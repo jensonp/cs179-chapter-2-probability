@@ -1,0 +1,873 @@
+# Probability and Inference
+
+Source: `source/02_probability.pdf`
+
+This is a full note-style reconstruction of Chapter 2. It keeps the chapter's section structure, worked examples, key tables, and core derivations, while normalizing some prose and keeping the main visuals in the local `assets/` directory.
+
+## 2.1 Probability, Events, Random Variables
+
+Probability is the language we use when a system is uncertain or too complex to model exactly. In AI, the uncertainty often comes less from true randomness than from missing information and limited modeling power. A useful probabilistic model does two things: it describes our assumptions about the world, and it gives rules for combining evidence and updating those assumptions when observations arrive.
+
+### Axioms of Probability
+
+Let `S` denote the event space, the set of all possible outcomes or possible worlds. A random event is any subset `A \subseteq S`. A probability measure assigns values to events and must satisfy:
+
+$$
+0 \le Pr[A] \le 1
+$$
+
+$$
+Pr[S] = 1
+$$
+
+$$
+Pr[\varnothing] = 0
+$$
+
+$$
+Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B]
+$$
+
+The last rule is inclusion-exclusion: add the worlds where `A` happens and the worlds where `B` happens, then subtract the overlap because it was counted twice.
+
+### Example 2-1: Random Events
+
+Suppose we roll a standard six-sided die. The event space is
+
+$$
+S = \{1,2,3,4,5,6\}.
+$$
+
+Two events are:
+
+$$
+A = \{\text{odd roll}\} = \{1,3,5\}
+$$
+
+$$
+B = \{\text{roll is 4 or greater}\} = \{4,5,6\}.
+$$
+
+Then `Pr[A] = 3/6`, `Pr[B] = 3/6`, and `Pr[A \cap B] = 1/6`, so `Pr[A \cup B] = 5/6`.
+
+### Random Variables
+
+A random variable partitions the event space into disjoint and exhaustive cases and assigns each case a symbolic value. If
+
+$$
+X \in \{1,\dots,d\},
+$$
+
+then the events `X = 1, \dots, X = d` are mutually exclusive and cover all outcomes, so
+
+$$
+\sum_{i=1}^d Pr[X=i] = 1.
+$$
+
+The possible values are called the states of the variable, and the set of all possible values is its domain. For discrete variables, the probability mass function is often written as `p(X=x)` or simply `p(x)` when the variable is clear from context.
+
+### Example 2-2: Bernoulli Distribution
+
+A Bernoulli random variable is binary:
+
+$$
+X \in \{0,1\}.
+$$
+
+If
+
+$$
+Pr[X=1] = \rho,
+$$
+
+then automatically
+
+$$
+Pr[X=0] = 1-\rho.
+$$
+
+We can write the distribution as
+
+$$
+p(X) = Ber(X;\rho) = \rho^X (1-\rho)^{1-X}.
+$$
+
+This evaluates to `\rho` when `X = 1` and to `1-\rho` when `X = 0`.
+
+An equivalent representation is
+
+$$
+p(X) = \rho \mathbf{1}[X=1] + (1-\rho)\mathbf{1}[X=0].
+$$
+
+### Example 2-3: Discrete Distribution
+
+If `X \in \{1,\dots,d\}`, then a discrete distribution is just a probability table:
+
+$$
+Pr[X=i] = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.
+$$
+
+Only `d-1` of those values are free, because the last one is determined by normalization. One compact representation is
+
+$$
+p(X) = \prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}.
+$$
+
+This simply selects the probability attached to the realized state and turns the others off.
+
+### Example 2-4: Dentist Example
+
+The chapter uses three binary variables:
+
+- `C = 1` means cavity
+- `T = 1` means toothache
+- `D = 1` means the probe catches on the tooth
+
+The joint distribution over `(T,D,C)` is:
+
+| TDC | p(T,D,C) |
+|---|---:|
+| 000 | 0.576 |
+| 001 | 0.008 |
+| 010 | 0.144 |
+| 011 | 0.072 |
+| 100 | 0.064 |
+| 101 | 0.012 |
+| 110 | 0.016 |
+| 111 | 0.108 |
+
+The eight rows are mutually exclusive and exhaustive, so their probabilities sum to one.
+
+### Marginal Probabilities
+
+To get the probability of one variable, add up all joint entries consistent with that value.
+
+$$
+p(T=0) = \sum_{d,c} p(T=0,D=d,C=c)
+$$
+
+$$
+= 0.576 + 0.008 + 0.144 + 0.072 = 0.80.
+$$
+
+Marginalization is just "add all ways the event can happen."
+
+### Conditional Probability
+
+Conditioning means restricting attention to worlds where the condition holds:
+
+$$
+p(D=d \mid T=t) = \frac{p(D=d,T=t)}{p(T=t)}.
+$$
+
+The numerator is the probability that both things happen; the denominator is the total probability of the condition. The result is a normalized probability distribution over `D` given `T=t`.
+
+### Example 2-5: Bayes Rule
+
+Bayes rule converts a forward model into a reverse one:
+
+$$
+p(C=c \mid D=d) = \frac{p(D=d \mid C=c)p(C=c)}{p(D=d)}.
+$$
+
+Read it as:
+
+$$
+\text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}.
+$$
+
+For the dentist example, suppose:
+
+$$
+p(T=1 \mid C=0) = 0.1, \qquad p(T=1 \mid C=1) = 0.6
+$$
+
+$$
+p(C=0) = 0.8, \qquad p(C=1) = 0.2.
+$$
+
+Then
+
+$$
+p(C=1 \mid T=1)
+= \frac{0.6 \cdot 0.2}{0.6 \cdot 0.2 + 0.1 \cdot 0.8}
+= \frac{0.12}{0.20}
+= 0.60.
+$$
+
+Observing a toothache raises the cavity probability from `0.20` to `0.60`.
+
+### Example 2-6: Table-Based Computation
+
+The same Bayes update can be done by manipulating tables directly. Start with the full table of `p(T,D,C)`, extract the subtable where `T=1`, sum over `D`, then normalize.
+
+| DC | p(T=1,D,C) |
+|---|---:|
+| 00 | 0.064 |
+| 01 | 0.012 |
+| 10 | 0.016 |
+| 11 | 0.108 |
+
+After marginalizing `D`:
+
+| C | p(T=1,C) |
+|---|---:|
+| 0 | `0.064 + 0.016 = 0.080` |
+| 1 | `0.012 + 0.108 = 0.120` |
+
+After normalization:
+
+| C | p(C \| T=1) |
+|---|---:|
+| 0 | `0.08 / 0.20 = 0.40` |
+| 1 | `0.12 / 0.20 = 0.60` |
+
+This is the same computation as Bayes rule, but expressed as table arithmetic.
+
+### Expectation
+
+The expectation of a discrete variable is a weighted average:
+
+$$
+E[X] = \sum_x x \, p(x).
+$$
+
+For a Bernoulli variable, `E[X] = \rho`, which is why the Bernoulli parameter is also the mean.
+
+### Independence
+
+Two random variables `X` and `Y` are independent if
+
+$$
+p(X,Y) = p(X)p(Y).
+$$
+
+Equivalently, observing one does not change the distribution of the other:
+
+$$
+p(X \mid Y) = p(X).
+$$
+
+Independence also simplifies the joint distribution. If `X` and `Y` are `d`-ary variables, the full joint has `d^2 - 1` degrees of freedom, while independence reduces that to `2d - 2`.
+
+### Example 2-7: Independence
+
+Let `X` be a biased coin and `Y` a weighted four-sided die. If they are independent, then the joint is just the product of the marginals.
+
+| X | p(X) |
+|---|---:|
+| 0 | 0.7 |
+| 1 | 0.3 |
+
+| Y | p(Y) |
+|---|---:|
+| 1 | 0.2 |
+| 2 | 0.3 |
+| 3 | 0.4 |
+| 4 | 0.1 |
+
+Representative joint entries:
+
+| X | Y | p(X,Y) |
+|---|---|---:|
+| 0 | 1 | 0.14 |
+| 0 | 2 | 0.21 |
+| 1 | 4 | 0.03 |
+
+### Conditional Independence
+
+It is rare for variables to be completely independent, but they are often conditionally independent given a mediating variable `Z`:
+
+$$
+p(X,Y \mid Z) = p(X \mid Z)p(Y \mid Z).
+$$
+
+Once `Z` is known, `X` and `Y` stop giving extra information about each other.
+
+### Example 2-8: Conditional Independence, Dentist
+
+In the dentist model, the probe catches and toothache are not independent in general. But conditioned on cavity status, they become independent. The conditional table is:
+
+| T | D | C | p(D \| C,T) |
+|---|---|---|---:|
+| 0 | 0 | 0 | 0.800 |
+| 0 | 0 | 1 | 0.100 |
+| 0 | 1 | 0 | 0.200 |
+| 0 | 1 | 1 | 0.900 |
+| 1 | 0 | 0 | 0.800 |
+| 1 | 0 | 1 | 0.100 |
+| 1 | 1 | 0 | 0.200 |
+| 1 | 1 | 1 | 0.900 |
+
+The key point is that `p(D \mid C,T)` does not actually depend on `T`.
+
+## 2.2 Continuous Random Variables
+
+Sometimes we model systems with real-valued random variables `X \in R`. In that setting we define a probability density function `p(x)` with `p(x) \ge 0` for all `x` and
+
+$$
+\int p(x)\,dx = 1.
+$$
+
+The density defines the probability of any event `X \in A \subseteq R` by
+
+$$
+Pr[X \in A] = \int_A p(x)\,dx.
+$$
+
+### Example 2-9: Uniform Distribution
+
+For a continuous-valued random variable `X` defined on `[0,T]`, the uniform distribution is
+
+$$
+p(x) =
+\begin{cases}
+\frac{1}{T} & \text{if } x \in [0,T] \\
+0 & \text{otherwise.}
+\end{cases}
+$$
+
+Then
+
+$$
+\int_0^T p(x)\,dx = T \cdot \frac{1}{T} = 1.
+$$
+
+Unlike discrete distributions, the density value may be larger than one, as long as its integral over the support is one.
+
+### Gaussian Distributions
+
+The Gaussian distribution is one of the most important continuous families. In one dimension,
+
+$$
+p(x) = \mathcal{N}(x;\mu,\sigma^2)
+= \frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+$$
+
+In multiple dimensions,
+
+$$
+p(x) = \mathcal{N}(x;\mu,\Sigma)
+= (2\pi)^{-n/2} |\Sigma|^{-1/2}
+\exp\!\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right).
+$$
+
+The mean vector `\mu` sets the center, and the covariance matrix `\Sigma` sets the shape and spread.
+
+![Gaussian distribution plots](assets/figure_2_1_gaussian.png)
+
+### Example 2-10: Bernoulli Exponential Family Form
+
+The Bernoulli distribution can be written in exponential-family form:
+
+$$
+\rho^X (1-\rho)^{1-X}
+= \exp\!\Bigl(\log(\rho)X + \log(1-\rho)(1-X)\Bigr).
+$$
+
+This highlights the feature `\phi(X)=X` and the natural parameter `\eta = \log(\rho/(1-\rho))`.
+
+### Example 2-11: Bernoulli Two-Parameter Form
+
+We can also write an over-parameterized Bernoulli distribution with two parameters:
+
+$$
+p(X;\eta_0,\eta_1)
+= \frac{\exp\bigl(\eta_1 X + \eta_0(1-X)\bigr)}{\exp(\eta_0)+\exp(\eta_1)}.
+$$
+
+Only the difference `\eta_1 - \eta_0` matters, so different parameter values can represent the same distribution.
+
+### Beta and Dirichlet Distributions
+
+Another important continuous distribution is the Beta distribution on `[0,1]`:
+
+$$
+p(x) = \mathrm{Beta}(x;a,b)
+= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^{a-1}(1-x)^{b-1}.
+$$
+
+When `a=b=1`, the Beta distribution is uniform. When `a,b > 1`, it is unimodal. When either parameter is less than one, the density can spike at the boundary.
+
+The Dirichlet distribution generalizes Beta to vectors on the simplex:
+
+$$
+p(x) = \mathrm{Dir}(x;\alpha)
+= \frac{\Gamma(\sum_j \alpha_j)}{\prod_j \Gamma(\alpha_j)}
+\prod_j x_j^{\alpha_j - 1},
+$$
+
+with `\sum_j x_j = 1`.
+
+![Beta distribution family](assets/figure_2_2_beta_grid.png)
+
+![Dirichlet distribution family](assets/figure_2_3_dirichlet_simplex.png)
+
+### The Exponential Family
+
+The distributions discussed so far are examples of the exponential family:
+
+$$
+p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr).
+$$
+
+The vector `\phi(x)` contains the features or sufficient statistics, and `A(\theta)` normalizes the distribution. A canonical parameterization often makes optimization and analysis especially clean.
+
+## 2.3 Learning and Parameter Estimation
+
+In practice, we often do not know the probabilities that govern a system. Instead, we observe data and estimate the model parameters from those observations.
+
+### Frequentist Versus Bayesian Perspectives
+
+From the frequentist perspective, probability is long-run frequency. The parameter is fixed but unknown, data are random, and learning means estimating the true parameter from samples.
+
+From the Bayesian perspective, probability is degree of belief. The parameter itself is uncertain, so we place a prior distribution on it and update that prior after seeing data.
+
+Both views use many of the same formulas, but they answer slightly different questions. Maximum likelihood is the canonical frequentist estimator.
+
+### Likelihood
+
+For i.i.d. data `D = {x^{(1)}, \dots, x^{(m)}}`, the likelihood is
+
+$$
+p(D;\theta) = \prod_i p(x^{(i)};\theta)
+$$
+
+and the log-likelihood is
+
+$$
+L(\theta) = \sum_i \log p(x^{(i)};\theta).
+$$
+
+The principle of maximum likelihood says to choose the parameter value that makes the observed data look most probable.
+
+### Example 2-12: Bernoulli Likelihood
+
+Suppose we observe `m` Bernoulli samples, with `m_1` ones and `m_0` zeros. Then
+
+$$
+L(\rho) = m_1 \log \rho + m_0 \log(1-\rho).
+$$
+
+The likelihood is maximized at the empirical frequency of ones.
+
+![Bernoulli likelihood curves](assets/figure_2_12_bernoulli_likelihood.png)
+
+### Example 2-13: Gaussian Likelihood
+
+For a one-dimensional Gaussian with variance fixed at one, the likelihood as a function of `\mu` becomes more sharply peaked as the number of samples grows.
+
+![Gaussian likelihood curves](assets/figure_2_13_gaussian_likelihood.png)
+
+### Maximum Likelihood Estimation
+
+For a Bernoulli distribution,
+
+$$
+L(\rho) = m_1 \log \rho + m_0 \log(1-\rho).
+$$
+
+Differentiating gives
+
+$$
+\frac{\partial L}{\partial \rho} = \frac{m_1}{\rho} - \frac{m_0}{1-\rho}.
+$$
+
+Setting this to zero yields
+
+$$
+\hat\rho_{\text{MLE}} = \frac{m_1}{m}.
+$$
+
+For a Gaussian with mean `\mu` and variance `\nu = \sigma^2`,
+
+$$
+\hat\mu_{\text{MLE}} = \frac{1}{m}\sum_i x^{(i)}
+$$
+
+$$
+\hat\nu_{\text{MLE}} = \frac{1}{m}\sum_i (x^{(i)} - \hat\mu)^2.
+$$
+
+For a discrete distribution with probabilities `\rho_x`, the MLE is the empirical frequency of each state.
+
+### Example 2-14: Bernoulli MLE
+
+If `m_1` of the `m` observations are ones, then
+
+$$
+\hat\rho = \frac{m_1}{m}.
+$$
+
+### Example 2-15: Gaussian MLE
+
+The Gaussian MLE is the sample mean and sample variance:
+
+$$
+\hat\mu = \frac{1}{m}\sum_i x^{(i)},
+$$
+
+$$
+\hat\nu = \frac{1}{m}\sum_i (x^{(i)}-\hat\mu)^2.
+$$
+
+### Example 2-16: Discrete MLE
+
+For a discrete distribution over states `x`, the MLE is
+
+$$
+\hat\rho_x = \frac{m_x}{m},
+$$
+
+where `m_x` is the count of state `x` in the data.
+
+### Maximum Likelihood and Exponential Families
+
+For a canonical exponential-family model
+
+$$
+p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr),
+$$
+
+the log-likelihood of i.i.d. data is
+
+$$
+L(\theta)
+= \sum_i \log h(x^{(i)})
++ \theta^T \sum_i \phi(x^{(i)})
+ - m A(\theta).
+$$
+
+At the optimum, the model's expected sufficient statistics match the empirical averages. This moment-matching condition is one of the reasons exponential families are so useful.
+
+### Overfitting
+
+Likelihood alone can overfit. If a model is too flexible and the data set is too small, the MLE may explain the training data perfectly while generalizing poorly. Histogram models make this especially clear: as the number of bins grows, the likelihood on the training data can keep increasing even when the estimate becomes a bad predictor.
+
+![Histogram likelihood progression](assets/figure_2_17_histograms.png)
+
+### Posterior Distributions
+
+In the Bayesian view, we keep a distribution over parameters:
+
+$$
+p(\theta \mid D) \propto p(D \mid \theta)p(\theta).
+$$
+
+The posterior trades a point estimate for uncertainty about plausible parameter values.
+
+### Example 2-18: Beta-Bernoulli Conjugacy
+
+If the likelihood is Bernoulli and the prior is `Beta(a,b)`, then the posterior is still Beta:
+
+$$
+\rho \mid D \sim Beta(a+m_1, b+m_0).
+$$
+
+This is the simplest example of conjugacy.
+
+### Posterior Estimators
+
+Two common point estimates derived from the posterior are the posterior mean and the MAP estimate:
+
+$$
+\hat\theta_{\text{PM}} = E_{p(\theta \mid D)}[\theta],
+$$
+
+$$
+\hat\theta_{\text{MAP}} = \arg\max_\theta \log p(\theta \mid D).
+$$
+
+For Bernoulli/Beta,
+
+$$
+\hat\rho_{\text{PM}} = \frac{a+m_1}{a+b+m_1+m_0}
+$$
+
+and
+
+$$
+\hat\rho_{\text{MAP}} = \frac{a-1+m_1}{a+b-2+m_1+m_0}.
+$$
+
+### Example 2-19: Bernoulli Posterior Estimates
+
+The posterior mean smooths the empirical frequency by the prior. The MAP estimate is a regularized version of MLE and matches MLE when `a=b=1`.
+
+### Sequential Belief Updating
+
+Bayesian updating naturally supports sequential learning: after observing one batch of data, the posterior becomes the prior for the next batch.
+
+![Sequential belief updating](assets/figure_2_4_sequential_updates.png)
+
+### Example 2-20: Coin Toss Hyper-Prior
+
+Sometimes we are uncertain even about the prior. A mixture of a fair-coin prior and a trick-coin prior can be written as a hyper-prior over the Beta parameters.
+
+![Mixture of Beta priors](assets/figure_2_20_beta_hyperprior.png)
+
+### Weakly Informative Priors
+
+A prior is never literally uninformative, because any prior expresses some preference over parameter values. The choice of parameterization matters: a prior that is uniform in `\rho` is not uniform in the natural parameter `\eta = \log(\rho/(1-\rho))`.
+
+### Example 2-21: Priors for the Bernoulli Likelihood
+
+The uniform prior on `\rho` is `Beta(\rho;1,1)`. Under a log-odds parameterization, the induced prior on `\eta` is not uniform. This is one reason the notion of "uninformative prior" is parameterization-dependent.
+
+### Bayesian Model Selection
+
+The Bayesian marginal likelihood is
+
+$$
+\log p(D) = \log \int p(D \mid \theta)p(\theta)\,d\theta.
+$$
+
+It automatically penalizes overly flexible models that spread prior mass too thinly.
+
+The BIC approximation is
+
+$$
+L_{\text{BIC}} = \max_\theta \log p(D \mid \theta) - \frac{d}{2}\log m,
+$$
+
+where `d` is the number of parameters and `m` is the number of observations.
+
+### Example 2-22: Bayesian Histogram Estimator
+
+For a histogram model with Dirichlet prior, the marginal likelihood and BIC penalized score can be compared across numbers of bins. Both typically favor a moderate number of bins rather than the most complex possible histogram.
+
+![Histogram model selection scores](assets/figure_2_22_histogram_model_scores.png)
+
+## 2.4 Convexity
+
+A convex function satisfies
+
+$$
+f(\alpha x + (1-\alpha)x') \le \alpha f(x) + (1-\alpha)f(x')
+$$
+
+for all `\alpha \in [0,1]`. Strict convexity makes the inequality strict for distinct points.
+
+Equivalent characterizations are:
+
+$$
+f(x') \ge f(x) + \nabla f(x)\cdot(x'-x)
+$$
+
+and, when second derivatives exist,
+
+$$
+\nabla^2 f(x) \succeq 0.
+$$
+
+Convex functions are useful because every local minimum is global, and a strictly convex function has a unique minimum.
+
+Jensen's inequality is the probability version of convexity:
+
+$$
+E[f(X)] \ge f(E[X])
+$$
+
+for convex `f`.
+
+### Example 2-23: Convexity and the Exponential Family
+
+The negative log-likelihood of a canonical exponential-family model is convex in its natural parameters. The Hessian of the log-partition function is a covariance matrix of the sufficient statistics, hence positive semidefinite.
+
+![Convexity sketch](assets/figure_2_23_convexity_sketch.png)
+
+## 2.5 Information Theory
+
+Entropy measures uncertainty:
+
+$$
+H[X] = -\sum_x p(x)\log p(x).
+$$
+
+If the logarithm is base 2, entropy is measured in bits. A deterministic variable has entropy zero, and a uniform distribution maximizes entropy for a fixed support.
+
+### Example 2-24: Entropy
+
+For a fair coin,
+
+$$
+H[X] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}.
+$$
+
+For a fair die,
+
+$$
+H[X] = -6 \cdot \frac{1}{6}\log_2 \frac{1}{6} \approx 2.58 \text{ bits}.
+$$
+
+### Example 2-25: Lottery
+
+Entropy also explains compression. If a yearly sequence is mostly zeros, we can encode it with far fewer bits than a naive one-bit-per-day representation, because the sequence is highly non-random.
+
+### Kullback-Leibler Divergence
+
+The KL divergence is
+
+$$
+D(p\|q) = \sum_x p(x)\log\frac{p(x)}{q(x)}.
+$$
+
+It is always nonnegative and zero only when `p=q`, but it is not symmetric.
+
+In learning, maximum likelihood can be viewed as minimizing the KL divergence from the empirical distribution to the model family.
+
+### Mutual Information
+
+Mutual information measures how much observing one variable tells us about another:
+
+$$
+I[X,Y] = D(p(X,Y)\|p(X)p(Y))
+= H[X] + H[Y] - H[X,Y].
+$$
+
+If `X` and `Y` are independent, mutual information is zero.
+
+### Conditional Entropy
+
+Conditional entropy is
+
+$$
+H[X \mid Y] = H[X,Y] - H[Y].
+$$
+
+It satisfies
+
+$$
+I[X,Y] = H[X] - H[X \mid Y] \ge 0,
+$$
+
+so conditioning reduces uncertainty on average.
+
+### Example 2-26: Information and Conditional Entropy
+
+Suppose we model commuting behavior `C \in \{\text{walk}, \text{bike}, \text{drive}\}` and weather `R \in \{\text{clear}, \text{rain}\}`. On rainy days we drive more often, so weather conveys information about commute choice.
+
+| R | C | p(C \| R) |
+|---|---|---:|
+| clear | walk | 0.9 |
+| clear | bike | 0.1 |
+| clear | drive | 0.0 |
+| rain | walk | 0.5 |
+| rain | bike | 0.0 |
+| rain | drive | 0.5 |
+
+With `p(R=\text{rain}) = 0.1`, the marginals are
+
+$$
+p(C=\text{walk}) = 0.86, \quad p(C=\text{bike}) = 0.09, \quad p(C=\text{drive}) = 0.05.
+$$
+
+The entropy of the commute alone is about `0.72` bits. Conditioning on weather gives a lower average entropy, around `0.52` bits, so the mutual information is about `0.2` bits.
+
+## 2.6 Change-of-Variable Models
+
+The classical probability distributions above are useful, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
+
+### Scalar Change of Variables
+
+If `X = f(Z)` is invertible and `g = f^{-1}`, then
+
+$$
+p_X(x) = p_Z(g(x)) \lvert g'(x) \rvert.
+$$
+
+The derivative corrects for stretching or compression under the transformation.
+
+### Example: Lognormal Distribution
+
+If `Z = \log X` is Gaussian, then `X` is lognormal. The density of `X` is obtained from the Gaussian density of `Z` plus the Jacobian factor `1/x`.
+
+### Multivariate Change of Variables
+
+In multiple dimensions,
+
+$$
+p_X(x) = p_Z(g(x)) \lvert \det J_g(x) \rvert,
+$$
+
+where `J_g` is the Jacobian matrix of the inverse transformation.
+
+### Copula Models
+
+Copulas separate marginal distributions from dependence structure. For two variables,
+
+$$
+Pr[X_1 \le x_1, X_2 \le x_2] = C(P_1(x_1), P_2(x_2)),
+$$
+
+where `P_1` and `P_2` are the marginal CDFs.
+
+![Copula transforms](assets/figure_2_5_copula_transforms.png)
+
+The Gaussian copula is a special case in which the transformed variables are Gaussian.
+
+### Example 2-27: Copula Transforms
+
+The chapter uses a KDD Cup data set to show the pipeline:
+
+1. estimate marginal CDFs `P_1, P_2`
+2. transform the data to uniform marginals
+3. apply `\Phi^{-1}` to obtain Gaussian marginals
+4. fit a Gaussian dependence model in that transformed space
+
+The resulting model can express complicated non-Gaussian marginals while keeping the dependence structure manageable.
+
+### Normalizing Flows
+
+Normalizing flows define an invertible transform `X = f(Z)` and use the change-of-variables formula to evaluate likelihoods. The transformation is often built as a composition of simple steps:
+
+$$
+f(Z) = f_T(f_{T-1}(\cdots f_1(Z)))
+$$
+
+with
+
+$$
+\log p_X(X) = \log p_Z(f^{-1}(X)) - \sum_t \log |\det J_{f_t}|.
+$$
+
+### Example 2-28: Copula-Like Normalizing Flow
+
+One useful construction is to start with a Gaussian base distribution and parameterize one-dimensional monotone transforms for each feature. This is a flexible stand-in for explicit CDF modeling.
+
+### Example 2-29: Conditional Affine Normalizing Flows
+
+A particularly convenient flow layer is conditional affine:
+
+$$
+Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1).
+$$
+
+Because the Jacobian is triangular, the determinant is easy to compute. A second layer can then swap roles and transform the other coordinate:
+
+$$
+Z_1'' = \alpha_2(Z_2')Z_1' + \beta_2(Z_2'), \qquad Z_2'' = Z_2'.
+$$
+
+![Normalizing flow deformation panels](assets/figure_2_6_affine_flow_panels.png)
+
+The main idea is that a sequence of simple invertible layers can produce a complex density while keeping likelihood evaluation tractable.
+
+## Summary
+
+The chapter can be compressed into one sentence:
+
+Probability gives us a language for uncertainty, learning tells us how to fit that language to data, and information/change-of-variables tools tell us how to analyze and extend those models once the basics are in place.
+
+If you remember only the essentials, remember these:
+
+- marginals add over hidden cases
+- conditionals restrict and renormalize
+- Bayes rule combines prior and evidence
+- expectation is a weighted average
+- MLE matches empirical sufficient statistics
+- Bayesian inference keeps uncertainty over parameters
+- entropy measures uncertainty
+- change-of-variables reweights density by a Jacobian

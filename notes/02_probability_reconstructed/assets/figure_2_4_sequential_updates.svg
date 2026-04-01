@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="220" viewBox="0 0 820 220">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7d8fb2"/>
+    </marker>
+  </defs>
+  <rect x="24" y="0" width="772" height="220" rx="14" fill="#ffffff"/>
+  <g font-family="Helvetica, Arial, sans-serif" text-anchor="middle">
+    <rect x="36" y="56" width="132" height="72" rx="12" fill="#f6f8fc" stroke="#8ea1c2" stroke-width="2"/>
+    <text x="102" y="82" font-size="18" fill="#2f3b52">Prior</text>
+    <rect x="194" y="56" width="132" height="72" rx="12" fill="#fdf8f0" stroke="#c5a16a" stroke-width="2"/>
+    <text x="260" y="82" font-size="18" fill="#4e412c">Data 1</text>
+
+    <rect x="352" y="56" width="132" height="72" rx="12" fill="#f6f8fc" stroke="#8ea1c2" stroke-width="2"/>
+    <text x="418" y="82" font-size="18" fill="#2f3b52">Posterior</text>
+
+    <rect x="510" y="56" width="132" height="72" rx="12" fill="#fdf8f0" stroke="#c5a16a" stroke-width="2"/>
+    <text x="576" y="82" font-size="18" fill="#4e412c">Data 2</text>
+
+    <rect x="668" y="56" width="132" height="72" rx="12" fill="#eef7f3" stroke="#7ea78f" stroke-width="2"/>
+    <text x="734" y="82" font-size="18" fill="#2c5041">Updated belief</text>
+
+    <line x1="168" y1="92" x2="194" y2="92" stroke="#7d8fb2" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="326" y1="92" x2="352" y2="92" stroke="#7d8fb2" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="484" y1="92" x2="510" y2="92" stroke="#7d8fb2" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="642" y1="92" x2="668" y2="92" stroke="#7d8fb2" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+  <text x="410" y="178" font-family="Helvetica, Arial, sans-serif" font-size="15" text-anchor="middle" fill="#556274">
+    Bayesian learning reuses the posterior after D1 as the new prior before incorporating D2.
+  </text>
+</svg>

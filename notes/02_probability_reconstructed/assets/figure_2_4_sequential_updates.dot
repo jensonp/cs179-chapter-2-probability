@@ -1,0 +1,11 @@
+digraph SequentialUpdates {
+  rankdir=LR;
+  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];
+  edge [color="#7d8fb2", penwidth=1.2, arrowsize=0.8];
+  prior [label="Prior\np(θ)"];
+  like1 [label="Data 1\np(D₁ | θ)"];
+  post1 [label="Posterior\np(θ | D₁)"];
+  like2 [label="Data 2\np(D₂ | θ, D₁)"];
+  post2 [label="Updated posterior\np(θ | D₁, D₂)"];
+  prior -> like1 -> post1 -> like2 -> post2;
+}
