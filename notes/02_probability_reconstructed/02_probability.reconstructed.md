@@ -198,6 +198,40 @@ $$
 
 The exponents are indicators, so all irrelevant states are raised to the zero power and disappear.
 
+### Geometric Distribution
+
+Another basic discrete family is the Geometric distribution. It models repeated independent Bernoulli trials with success probability $\rho$ until the first success occurs. One must be careful about conventions, because two closely related definitions are common in textbooks and software.
+
+In these notes, and in the course homework workflow built around Pyro, the random variable counts the number of failures before the first success. Its support is therefore
+
+$$
+X \in \{0,1,2,\dots\},
+$$
+
+and its PMF is
+
+$$
+p(X=x)=(1-\rho)^x\rho.
+$$
+
+The formula is easy to derive once the event is stated explicitly. The event $X=x$ means the first $x$ trials fail and the next trial succeeds. Because the trials are independent, we multiply the probabilities of those pieces: $x$ failures contribute $(1-\rho)^x$ and the final success contributes $\rho$.
+
+For example, if $\rho=0.2$, then
+
+$$
+p(X=0)=0.2,\qquad p(X=1)=0.8 \cdot 0.2=0.16,\qquad p(X=2)=0.8^2 \cdot 0.2=0.128.
+$$
+
+So the distribution puts its largest mass at zero and then decays geometrically to the right. That is why its histogram has a tall first bar and a long right tail.
+
+The mean under this zero-based convention is
+
+$$
+E[X]=\frac{1-\rho}{\rho}.
+$$
+
+If $\rho=0.2$, the expected number of failures before the first success is therefore $4$. A different but equally common convention counts the total number of trials until the first success. Under that one-based convention the support starts at $1$ instead of $0$, the PMF becomes $p(Y=y)=(1-\rho)^{y-1}\rho$, and the mean becomes $1/\rho$. When using a software library, one should always check which convention the library adopts before interpreting the samples.
+
 ### Example 2-4: Dentist Example
 
 The chapter uses three binary variables:
@@ -740,6 +774,163 @@ p(D=1 \mid C=1,T=0)=0.9, \qquad p(D=1 \mid C=1,T=1)=0.9.
 $$
 
 So once the cavity variable is fixed, knowing the toothache value adds no further information about the probe outcome. That is precisely what conditional independence means in this example.
+
+### Worked Example: Auto Warning Light
+
+The conditional independence machinery above is exactly what one uses in simple diagnostic models. Suppose
+
+- $H=1$ means the engine is too hot
+- $C=1$ means the coolant level is too low
+- $W=1$ means the warning light is on
+
+Assume
+
+$$
+p(H=1)=0.1,\qquad p(C=1)=0.1,
+$$
+
+and assume $H$ and $C$ are independent. Then
+
+$$
+p(H,C)=p(H)p(C).
+$$
+
+The warning light is a noisy sensor whose probability of turning on depends on the hidden causes:
+
+| $H$ | $C$ | $p(H,C)$ | $p(W=1 \mid H,C)$ | $p(H,C,W=1)$ |
+|---|---|---:|---:|---:|
+| 0 | 0 | $0.9 \cdot 0.9 = 0.81$ | 0.1 | $0.81 \cdot 0.1 = 0.081$ |
+| 0 | 1 | $0.9 \cdot 0.1 = 0.09$ | 0.8 | $0.09 \cdot 0.8 = 0.072$ |
+| 1 | 0 | $0.1 \cdot 0.9 = 0.09$ | 0.8 | $0.09 \cdot 0.8 = 0.072$ |
+| 1 | 1 | $0.1 \cdot 0.1 = 0.01$ | 0.9 | $0.01 \cdot 0.9 = 0.009$ |
+
+The first posterior query is the probability that coolant is low after seeing the warning light:
+
+$$
+p(C=1 \mid W=1)=\frac{p(C=1,W=1)}{p(W=1)}.
+$$
+
+Compute the denominator by summing the last column:
+
+$$
+p(W=1)=0.081+0.072+0.072+0.009=0.234.
+$$
+
+Compute the numerator by summing only the rows with $C=1$:
+
+$$
+p(C=1,W=1)=0.072+0.009=0.081.
+$$
+
+Therefore
+
+$$
+p(C=1 \mid W=1)=\frac{0.081}{0.234}=\frac{9}{26}\approx 0.346.
+$$
+
+The second posterior query uses extra evidence. Once we also learn that the engine is hot,
+
+$$
+p(C=1 \mid W=1,H=1)=\frac{p(C=1,W=1,H=1)}{p(W=1,H=1)}.
+$$
+
+The numerator is just the row $(H,C)=(1,1)$:
+
+$$
+p(C=1,W=1,H=1)=0.009.
+$$
+
+The denominator sums the two rows with $H=1$:
+
+$$
+p(W=1,H=1)=0.072+0.009=0.081.
+$$
+
+So the updated posterior is
+
+$$
+p(C=1 \mid W=1,H=1)=\frac{0.009}{0.081}=\frac{1}{9}\approx 0.111.
+$$
+
+This drop is not a paradox. Before checking the engine, the warning light could have been explained by either low coolant or overheating. After verifying that overheating is already present, much of the evidence carried by the light has already been explained away, so the extra need to blame low coolant becomes smaller.
+
+This example is also useful for structural counting. The full joint model over $(H,C,W)$ has
+
+$$
+2^3=8
+$$
+
+possible states. But the number of distinct real values we actually specified is much smaller. We used one shared prior number $0.1$ for both $H$ and $C$, and three distinct sensor probabilities $0.9$, $0.8$, and $0.1$ for the three qualitative parent cases "both true," "exactly one true," and "neither true." So the model was specified using only four distinct numbers. The gap between eight states and four numbers is exactly the payoff from independence plus parameter sharing.
+
+### Worked Example: Information Sufficiency for Posterior Queries
+
+Suppose $A$, $B$, and $C$ are binary variables and we want to compute
+
+$$
+p(A=1 \mid B=1,C=1).
+$$
+
+Bayes' rule exposes the information requirement immediately:
+
+$$
+p(A=1 \mid B=1,C=1)
+=
+\frac{p(B=1,C=1 \mid A=1)p(A=1)}{p(B=1,C=1)}.
+$$
+
+So, with no conditional independence assumptions, three ingredients are needed:
+
+- the prior $p(A=1)$
+- the likelihood term $p(B=1,C=1 \mid A=1)$
+- the evidence term $p(B=1,C=1)$
+
+That is the cleanest way to judge whether a proposed set of numbers is sufficient. We do not ask whether the numbers "feel related." We ask whether they determine the numerator and denominator in the displayed formula.
+
+Now consider three candidate information sets.
+
+Set 1 gives
+
+$$
+p(B=1,C=1),\qquad p(A=1),\qquad p(B=1 \mid A=1),\qquad p(C=1 \mid A=1).
+$$
+
+Without further assumptions, this set is not sufficient. The separate conditionals $p(B=1 \mid A=1)$ and $p(C=1 \mid A=1)$ do not determine the joint conditional probability $p(B=1,C=1 \mid A=1)$. Many different joint distributions of $(B,C)$ given $A=1$ can share the same one-variable conditionals.
+
+Set 2 gives
+
+$$
+p(B=1,C=1),\qquad p(A=1),\qquad p(B=1,C=1 \mid A=1).
+$$
+
+This set is sufficient, because it contains exactly the three ingredients needed by Bayes' rule.
+
+Set 3 gives
+
+$$
+p(A=1),\qquad p(B=1 \mid A=1),\qquad p(C=1 \mid A=1).
+$$
+
+This set is not sufficient. Even if one somehow recovered the numerator, the denominator $p(B=1,C=1)$ is still missing, so the posterior cannot be normalized.
+
+Now suppose we are also told that
+
+$$
+p(B \mid A,C)=p(B \mid A)
+$$
+
+for all values of the variables, which is the conditional independence statement
+
+$$
+B \perp C \mid A.
+$$
+
+Then Set 1 becomes sufficient, because the missing joint conditional factor can now be reconstructed as
+
+$$
+p(B=1,C=1 \mid A=1)=p(B=1 \mid A=1)p(C=1 \mid A=1).
+$$
+
+Set 2 remains sufficient for the same reason as before: it already contained the full joint conditional term. Set 3 is still not sufficient, because the marginal evidence probability $p(B=1,C=1)$ is still absent. Conditional independence can reduce the amount of information needed to specify a numerator, but it does not make the denominator appear by magic.
 
 ## 2.2 Continuous Random Variables
 
@@ -1473,6 +1664,104 @@ For a histogram model with Dirichlet prior, the marginal likelihood and BIC pena
 The plotted curves separate three notions of fit. Raw maximum likelihood keeps rewarding additional flexibility. BIC and the marginal score include an explicit complexity penalty, so they flatten or decline once the extra bins stop being justified by the amount of data.
 
 Read the graph from left to right as a complexity sweep. Moving right means adding more histogram bins and therefore more parameters. The dotted maximum-likelihood curve keeps climbing because the model can carve the training set into finer and finer pieces. The penalized curves eventually turn over, indicating the point where extra flexibility stops helping enough to justify its complexity cost.
+
+### Worked Example: One Coin Versus Two Coin Model Selection
+
+Suppose a first batch of flips is
+
+$$
+D_A=\{H,T,T\},
+$$
+
+and a second batch is
+
+$$
+D_B=\{T,H,H\}.
+$$
+
+If there is only one coin, all six flips share a common head probability $\rho$. Since there are three heads out of six observations,
+
+$$
+\hat{\rho}=\frac{3}{6}=0.5.
+$$
+
+If there are two different coins, the first coin gets its own parameter $\rho_A$ and the second gets $\rho_B$. Their MLEs are just the within-batch head frequencies:
+
+$$
+\hat{\rho}_A=\frac{1}{3},\qquad \hat{\rho}_B=\frac{2}{3}.
+$$
+
+The maximized average log-likelihood under the one-coin model is
+
+$$
+\text{one-coin average log-likelihood}
+=
+(3 \log 0.5 + 3 \log 0.5)/6
+=
+\log 0.5
+\approx -0.693.
+$$
+
+For the two-coin model it is
+
+$$
+\text{two-coin average log-likelihood}
+=
+\bigl(2 \log(1/3)+4 \log(2/3)\bigr)/6
+\approx -0.637.
+$$
+
+So raw fit prefers the two-coin model, because extra parameters always help match the data more closely.
+
+BIC adds a complexity penalty. The one-coin model has $d=1$ parameter and the two-coin model has $d=2$ parameters, so with $m=6$ observations the penalized average scores are
+
+$$
+\text{one-coin BIC average}
+=
+-0.693-(\log 6)/12
+\approx -0.842,
+$$
+
+$$
+\text{two-coin BIC average}
+=
+-0.637-(\log 6)/6
+\approx -0.935.
+$$
+
+After penalization, the one-coin model wins. The extra flexibility of the two-coin model is not justified by only six flips.
+
+Now increase the data while keeping the same qualitative split:
+
+$$
+D_A=\{H,T,T,T,T\},\qquad D_B=\{T,H,H,H,H\}.
+$$
+
+The one-coin MLE is still
+
+$$
+\hat{\rho}=0.5,
+$$
+
+while the two-coin MLEs become
+
+$$
+\hat{\rho}_A=0.2,\qquad \hat{\rho}_B=0.8.
+$$
+
+The one-coin penalized average score is now
+
+$$
+\text{one-coin BIC average} \approx -0.808,
+$$
+
+while the two-coin penalized average score is
+
+$$
+\text{two-coin BIC average} \approx -0.731.
+$$
+
+Now the two-coin model wins even after the penalty. The lesson is structural: with small data, the simpler model is often preferred because complexity costs dominate. With more data, a genuine difference between the two batches can become strong enough that the richer model earns back its penalty.
 
 ## 2.4 Convexity
 

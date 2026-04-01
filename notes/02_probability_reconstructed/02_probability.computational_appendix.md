@@ -210,6 +210,74 @@ $$
 
 That exact match is accidental, not guaranteed. The important check is that as more rolls are accumulated, the running average should drift toward $3.5$ rather than away from it.
 
+### Homework Workflow: Sampling and Plotting
+
+The Chapter 2 homework asks for sampled histograms rather than symbolic derivations. The computational logic should therefore be stated explicitly.
+
+First, fix the random seed before drawing any samples so that the results are reproducible. In the course notebook, the seed is $123$, and that fixed seed should be preserved. Second, choose the distribution parameters and draw the requested number of independent samples. Third, inspect the raw sample range before plotting, because the support determines the correct histogram style. Continuous samples should usually be plotted with contiguous bins over an interval. Discrete integer-valued samples should be plotted with bins aligned to integer locations rather than with arbitrary floating-point boundaries.
+
+A histogram is not just a picture; it is an empirical approximation to a PMF or density. So after plotting, one should compare the histogram to basic theoretical checks such as support, center, skewness, and rough scale. If the picture contradicts those simple checks, the issue is usually a parameterization mistake, a sampling mistake, or an inappropriate bin choice.
+
+### Worked Example: Beta$(3,2)$ Samples
+
+The Beta$(3,2)$ law is continuous on the interval $[0,1]$. Its density is proportional to
+
+$$
+x^2(1-x).
+$$
+
+That immediately implies several qualitative facts. The support is only the unit interval, so no sampled value should fall below $0$ or above $1$. The density is zero at both boundaries, so the histogram should taper toward both ends rather than spike exactly at $0$ or $1$. The mean is
+
+$$
+\frac{3}{3+2}=0.6,
+$$
+
+and the mode is
+
+$$
+\frac{3-1}{3+2-2}=\frac{2}{3},
+$$
+
+so the histogram should peak somewhat to the right of the center, around $0.6$ to $0.7$.
+
+For $1000$ samples, a moderate number of bins is usually best. Too few bins hide the shape, while too many bins make the plot look noisy and can suggest fake structure. A practical target is to choose enough bins to reveal the single interior peak while keeping adjacent bars reasonably smooth. If the histogram is wildly jagged, the bin count is probably too large for only $1000$ samples.
+
+### Worked Example: Geometric$(0.2)$ Samples
+
+For the homework's Pyro workflow, the Geometric distribution uses the zero-based convention:
+
+$$
+p(X=x)=(1-0.2)^x(0.2),
+\qquad
+x \in \{0,1,2,\dots\}.
+$$
+
+So a sampled value of $0$ means success occurred on the first trial, a sampled value of $1$ means one failure occurred before the first success, and so on. The first few probabilities are
+
+$$
+p(0)=0.2,\qquad p(1)=0.16,\qquad p(2)=0.128,\qquad p(3)=0.1024.
+$$
+
+The histogram should therefore start high at zero and then decrease steadily as the value grows. It should be right-skewed with a visibly long tail.
+
+The theoretical mean under this convention is
+
+$$
+\frac{1-0.2}{0.2}=4.
+$$
+
+So while many samples will be small integers, the average over $1000$ draws should be somewhere near $4$. That does not mean most samples equal $4$; it means the long right tail pulls the average to the right even though the most likely outcome is still $0$.
+
+The histogram for a Geometric sample should use bins centered on the integers. If the plotting routine uses wide floating-point bins, the plot can blur together distinct mass points and make a discrete law look falsely continuous. The right visual target is a descending bar chart over the nonnegative integers, not a smooth bell-shaped curve.
+
+### Sampling Audit for the Homework Plots
+
+- check that the Beta samples all lie in $[0,1]$
+- check that the Geometric samples are nonnegative integers
+- check that the Beta histogram has one interior peak near $0.6$ to $0.7$
+- check that the Geometric histogram is tallest at $0$ and decays to the right
+- check that the plotted axes are labeled so the reader can see which distribution and which support is being shown
+
 ## 5. Likelihood and Log-Likelihood Sweeps
 
 Likelihood surfaces are easiest to understand numerically by evaluating them on a parameter grid. For Bernoulli data
