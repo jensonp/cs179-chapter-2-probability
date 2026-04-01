@@ -604,7 +604,7 @@ def render_table_block(
     return page, page_num, y
 
 
-def compute_table_widths(rows: list[list[str]], width: float, fontsize: float) -> list[float]:
+def compute_table_widths(rows: list[list[str]], width: float, fontsize: float, *, fill_available: bool = False) -> list[float]:
     col_count = max(len(row) for row in rows)
     col_weights: list[float] = []
     for col_idx in range(col_count):
@@ -618,7 +618,7 @@ def compute_table_widths(rows: list[list[str]], width: float, fontsize: float) -
     scale = min(1.0, width / total_weight)
     col_widths = [item * scale for item in col_weights]
     extra = width - sum(col_widths)
-    if extra > 0:
+    if fill_available and extra > 0:
         col_widths[-1] += extra
     return col_widths
 
@@ -634,7 +634,9 @@ def render_table_at(
     row_height: float,
 ) -> float:
     col_count = max(len(row) for row in rows)
-    col_widths = compute_table_widths(rows, width, fontsize)
+    col_widths = compute_table_widths(rows, width, fontsize, fill_available=False)
+    actual_width = sum(col_widths)
+    table_x0 = x0 + max(0.0, (width - actual_width) / 2)
 
     for row_idx, row in enumerate(rows):
         is_header = row_idx == 0
@@ -651,7 +653,7 @@ def render_table_at(
         line_step = fontsize * 1.18
         content_height = max_lines * line_step
         effective_row_height = max(row_height, content_height + 2 * TABLE_CELL_PAD_Y + 2)
-        x = x0
+        x = table_x0
         for col_idx in range(col_count):
             cell_rect = fitz.Rect(x, y, x + col_widths[col_idx], y + effective_row_height)
             if is_header:
@@ -680,7 +682,7 @@ def render_table_at(
 
 def estimate_table_height(rows: list[list[str]], width: float, fontsize: float, min_row_height: float) -> float:
     col_count = max(len(row) for row in rows)
-    col_widths = compute_table_widths(rows, width, fontsize)
+    col_widths = compute_table_widths(rows, width, fontsize, fill_available=False)
     total = 0.0
     for row_idx, row in enumerate(rows):
         fontname = "bodybold" if row_idx == 0 else "body"
@@ -734,20 +736,25 @@ def render_table_group_block(
     for idx, rows in enumerate(tables):
         title = titles[idx] if idx < len(titles) else ""
         current_y = y
+        col_widths = compute_table_widths(rows, section_width, body_fontsize, fill_available=False)
+        actual_width = sum(col_widths)
+        table_x = x + max(0.0, (section_width - actual_width) / 2)
         if title:
             title_lines = wrap_text(title, title_font, title_size, section_width)
+            title_width = max((measure_text(line, title_font, title_size) for line in title_lines), default=0.0)
+            title_x = x + max(0.0, (section_width - title_width) / 2)
             current_y = draw_wrapped_lines(
                 page,
                 current_y,
                 title_lines,
-                x,
+                title_x,
                 title_font,
                 title_size,
                 (0.07, 0.14, 0.24),
                 lineheight=title_lineheight,
             )
             current_y += title_gap
-        render_table_at(page, x, current_y, section_width, rows, fontsize=body_fontsize, row_height=row_height)
+        render_table_at(page, table_x, current_y, actual_width, rows, fontsize=body_fontsize, row_height=row_height)
         x += section_width + TABLE_GROUP_GAP
 
     y += needed
