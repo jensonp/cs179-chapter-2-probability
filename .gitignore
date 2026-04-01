@@ -3,15 +3,20 @@
 
 !.gitignore
 !README.md
-!02_probability_main.pdf
-!02_probability_formal_supplement.pdf
-!02_probability_exercises.pdf
-!02_probability_computational_appendix.pdf
+!02_probability_main/
+!02_probability_main/**
+!02_probability_formal_supplement/
+!02_probability_formal_supplement/**
+!02_probability_exercises/
+!02_probability_exercises/**
+!02_probability_computational_appendix/
+!02_probability_computational_appendix/**
 
 !notes/
 notes/*
 !notes/02_probability_reconstructed/
 !notes/02_probability_reconstructed/**
+notes/02_probability_reconstructed/dist/
 
 !scripts/
 scripts/*

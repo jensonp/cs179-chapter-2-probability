@@ -969,7 +969,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build the reconstructed Chapter 2 notes artifact.")
     parser.add_argument(
         "--markdown",
-        default="notes/02_probability_reconstructed/02_probability.reconstructed.md",
+        default="02_probability_main/README.md",
         help="Path to the reconstructed markdown source",
     )
     parser.add_argument(
