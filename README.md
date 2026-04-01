@@ -4,7 +4,18 @@ This repository publishes a layered reconstruction of Chapter 2, "Probability an
 
 The tracked content is intentionally limited to the Chapter 2 reconstruction bundle. The rest of the original `cs179` workspace remains local and is excluded from version control by default.
 
-## Layout
+## Read These PDFs
+
+If you only want the notes, open these root-level PDFs:
+
+- `02_probability_main.pdf`: main Chapter 2 note
+- `02_probability_formal_supplement.pdf`: formal definitions and derivations
+- `02_probability_exercises.pdf`: exercises and checks
+- `02_probability_computational_appendix.pdf`: sampling, plotting, and implementation notes
+
+If you only want one file, start with `02_probability_main.pdf`.
+
+## Source Layout
 
 - `notes/02_probability_reconstructed/02_probability.reconstructed.md`: main reconstructed chapter source
 - `notes/02_probability_reconstructed/02_probability.formal_supplement.md`: formal definitions and proof spine
@@ -22,9 +33,12 @@ The tracked content is intentionally limited to the Chapter 2 reconstruction bun
 
 Run from the repository root.
 
+- Full bundle with root-level PDFs: `python3 scripts/notes/build_02_probability_bundle.py`
 - Main note: `python3 scripts/notes/build_02_probability_reconstructed.py`
 - Formal supplement: `python3 scripts/notes/build_02_probability_reconstructed.py --markdown notes/02_probability_reconstructed/02_probability.formal_supplement.md --output-pdf notes/02_probability_reconstructed/dist/02_probability.formal_supplement.pdf --subtitle "Formal Supplement"`
 - Exercises: `python3 scripts/notes/build_02_probability_reconstructed.py --markdown notes/02_probability_reconstructed/02_probability.exercises.md --output-pdf notes/02_probability_reconstructed/dist/02_probability.exercises.pdf --subtitle "Exercises"`
 - Computational appendix: `python3 scripts/notes/build_02_probability_reconstructed.py --markdown notes/02_probability_reconstructed/02_probability.computational_appendix.md --output-pdf notes/02_probability_reconstructed/dist/02_probability.computational_appendix.pdf --subtitle "Computational Appendix"`
 
-The build script uses PyMuPDF to clip figures from the source PDF, regenerate native assets for the sequential-updating figure, and render any of the chapter markdown companions into PDF.
+The bundle build script regenerates the chapter PDFs in `notes/02_probability_reconstructed/dist/` and then copies the reader-facing PDFs to the repository root.
+
+The renderer uses PyMuPDF to clip figures from the source PDF, regenerate native assets for the sequential-updating figure, and render any of the chapter markdown companions into PDF.

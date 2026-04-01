@@ -3,6 +3,10 @@
 
 !.gitignore
 !README.md
+!02_probability_main.pdf
+!02_probability_formal_supplement.pdf
+!02_probability_exercises.pdf
+!02_probability_computational_appendix.pdf
 
 !notes/
 notes/*
@@ -14,6 +18,7 @@ scripts/*
 !scripts/notes/
 scripts/notes/*
 !scripts/notes/build_02_probability_reconstructed.py
+!scripts/notes/build_02_probability_bundle.py
 
 .DS_Store
 **/.DS_Store
