@@ -25,6 +25,7 @@ TABLE_GROUP_GAP = 16
 
 TITLE = "Probability and Inference"
 SUBTITLE = "Reconstructed Chapter"
+SUBJECT = ""
 FONT_ARCHIVE_DIR = Path("/System/Library/Fonts/Supplemental")
 FONT_FILES = {
     "body": FONT_ARCHIVE_DIR / "Times New Roman.ttf",
@@ -93,12 +94,22 @@ def latexish_to_text(text: str) -> str:
         text = SQRT_RE.sub(r"sqrt(\1)", text)
 
     replacements = {
+        r"\mathbb{R}": "ℝ",
+        r"\begin{cases}": "",
+        r"\end{cases}": "",
+        r"\begincases": "",
+        r"\endcases": "",
+        r"\\": " ; ",
         r"\to": "→",
         r"\leftarrow": "←",
         r"\Rightarrow": "⇒",
         r"\Longrightarrow": "⇒",
         r"\implies": "⇒",
         r"\iff": "⇔",
+        r"\cup": "∪",
+        r"\cap": "∩",
+        r"\setminus": "∖",
+        r"\oplus": "⊕",
         r"\approx": "≈",
         r"\neq": "≠",
         r"\geq": "≥",
@@ -128,6 +139,7 @@ def latexish_to_text(text: str) -> str:
         r"\lambda": "λ",
         r"\mu": "μ",
         r"\nu": "ν",
+        r"\Omega": "Ω",
         r"\pi": "π",
         r"\rho": "ρ",
         r"\sigma": "σ",
@@ -178,6 +190,7 @@ def latexish_to_text(text: str) -> str:
     for src, dst in replacements.items():
         text = text.replace(src, dst)
 
+    text = text.replace("&", " ")
     text = text.replace("{", "").replace("}", "")
     text = text.replace("^T", "ᵀ")
     text = text.replace("^2", "²")
@@ -787,7 +800,7 @@ def render_blocks(blocks: list[Block], output_pdf: Path) -> None:
         {
             "title": f"{TITLE} ({SUBTITLE})",
             "author": "OpenAI Codex",
-            "subject": "Reconstructed Chapter 2 from notes/02_probability_reconstructed/source/02_probability.pdf",
+            "subject": SUBJECT or f"{TITLE} ({SUBTITLE})",
         }
     )
     doc.save(
@@ -824,7 +837,10 @@ def extract_figures(source_pdf: Path, assets_dir: Path) -> None:
         page = doc[spec.page_index]
         clip = fitz.Rect(*spec.clip)
         pix = page.get_pixmap(matrix=fitz.Matrix(spec.scale, spec.scale), clip=clip, alpha=False)
-        pix.save(assets_dir / spec.filename)
+        target = assets_dir / spec.filename
+        if target.exists():
+            target.unlink()
+        pix.save(target)
     doc.close()
 
 
@@ -963,16 +979,35 @@ def parse_args() -> argparse.Namespace:
         default="notes/02_probability_reconstructed/dist/02_probability.reconstructed.pdf",
         help="Path to the rendered PDF output",
     )
+    parser.add_argument(
+        "--title",
+        default=TITLE,
+        help="Title used in the page header and PDF metadata",
+    )
+    parser.add_argument(
+        "--subtitle",
+        default=SUBTITLE,
+        help="Subtitle used in the page header and PDF metadata",
+    )
+    parser.add_argument(
+        "--subject",
+        default="",
+        help="Optional PDF metadata subject",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
+    global TITLE, SUBTITLE, SUBJECT
     args = parse_args()
+    TITLE = args.title
+    SUBTITLE = args.subtitle
     root = Path(__file__).resolve().parents[2]
     markdown_path = (root / args.markdown).resolve()
     source_pdf = (root / args.source_pdf).resolve()
     assets_dir = (root / args.assets_dir).resolve()
     output_pdf = (root / args.output_pdf).resolve()
+    SUBJECT = args.subject or f"Rendered from {markdown_path.name} using {source_pdf.name}"
     build(markdown_path, source_pdf, assets_dir, output_pdf)
 
 

@@ -8,6 +8,34 @@ This is a full note-style reconstruction of Chapter 2. It keeps the chapter's se
 
 Probability is the language we use when a system is uncertain or too complex to model exactly. In AI, the uncertainty often comes less from true randomness than from missing information and limited modeling power. A useful probabilistic model does two things: it describes our assumptions about the world, and it gives rules for combining evidence and updating those assumptions when observations arrive.
 
+This main note is paired with a formal supplement and an exercise set in the same chapter directory. The main chapter keeps the narrative readable, but it now makes the foundational objects explicit instead of leaving them implicit.
+
+### Formal Foundations
+
+At a more formal level, a probabilistic model starts with a probability space
+
+$$
+(\Omega,\mathcal{F},P).
+$$
+
+Here $\Omega$ is the sample space of possible outcomes, $\mathcal{F}$ is the collection of events on which probabilities are defined, and $P$ is the probability measure. The measure assigns a number to each event and satisfies nonnegativity, normalization, and countable additivity.
+
+In elementary finite examples, one usually suppresses $\mathcal{F}$ because every subset of $\Omega$ can be treated as an event. In that case the abstract measure language reduces to ordinary bookkeeping over subsets. But the more formal notation matters because later concepts such as densities, cumulative distribution functions, and random variables are induced from this underlying structure rather than being primitive objects in every setting.
+
+A random variable is a measurable function
+
+$$
+X:\Omega \to \mathbb{R}.
+$$
+
+This explains an important notation point. A statement such as $X=x$ is not a mysterious new kind of object; it is shorthand for the event
+
+$$
+\{\omega \in \Omega : X(\omega)=x\}.
+$$
+
+Likewise, the event $X \le t$ means the subset of worlds whose assigned values are at most $t$. This distinction matters because probabilities are fundamentally attached to events, while PMFs, PDFs, and CDFs are devices derived from the way a random variable pushes that event-level probability structure onto its value space.
+
 ### Axioms of Probability
 
 Let $S$ denote the event space, the set of all possible outcomes or possible worlds. A random event is any subset $A \subseteq S$. A probability measure assigns values to events and must satisfy:
@@ -245,6 +273,8 @@ $$
 
 The key beginner intuition is "restrict first, renormalize second."
 
+It is also important to separate conditioning from intervention. The quantity $p(D \mid T=1)$ describes what the distribution of $D$ looks like inside the worlds where toothache already occurs. It does not say what would happen if we physically forced a toothache event to happen by intervention. Probabilistic conditioning is an informational operation, not automatically a causal one.
+
 ### Example 2-5: Bayes Rule
 
 Bayes rule converts a forward model into a reverse one:
@@ -258,6 +288,18 @@ Read it as:
 $$
 \text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}.
 $$
+
+For two competing hypotheses $H_1$ and $H_0$, Bayes' rule also has an odds form:
+
+$$
+\frac{p(H_1 \mid E)}{p(H_0 \mid E)}
+=
+\frac{p(E \mid H_1)}{p(E \mid H_0)}
+\cdot
+\frac{p(H_1)}{p(H_0)}.
+$$
+
+This factorization is often more informative than the scalar formula because it separates three roles cleanly. The prior odds tell us how plausible the hypotheses were before seeing evidence. The likelihood ratio tells us how strongly the evidence favors one hypothesis over the other. The posterior odds are the updated result after those two effects are combined.
 
 For the dentist example, suppose:
 
@@ -293,6 +335,68 @@ p(C=1,T=1)=p(T=1 \mid C=1)p(C=1).
 $$
 
 Substituting this into the conditional formula gives Bayes' rule. So Bayes' rule is not an extra axiom; it is the conditional-probability definition plus the product rule written in a convenient direction.
+
+### Law of Total Probability
+
+If $B_1,\dots,B_k$ form a partition of the sample space, then any event $A$ satisfies
+
+$$
+p(A)=\sum_{i=1}^k p(A \mid B_i)p(B_i).
+$$
+
+The law is simple but foundational. It says that if the worlds are first split into mutually exclusive cases, then the total probability of $A$ is the weighted average of its conditional probabilities inside those cases. In the dentist example, the denominator in Bayes' rule is exactly
+
+$$
+p(T=1)=p(T=1 \mid C=1)p(C=1)+p(T=1 \mid C=0)p(C=0).
+$$
+
+Plugging in the numbers gives
+
+$$
+p(T=1)=0.6 \cdot 0.2 + 0.1 \cdot 0.8 = 0.20.
+$$
+
+So the evidence term is not mysterious. It is the ordinary total probability of the observation, computed by averaging over the hidden hypothesis cases.
+
+### Worked Example: Base Rates and Screening
+
+Suppose a rare disease has prevalence
+
+$$
+p(D=1)=0.01.
+$$
+
+A screening test has sensitivity
+
+$$
+p(T=+ \mid D=1)=0.95
+$$
+
+and false-positive rate
+
+$$
+p(T=+ \mid D=0)=0.10.
+$$
+
+If a patient tests positive, the posterior disease probability is
+
+$$
+p(D=1 \mid T=+)=\frac{p(T=+ \mid D=1)p(D=1)}{p(T=+)}.
+$$
+
+The denominator comes from the law of total probability:
+
+$$
+p(T=+)=0.95 \cdot 0.01 + 0.10 \cdot 0.99 = 0.1085.
+$$
+
+Therefore
+
+$$
+p(D=1 \mid T=+)=\frac{0.95 \cdot 0.01}{0.1085}\approx 0.0876.
+$$
+
+So even after a positive test, the posterior probability is only about $8.8\%$. The test is informative, because the probability rose from $1\%$ to almost $9\%$, but the disease remains unlikely because the base rate was extremely small to begin with. This is exactly the setting in which base-rate neglect causes intuitive mistakes.
 
 ### Example 2-6: Table-Based Computation
 
@@ -388,6 +492,118 @@ $$
 
 So expectation is not required to be a value the variable actually takes. A fair die never lands on $3.5$, but $3.5$ is still the mean location of the distribution.
 
+### Linearity of Expectation
+
+Expectation is linear:
+
+$$
+E[aX+bY+c]=aE[X]+bE[Y]+c.
+$$
+
+No independence assumption is required. That point is easy to miss because many later formulas do require independence, but linearity of expectation does not. The rule holds even when $X$ and $Y$ are strongly dependent.
+
+For a concrete example, suppose three coin flips have indicator variables $H_1,H_2,H_3$, where $H_i=1$ if flip $i$ is heads and $0$ otherwise. Let
+
+$$
+N=H_1+H_2+H_3
+$$
+
+denote the total number of heads. Then
+
+$$
+E[N]=E[H_1]+E[H_2]+E[H_3].
+$$
+
+If each flip has head probability $\rho$, then $E[H_i]=\rho$ for every $i$, so
+
+$$
+E[N]=3\rho.
+$$
+
+This conclusion does not require us to enumerate all eight outcomes explicitly. Linearity lets us decompose a complicated count into simple indicator expectations and add them back together.
+
+### Variance, Covariance, and Correlation
+
+Expectation gives the center of a distribution, but it does not describe spread. The basic spread measure is variance:
+
+$$
+\mathrm{Var}(X)=E[(X-E[X])^2].
+$$
+
+Expanding the square gives the useful identity
+
+$$
+\mathrm{Var}(X)=E[X^2]-E[X]^2.
+$$
+
+For two variables, covariance is
+
+$$
+\mathrm{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])].
+$$
+
+The normalized version is correlation:
+
+$$
+\mathrm{Corr}(X,Y)=\frac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}.
+$$
+
+Variance reacts predictably to affine transformations:
+
+$$
+\mathrm{Var}(aX+b)=a^2 \mathrm{Var}(X),
+\qquad
+\mathrm{Cov}(aX+b,cY+d)=ac\,\mathrm{Cov}(X,Y).
+$$
+
+These formulas show what each quantity measures. Adding a constant shifts the location but does not change spread. Multiplying by $a$ rescales the spread by $a^2$. Covariance records whether large values of one variable tend to occur with large or small values of the other.
+
+A diagnostic example shows why mean and variance are genuinely different summaries. Let $X$ be constant at $3$, and let $Y$ equal $0$ or $6$ with probabilities $1/2$ and $1/2$. Then
+
+$$
+E[X]=3,
+\qquad
+E[Y]=0 \cdot \frac{1}{2}+6 \cdot \frac{1}{2}=3,
+$$
+
+so both variables have the same mean. But
+
+$$
+\mathrm{Var}(X)=0
+$$
+
+because $X$ never moves, while
+
+$$
+\mathrm{Var}(Y)=E[Y^2]-E[Y]^2
+=\left(0^2 \cdot \frac{1}{2}+6^2 \cdot \frac{1}{2}\right)-3^2
+=18-9=9.
+$$
+
+So two distributions can agree perfectly on their center and still differ sharply in uncertainty.
+
+Covariance also does not capture every form of dependence. Let $X$ take values $-1$, $0$, and $1$ with equal probability, and define
+
+$$
+Y=X^2.
+$$
+
+Then $Y$ is completely determined by $X$, so the variables are dependent. But
+
+$$
+E[X]=0,
+\qquad
+E[XY]=E[X^3]=0,
+$$
+
+which gives
+
+$$
+\mathrm{Cov}(X,Y)=E[XY]-E[X]E[Y]=0.
+$$
+
+So zero covariance does not imply independence. It only rules out linear dependence in the centered variables.
+
 ### Independence
 
 Two random variables $X$ and $Y$ are independent if
@@ -449,6 +665,42 @@ p(X=1 \mid Y=4)=\frac{0.03}{0.1}=0.3=p(X=1).
 $$
 
 The observation of $Y$ leaves the distribution of $X$ unchanged, which is the operational meaning of independence.
+
+### Pairwise Versus Mutual Independence
+
+Independence among more than two variables needs careful wording. Variables $X_1,\dots,X_n$ are mutually independent if every subcollection factorizes:
+
+$$
+p(X_{i_1},\dots,X_{i_k})=\prod_{j=1}^k p(X_{i_j})
+$$
+
+for every subset of indices. Pairwise independence is weaker. It only requires each pair to be independent, not every triple or larger group.
+
+A standard counterexample makes the distinction explicit. Let $U$ and $V$ be independent fair bits, and define
+
+$$
+W = U \oplus V,
+$$
+
+their exclusive-or. The four possible triples are
+
+$$
+(U,V,W) \in \{(0,0,0),(0,1,1),(1,0,1),(1,1,0)\},
+$$
+
+each with probability $1/4$. Every pair is independent: for instance, $p(U=0,V=0)=1/4=(1/2)(1/2)$, and the same factorization holds for $(U,W)$ and $(V,W)$. But the three variables are not mutually independent, because
+
+$$
+p(U=0,V=0,W=0)=\frac{1}{4}
+$$
+
+while the product of marginals would be
+
+$$
+p(U=0)p(V=0)p(W=0)=\frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}=\frac{1}{8}.
+$$
+
+The failure occurs because once two of the variables are known, the third is completely determined. Pairwise checks are therefore not enough to certify full mutual independence.
 
 ### Conditional Independence
 
@@ -516,6 +768,36 @@ Pr[0.3 \le X \le 0.9] = \int_{0.3}^{0.9} \frac{1}{2}\,dx = \frac{1}{2}(0.9-0.3)=
 $$
 
 The point $x=0.4$ itself still has probability zero. What matters is the width of the interval, not the existence of an individual point.
+
+### CDFs and Types of Distributions
+
+The cumulative distribution function is the most universal object for a real-valued random variable:
+
+$$
+F_X(x)=Pr[X \le x].
+$$
+
+Every real-valued random variable has a CDF, whether it is discrete, continuous, or mixed. A PMF exists when probability is concentrated on isolated states. A PDF exists only when the distribution is absolutely continuous with respect to ordinary length or volume. So PMFs and PDFs are special representations, while the CDF always exists.
+
+This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution can contain both an atom and a continuous part. For example, suppose
+
+$$
+Pr[X=0]=0.7,
+$$
+
+and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is
+
+$$
+F_X(x)=
+\begin{cases}
+0 & x<0 \\
+0.7 & x=0 \\
+0.7+0.3x & 0<x<1 \\
+1 & x \ge 1.
+\end{cases}
+$$
+
+This variable has a jump of size $0.7$ at zero and a continuous linear rise on $(0,1)$. It cannot be described by an ordinary density alone, because the point mass at zero would be lost. The CDF therefore gives the cleanest unified description.
 
 ### Example 2-9: Uniform Distribution
 
@@ -764,6 +1046,18 @@ p(D \mid 0.2)=0.032,\qquad p(D \mid 0.5)=0.125,\qquad p(D \mid 0.8)=0.128.
 $$
 
 So among those candidates, $\rho=0.8$ explains the observed data slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly.
+
+### Probability Versus Likelihood
+
+The same algebraic expression can play two different roles depending on what is held fixed. When $\theta$ is fixed and $x$ varies, the quantity $p(x \mid \theta)$ is a probability model over possible observations. When the observation $x$ has already been fixed and $\theta$ varies, the same expression is treated as a likelihood function of the parameter.
+
+For Bernoulli data, if we observe a single success $x=1$, then
+
+$$
+p(x=1 \mid \rho)=\rho.
+$$
+
+Viewed as a function of the data, this is a perfectly ordinary probability rule: for fixed $\rho$, the probabilities of $x=0$ and $x=1$ add to one. But viewed as a function of $\rho$ after observing $x=1$, the same expression becomes the likelihood $L(\rho)=\rho$. That likelihood does not integrate to one over $\rho \in [0,1]$, nor is it supposed to. Its job is only to rank parameter values by how well they explain the observation.
 
 ### Example 2-12: Bernoulli Likelihood
 
@@ -1044,6 +1338,43 @@ $$
 $$
 
 The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros.
+
+### Worked Example: Dirichlet-Categorical Pseudo-Counts
+
+The categorical analogue of Beta-Bernoulli conjugacy is Dirichlet-Categorical conjugacy. Let a three-class probability vector satisfy
+
+$$
+\theta=(\theta_1,\theta_2,\theta_3) \sim \mathrm{Dir}(2,2,2).
+$$
+
+Now observe four class labels with counts
+
+$$
+m=(3,1,0).
+$$
+
+The posterior is obtained by adding counts coordinatewise:
+
+$$
+\theta \mid D \sim \mathrm{Dir}(5,3,2).
+$$
+
+This is the multi-class pseudo-count interpretation in explicit form. The prior behaves like two virtual observations in each class. The data then add three more observations to class $1$, one to class $2$, and none to class $3$.
+
+The posterior mean is
+
+$$
+E[\theta \mid D]
+=
+\left(
+\frac{5}{10},
+\frac{3}{10},
+\frac{2}{10}
+\right)
+=(0.5,0.3,0.2).
+$$
+
+The posterior therefore still leaves positive mass on the unobserved third class, because the prior did not allow its probability to collapse to zero after only four observations. That is exactly the smoothing effect one usually wants from a Bayesian categorical model.
 
 ### Posterior Estimators
 
