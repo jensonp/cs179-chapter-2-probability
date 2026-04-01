@@ -30,6 +30,8 @@ $$
 
 The last rule is inclusion-exclusion: add the worlds where $A$ happens and the worlds where $B$ happens, then subtract the overlap because it was counted twice.
 
+For a beginner, the safest way to use these axioms is to think in terms of bookkeeping over possible worlds. First list the worlds that belong to the event. Then check whether those worlds overlap with the worlds of another event. If they do, inclusion-exclusion is the correction term that prevents double counting. For a die roll, if $A=\{1,3,5\}$ and $B=\{4,5,6\}$, the union is not six outcomes but five, because the world $5$ sits in both sets.
+
 ### Example 2-1: Random Events
 
 Suppose we roll a standard six-sided die. The event space is
@@ -50,6 +52,8 @@ $$
 
 Then $Pr[A] = 3/6$, $Pr[B] = 3/6$, and $Pr[A \cap B] = 1/6$, so $Pr[A \cup B] = 5/6$.
 
+The step-by-step computation is worth stating explicitly. Event $A$ contains three elementary outcomes, so $Pr[A]=3/6$. Event $B$ also contains three elementary outcomes, so $Pr[B]=3/6$. Their intersection is the single outcome $\{5\}$, so $Pr[A \cap B]=1/6$. If we simply added $3/6+3/6$, we would count outcome $5$ twice, so we subtract $1/6$ and obtain $5/6$.
+
 ### Random Variables
 
 A random variable partitions the event space into disjoint and exhaustive cases and assigns each case a symbolic value. If
@@ -65,6 +69,26 @@ $$
 $$
 
 The possible values are called the states of the variable, and the set of all possible values is its domain. For discrete variables, the probability mass function is often written as $p(X=x)$ or simply $p(x)$ when the variable is clear from context.
+
+A full beginner-to-expert way to read this is the following. At the beginner level, a random variable is a label attached to each outcome. At the intermediate level, it is a partition of the event space into mutually exclusive cases. At the expert level, it is a measurable map from worlds in $S$ to values in a codomain, and the induced distribution on those values is obtained by pushing probability mass through that map.
+
+A concrete example helps. Let the world be a die roll and define
+
+$$
+X =
+\begin{cases}
+0 & \text{if the roll is even} \\
+1 & \text{if the roll is odd.}
+\end{cases}
+$$
+
+Then the six raw outcomes collapse into only two states. Since $\{2,4,6\}$ map to $0$ and $\{1,3,5\}$ map to $1$,
+
+$$
+p(X=0)=3/6, \qquad p(X=1)=3/6.
+$$
+
+The random variable therefore compresses a detailed world description into the part of the world we care about.
 
 ### Example 2-2: Bernoulli Distribution
 
@@ -100,6 +124,20 @@ $$
 p(X) = \rho \mathbf{1}[X=1] + (1-\rho)\mathbf{1}[X=0].
 $$
 
+To see this mechanically, plug in the only two possible values. If $X=1$, then
+
+$$
+\rho^X(1-\rho)^{1-X} = \rho^1(1-\rho)^0 = \rho.
+$$
+
+If $X=0$, then
+
+$$
+\rho^X(1-\rho)^{1-X} = \rho^0(1-\rho)^1 = 1-\rho.
+$$
+
+So the compact formula is not magic notation; it is just a switch that selects the correct probability for the realized binary outcome.
+
 ### Example 2-3: Discrete Distribution
 
 If $X \in \{1,\dots,d\}$, then a discrete distribution is just a probability table:
@@ -115,6 +153,26 @@ p(X) = \prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}.
 $$
 
 This simply selects the probability attached to the realized state and turns the others off.
+
+A concrete three-state example makes the structure explicit. Suppose weather tomorrow is modeled as
+
+$$
+X \in \{\text{sun}, \text{cloud}, \text{rain}\}
+$$
+
+with
+
+$$
+\rho_{\text{sun}}=0.5,\qquad \rho_{\text{cloud}}=0.3,\qquad \rho_{\text{rain}}=0.2.
+$$
+
+If the realized state is rain, then the product form becomes
+
+$$
+\rho_{\text{sun}}^0 \rho_{\text{cloud}}^0 \rho_{\text{rain}}^1 = 0.2.
+$$
+
+The exponents are indicators, so all irrelevant states are raised to the zero power and disappear.
 
 ### Example 2-4: Dentist Example
 
@@ -139,6 +197,8 @@ The joint distribution over $(T,D,C)$ is:
 
 The eight rows are mutually exclusive and exhaustive, so their probabilities sum to one.
 
+It is useful to say exactly how to read one row. The row $111$ means toothache, probe catch, and cavity all occur together. Its probability $0.108$ is not a conditional number and not a marginal number; it is the probability of that whole conjunction. Every later marginal or conditional calculation in this section will be built by summing or renormalizing rows from this joint table.
+
 ### Marginal Probabilities
 
 To get the probability of one variable, add up all joint entries consistent with that value.
@@ -153,6 +213,14 @@ $$
 
 Marginalization is just "add all ways the event can happen."
 
+A second marginal shows the same procedure from another angle. To compute the chance of a cavity, sum every row with $C=1$:
+
+$$
+p(C=1)=0.008+0.072+0.012+0.108=0.20.
+$$
+
+This explains why a marginal is called a marginal: it is what remains after the other coordinates have been summed away.
+
 ### Conditional Probability
 
 Conditioning means restricting attention to worlds where the condition holds:
@@ -162,6 +230,20 @@ p(D=d \mid T=t) = \frac{p(D=d,T=t)}{p(T=t)}.
 $$
 
 The numerator is the probability that both things happen; the denominator is the total probability of the condition. The result is a normalized probability distribution over $D$ given $T=t$.
+
+For the dentist table, conditioning on $T=1$ means we throw away every row with $T=0$ and keep only the four rows with toothache. Inside that restricted world, the total probability mass is
+
+$$
+p(T=1)=0.064+0.012+0.016+0.108=0.20.
+$$
+
+Now the conditional probability of a probe catch becomes
+
+$$
+p(D=1 \mid T=1)=\frac{0.016+0.108}{0.20}=\frac{0.124}{0.20}=0.62.
+$$
+
+The key beginner intuition is "restrict first, renormalize second."
 
 ### Example 2-5: Bayes Rule
 
@@ -197,6 +279,20 @@ p(C=1 \mid T=1)
 $$
 
 Observing a toothache raises the cavity probability from $0.20$ to $0.60$.
+
+The derivation can also be unpacked from the definition of conditional probability itself. Start with
+
+$$
+p(C=1 \mid T=1)=\frac{p(C=1,T=1)}{p(T=1)}.
+$$
+
+Then factor the numerator using the product rule:
+
+$$
+p(C=1,T=1)=p(T=1 \mid C=1)p(C=1).
+$$
+
+Substituting this into the conditional formula gives Bayes' rule. So Bayes' rule is not an extra axiom; it is the conditional-probability definition plus the product rule written in a convenient direction.
 
 ### Example 2-6: Table-Based Computation
 
@@ -260,6 +356,8 @@ The same Bayes update can be done by manipulating tables directly. Start with th
 
 This is the same computation as Bayes rule, but expressed as table arithmetic.
 
+The three tables correspond exactly to three conceptual operations. The first table performs restriction by keeping only the rows consistent with the evidence $T=1$. The second table performs marginalization by summing out the hidden variable $D$. The third table performs normalization so the remaining numbers add to one and therefore form a proper posterior distribution over $C$.
+
 ### Expectation
 
 The expectation of a discrete variable is a weighted average:
@@ -269,6 +367,26 @@ E[X] = \sum_x x \, p(x).
 $$
 
 For a Bernoulli variable, $E[X] = \rho$, which is why the Bernoulli parameter is also the mean.
+
+A full worked example shows why expectation is called a weighted average. Suppose
+
+$$
+Pr[X=0]=0.7, \qquad Pr[X=1]=0.3.
+$$
+
+Then
+
+$$
+E[X]=0 \cdot 0.7 + 1 \cdot 0.3 = 0.3.
+$$
+
+For a die roll with values $1$ through $6$,
+
+$$
+E[X] = \sum_{x=1}^6 x \cdot \frac{1}{6} = \frac{1+2+3+4+5+6}{6}=3.5.
+$$
+
+So expectation is not required to be a value the variable actually takes. A fair die never lands on $3.5$, but $3.5$ is still the mean location of the distribution.
 
 ### Independence
 
@@ -285,6 +403,8 @@ p(X \mid Y) = p(X).
 $$
 
 Independence also simplifies the joint distribution. If $X$ and $Y$ are $d$-ary variables, the full joint has $d^2 - 1$ degrees of freedom, while independence reduces that to $2d - 2$.
+
+That parameter-count reduction is the structural reward for independence. Without independence, every pair $(x,y)$ needs its own joint probability, subject only to one normalization constraint. With independence, the entire table is reconstructed from two marginal vectors. This is a dramatic simplification, but it is also a strong modeling claim, so it should only be used when it is substantively justified.
 
 ### Example 2-7: Independence
 
@@ -310,6 +430,26 @@ Representative joint entries:
 | 0 | 2 | 0.21 |
 | 1 | 4 | 0.03 |
 
+To verify independence explicitly, check one conditional. Since
+
+$$
+p(X=1,Y=4)=0.03
+$$
+
+and
+
+$$
+p(Y=4)=0.1,
+$$
+
+we have
+
+$$
+p(X=1 \mid Y=4)=\frac{0.03}{0.1}=0.3=p(X=1).
+$$
+
+The observation of $Y$ leaves the distribution of $X$ unchanged, which is the operational meaning of independence.
+
 ### Conditional Independence
 
 It is rare for variables to be completely independent, but they are often conditionally independent given a mediating variable $Z$:
@@ -319,6 +459,8 @@ p(X,Y \mid Z) = p(X \mid Z)p(Y \mid Z).
 $$
 
 Once $Z$ is known, $X$ and $Y$ stop giving extra information about each other.
+
+A good way to read this is as a statement about information flow. Before conditioning, $X$ and $Y$ may be correlated because they both respond to the hidden cause $Z$. After conditioning on $Z$, that common cause has been fixed, so the leftover association disappears. Conditional independence is therefore weaker than independence in general but often much more realistic in structured probabilistic models.
 
 ### Example 2-8: Conditional Independence, Dentist
 
@@ -337,6 +479,20 @@ In the dentist model, the probe catches and toothache are not independent in gen
 
 The key point is that $p(D \mid C,T)$ does not actually depend on $T$.
 
+We can check that explicitly from the table. For cavity-free teeth,
+
+$$
+p(D=1 \mid C=0,T=0)=0.2, \qquad p(D=1 \mid C=0,T=1)=0.2.
+$$
+
+For cavity teeth,
+
+$$
+p(D=1 \mid C=1,T=0)=0.9, \qquad p(D=1 \mid C=1,T=1)=0.9.
+$$
+
+So once the cavity variable is fixed, knowing the toothache value adds no further information about the probe outcome. That is precisely what conditional independence means in this example.
+
 ## 2.2 Continuous Random Variables
 
 Sometimes we model systems with real-valued random variables $X \in \mathbb{R}$. In that setting we define a probability density function $p(x)$ with $p(x) \ge 0$ for all $x$ and
@@ -352,6 +508,14 @@ Pr[X \in A] = \int_A p(x)\,dx.
 $$
 
 This is the first major structural difference from the discrete case. For a continuous variable, the number $p(x)$ is not the probability of the event $X=x$; in fact $Pr[X=x]=0$ for every individual point. A density only becomes a probability after integrating it over an interval or region. That is why a density is allowed to exceed one locally, provided the total area under the curve is still one.
+
+A concrete interval computation makes this precise. If $X$ is uniform on $[0,2]$, then $p(x)=1/2$ on that interval. The probability that $X$ falls between $0.3$ and $0.9$ is
+
+$$
+Pr[0.3 \le X \le 0.9] = \int_{0.3}^{0.9} \frac{1}{2}\,dx = \frac{1}{2}(0.9-0.3)=0.3.
+$$
+
+The point $x=0.4$ itself still has probability zero. What matters is the width of the interval, not the existence of an individual point.
 
 ### Example 2-9: Uniform Distribution
 
@@ -372,6 +536,20 @@ $$
 $$
 
 Unlike discrete distributions, the density value may be larger than one, as long as its integral over the support is one. The important normalization object is area, not height.
+
+For example, if $X$ is uniform on the very short interval $[0,0.2]$, then
+
+$$
+p(x)=5
+$$
+
+on that interval. The density value exceeds one, but the total probability is still
+
+$$
+\int_0^{0.2} 5\,dx = 1.
+$$
+
+So there is no contradiction between a large density and a valid probability model.
 
 ### Gaussian Distributions
 
@@ -397,6 +575,22 @@ The mean vector $\mu$ sets the center, and the covariance matrix $\Sigma$ sets t
 
 The three panels show the same family viewed three ways. The one-dimensional curve emphasizes how the mean shifts location and the standard deviation changes spread. The surface plot shows the bivariate density as height over the plane. The contour plot removes the height dimension and keeps only level sets, which is often the most useful representation when reasoning about covariance structure.
 
+A concrete one-dimensional example is
+
+$$
+X \sim \mathcal{N}(2, 9),
+$$
+
+so the mean is $2$ and the standard deviation is $3$. About two-thirds of the mass lies within one standard deviation of the mean, namely in the interval $[-1,5]$, and almost all of the mass lies within a few standard deviations. In two dimensions, if
+
+$$
+\mu=(0,0)^T,
+\qquad
+\Sigma=[[4,0],[0,1]],
+$$
+
+then the contours are ellipses stretched more strongly along the first coordinate than along the second. Off-diagonal covariance terms rotate those ellipses and encode correlation.
+
 ### Example 2-10: Bernoulli Exponential Family Form
 
 The Bernoulli distribution can be written in exponential-family form:
@@ -408,6 +602,29 @@ $$
 
 This highlights the feature $\phi(X)=X$ and the natural parameter $\eta = \log(\rho/(1-\rho))$. Writing Bernoulli in this way makes the log-odds parameter explicit and shows how a nonlinear parameter such as $\rho$ becomes a linear coefficient in the exponent.
 
+One more step makes the canonical form fully explicit. Since
+
+$$
+\log(\rho)X + \log(1-\rho)(1-X)
+= X \log \frac{\rho}{1-\rho} + \log(1-\rho),
+$$
+
+we can write
+
+$$
+p(X) = \exp\!\bigl(\eta X - A(\eta)\bigr)
+$$
+
+with
+
+$$
+\eta = \log \frac{\rho}{1-\rho},
+\qquad
+A(\eta)=\log(1+e^\eta).
+$$
+
+This shows exactly how the Bernoulli distribution fits the general exponential-family template.
+
 ### Example 2-11: Bernoulli Two-Parameter Form
 
 We can also write an over-parameterized Bernoulli distribution with two parameters:
@@ -418,6 +635,8 @@ p(X;\eta_0,\eta_1)
 $$
 
 Only the difference $\eta_1 - \eta_0$ matters, so different parameter values can represent the same distribution. This is an explicit structural redundancy: the model has two coordinates, but the actual Bernoulli family still has only one degree of freedom.
+
+For example, the parameter pairs $(\eta_0,\eta_1)=(0,2)$ and $(5,7)$ define the same Bernoulli law because both have difference $2$. Adding the same constant to both coordinates changes numerator and denominator by the same multiplicative factor and therefore leaves the normalized probability unchanged.
 
 ### Beta and Dirichlet Distributions
 
@@ -446,6 +665,20 @@ with $x_j \ge 0$ and $\sum_j x_j = 1$. The simplex constraint means the domain h
 
 The Beta grid makes the parameter effects explicit: symmetric parameters above one create a peak in the middle, while parameters below one push mass toward the boundaries. The Dirichlet simplex panels show the same phenomenon in two free dimensions. Mass near the center means balanced proportions; mass near an edge or corner means one or more coordinates are favored strongly.
 
+A full prior example helps fix intuition. Suppose $\rho$ is the head probability of a coin. A prior
+
+$$
+\rho \sim \mathrm{Beta}(20,20)
+$$
+
+encodes a strong belief that the coin is close to fair, because the mass is tightly concentrated around $0.5$. By contrast,
+
+$$
+\rho \sim \mathrm{Beta}(0.3,0.3)
+$$
+
+puts much more mass near $0$ and $1$, expressing the belief that the coin is likely to be strongly biased in one direction or the other. In the Dirichlet case, the same logic applies to a probability vector rather than a single number.
+
 ### The Exponential Family
 
 The distributions discussed so far are examples of the exponential family:
@@ -462,6 +695,14 @@ $$
 
 Writing the model this way makes the structure explicit: the log-density is affine in the fixed feature vector $\phi(x)$, while all normalization is absorbed into $A(\theta)$. That structure is what gives exponential families their clean moment-matching and convexity properties. It is also a genuine limitation: only distributions whose log-density can be expressed using a fixed finite-dimensional feature map belong to a finite-dimensional exponential family.
 
+It is helpful to see the template instantiated twice. For Bernoulli,
+
+$$
+h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\eta)=\log(1+e^\eta).
+$$
+
+For a Gaussian with known variance $\sigma^2$, one can write the density in exponential-family form with sufficient statistics $x$ and $x^2$. The point is not that every distribution looks identical, but that once the pieces are identified, the same structural tools apply across many families.
+
 ## 2.3 Learning and Parameter Estimation
 
 In practice, we often do not know the probabilities that govern a system. Instead, we observe data and estimate the model parameters from those observations.
@@ -473,6 +714,20 @@ From the frequentist perspective, probability is long-run frequency. The paramet
 From the Bayesian perspective, probability is degree of belief. The parameter itself is uncertain, so we place a prior distribution on it and update that prior after seeing data.
 
 Both views use many of the same formulas, but they answer slightly different questions. A frequentist estimator asks, "if nature chose a fixed parameter, what rule should I use to estimate it?" A Bayesian posterior asks, "after observing this concrete data set, which parameter values remain plausible and how plausible are they relative to one another?" Maximum likelihood is the canonical frequentist estimator because it ignores prior beliefs and keeps only the data-fit term.
+
+The same coin-toss example makes the contrast concrete. Suppose we observe five flips with outcomes
+
+$$
+D=\{1,1,0,1,0\}.
+$$
+
+A frequentist summary is the single estimate $\hat\rho=3/5=0.6$. A Bayesian summary with prior $\mathrm{Beta}(2,2)$ produces the full posterior
+
+$$
+\rho \mid D \sim \mathrm{Beta}(5,4),
+$$
+
+which still centers near $0.56$ but also quantifies uncertainty around that value.
 
 ### Likelihood
 
@@ -490,6 +745,26 @@ $$
 
 The principle of maximum likelihood says to choose the parameter value that makes the observed data look most probable. It is important to state explicitly what varies and what stays fixed: after we have observed $D$, the data are treated as fixed, and the likelihood is a function of $\theta$. It is not a probability distribution over $\theta$, and it does not have to integrate to one over parameter space.
 
+For the small Bernoulli sample
+
+$$
+D=\{1,0,1\},
+$$
+
+the likelihood is
+
+$$
+p(D \mid \rho)=\rho(1-\rho)\rho=\rho^2(1-\rho).
+$$
+
+If we try three candidate parameters, we get
+
+$$
+p(D \mid 0.2)=0.032,\qquad p(D \mid 0.5)=0.125,\qquad p(D \mid 0.8)=0.128.
+$$
+
+So among those candidates, $\rho=0.8$ explains the observed data slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly.
+
 ### Example 2-12: Bernoulli Likelihood
 
 Suppose we observe $m$ Bernoulli samples, with $m_1$ ones and $m_0$ zeros. Then
@@ -504,6 +779,14 @@ The likelihood is maximized at the empirical frequency of ones. If the observed 
 
 Each panel holds the observed data fixed and varies only the parameter $\rho$. The curve peaks where the model's predicted head probability best matches the observed proportion of heads. When the data rule out part of parameter space completely, the log-likelihood drops toward negative infinity at the incompatible boundary.
 
+For the data set $D=\{0,1\}$, the likelihood is
+
+$$
+p(D \mid \rho)=\rho(1-\rho),
+$$
+
+which is zero at $\rho=0$ and $\rho=1$ because either extreme makes one of the two observations impossible. The peak therefore occurs in the interior, specifically at $\rho=1/2$.
+
 ### Example 2-13: Gaussian Likelihood
 
 For a one-dimensional Gaussian with variance fixed at one, the likelihood as a function of $\mu$ becomes more sharply peaked as the number of samples grows. That sharpening is the visual signature that more data reduce parameter uncertainty: many values of $\mu$ may explain three observations reasonably well, but far fewer values remain plausible once twenty observations cluster around the same region.
@@ -511,6 +794,14 @@ For a one-dimensional Gaussian with variance fixed at one, the likelihood as a f
 ![Gaussian likelihood curves](assets/figure_2_13_gaussian_likelihood.png)
 
 The dots along the top of each panel are the observed samples. The curve below them is the log-likelihood as a function of the Gaussian mean. As $m$ increases, the curve narrows and the maximizing value moves toward the visual center of the observed data cloud.
+
+If the observed values are $-0.5$, $0.4$, and $1.3$, then the Gaussian likelihood in $\mu$ is largest near the arithmetic average
+
+$$
+\bar x = \frac{-0.5+0.4+1.3}{3}=0.4.
+$$
+
+The entire curve is simply another way of visualizing how much squared-error penalty is paid for choosing a mean away from that center.
 
 ### Maximum Likelihood Estimation
 
@@ -575,6 +866,20 @@ $$
 $$
 
 so setting the derivative to zero forces $\mu$ to equal the arithmetic average of the observations. The variance estimate is then the average squared deviation around that fitted mean. For a discrete distribution with probabilities $\rho_x$, the MLE is the empirical frequency of each state.
+
+An explicit discrete example makes the frequency rule concrete. Suppose the data over states $\{a,b,c\}$ are
+
+$$
+D=\{a,c,a,b,a,c\}.
+$$
+
+Then the counts are $m_a=3$, $m_b=1$, and $m_c=2$, so the MLE is
+
+$$
+\hat\rho_a=3/6,\qquad \hat\rho_b=1/6,\qquad \hat\rho_c=2/6.
+$$
+
+The estimate simply copies empirical proportions into the model.
 
 ### Example 2-14: Bernoulli MLE
 
@@ -644,9 +949,25 @@ $$
 
 This is the explicit moment-matching statement: the fitted model reproduces the empirical averages of the sufficient statistics. That identity is one of the main reasons exponential families are so useful.
 
+For Bernoulli, the sufficient statistic is just $X$, so moment matching says
+
+$$
+E_\theta[X] = \frac{1}{m}\sum_i x^{(i)}.
+$$
+
+But the model expectation of $X$ is exactly $\rho$, so the condition reduces to
+
+$$
+\rho = \text{sample mean},
+$$
+
+which reproduces the familiar Bernoulli MLE immediately.
+
 ### Overfitting
 
 Likelihood alone can overfit. If a model is too flexible and the data set is too small, the MLE may explain the training data perfectly while generalizing poorly. Histogram models make this especially clear: as the number of bins grows, the likelihood on the training data can keep increasing even when the estimate becomes a bad predictor. In the extreme limit where each observation gets its own tiny bin, the model can memorize the sample rather than discover a stable distributional pattern.
+
+A toy example is enough to show the mechanism. If eight data points occupy eight distinct locations and we fit a histogram with sixty-four bins, most bins are empty and a few bins receive all the mass. The training likelihood becomes large because each observed sample falls into a narrow high-density bin, but a new sample landing between those bins receives nearly zero support. The model has learned the sample, not the underlying distribution.
 
 ![Histogram likelihood progression](assets/figure_2_17_histograms.png)
 
@@ -673,6 +994,20 @@ p(\theta \mid D) = \frac{p(D \mid \theta)p(\theta)}{p(D)}.
 $$
 
 The posterior trades a point estimate for uncertainty about plausible parameter values. This is conceptually important and computationally consequential: exact inference is easy only when the evidence integral can be computed analytically or when the prior-likelihood pair has a conjugate form.
+
+For a concrete update, start with
+
+$$
+\rho \sim \mathrm{Beta}(2,2)
+$$
+
+and observe $D=\{1,0,1\}$. The posterior becomes
+
+$$
+\rho \mid D \sim \mathrm{Beta}(4,3).
+$$
+
+The prior contributes two pseudo-observations toward heads and two toward tails, while the real data contribute two heads and one tail. The posterior therefore behaves like a total of seven weighted observations.
 
 ### Example 2-18: Beta-Bernoulli Conjugacy
 
@@ -702,6 +1037,14 @@ $$
 
 which is exactly the kernel of another Beta density. This is the simplest example of conjugacy.
 
+If we plug in $a=b=2$ and observe $m_1=3$, $m_0=1$, then
+
+$$
+\rho \mid D \sim \mathrm{Beta}(5,3).
+$$
+
+The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros.
+
 ### Posterior Estimators
 
 Two common point estimates derived from the posterior are the posterior mean and the MAP estimate:
@@ -728,9 +1071,27 @@ $$
 
 The posterior mean averages with respect to the full posterior and therefore always exists for $a,b>0$. The MAP estimator is different: it looks for the mode of the posterior density, and if either updated shape parameter is at most one, the mode moves to the boundary rather than the interior. That boundary behavior is another structural feature that is easy to miss if one only memorizes the closed form.
 
+With the posterior $\mathrm{Beta}(5,3)$, the two estimators are
+
+$$
+\hat\rho_{\text{PM}}=\frac{5}{8}=0.625,
+\qquad
+\hat\rho_{\text{MAP}}=\frac{4}{6}\approx 0.667.
+$$
+
+The MAP estimate is slightly more aggressive because it chooses the mode, while the posterior mean averages over the whole posterior mass.
+
 ### Example 2-19: Bernoulli Posterior Estimates
 
 The posterior mean smooths the empirical frequency by the prior. The MAP estimate is a regularized version of MLE and matches MLE when $a=b=1$. In effect, the prior acts like pseudo-counts: $a-1$ prior successes and $b-1$ prior failures for the MAP formula, or $a$ and $b$ for the posterior mean formula.
+
+For the sample $D=\{1,1,0\}$, the MLE is $2/3 \approx 0.667$. With prior $\mathrm{Beta}(2,2)$, the posterior mean becomes
+
+$$
+\frac{2+2}{2+2+2+1}=\frac{4}{7}\approx 0.571.
+$$
+
+So the prior pulls the estimate back toward $0.5$, which is exactly what regularization is supposed to do.
 
 ### Sequential Belief Updating
 
@@ -740,6 +1101,14 @@ Bayesian updating naturally supports sequential learning: after observing one ba
 
 The figure is deliberately procedural: first combine the prior with the first data batch, then treat the resulting posterior as the next prior before incorporating the second batch. Nothing conceptually new happens in the second step; Bayesian learning is the repeated application of the same update rule.
 
+For example, begin with $\mathrm{Beta}(2,2)$. After the first batch $D_1=\{1,0,1\}$, the posterior is $\mathrm{Beta}(4,3)$. If a second batch $D_2=\{1,1\}$ arrives later, the new posterior is
+
+$$
+\mathrm{Beta}(6,3).
+$$
+
+If we had processed all five observations at once, we would obtain exactly the same answer. Sequential updating is therefore not an approximation; it is algebraically equivalent to batch updating when the model assumptions are unchanged.
+
 ### Example 2-20: Coin Toss Hyper-Prior
 
 Sometimes we are uncertain even about the prior. A mixture of a fair-coin prior and a trick-coin prior can be written as a hyper-prior over the Beta parameters. This adds one more layer to the model hierarchy: first choose which prior family is active, then draw the Bernoulli parameter from that prior, and only then generate the data.
@@ -747,6 +1116,8 @@ Sometimes we are uncertain even about the prior. A mixture of a fair-coin prior 
 ![Mixture of Beta priors](assets/figure_2_20_beta_hyperprior.png)
 
 The left and middle components encode two qualitatively different prior stories: one centered near a fair coin and one concentrated near the extremes. The mixture panel makes the uncertainty over priors visible by averaging those stories before any data are observed.
+
+This is a full hierarchical example. First sample a latent indicator $H$ that chooses between the "fair coin" story and the "trick coin" story. Then sample $\rho$ from the Beta prior associated with that choice. Finally sample the observed tosses from Bernoulli$(\rho)$. The hyper-prior therefore models uncertainty not just about a parameter value, but about which prior regime the experiment belongs to.
 
 ### Weakly Informative Priors
 
@@ -766,6 +1137,8 @@ $$
 
 It automatically penalizes overly flexible models that spread prior mass too thinly. This happens because the marginal likelihood averages $p(D \mid \theta)$ over the prior rather than looking only at the single best parameter value. A highly flexible model can fit some parameter settings extremely well, but if most of its prior mass corresponds to poor fits, the average score can still be small.
 
+That difference is easiest to see by contrasting two models. Model A may have a very sharp peak at one parameter value and terrible fit almost everywhere else. Model B may never fit quite as perfectly at its best point, but may devote much more prior mass to reasonably good fits. Maximum likelihood prefers Model A because it only cares about the peak. Marginal likelihood can prefer Model B because it averages over the whole parameter space.
+
 The BIC approximation is
 
 $$
@@ -781,6 +1154,8 @@ For a histogram model with Dirichlet prior, the marginal likelihood and BIC pena
 ![Histogram model selection scores](assets/figure_2_22_histogram_model_scores.png)
 
 The plotted curves separate three notions of fit. Raw maximum likelihood keeps rewarding additional flexibility. BIC and the marginal score include an explicit complexity penalty, so they flatten or decline once the extra bins stop being justified by the amount of data.
+
+Read the graph from left to right as a complexity sweep. Moving right means adding more histogram bins and therefore more parameters. The dotted maximum-likelihood curve keeps climbing because the model can carve the training set into finer and finer pieces. The penalized curves eventually turn over, indicating the point where extra flexibility stops helping enough to justify its complexity cost.
 
 ## 2.4 Convexity
 
@@ -805,6 +1180,26 @@ $$
 $$
 
 Convex functions are useful because every local minimum is global, and a strictly convex function has a unique minimum. Positive semidefinite curvature allows flat directions, so multiple minimizers can still exist. Positive definite curvature removes those flat directions and forces uniqueness.
+
+A full worked example is $f(x)=x^2$. For any $x$ and $x'$ and any $\alpha \in [0,1]$,
+
+$$
+f(\alpha x + (1-\alpha)x') = (\alpha x + (1-\alpha)x')^2
+$$
+
+expands to
+
+$$
+\alpha x^2 + (1-\alpha)x'^2 - \alpha(1-\alpha)(x-x')^2.
+$$
+
+Since the last term is nonpositive, we obtain
+
+$$
+(\alpha x + (1-\alpha)x')^2 \le \alpha x^2 + (1-\alpha)x'^2.
+$$
+
+That is the convexity inequality in explicit algebraic form. Geometrically, it says the parabola lies below every secant line connecting two points on its graph.
 
 Jensen's inequality is the probability version of convexity:
 
@@ -831,6 +1226,8 @@ The Hessian of the log-partition function is therefore a covariance matrix of th
 
 The blue secant line lies above the black graph, which is the geometric definition of convexity. The red tangent line lies below the graph, which is the first-order equivalent statement. These are not separate ideas; they are two views of the same structural property.
 
+For exponential families, the most concrete beginner-to-expert takeaway is that optimization is well behaved in natural-parameter space because the curvature comes from a covariance matrix. Covariances cannot be negative in the matrix sense, so the Hessian cannot create spurious local minima.
+
 ## 2.5 Information Theory
 
 Entropy measures uncertainty:
@@ -840,6 +1237,14 @@ H[X] = -\sum_x p(x)\log p(x).
 $$
 
 If the logarithm is base 2, entropy is measured in bits. A deterministic variable has entropy zero, and a uniform distribution maximizes entropy for a fixed finite support. Entropy is therefore not just "randomness" in an informal sense; it is the expected code length of the optimal lossless code and the expected information revealed by one observation.
+
+A useful comparison is between a fair coin and a biased coin with probabilities $(0.9,0.1)$. The fair coin has entropy $1$ bit, while the biased coin has
+
+$$
+H[X] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47 \text{ bits}.
+$$
+
+The biased coin is more predictable, so it carries less uncertainty and requires fewer average bits to encode.
 
 ### Example 2-24: Entropy
 
@@ -859,6 +1264,8 @@ $$
 
 Entropy also explains compression. If a yearly sequence is mostly zeros, we can encode it with far fewer bits than a naive one-bit-per-day representation, because the sequence is highly non-random.
 
+To make that explicit, imagine a lottery-notification variable that is $1$ only on a winning day and $0$ otherwise. If the event occurs once in a thousand days, then almost every symbol is zero. A code that assigns a very short description to $0$ and a longer one to $1$ achieves far better compression than a fixed one-bit code, precisely because the entropy is low.
+
 ### Kullback-Leibler Divergence
 
 The KL divergence is
@@ -871,6 +1278,26 @@ It is always nonnegative and zero only when $p=q$, but it is not symmetric. Ther
 
 In learning, maximum likelihood can be viewed as minimizing the KL divergence from the empirical distribution to the model family.
 
+A concrete Bernoulli example makes the asymmetry visible. Let
+
+$$
+p=(0.8,0.2), \qquad q=(0.5,0.5).
+$$
+
+Then
+
+$$
+D(p \,\|\, q)=0.8\log \frac{0.8}{0.5} + 0.2\log \frac{0.2}{0.5}.
+$$
+
+If we reverse the arguments, we compute a different number:
+
+$$
+D(q \,\|\, p)=0.5\log \frac{0.5}{0.8} + 0.5\log \frac{0.5}{0.2}.
+$$
+
+So KL divergence is a directed discrepancy, not an ordinary symmetric distance.
+
 ### Mutual Information
 
 Mutual information measures how much observing one variable tells us about another:
@@ -881,6 +1308,20 @@ I[X,Y] = D(p(X,Y) \,\|\, p(X)p(Y))
 $$
 
 If $X$ and $Y$ are independent, mutual information is zero.
+
+At the opposite extreme, if $Y=X$ exactly, then learning $Y$ reveals $X$ completely, so
+
+$$
+H[X \mid Y]=0
+$$
+
+and therefore
+
+$$
+I[X,Y]=H[X].
+$$
+
+So mutual information ranges from zero for complete independence up to the full entropy of one variable when the other variable determines it exactly.
 
 ### Conditional Entropy
 
@@ -925,6 +1366,24 @@ $$
 
 The entropy of the commute alone is about $0.72$ bits. Conditioning on weather gives a lower average entropy, around $0.52$ bits, so the mutual information is about $0.2$ bits. Writing the quantities this way makes the interpretation explicit: knowing the weather removes about two-tenths of a bit of uncertainty about how the commute will happen.
 
+The full step-by-step calculation is:
+
+$$
+H[C \mid R=\text{clear}] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47,
+$$
+
+$$
+H[C \mid R=\text{rain}] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1.
+$$
+
+Averaging over weather gives
+
+$$
+H[C \mid R] = 0.9 \cdot 0.47 + 0.1 \cdot 1 \approx 0.52.
+$$
+
+The unconditional commute entropy is larger, so the difference between them is exactly the information weather provides.
+
 ## 2.6 Change-of-Variable Models
 
 The classical probability distributions above are useful, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
@@ -939,9 +1398,33 @@ $$
 
 The derivative corrects for stretching or compression under the transformation. A small interval around $x$ corresponds to an interval around $z=g(x)$ of width approximately $|g'(x)|dx$, so probability conservation forces the density to scale by that same factor. This formula requires invertibility on the region of interest; if the map has multiple inverse branches, the correct density is a sum over branches rather than a single Jacobian term.
 
+A minimal worked example is $X=2Z$ with $Z$ uniform on $[0,1]$. Then $g(x)=x/2$ and $g'(x)=1/2$, so
+
+$$
+p_X(x)=p_Z(x/2)\cdot \frac{1}{2}.
+$$
+
+Since $p_Z(z)=1$ on $[0,1]$, we get
+
+$$
+p_X(x)=\frac{1}{2}
+$$
+
+on $[0,2]$. Stretching the variable by a factor of $2$ cuts the density height by a factor of $2$.
+
 ### Example: Lognormal Distribution
 
 If $Z = \log X$ is Gaussian, then $X$ is lognormal. The density of $X$ is obtained from the Gaussian density of $Z$ plus the Jacobian factor $1/x$, because $z=\log x$ implies $dz/dx = 1/x$. This is a concrete example of the general rule that multiplicative stretching in variable space becomes additive correction in log-density space.
+
+Writing the full expression gives
+
+$$
+p_X(x)=\frac{1}{x \sqrt{2\pi\sigma^2}}
+\exp\!\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right),
+\qquad x>0.
+$$
+
+The extra factor $1/x$ is exactly the Jacobian term. Without it, the transformed density would no longer integrate to one.
 
 ### Multivariate Change of Variables
 
@@ -952,6 +1435,14 @@ p_X(x) = p_Z(g(x)) \lvert \det J_g(x) \rvert,
 $$
 
 where $J_g$ is the Jacobian matrix of the inverse transformation. The determinant plays the same role as $|g'(x)|$ in one dimension: it is the local volume scaling factor. If the transformation doubles area near one point, the density there must be cut in half to preserve total probability.
+
+An explicit two-dimensional example is
+
+$$
+X_1=2Z_1, \qquad X_2=3Z_2.
+$$
+
+The inverse map scales coordinates by $(1/2,1/3)$, so the determinant of the inverse Jacobian is $1/6$. Every small area element is expanded by a factor of $6$ in data space, so the density must shrink by the same factor.
 
 ### Copula Models
 
@@ -967,9 +1458,13 @@ where $P_1$ and $P_2$ are the marginal CDFs. This is the content of Sklar's theo
 
 The Gaussian copula is a special case in which the transformed variables are Gaussian. The visual sequence shows the separation explicitly: start with the original marginals, map each one to a uniform scale, then map those uniform variables to a Gaussian scale where the dependence is easy to model.
 
+This gives a clean division of labor. The marginal CDFs control one-dimensional shape, skewness, and heavy tails. The copula controls only how coordinates move together after those marginal effects have been removed.
+
 ### Example 2-27: Copula Transforms
 
 The chapter uses a KDD Cup data set to show the pipeline. First estimate the marginal CDFs $P_1$ and $P_2$. Then transform each coordinate into a uniform variable by applying its own CDF. Then apply $\Phi^{-1}$ to map those uniform variables into Gaussian marginals. Finally fit a Gaussian dependence model in that transformed space. The resulting model can express complicated non-Gaussian marginals while keeping the dependence structure manageable.
+
+The step-by-step reason this works is that CDF transforms preserve order. If an observation is at the $80$th percentile of its own marginal distribution, its transformed value is $0.8$ regardless of the original physical units. After both coordinates are mapped into percentile space, the dependence structure can be modeled in a unit-free way.
 
 ### Normalizing Flows
 
@@ -987,9 +1482,25 @@ $$
 
 The computational reason this works is that the Jacobian determinant of a composition decomposes into a sum in log-space. A flow is therefore practical only when each layer is invertible and has a determinant that can be evaluated cheaply.
 
+A one-layer sanity check is the scaling flow
+
+$$
+X = aZ + b
+$$
+
+with $a \neq 0$. Then the inverse is $(X-b)/a$ and
+
+$$
+\log p_X(X)=\log p_Z\!\left(\frac{X-b}{a}\right)-\log |a|.
+$$
+
+Normalizing flows are just more elaborate versions of this same accounting rule, composed many times.
+
 ### Example 2-28: Copula-Like Normalizing Flow
 
 One useful construction is to start with a Gaussian base distribution and parameterize one-dimensional monotone transforms for each feature. This is a flexible stand-in for explicit CDF modeling. The monotonicity constraint is not optional: without it, the map would stop being invertible and the simple change-of-variables formula would break.
+
+At the beginner level, this means "bend each axis without folding it over itself." At the expert level, it means each scalar transform must remain strictly monotone so that the inverse exists and the Jacobian diagonal stays nonzero everywhere.
 
 ### Example 2-29: Conditional Affine Normalizing Flows
 
@@ -1009,10 +1520,23 @@ $$
 
 The deformation panels show what the algebra means geometrically. A rectangular grid in latent space is progressively bent and stretched into a curved mesh in data space. The main idea is that a sequence of simple invertible layers can produce a complex density while keeping likelihood evaluation tractable. The structural limit is equally important: each layer must preserve invertibility, and in practice the scale functions are parameterized so they never cross zero.
 
-## Summary
+A full worked determinant calculation makes the affine layer concrete. For
 
-The chapter can be compressed into one sentence:
+$$
+Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1),
+$$
 
-Probability gives us a language for uncertainty, learning tells us how to fit that language to data, and information/change-of-variables tools tell us how to analyze and extend those models once the basics are in place.
+the Jacobian matrix is
 
-If you remember only the essentials, remember them as one connected chain rather than as isolated formulas. Marginals add over hidden cases, conditionals restrict to a subset of worlds and then renormalize, and Bayes' rule combines prior belief with evidence. Expectation turns a distribution into a weighted average. Maximum likelihood fits parameters by matching model predictions to empirical structure, while Bayesian inference keeps uncertainty over parameters instead of collapsing immediately to a single point estimate. Entropy measures uncertainty, KL divergence measures mismatch, and change-of-variables models reweight density by a Jacobian so that complex distributions can be built from simpler ones without losing exact probability accounting.
+$$
+J=
+[[1,0],[\frac{\partial Z_2'}{\partial Z_1},\alpha_1(Z_1)]],
+$$
+
+so
+
+$$
+\det J = \alpha_1(Z_1).
+$$
+
+The lower-left derivative can be complicated, but the determinant ignores it because the matrix is triangular. That is the key design principle: choose transformations that are expressive enough to bend the density, yet structured enough that the determinant remains cheap to evaluate exactly.
