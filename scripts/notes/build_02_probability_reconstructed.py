@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,6 +21,7 @@ IMAGE_GAP = 12
 TABLE_CELL_PAD_X = 6
 TABLE_CELL_PAD_Y = 5
 MAX_IMAGE_HEIGHT = 290
+TABLE_GROUP_GAP = 16
 
 TITLE = "Probability and Inference"
 SUBTITLE = "Reconstructed Chapter"
@@ -45,6 +47,8 @@ class Block:
     text: str = ""
     lines: list[str] | None = None
     rows: list[list[str]] | None = None
+    tables: list[list[list[str]]] | None = None
+    titles: list[str] | None = None
     image_path: Path | None = None
     alt: str = ""
 
@@ -198,12 +202,52 @@ def split_table_row(line: str) -> list[str]:
     return [part for part in parts]
 
 
+def normalize_html_text(element: ET.Element | None) -> str:
+    if element is None:
+        return ""
+    return normalize_text(" ".join(element.itertext()))
+
+
+def parse_table_stack(html_lines: list[str]) -> Block:
+    root = ET.fromstring("\n".join(html_lines))
+    tables: list[list[list[str]]] = []
+    titles: list[str] = []
+
+    outer_row = root.find("./tbody/tr")
+    if outer_row is None:
+        raise ValueError("table-stack block is missing an outer table row")
+
+    for cell in outer_row.findall("td"):
+        inner_table = cell.find("table")
+        if inner_table is None:
+            continue
+
+        rows: list[list[str]] = []
+        header = inner_table.find("thead")
+        if header is not None:
+            for row in header.findall("tr"):
+                rows.append([normalize_html_text(item) for item in row if item.tag in {"th", "td"}])
+
+        body = inner_table.find("tbody")
+        if body is not None:
+            for row in body.findall("tr"):
+                rows.append([normalize_html_text(item) for item in row if item.tag in {"th", "td"}])
+
+        if rows:
+            tables.append(rows)
+            titles.append(normalize_html_text(cell.find("p")))
+
+    return Block(kind="table_group", tables=tables, titles=titles)
+
+
 def parse_markdown(markdown_path: Path) -> list[Block]:
     blocks: list[Block] = []
     paragraph: list[str] = []
     table_lines: list[str] = []
     math_lines: list[str] = []
+    table_stack_lines: list[str] = []
     in_math = False
+    in_table_stack = False
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -226,6 +270,15 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
     for raw in markdown_path.read_text(encoding="utf-8").splitlines():
         line = raw.rstrip()
 
+        if in_table_stack:
+            if line.strip() == "<!-- table-stack:end -->":
+                blocks.append(parse_table_stack(table_stack_lines))
+                table_stack_lines = []
+                in_table_stack = False
+            else:
+                table_stack_lines.append(line)
+            continue
+
         if in_math:
             if line.strip() == "$$":
                 blocks.append(Block(kind="math", lines=[latexish_to_text(item) for item in math_lines if item.strip()]))
@@ -245,6 +298,13 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
         if line.strip() == "$$":
             flush_paragraph()
             in_math = True
+            continue
+
+        if line.strip() == "<!-- table-stack:start -->":
+            flush_paragraph()
+            flush_table()
+            in_table_stack = True
+            table_stack_lines = []
             continue
 
         image_match = IMAGE_RE.match(line.strip())
@@ -529,14 +589,24 @@ def render_table_block(
     if not rows:
         return page, page_num, y
 
-    col_count = max(len(row) for row in rows)
     width = PAGE_WIDTH - 2 * MARGIN_X
+    needed = estimate_table_height(rows, width, fontsize=10.2, min_row_height=22) + 10
+    if y + needed > PAGE_HEIGHT - MARGIN_BOTTOM:
+        page_num += 1
+        page, y = add_page(doc, page_num)
+    y = render_table_at(page, MARGIN_X, y, width, rows, fontsize=10.2, row_height=22)
+    y += 10
+    return page, page_num, y
+
+
+def compute_table_widths(rows: list[list[str]], width: float, fontsize: float) -> list[float]:
+    col_count = max(len(row) for row in rows)
     col_weights: list[float] = []
     for col_idx in range(col_count):
         longest = 0.0
         for row in rows:
             if col_idx < len(row):
-                longest = max(longest, measure_text(row[col_idx], "body", 10.2))
+                longest = max(longest, measure_text(row[col_idx], "body", fontsize))
         col_weights.append(max(longest + 2 * TABLE_CELL_PAD_X, 70.0))
 
     total_weight = sum(col_weights)
@@ -545,42 +615,137 @@ def render_table_block(
     extra = width - sum(col_widths)
     if extra > 0:
         col_widths[-1] += extra
+    return col_widths
 
-    row_height = 22
-    needed = len(rows) * row_height + 18
+
+def render_table_at(
+    page: fitz.Page,
+    x0: float,
+    y: float,
+    width: float,
+    rows: list[list[str]],
+    *,
+    fontsize: float,
+    row_height: float,
+) -> float:
+    col_count = max(len(row) for row in rows)
+    col_widths = compute_table_widths(rows, width, fontsize)
+
+    for row_idx, row in enumerate(rows):
+        is_header = row_idx == 0
+        fontname = "bodybold" if is_header else "body"
+        cell_lines_per_col: list[list[str]] = []
+        max_lines = 1
+        for col_idx in range(col_count):
+            cell = row[col_idx] if col_idx < len(row) else ""
+            wrap_width = max(24.0, col_widths[col_idx] - 2 * TABLE_CELL_PAD_X)
+            lines = wrap_text(cell, fontname, fontsize, wrap_width) or [""]
+            cell_lines_per_col.append(lines)
+            max_lines = max(max_lines, len(lines))
+
+        line_step = fontsize * 1.18
+        content_height = max_lines * line_step
+        effective_row_height = max(row_height, content_height + 2 * TABLE_CELL_PAD_Y + 2)
+        x = x0
+        for col_idx in range(col_count):
+            cell_rect = fitz.Rect(x, y, x + col_widths[col_idx], y + effective_row_height)
+            if is_header:
+                page.draw_rect(cell_rect, fill=(0.93, 0.96, 0.99), color=(0.77, 0.83, 0.9), width=0.7)
+            else:
+                page.draw_rect(cell_rect, color=(0.83, 0.86, 0.9), width=0.6)
+            lines = cell_lines_per_col[col_idx]
+            block_height = len(lines) * line_step
+            baseline_y = cell_rect.y0 + (effective_row_height - block_height) / 2 + fontsize
+            for line_idx, line in enumerate(lines):
+                line_width = measure_text(line, fontname, fontsize)
+                text_x = max(cell_rect.x0 + TABLE_CELL_PAD_X, cell_rect.x0 + (col_widths[col_idx] - line_width) / 2)
+                page.insert_text(
+                    fitz.Point(text_x, baseline_y + line_idx * line_step),
+                    line,
+                    fontname=fontname,
+                    fontfile=str(FONT_FILES[fontname]),
+                    fontsize=fontsize,
+                    color=(0.1, 0.12, 0.16),
+                )
+            x += col_widths[col_idx]
+        y += effective_row_height
+
+    return y
+
+
+def estimate_table_height(rows: list[list[str]], width: float, fontsize: float, min_row_height: float) -> float:
+    col_count = max(len(row) for row in rows)
+    col_widths = compute_table_widths(rows, width, fontsize)
+    total = 0.0
+    for row_idx, row in enumerate(rows):
+        fontname = "bodybold" if row_idx == 0 else "body"
+        max_lines = 1
+        for col_idx in range(col_count):
+            cell = row[col_idx] if col_idx < len(row) else ""
+            wrap_width = max(24.0, col_widths[col_idx] - 2 * TABLE_CELL_PAD_X)
+            lines = wrap_text(cell, fontname, fontsize, wrap_width) or [""]
+            max_lines = max(max_lines, len(lines))
+        content_height = max_lines * fontsize * 1.18
+        total += max(min_row_height, content_height + 2 * TABLE_CELL_PAD_Y + 2)
+    return total
+
+
+def render_table_group_block(
+    doc: fitz.Document,
+    page: fitz.Page,
+    page_num: int,
+    y: float,
+    block: Block,
+) -> tuple[fitz.Page, int, float]:
+    tables = block.tables or []
+    titles = block.titles or []
+    if not tables:
+        return page, page_num, y
+
+    count = len(tables)
+    available_width = PAGE_WIDTH - 2 * MARGIN_X
+    section_width = (available_width - TABLE_GROUP_GAP * (count - 1)) / count
+    title_font = "bodybold"
+    title_size = 10.4
+    title_lineheight = 1.24
+    title_gap = 6
+    row_height = 21
+    body_fontsize = 9.6
+
+    section_heights: list[float] = []
+    for idx, rows in enumerate(tables):
+        title = titles[idx] if idx < len(titles) else ""
+        title_lines = wrap_text(title, title_font, title_size, section_width) if title else []
+        title_height = len(title_lines) * title_size * title_lineheight + (title_gap if title else 0)
+        table_height = estimate_table_height(rows, section_width, fontsize=body_fontsize, min_row_height=row_height)
+        section_heights.append(title_height + table_height)
+
+    needed = max(section_heights, default=0.0) + 10
     if y + needed > PAGE_HEIGHT - MARGIN_BOTTOM:
         page_num += 1
         page, y = add_page(doc, page_num)
 
     x = MARGIN_X
-    for row_idx, row in enumerate(rows):
-        is_header = row_idx == 0
-        x = MARGIN_X
-        for col_idx in range(col_count):
-            cell = row[col_idx] if col_idx < len(row) else ""
-            cell_rect = fitz.Rect(x, y, x + col_widths[col_idx], y + row_height)
-            if is_header:
-                page.draw_rect(cell_rect, fill=(0.93, 0.96, 0.99), color=(0.77, 0.83, 0.9), width=0.7)
-            else:
-                page.draw_rect(cell_rect, color=(0.83, 0.86, 0.9), width=0.6)
-            page.insert_textbox(
-                fitz.Rect(
-                    cell_rect.x0 + TABLE_CELL_PAD_X,
-                    cell_rect.y0 + TABLE_CELL_PAD_Y - 1,
-                    cell_rect.x1 - TABLE_CELL_PAD_X,
-                    cell_rect.y1 - TABLE_CELL_PAD_Y,
-                ),
-                cell,
-                fontname="bodybold" if is_header else "body",
-                fontfile=str(FONT_FILES["bodybold" if is_header else "body"]),
-                fontsize=10.2,
-                color=(0.1, 0.12, 0.16),
-                align=1,
+    for idx, rows in enumerate(tables):
+        title = titles[idx] if idx < len(titles) else ""
+        current_y = y
+        if title:
+            title_lines = wrap_text(title, title_font, title_size, section_width)
+            current_y = draw_wrapped_lines(
+                page,
+                current_y,
+                title_lines,
+                x,
+                title_font,
+                title_size,
+                (0.07, 0.14, 0.24),
+                lineheight=title_lineheight,
             )
-            x += col_widths[col_idx]
-        y += row_height
+            current_y += title_gap
+        render_table_at(page, x, current_y, section_width, rows, fontsize=body_fontsize, row_height=row_height)
+        x += section_width + TABLE_GROUP_GAP
 
-    y += 10
+    y += needed
     return page, page_num, y
 
 
@@ -596,6 +761,8 @@ def render_blocks(blocks: list[Block], output_pdf: Path) -> None:
             page, page_num, y = render_math_block(doc, page, page_num, y, block)
         elif block.kind == "table":
             page, page_num, y = render_table_block(doc, page, page_num, y, block)
+        elif block.kind == "table_group":
+            page, page_num, y = render_table_group_block(doc, page, page_num, y, block)
         elif block.kind == "image":
             page, page_num, y = render_image_block(doc, page, page_num, y, block)
         else:

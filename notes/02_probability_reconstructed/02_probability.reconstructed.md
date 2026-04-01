@@ -202,26 +202,61 @@ Observing a toothache raises the cavity probability from $0.20$ to $0.60$.
 
 The same Bayes update can be done by manipulating tables directly. Start with the full table of $p(T,D,C)$, extract the subtable where $T=1$, sum over $D$, then normalize.
 
-| $DC$ | $p(T=1,D,C)$ |
-|---|---:|
-| 00 | 0.064 |
-| 01 | 0.012 |
-| 10 | 0.016 |
-| 11 | 0.108 |
-
-After marginalizing $D$:
-
-| $C$ | $p(T=1,C)$ |
-|---|---:|
-| 0 | $0.064 + 0.016 = 0.080$ |
-| 1 | $0.012 + 0.108 = 0.120$ |
-
-After normalization:
-
-| $C$ | $p(C \mid T=1)$ |
-|---|---:|
-| 0 | $0.08 / 0.20 = 0.40$ |
-| 1 | $0.12 / 0.20 = 0.60$ |
+<!-- table-stack:start -->
+<table border="0" cellpadding="0" cellspacing="16">
+  <tbody>
+    <tr>
+      <td valign="top">
+        <p><strong>Restrict to <i>T</i> = 1</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th><i>DC</i></th>
+              <th><i>p(T = 1, D, C)</i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>00</td><td>0.064</td></tr>
+            <tr><td>01</td><td>0.012</td></tr>
+            <tr><td>10</td><td>0.016</td></tr>
+            <tr><td>11</td><td>0.108</td></tr>
+          </tbody>
+        </table>
+      </td>
+      <td valign="top">
+        <p><strong>Marginalize over <i>D</i></strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th><i>C</i></th>
+              <th><i>p(T = 1, C)</i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>0.064 + 0.016 = 0.080</td></tr>
+            <tr><td>1</td><td>0.012 + 0.108 = 0.120</td></tr>
+          </tbody>
+        </table>
+      </td>
+      <td valign="top">
+        <p><strong>Normalize</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th><i>C</i></th>
+              <th><i>p(C | T = 1)</i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>0.08 / 0.20 = 0.40</td></tr>
+            <tr><td>1</td><td>0.12 / 0.20 = 0.60</td></tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!-- table-stack:end -->
 
 This is the same computation as Bayes rule, but expressed as table arithmetic.
 
