@@ -8,7 +8,7 @@ This is a full note-style reconstruction of Chapter 2. It keeps the chapter's se
 
 Probability is the language we use when a system is uncertain or too complex to model exactly. In AI, the uncertainty often comes less from true randomness than from missing information and limited modeling power. A useful probabilistic model does two things: it describes our assumptions about the world, and it gives rules for combining evidence and updating those assumptions when observations arrive.
 
-This main note is paired with a formal supplement and an exercise set in the same chapter directory. The main chapter keeps the narrative readable, but it now makes the foundational objects explicit instead of leaving them implicit.
+This main note is paired with a formal supplement, an exercise set, and a computational appendix in the same chapter directory. The main chapter keeps the narrative readable, but it now makes the foundational objects explicit instead of leaving them implicit.
 
 ### Formal Foundations
 
