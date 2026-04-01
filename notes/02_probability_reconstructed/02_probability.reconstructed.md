@@ -103,11 +103,7 @@ A full beginner-to-expert way to read this is the following. At the beginner lev
 A concrete example helps. Let the world be a die roll and define
 
 $$
-X =
-\begin{cases}
-0 & \text{if the roll is even} \\
-1 & \text{if the roll is odd.}
-\end{cases}
+X=0 \text{ if the roll is even}, \qquad X=1 \text{ if the roll is odd.}
 $$
 
 Then the six raw outcomes collapse into only two states. Since $\{2,4,6\}$ map to $0$ and $\{1,3,5\}$ map to $1$,
@@ -787,15 +783,12 @@ $$
 
 and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is
 
-$$
-F_X(x)=
-\begin{cases}
-0 & x<0 \\
-0.7 & x=0 \\
-0.7+0.3x & 0<x<1 \\
-1 & x \ge 1.
-\end{cases}
-$$
+| range | $F_X(x)$ |
+|---|---:|
+| $x<0$ | $0$ |
+| $x=0$ | $0.7$ |
+| $0<x<1$ | $0.7+0.3x$ |
+| $x \ge 1$ | $1$ |
 
 This variable has a jump of size $0.7$ at zero and a continuous linear rise on $(0,1)$. It cannot be described by an ordinary density alone, because the point mass at zero would be lost. The CDF therefore gives the cleanest unified description.
 
@@ -803,13 +796,10 @@ This variable has a jump of size $0.7$ at zero and a continuous linear rise on $
 
 For a continuous-valued random variable $X$ defined on $[0,T]$, the uniform distribution is
 
-$$
-p(x) =
-\begin{cases}
-\frac{1}{T} & \text{if } x \in [0,T] \\
-0 & \text{otherwise.}
-\end{cases}
-$$
+| support condition | $p(x)$ |
+|---|---:|
+| $x \in [0,T]$ | $\frac{1}{T}$ |
+| otherwise | $0$ |
 
 Then
 
@@ -1366,11 +1356,7 @@ The posterior mean is
 $$
 E[\theta \mid D]
 =
-\left(
-\frac{5}{10},
-\frac{3}{10},
-\frac{2}{10}
-\right)
+( \frac{5}{10}, \frac{3}{10}, \frac{2}{10} )
 =(0.5,0.3,0.2).
 $$
 

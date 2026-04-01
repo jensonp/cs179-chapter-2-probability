@@ -40,6 +40,12 @@ TABLE_DIVIDER_RE = re.compile(r"^\|\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|$")
 TEXT_BRACE_RE = re.compile(r"\\text\{([^}]*)\}")
 FRAC_RE = re.compile(r"\\frac\{([^{}]+)\}\{([^{}]+)\}")
 SQRT_RE = re.compile(r"\\sqrt\{([^{}]+)\}")
+BAR_BRACE_RE = re.compile(r"\\bar\{([^{}]+)\}")
+BAR_TOKEN_RE = re.compile(r"\\bar\s+([A-Za-z])")
+HAT_BRACE_RE = re.compile(r"\\hat\{([^{}]+)\}")
+HAT_TOKEN_RE = re.compile(r"\\hat\s+([A-Za-zα-ωΑ-Ω])")
+BAR_SYMBOL_RE = re.compile(r"\\bar([A-Za-zα-ωΑ-Ω])")
+HAT_SYMBOL_RE = re.compile(r"\\hat([A-Za-zα-ωΑ-Ω])")
 
 
 @dataclass
@@ -70,7 +76,7 @@ FIGURE_SPECS = [
     FigureSpec("figure_2_13_gaussian_likelihood.png", 12, (68, 545, 525, 662)),
     FigureSpec("figure_2_17_histograms.png", 17, (60, 160, 535, 260)),
     FigureSpec("figure_2_20_beta_hyperprior.png", 20, (95, 338, 502, 460)),
-    FigureSpec("figure_2_22_histogram_model_scores.png", 22, (353, 425, 504, 532), scale=4.0),
+    FigureSpec("figure_2_22_histogram_model_scores.png", 22, (332, 423, 538, 534), scale=4.0),
     FigureSpec("figure_2_23_convexity_sketch.png", 23, (360, 205, 523, 314), scale=3.2),
     FigureSpec("figure_2_5_copula_transforms.png", 29, (80, 74, 524, 198)),
     FigureSpec("figure_2_6_affine_flow_panels.png", 31, (84, 72, 520, 176)),
@@ -92,38 +98,42 @@ def latexish_to_text(text: str) -> str:
         previous = text
         text = FRAC_RE.sub(r"(\1)/(\2)", text)
         text = SQRT_RE.sub(r"sqrt(\1)", text)
+    text = BAR_BRACE_RE.sub(r"\1-bar", text)
+    text = BAR_TOKEN_RE.sub(r"\1-bar", text)
+    text = HAT_BRACE_RE.sub(r"\1-hat", text)
+    text = HAT_TOKEN_RE.sub(r"\1-hat", text)
 
     replacements = {
-        r"\mathbb{R}": "ℝ",
+        r"\mathbb{R}": "R",
+        r"\Longrightarrow": "⇒",
+        r"\Rightarrow": "⇒",
+        r"\leftarrow": "←",
         r"\begin{cases}": "",
         r"\end{cases}": "",
         r"\begincases": "",
         r"\endcases": "",
-        r"\\": " ; ",
-        r"\to": "→",
-        r"\leftarrow": "←",
-        r"\Rightarrow": "⇒",
-        r"\Longrightarrow": "⇒",
-        r"\implies": "⇒",
-        r"\iff": "⇔",
-        r"\cup": "∪",
-        r"\cap": "∩",
+        r"\subseteq": "⊆",
         r"\setminus": "∖",
-        r"\oplus": "⊕",
+        r"\varnothing": "∅",
+        r"\infty": "∞",
         r"\approx": "≈",
         r"\neq": "≠",
         r"\geq": "≥",
-        r"\ge": "≥",
         r"\leq": "≤",
+        r"\ge": "≥",
         r"\le": "≤",
-        r"\infty": "∞",
+        r"\quad": "  ",
+        r"\qquad": "  ",
+        r"\sim": "~",
+        r"\to": "→",
+        r"\iff": "⇔",
+        r"\cup": "∪",
+        r"\cap": "∩",
+        r"\oplus": "⊕",
         r"\times": "×",
         r"\cdot": "·",
         r"\mid": "|",
         r"\|": "|",
-        r"\subseteq": "⊆",
-        r"\varnothing": "∅",
-        r"\in": "∈",
         r"\perp": "⊥",
         r"\alpha": "α",
         r"\beta": "β",
@@ -152,18 +162,18 @@ def latexish_to_text(text: str) -> str:
         r"\partial": "∂",
         r"\propto": "∝",
         r"\det": "det",
+        r"\arg\max": "argmax",
+        r"\arg\min": "argmin",
+        r"\arg": "arg",
         r"\log": "log",
         r"\exp": "exp",
         r"\max": "max",
         r"\min": "min",
-        r"\arg": "arg",
         r"\dots": "...",
-        r"\cdots": "···",
+        r"\cdots": "...",
         r"\prod": "∏",
         r"\sum": "Σ",
         r"\int": "∫",
-        r"\frac": "frac",
-        r"\hat": "hat",
         r"\lvert": "|",
         r"\rvert": "|",
         r"\succeq": "⪰",
@@ -179,30 +189,20 @@ def latexish_to_text(text: str) -> str:
         r"\Bigl": "",
         r"\Bigr": "",
         r"\Big": "",
-        r"\qquad": "  ",
-        r"\begincases": "",
-        r"\endcases": "",
         r"\,": " ",
         r"\;": " ",
         r"\!": "",
+        r"\\": "\n",
     }
 
-    for src, dst in replacements.items():
+    for src in sorted(replacements, key=len, reverse=True):
+        dst = replacements[src]
         text = text.replace(src, dst)
 
+    text = BAR_SYMBOL_RE.sub(r"\1-bar", text)
+    text = HAT_SYMBOL_RE.sub(r"\1-hat", text)
     text = text.replace("&", " ")
     text = text.replace("{", "").replace("}", "")
-    text = text.replace("^T", "ᵀ")
-    text = text.replace("^2", "²")
-    text = text.replace("^*", "*")
-    text = text.replace("_1", "₁")
-    text = text.replace("_2", "₂")
-    text = text.replace("_3", "₃")
-    text = text.replace("_4", "₄")
-    text = text.replace("_i", "ᵢ")
-    text = text.replace("_j", "ⱼ")
-    text = text.replace("_k", "ₖ")
-    text = text.replace("sqrt", "sqrt")
     return normalize_text(text)
 
 
@@ -371,6 +371,13 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
     flush_paragraph()
     flush_table()
     return blocks
+
+
+def markdown_uses_images(markdown_path: Path) -> bool:
+    for raw in markdown_path.read_text(encoding="utf-8").splitlines():
+        if IMAGE_RE.match(raw.strip()):
+            return True
+    return False
 
 
 def measure_text(text: str, fontname: str, fontsize: float) -> float:
@@ -951,8 +958,9 @@ def write_sequential_update_assets(assets_dir: Path) -> None:
 
 
 def build(markdown_path: Path, source_pdf: Path, assets_dir: Path, output_pdf: Path) -> None:
-    extract_figures(source_pdf, assets_dir)
-    write_sequential_update_assets(assets_dir)
+    if markdown_uses_images(markdown_path):
+        extract_figures(source_pdf, assets_dir)
+        write_sequential_update_assets(assets_dir)
     blocks = parse_markdown(markdown_path)
     render_blocks(blocks, output_pdf)
 
