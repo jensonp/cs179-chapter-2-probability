@@ -58,7 +58,7 @@ Likewise, the statement $X \le t$ is shorthand for the event
 
 $$\{\omega \in \Omega : X(\omega)\le t\}.$$
 
-In words: it is the set of all worlds whose value under $X$ is at most $t$. This matters because the notation looks like an ordinary numerical inequality, but probabilistically it is still an event in the sample space. Probabilities are attached to events first; PMFs, PDFs, and CDFs are derived descriptions of how that event-level probability structure appears after the random variable has mapped worlds into numerical values.
+In words: it is the set of all worlds whose value under $X$ is at most $t$. For example, if $X$ is the outcome of a die roll and $t=3$, then the event $X \le 3$ is the subset of worlds $\{1,2,3\}$. The notation looks like an ordinary numerical inequality, but probabilistically it is still an event in the sample space. Probabilities are attached to events first; PMFs, PDFs, and CDFs are derived descriptions of how that event-level probability structure appears after the random variable has mapped worlds into numerical values.
 
 ### Probability Axioms and First Consequences
 
@@ -76,11 +76,11 @@ $$\mathbb{P}\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} \mat
 
 whenever the events $A_1,A_2,\dots$ are pairwise disjoint.
 
-Pairwise disjoint means that no single world belongs to two different events in the collection. Formally,
+Pairwise disjoint means that every pair of distinct events in the collection is disjoint. In other words, if you choose any two different indices $i$ and $j$, the corresponding events do not share any worlds. Formally,
 
 $$A_i \cap A_j = \varnothing \qquad \text{whenever } i \ne j.$$
 
-So countable additivity applies only when the events do not overlap. In that case there is no double counting, so the probability of the union is exactly the sum of the individual probabilities.
+So countable additivity applies only when the events do not overlap. In that case there is no double counting, so the probability of the union is exactly the sum of the individual probabilities. The phrase pairwise disjoint is stronger than saying only that the whole collection has empty total intersection. It requires every two-event overlap to be empty, because any such overlap would otherwise be counted twice in the sum.
 
 Several familiar rules are consequences of these axioms rather than additional axioms. For example,
 
@@ -88,7 +88,7 @@ $$\mathbb{P}(\varnothing)=0$$
 
 follows because $\Omega$ and $\Omega \cup \varnothing$ are the same event, while finite additivity for disjoint sets is the finite case of countable additivity.
 
-Inclusion-exclusion is also derived, not assumed. Write
+Inclusion-exclusion is also derived, not assumed. The clean way to derive it is to decompose the union into pieces that do not overlap. Write
 
 $$A \cup B = A \cup (B \setminus A),$$
 
@@ -100,11 +100,11 @@ But $B$ itself decomposes as the disjoint union
 
 $$B = (B \setminus A) \cup (A \cap B),$$
 
-because every world in $B$ falls into exactly one of two cases: either it is not in $A$, in which case it lies in $B \setminus A$, or it is also in $A$, in which case it lies in $A \cap B$. These two cases cannot happen simultaneously, so they are disjoint. Therefore
+because every world in $B$ falls into exactly one of two cases. Either it is not in $A$, in which case it lies in $B \setminus A$, or it is also in $A$, in which case it lies in $A \cap B$. These two cases cannot happen simultaneously, so they are disjoint. Therefore
 
 $$\mathbb{P}(B) = \mathbb{P}(B \setminus A) + \mathbb{P}(A \cap B).$$
 
-Eliminating $\mathbb{P}(B \setminus A)$ yields
+Now solve the second equation for $\mathbb{P}(B \setminus A)$ and substitute the result into the first equation. That removes the intermediate term and leaves the familiar correction formula
 
 $$\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B).$$
 
@@ -337,7 +337,9 @@ $$p(D=1 \mid T=1)=\frac{0.016+0.108}{0.20}=\frac{0.124}{0.20}=0.62.$$
 
 The key beginner intuition is "restrict first, renormalize second."
 
-It is also important to separate conditioning from intervention. The quantity $p(D \mid T=1)$ describes what the distribution of $D$ looks like inside the worlds where toothache already occurs. It does not say what would happen if we physically forced a toothache event to happen by intervention. Probabilistic conditioning is an informational operation, not automatically a causal one.
+It is also important to separate conditioning from intervention. The conditional distribution $p(D \mid T=1)$ is obtained by taking the original joint distribution, keeping only the worlds in which toothache has already been observed, and renormalizing the remaining probabilities so they sum to one. So this conditional answers an informational question: among the worlds where $T=1$ is already true, how does the probe variable $D$ behave?
+
+That is different from an intervention. An intervention would mean externally forcing $T$ to equal $1$ and then asking how $D$ changes under that manipulated system. In the dentist story, observing a toothache gives information about whether a cavity is present, and that information changes the distribution of $D$. But physically causing a toothache would not automatically carry the same information about the cavity state. A plain joint distribution supports conditioning; it does not, by itself, tell us the effect of interventions. For intervention questions, one needs extra causal structure beyond ordinary probability tables.
 
 ### Example 2-5: Bayes Rule
 
@@ -345,15 +347,31 @@ Bayes rule converts a forward model into a reverse one:
 
 $$p(C=c \mid D=d) = \frac{p(D=d \mid C=c)p(C=c)}{p(D=d)}.$$
 
-Read it as:
+Before using shorthand language, it helps to name each term explicitly. The prior is $p(C=c)$, which is the probability assigned to the hypothesis before seeing the observation. The likelihood is $p(D=d \mid C=c)$, which measures how compatible the observation is with that hypothesis. The evidence is $p(D=d)$, which is the total probability of the observation after averaging over every way that observation could occur. The posterior is $p(C=c \mid D=d)$, which is the updated probability after the observation has been taken into account.
+
+With those names in place, the formula can be read as the sentence
 
 $$\text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}.$$
 
-For two competing hypotheses $H_1$ and $H_0$, Bayes' rule also has an odds form:
+This sentence is only a mnemonic for the roles played by the four terms. It is not a second formula that must be memorized separately. It simply says that the updated belief equals the old belief, reweighted by how strongly the data supports that hypothesis, and then normalized by the total probability of the observation.
+
+To describe the odds form, suppose $H_1$ and $H_0$ are two mutually exclusive hypotheses, meaning two competing explanations that cannot both be true at the same time. Let $E$ denote the observed evidence. Bayes' rule then implies
 
 $$\frac{p(H_1 \mid E)}{p(H_0 \mid E)} = \frac{p(E \mid H_1)}{p(E \mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}.$$
 
-This factorization is often more informative than the scalar formula because it separates three roles cleanly. The prior odds tell us how plausible the hypotheses were before seeing evidence. The likelihood ratio tells us how strongly the evidence favors one hypothesis over the other. The posterior odds are the updated result after those two effects are combined.
+This odds form is often more informative than the scalar formula because each ratio has a distinct interpretation. The prior odds
+
+$$\frac{p(H_1)}{p(H_0)}$$
+
+compare the plausibility of the two hypotheses before any new evidence is observed. The likelihood ratio
+
+$$\frac{p(E \mid H_1)}{p(E \mid H_0)}$$
+
+measures how much more strongly the evidence supports $H_1$ than $H_0$. The posterior odds
+
+$$\frac{p(H_1 \mid E)}{p(H_0 \mid E)}$$
+
+are the updated comparison after the evidence has been incorporated. The evidence term does not appear explicitly in this ratio form because the same normalizing constant $p(E)$ appears in both posterior probabilities and cancels when the quotient is taken.
 
 For the dentist example, suppose:
 
