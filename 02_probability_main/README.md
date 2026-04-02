@@ -343,7 +343,7 @@ That is different from an intervention. An intervention would mean externally fo
 
 ### Example 2-5: Bayes Rule
 
-Bayes rule converts a forward model into a reverse one:
+Bayes rule starts from a model of how likely an observation is under each hypothesis, such as $p(D=d \mid C=c)$, and turns it into a model of how likely each hypothesis is after the observation has been seen, namely $p(C=c \mid D=d)$:
 
 $$p(C=c \mid D=d) = \frac{p(D=d \mid C=c)p(C=c)}{p(D=d)}.$$
 
