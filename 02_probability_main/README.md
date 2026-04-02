@@ -529,7 +529,13 @@ In this example, the prior disease probability is $p(D=1)=0.01$, which is $1\%$.
 
 ### Example 2-6: Table-Based Computation
 
-The same Bayes update can be done by manipulating tables directly. Start with the full table of $p(T,D,C)$, extract the subtable where $T=1$, sum over $D$, then normalize.
+The same Bayes update can be done by manipulating tables directly. The goal is to compute the posterior distribution $p(C \mid T=1)$, meaning "how likely is a cavity after we observe toothache."
+
+The table view is easiest to understand if we write the target posterior in a way that matches the three operations we will perform:
+
+$$p(C \mid T=1)=\frac{\sum_d p(T=1,d,C)}{\sum_{c,d} p(T=1,d,c)}.$$
+
+The numerator $\sum_d p(T=1,d,C)$ means: fix the evidence $T=1$, then sum out the hidden variable $D$ to obtain a joint table over $(T=1,C)$. The denominator $\sum_{c,d} p(T=1,d,c)$ is the total probability of the evidence $T=1$, also called the evidence or normalization constant. Dividing by that constant is what turns the remaining nonnegative numbers into a proper posterior distribution that sums to $1$ over the possible cavity states.
 
 ![Restriction, marginalization, and normalization pipeline](../notes/02_probability_reconstructed/assets/figure_2_table_update_pipeline.png)
 
@@ -542,15 +548,16 @@ The same Bayes update can be done by manipulating tables directly. Start with th
         <table>
           <thead>
             <tr>
-              <th><i>DC</i></th>
+              <th><i>D</i></th>
+              <th><i>C</i></th>
               <th><i>p(T = 1, D, C)</i></th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>00</td><td>0.064</td></tr>
-            <tr><td>01</td><td>0.012</td></tr>
-            <tr><td>10</td><td>0.016</td></tr>
-            <tr><td>11</td><td>0.108</td></tr>
+            <tr><td>0</td><td>0</td><td>0.064</td></tr>
+            <tr><td>0</td><td>1</td><td>0.012</td></tr>
+            <tr><td>1</td><td>0</td><td>0.016</td></tr>
+            <tr><td>1</td><td>1</td><td>0.108</td></tr>
           </tbody>
         </table>
       </td>
@@ -589,9 +596,35 @@ The same Bayes update can be done by manipulating tables directly. Start with th
 </table>
 <!-- table-stack:end -->
 
-This is the same computation as Bayes rule, but expressed as table arithmetic.
+The three tables correspond exactly to three conceptual operations, and every number in them comes from one of three formulas: restriction (copy the consistent rows), marginalization (sum out $D$), and normalization (divide by the evidence total).
 
-The three tables correspond exactly to three conceptual operations. The first table performs restriction by keeping only the rows consistent with the evidence $T=1$. The second table performs marginalization by summing out the hidden variable $D$. The third table performs normalization so the remaining numbers add to one and therefore form a proper posterior distribution over $C$.
+Step 1 (restrict to $T=1$). The first table is the $T=1$ slice of the full joint table $p(T,D,C)$. Each entry is copied directly from the original joint table by keeping only the rows with $T=1$. The total mass of this restricted slice is
+
+$$p(T=1,D=0,C=0)=0.064,\qquad p(T=1,D=0,C=1)=0.012,$$
+
+$$p(T=1,D=1,C=0)=0.016,\qquad p(T=1,D=1,C=1)=0.108,$$
+
+and summing them gives
+
+$$p(T=1)=0.064+0.012+0.016+0.108=0.20.$$
+
+This $0.20$ is the probability that a toothache occurs under the model, before conditioning on anything else. It is also the normalizing constant we will divide by at the end.
+
+Step 2 (marginalize out $D$). To obtain $p(T=1,C)$, add over the two possible values of $D$ for each fixed cavity state:
+
+$$p(T=1,C=0)=p(T=1,D=0,C=0)+p(T=1,D=1,C=0)=0.064+0.016=0.080,$$
+
+$$p(T=1,C=1)=p(T=1,D=0,C=1)+p(T=1,D=1,C=1)=0.012+0.108=0.120.$$
+
+Notice that this intermediate table is still not a conditional distribution over $C$. It is a joint table with $T=1$ fixed, so it sums to $p(T=1)$:
+
+$$0.080+0.120=0.20.$$
+
+Step 3 (normalize). Finally divide by the evidence total $p(T=1)=0.20$ to turn $p(T=1,C)$ into a posterior distribution over $C$:
+
+$$p(C=0 \mid T=1)=\frac{0.080}{0.20}=0.40,\qquad p(C=1 \mid T=1)=\frac{0.120}{0.20}=0.60.$$
+
+Now the two posterior probabilities sum to $1$, as they must. Interpreting the result: after observing toothache, the cavity probability rises from the prior $p(C=1)=0.20$ to the posterior $p(C=1 \mid T=1)=0.60$.
 
 ### Expectation
 

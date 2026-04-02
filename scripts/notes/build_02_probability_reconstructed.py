@@ -1040,10 +1040,10 @@ def write_table_update_pipeline_assets(assets_dir: Path) -> None:
                 '  rankdir=LR;',
                 '  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
                 '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
-                '  joint [label="Full joint\\np(T,D,C)"];',
-                '  restrict [label="Restrict evidence\\nkeep rows with T = 1"];',
-                '  marginal [label="Marginalize\\nsum over D"];',
-                '  normalize [label="Normalize\\nobtain p(C | T = 1)"];',
+                '  joint [label="Full joint\\np(T,D,C)\\n8 rows, sum = 1"];',
+                '  restrict [label="Restrict\\nkeep T = 1\\np(T=1,D,C)"];',
+                '  marginal [label="Marginalize\\nsum over D\\np(T=1,C)"];',
+                '  normalize [label="Normalize\\ndivide by p(T=1)\\np(C | T = 1)"];',
                 '  joint -> restrict -> marginal -> normalize;',
                 "}",
                 "",
@@ -1059,10 +1059,10 @@ def write_table_update_pipeline_assets(assets_dir: Path) -> None:
     insert_fonts(page, include_diagram=True)
 
     boxes = [
-        (40, 54, 220, 142, "Full joint", "all rows of the table", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
-        (260, 54, 440, 142, "Restrict evidence", "keep only rows with T = 1", DIAGRAM_WARM_FILL, DIAGRAM_WARM_STROKE),
-        (480, 54, 660, 142, "Marginalize", "sum over D", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
-        (700, 54, 880, 142, "Normalize", "turn the result into a posterior", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
+        (40, 54, 220, 142, "Full joint", "p(T,D,C)\n8 rows, sum = 1", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (260, 54, 440, 142, "Restrict", "keep T = 1\np(T=1,D,C)\nsum = 0.20", DIAGRAM_WARM_FILL, DIAGRAM_WARM_STROKE),
+        (480, 54, 660, 142, "Marginalize", "sum over D\np(T=1,C)", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (700, 54, 880, 142, "Normalize", "divide by 0.20\np(C | T=1)", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
     ]
     for x0, y0, x1, y1, title, subtitle, fill, stroke in boxes:
         _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
@@ -1072,7 +1072,7 @@ def write_table_update_pipeline_assets(assets_dir: Path) -> None:
 
     page.insert_textbox(
         fitz.Rect(56, 166, 864, 204),
-        "Table inference is an operator sequence: restrict to evidence, sum out hidden variables, then renormalize.",
+        "Operator view: u(C)=sum over d p(T=1,d,C), then p(C|T=1)=u(C)/sum over c u(c).",
         fontname="diagram",
         fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=13.5,

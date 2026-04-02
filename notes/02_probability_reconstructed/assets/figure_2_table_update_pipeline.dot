@@ -2,9 +2,9 @@ digraph TableUpdate {
   rankdir=LR;
   node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];
   edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];
-  joint [label="Full joint\np(T,D,C)"];
-  restrict [label="Restrict evidence\nkeep rows with T = 1"];
-  marginal [label="Marginalize\nsum over D"];
-  normalize [label="Normalize\nobtain p(C | T = 1)"];
+  joint [label="Full joint\np(T,D,C)\n8 rows, sum = 1"];
+  restrict [label="Restrict\nkeep T = 1\np(T=1,D,C)"];
+  marginal [label="Marginalize\nsum over D\np(T=1,C)"];
+  normalize [label="Normalize\ndivide by p(T=1)\np(C | T = 1)"];
   joint -> restrict -> marginal -> normalize;
 }
