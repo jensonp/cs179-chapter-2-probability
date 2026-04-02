@@ -523,7 +523,9 @@ Therefore
 
 $$p(D=1 \mid T=+)=\frac{0.95 \cdot 0.01}{0.1085}\approx 0.0876.$$
 
-So even after a positive test, the posterior probability is only about $8.8\%$. The test is informative, because the probability rose from $1\%$ to almost $9\%$, but the disease remains unlikely because the base rate was extremely small to begin with. This is exactly the setting in which base-rate neglect causes intuitive mistakes.
+Here is what those numbers mean in both probability and percentage form. Probabilities are numbers between $0$ and $1$. To convert a probability to a percentage, multiply by $100$.
+
+In this example, the prior disease probability is $p(D=1)=0.01$, which is $1\%$. After observing a positive test, the posterior is $p(D=1 \mid T=+)\approx 0.0876$, which is about $8.76\%$ (rounded to $8.8\%$). So the test is informative because it raises the disease probability from $0.01$ to about $0.088$, but the disease still remains unlikely (well under $10\%$) because the base rate was extremely small to begin with. This is exactly the setting in which base-rate neglect causes intuitive mistakes.
 
 ### Example 2-6: Table-Based Computation
 
