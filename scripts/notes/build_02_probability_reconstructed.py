@@ -1074,10 +1074,10 @@ def write_indicator_product_assets(assets_dir: Path) -> None:
                 '  rankdir=LR;',
                 '  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
                 '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
-                '  sun [label="sun\\nρ_sun\\nindicator = 0"];',
-                '  cloud [label="cloud\\nρ_cloud\\nindicator = 0"];',
-                '  rain [label="rain\\nρ_rain\\nindicator = 1"];',
-                '  product [label="ρ_sun^0 ρ_cloud^0 ρ_rain^1\\n= 1 · 1 · 0.2 = 0.2"];',
+                '  sun [label="sun\\nselected exponent: 0"];',
+                '  cloud [label="cloud\\nselected exponent: 0"];',
+                '  rain [label="rain\\nselected exponent: 1"];',
+                '  product [label="sun off · cloud off · rain on\\n= 1 · 1 · 0.2 = 0.2"];',
                 '  sun -> product;',
                 '  cloud -> product;',
                 '  rain -> product;',
@@ -1096,9 +1096,9 @@ def write_indicator_product_assets(assets_dir: Path) -> None:
         page.insert_font(fontname=alias, fontfile=str(path))
 
     boxes = [
-        (58, 56, 238, 154, "State: sun", "ρ_sun\nindicator exponent = 0", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (286, 56, 466, 154, "State: cloud", "ρ_cloud\nindicator exponent = 0", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (514, 56, 694, 154, "State: rain", "ρ_rain\nindicator exponent = 1", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+        (58, 56, 238, 154, "State: sun", "selected exponent = 0\nthis factor is turned off", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (286, 56, 466, 154, "State: cloud", "selected exponent = 0\nthis factor is turned off", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (514, 56, 694, 154, "State: rain", "selected exponent = 1\nthis factor stays active", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
     ]
     for x0, y0, x1, y1, title, subtitle, fill, stroke in boxes:
         _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
@@ -1108,7 +1108,7 @@ def write_indicator_product_assets(assets_dir: Path) -> None:
         page,
         product_rect,
         "Product form when X = rain",
-        "ρ_sun^0 · ρ_cloud^0 · ρ_rain^1 = 1 · 1 · 0.2 = 0.2",
+        "off · off · on = 1 · 1 · 0.2 = 0.2",
         (0.992, 0.973, 0.941),
         (0.773, 0.631, 0.416),
     )
@@ -1119,7 +1119,7 @@ def write_indicator_product_assets(assets_dir: Path) -> None:
 
     page.insert_textbox(
         fitz.Rect(84, 8, 896, 34),
-        "Indicator exponents do not encode probabilities; they only mark which state was realized.",
+        "Indicator exponents only mark which state was realized; they do not store probabilities.",
         fontname="body",
         fontfile=str(FONT_FILES["body"]),
         fontsize=13.5,
@@ -1231,12 +1231,12 @@ def write_copula_flow_pipeline_assets(assets_dir: Path) -> None:
                 '  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
                 '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
                 '  obs [label="Observed data x"];',
-                '  uni [label="Marginal CDFs\\nu = P(x)"];',
-                '  gauss [label="Gaussianized variables\\nz = Φ^{-1}(u)"];',
-                '  dep [label="Dependence model\\nfit copula in z-space"];',
-                '  base [label="Base density\\nz ~ p_Z"];',
-                '  layers [label="Invertible layers\\nf_1, f_2, ... , f_T"];',
-                '  data [label="Complex density\\nx = f(z)"];',
+                '  uni [label="Marginal CDFs\\nconvert to percentiles"];',
+                '  gauss [label="Gaussianize\\nmap percentiles to Gaussian scale"];',
+                '  dep [label="Dependence model\\nfit copula in transformed space"];',
+                '  base [label="Base density\\nsimple latent distribution"];',
+                '  layers [label="Invertible layers\\ncompose simple transforms"];',
+                '  data [label="Complex density\\nflexible observed distribution"];',
                 '  obs -> uni -> gauss -> dep;',
                 '  base -> layers -> data;',
                 "}",
@@ -1259,20 +1259,20 @@ def write_copula_flow_pipeline_assets(assets_dir: Path) -> None:
     page.insert_textbox(fitz.Rect(40, 200, 940, 226), "Normalizing Flow Pipeline", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
 
     top_boxes = [
-        (58, 72, 242, 132, "Observed data x", "non-Gaussian marginals"),
-        (286, 72, 470, 132, "Marginal CDFs", "u = P(x)"),
-        (514, 72, 698, 132, "Gaussianize", "z = Φ⁻¹(u)"),
-        (742, 72, 926, 132, "Dependence model", "fit Gaussian copula"),
+        (58, 72, 242, 132, "Observed data", "raw coordinates and marginals", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (286, 72, 470, 132, "Marginal CDFs", "convert each coordinate to a percentile", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (514, 72, 698, 132, "Gaussianize", "map percentiles to Gaussian scale", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (742, 72, 926, 132, "Dependence model", "fit the copula after the transform", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
     ]
     bottom_boxes = [
-        (132, 240, 316, 300, "Base density", "z ~ p_Z"),
-        (398, 240, 582, 300, "Invertible layers", "f₁, f₂, ... , f_T"),
-        (664, 240, 848, 300, "Complex density", "x = f(z)"),
+        (132, 240, 316, 300, "Base density", "start from a simple latent distribution", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+        (398, 240, 582, 300, "Invertible layers", "compose simple reversible transforms", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+        (664, 240, 848, 300, "Complex density", "obtain a flexible observed distribution", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
     ]
-    for x0, y0, x1, y1, title, subtitle in top_boxes:
-        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, (0.965, 0.973, 0.988), (0.556, 0.631, 0.761))
-    for x0, y0, x1, y1, title, subtitle in bottom_boxes:
-        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, (0.933, 0.969, 0.953), (0.494, 0.655, 0.561))
+    for x0, y0, x1, y1, title, subtitle, fill, stroke in top_boxes:
+        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
+    for x0, y0, x1, y1, title, subtitle, fill, stroke in bottom_boxes:
+        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
 
     for start_x, end_x in [(242, 286), (470, 514), (698, 742)]:
         _draw_arrow(page, (start_x, 102), (end_x, 102), (0.49, 0.56, 0.7), width=3)
