@@ -1065,6 +1065,73 @@ def write_table_update_pipeline_assets(assets_dir: Path) -> None:
     doc.close()
 
 
+def write_indicator_product_assets(assets_dir: Path) -> None:
+    dot_path = assets_dir / "figure_2_indicator_product_selector.dot"
+    dot_path.write_text(
+        "\n".join(
+            [
+                "digraph IndicatorProduct {",
+                '  rankdir=LR;',
+                '  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
+                '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
+                '  sun [label="sun\\nρ_sun\\nindicator = 0"];',
+                '  cloud [label="cloud\\nρ_cloud\\nindicator = 0"];',
+                '  rain [label="rain\\nρ_rain\\nindicator = 1"];',
+                '  product [label="ρ_sun^0 ρ_cloud^0 ρ_rain^1\\n= 1 · 1 · 0.2 = 0.2"];',
+                '  sun -> product;',
+                '  cloud -> product;',
+                '  rain -> product;',
+                "}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    png_path = assets_dir / "figure_2_indicator_product_selector.png"
+    doc = fitz.open()
+    page = doc.new_page(width=980, height=290)
+    page.draw_rect(page.rect, fill=(1, 1, 1))
+    for alias, path in FONT_FILES.items():
+        page.insert_font(fontname=alias, fontfile=str(path))
+
+    boxes = [
+        (58, 56, 238, 154, "State: sun", "ρ_sun\nindicator exponent = 0", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (286, 56, 466, 154, "State: cloud", "ρ_cloud\nindicator exponent = 0", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (514, 56, 694, 154, "State: rain", "ρ_rain\nindicator exponent = 1", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+    ]
+    for x0, y0, x1, y1, title, subtitle, fill, stroke in boxes:
+        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
+
+    product_rect = fitz.Rect(282, 196, 698, 258)
+    _draw_labeled_box(
+        page,
+        product_rect,
+        "Product form when X = rain",
+        "ρ_sun^0 · ρ_cloud^0 · ρ_rain^1 = 1 · 1 · 0.2 = 0.2",
+        (0.992, 0.973, 0.941),
+        (0.773, 0.631, 0.416),
+    )
+
+    _draw_arrow(page, (148, 154), (372, 196), (0.49, 0.56, 0.7), width=3)
+    _draw_arrow(page, (376, 154), (490, 196), (0.49, 0.56, 0.7), width=3)
+    _draw_arrow(page, (604, 154), (608, 196), (0.49, 0.56, 0.7), width=3)
+
+    page.insert_textbox(
+        fitz.Rect(84, 8, 896, 34),
+        "Indicator exponents do not encode probabilities; they only mark which state was realized.",
+        fontname="body",
+        fontfile=str(FONT_FILES["body"]),
+        fontsize=13.5,
+        color=(0.33, 0.39, 0.46),
+        align=1,
+    )
+
+    pix = page.get_pixmap(matrix=fitz.Matrix(2.0, 2.0), alpha=False)
+    pix.save(png_path)
+    doc.close()
+
+
 def write_conditional_structure_assets(assets_dir: Path) -> None:
     dot_path = assets_dir / "figure_2_conditional_independence_structures.dot"
     dot_path.write_text(
@@ -1241,6 +1308,7 @@ def build(markdown_path: Path, source_pdf: Path, assets_dir: Path, output_pdf: P
         extract_figures(source_pdf, assets_dir)
         write_sequential_update_assets(assets_dir)
         write_table_update_pipeline_assets(assets_dir)
+        write_indicator_product_assets(assets_dir)
         write_conditional_structure_assets(assets_dir)
         write_copula_flow_pipeline_assets(assets_dir)
     blocks = parse_markdown(markdown_path)

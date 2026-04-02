@@ -54,7 +54,11 @@ This explains an important notation point. A statement such as $X=x$ is not a my
 
 $$\{\omega \in \Omega : X(\omega)=x\}.$$
 
-Likewise, the event $X \le t$ means the subset of worlds whose assigned values are at most $t$. This distinction matters because probabilities are fundamentally attached to events, while PMFs, PDFs, and CDFs are devices derived from the way a random variable pushes that event-level probability structure onto its value space.
+Likewise, the statement $X \le t$ is shorthand for the event
+
+$$\{\omega \in \Omega : X(\omega)\le t\}.$$
+
+In words: it is the set of all worlds whose value under $X$ is at most $t$. This matters because the notation looks like an ordinary numerical inequality, but probabilistically it is still an event in the sample space. Probabilities are attached to events first; PMFs, PDFs, and CDFs are derived descriptions of how that event-level probability structure appears after the random variable has mapped worlds into numerical values.
 
 ### Probability Axioms and First Consequences
 
@@ -72,6 +76,12 @@ $$\mathbb{P}\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} \mat
 
 whenever the events $A_1,A_2,\dots$ are pairwise disjoint.
 
+Pairwise disjoint means that no single world belongs to two different events in the collection. Formally,
+
+$$A_i \cap A_j = \varnothing \qquad \text{whenever } i \ne j.$$
+
+So countable additivity applies only when the events do not overlap. In that case there is no double counting, so the probability of the union is exactly the sum of the individual probabilities.
+
 Several familiar rules are consequences of these axioms rather than additional axioms. For example,
 
 $$\mathbb{P}(\varnothing)=0$$
@@ -82,7 +92,7 @@ Inclusion-exclusion is also derived, not assumed. Write
 
 $$A \cup B = A \cup (B \setminus A),$$
 
-where the two pieces are disjoint. Then
+where the two pieces are disjoint. The reason is simple: every world in $A$ is, by definition, in $A$, while every world in $B \setminus A$ is in $B$ but explicitly not in $A$. So no world can belong to both pieces at once. Then
 
 $$\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B \setminus A).$$
 
@@ -90,7 +100,7 @@ But $B$ itself decomposes as the disjoint union
 
 $$B = (B \setminus A) \cup (A \cap B),$$
 
-so
+because every world in $B$ falls into exactly one of two cases: either it is not in $A$, in which case it lies in $B \setminus A$, or it is also in $A$, in which case it lies in $A \cap B$. These two cases cannot happen simultaneously, so they are disjoint. Therefore
 
 $$\mathbb{P}(B) = \mathbb{P}(B \setminus A) + \mathbb{P}(A \cap B).$$
 
@@ -142,6 +152,22 @@ $$p(X=0)=3/6, \qquad p(X=1)=3/6.$$
 
 The random variable therefore compresses a detailed world description into the part of the world we care about.
 
+### PMFs and Indicator Notation
+
+Before writing down specific discrete distributions, it helps to define two pieces of notation that will be used repeatedly.
+
+For a discrete random variable, the probability mass function, or PMF, is the function that assigns a probability to each possible state:
+
+$$p(X=x)=\mathbb{P}(X=x).$$
+
+So a PMF is not a new kind of probability. It is simply the probability of the event $X=x$, viewed as a function of the value $x$.
+
+The second piece of notation is the indicator function
+
+$$\mathbf{1}[X=x],$$
+
+which equals $1$ when the statement inside the brackets is true and equals $0$ when it is false. Indicator notation is useful because it turns a logical statement such as "the realized state is rain" into a numerical exponent or coefficient. That is exactly what happens in the Bernoulli and categorical product forms below.
+
 ### Example 2-2: Bernoulli Distribution
 
 A Bernoulli random variable is binary:
@@ -182,11 +208,13 @@ If $X \in \{1,\dots,d\}$, then a discrete distribution is just a probability tab
 
 $$\mathbb{P}(X=i) = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.$$
 
-Only $d-1$ of those values are free, because the last one is determined by normalization. One compact representation is
+This table is the PMF of the variable. For each possible state $i$, the number $\rho_i$ is the probability that $X$ takes that state. Only $d-1$ of those values are free, because the last one is determined by normalization. If the first $d-1$ probabilities are already fixed, the final one must be whatever value makes the whole table sum to one.
+
+One compact representation is
 
 $$p(X) = \prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}.$$
 
-This simply selects the probability attached to the realized state and turns the others off.
+This product form is compact, but it should not be read too quickly. The indicator in the exponent decides which factor stays active. If the realized state is $i$, then $\mathbf{1}[X=i]=1$ for that one state and $\mathbf{1}[X=j]=0$ for every other state $j \ne i$. So the factor corresponding to the realized state contributes its probability, while every non-realized factor becomes a zero-th power and therefore contributes the multiplicative identity $1$.
 
 A concrete three-state example makes the structure explicit. Suppose weather tomorrow is modeled as
 
@@ -196,11 +224,31 @@ with
 
 $$\rho_{\text{sun}}=0.5,\qquad \rho_{\text{cloud}}=0.3,\qquad \rho_{\text{rain}}=0.2.$$
 
-If the realized state is rain, then the product form becomes
+Suppose the realized state is rain. Then the three indicator exponents are
+
+$$\mathbf{1}[X=\text{sun}]=0,\qquad \mathbf{1}[X=\text{cloud}]=0,\qquad \mathbf{1}[X=\text{rain}]=1.$$
+
+Substituting those values into the product form gives
+
+$$p(X)=\rho_{\text{sun}}^{0}\rho_{\text{cloud}}^{0}\rho_{\text{rain}}^{1}.$$
+
+Now evaluate each factor separately. The first two factors are
+
+$$\rho_{\text{sun}}^{0}=1,\qquad \rho_{\text{cloud}}^{0}=1,$$
+
+not because sun or cloud have probability zero, but because those states were not realized in this particular outcome. The final factor is
+
+$$\rho_{\text{rain}}^{1}=\rho_{\text{rain}}=0.2.$$
+
+So the whole product reduces to
 
 $$\rho_{\text{sun}}^0 \rho_{\text{cloud}}^0 \rho_{\text{rain}}^1 = 0.2.$$
 
-The exponents are indicators, so all irrelevant states are raised to the zero power and disappear.
+That is why the exponents look like $0,0,1$: they are not probabilities, they are indicator values saying which state actually occurred. If the realized state had been cloud instead, the exponents would have been $0,1,0$ and the same product would have selected $\rho_{\text{cloud}}=0.3$ instead.
+
+![Indicator exponents select the realized state](../notes/02_probability_reconstructed/assets/figure_2_indicator_product_selector.png)
+
+The main structural idea is that a categorical PMF can be written either as an explicit table or as a product that automatically selects the row corresponding to the realized state. The table form is easier to read at first; the product form becomes useful later when we write more complicated models compactly.
 
 ### Geometric Distribution
 
@@ -220,7 +268,9 @@ For example, if $\rho=0.2$, then
 
 $$p(X=0)=0.2,\qquad p(X=1)=0.8 \cdot 0.2=0.16,\qquad p(X=2)=0.8^2 \cdot 0.2=0.128.$$
 
-So the distribution puts its largest mass at zero and then decays geometrically to the right. That is why its histogram has a tall first bar and a long right tail.
+The key numerical pattern is that each step to the right multiplies the previous probability by another factor of $(1-\rho)$. When $\rho=0.2$, that factor is $0.8$, so each bar is $80\%$ of the bar immediately before it. Concretely, the first few probabilities are $0.2$, $0.16$, $0.128$, and so on. That is what "decays geometrically to the right" means: the bars do not decrease by subtracting a fixed amount; they decrease by repeated multiplication by the same ratio.
+
+So a histogram of this distribution has a tallest bar at $x=0$, then progressively smaller bars as $x$ increases. The right tail is long because there is always some chance that many failures occur before the first success, but the probability of those larger counts drops off by repeated multiplication.
 
 The mean under this zero-based convention is
 
@@ -453,9 +503,13 @@ The three tables correspond exactly to three conceptual operations. The first ta
 
 ### Expectation
 
-The expectation of a discrete variable is a weighted average:
+The expectation, or expected value, is the long-run average value of the variable if the same random experiment were repeated many times and the outcomes were averaged. In a discrete model, that long-run average is computed by weighting each possible value by the probability of seeing it. So the expectation is a probability-weighted average, not a guess about the single next outcome.
+
+For a discrete variable, the definition is:
 
 $$\mathbb{E}[X] = \sum_x x \, p(x).$$
+
+Each term in the sum has a clear meaning. The value $x$ tells us what the outcome contributes if it occurs, and the factor $p(x)$ tells us how often it occurs in the long run. Multiplying and summing therefore averages the possible outcomes according to how likely they are.
 
 For a Bernoulli variable, $\mathbb{E}[X] = \rho$, which is why the Bernoulli parameter is also the mean.
 
