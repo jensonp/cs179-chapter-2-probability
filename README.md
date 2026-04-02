@@ -17,6 +17,16 @@ If you want GitHub to render each note automatically, open:
 If you only want one file, start with `02_probability_main/`.
 If you want the homework-specific reading flow, start with `hw1_reading_guide/`.
 
+## HW1 LaTeX Preview
+
+To set up the Homework 1 LaTeX live-preview workspace in VS Code, run from the repository root:
+
+- macOS / Linux: `python3 scripts/setup_hw1_latex_workspace.py`
+- Windows: `py -3 scripts\\setup_hw1_latex_workspace.py`
+
+That writes a dedicated `hw1-latex.code-workspace` plus the `.vscode` build settings inside `output/overleaf/cs179-hw1-project/`.
+The HW1 project is organized into `source/` for editable files and `build/` for generated PDFs/logs.
+
 ## Source Layout
 
 - `02_probability_main/README.md`: main reconstructed chapter source
