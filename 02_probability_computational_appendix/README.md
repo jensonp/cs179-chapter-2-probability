@@ -134,13 +134,13 @@ are samples from a model, then the empirical estimate of the mean is
 
 $$\hat{\mu}_m=\frac{1}{m}\sum_{i=1}^m X^{(i)}.$$
 
-The law of large numbers says that this quantity should stabilize near $E[X]$ as $m$ grows. The practical purpose of the simulation is not merely to approximate a number, but to develop intuition for which exact formulas are averages in disguise.
+The law of large numbers says that this quantity should stabilize near $\mathbb{E}[X]$ as $m$ grows. The practical purpose of the simulation is not merely to approximate a number, but to develop intuition for which exact formulas are averages in disguise.
 
 ### Worked Example: Bernoulli Mean
 
 If $X \sim \mathrm{Bernoulli}(0.3)$, then the exact expectation is
 
-$$E[X]=0.3.$$
+$$\mathbb{E}[X]=0.3.$$
 
 Suppose a small simulation produces the ten outcomes
 
@@ -156,7 +156,7 @@ A different run might produce $0.2$ or $0.4$ instead, because ten samples is sti
 
 For a fair die,
 
-$$E[X]=3.5.$$
+$$\mathbb{E}[X]=3.5.$$
 
 If a simulation produces the six values
 

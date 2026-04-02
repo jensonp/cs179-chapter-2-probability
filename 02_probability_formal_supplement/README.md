@@ -134,11 +134,11 @@ Interpretation. Posterior odds equal likelihood ratio times prior odds. The rati
 
 For integrable random variables $X$ and $Y$ and constants $a$, $b$, and $c$,
 
-$$E[aX+bY+c]=aE[X]+bE[Y]+c.$$
+$$\mathbb{E}[aX+bY+c]=a\mathbb{E}[X]+b\mathbb{E}[Y]+c.$$
 
 Proof. In the discrete case,
 
-$$E[aX+bY+c]=\sum_{\omega}(aX(\omega)+bY(\omega)+c)P(\omega).$$
+$$\mathbb{E}[aX+bY+c]=\sum_{\omega}(aX(\omega)+bY(\omega)+c)P(\omega).$$
 
 Distribute the sum and use
 
@@ -148,13 +148,13 @@ The continuous case is the same calculation with integrals replacing sums. No in
 
 ### Proposition: Variance Identity
 
-If $E[X^2]$ is finite, then
+If $\mathbb{E}[X^2]$ is finite, then
 
-$$\mathrm{Var}(X)=E[X^2]-E[X]^2.$$
+$$\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2.$$
 
 Proof. Expand the square:
 
-$$\mathrm{Var}(X)=E[(X-E[X])^2] =E[X^2-2XE[X]+E[X]^2].$$
+$$\mathrm{Var}(X)=\mathbb{E}[(X-\mathbb{E}[X])^2] =\mathbb{E}[X^2-2X\mathbb{E}[X]+\mathbb{E}[X]^2].$$
 
 Pull constants outside expectation and simplify.
 
@@ -234,7 +234,7 @@ $$p(x;\theta)=h(x)\exp(\theta^T\phi(x)-A(\theta)),$$
 
 one has
 
-$$\nabla A(\theta)=E_\theta[\phi(X)]$$
+$$\nabla A(\theta)=\mathbb{E}_\theta[\phi(X)]$$
 
 and
 

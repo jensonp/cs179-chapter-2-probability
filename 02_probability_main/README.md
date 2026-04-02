@@ -30,7 +30,7 @@ If time is short, read `2.1`, the Geometric section, the core parts of `2.2`, an
 
 ## Notation Policy
 
-Throughout the note, `Pr[A]` denotes the probability of an event $A$, while $p(x)$ denotes a PMF or PDF value when such an object exists. Random variables are written with uppercase letters, realized values with lowercase letters, $F_X(x)$ denotes a CDF, and $\Omega$ denotes the sample space. When a formula is valid only in a discrete setting, only for densities, only for invertible maps, or only away from a boundary case, that restriction is stated explicitly rather than left implicit.
+Throughout the note, `\mathbb{P}(A)` denotes the probability of an event $A$, while $p(x)$ denotes a PMF or PDF value when such an object exists. Random variables are written with uppercase letters, realized values with lowercase letters, $F_X(x)$ denotes a CDF, and $\Omega$ denotes the sample space. When a formula is valid only in a discrete setting, only for densities, only for invertible maps, or only away from a boundary case, that restriction is stated explicitly rather than left implicit.
 
 ## 2.1 Probability, Events, Random Variables
 
@@ -60,21 +60,21 @@ Likewise, the event $X \le t$ means the subset of worlds whose assigned values a
 
 Now fix a probability space $(\Omega,\mathcal{F},P)$. The actual axioms are:
 
-$$0 \le Pr[A]$$
+$$0 \le \mathbb{P}(A)$$
 
 for every event $A \in \mathcal{F}$,
 
-$$Pr[\Omega] = 1,$$
+$$\mathbb{P}(\Omega) = 1,$$
 
 and countable additivity:
 
-$$Pr\!\left[\bigcup_{i=1}^{\infty} A_i\right] = \sum_{i=1}^{\infty} Pr[A_i]$$
+$$\mathbb{P}\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} \mathbb{P}(A_i)$$
 
 whenever the events $A_1,A_2,\dots$ are pairwise disjoint.
 
 Several familiar rules are consequences of these axioms rather than additional axioms. For example,
 
-$$Pr[\varnothing]=0$$
+$$\mathbb{P}(\varnothing)=0$$
 
 follows because $\Omega$ and $\Omega \cup \varnothing$ are the same event, while finite additivity for disjoint sets is the finite case of countable additivity.
 
@@ -84,7 +84,7 @@ $$A \cup B = A \cup (B \setminus A),$$
 
 where the two pieces are disjoint. Then
 
-$$Pr[A \cup B] = Pr[A] + Pr[B \setminus A].$$
+$$\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B \setminus A).$$
 
 But $B$ itself decomposes as the disjoint union
 
@@ -92,11 +92,11 @@ $$B = (B \setminus A) \cup (A \cap B),$$
 
 so
 
-$$Pr[B] = Pr[B \setminus A] + Pr[A \cap B].$$
+$$\mathbb{P}(B) = \mathbb{P}(B \setminus A) + \mathbb{P}(A \cap B).$$
 
-Eliminating $Pr[B \setminus A]$ yields
+Eliminating $\mathbb{P}(B \setminus A)$ yields
 
-$$Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B].$$
+$$\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B).$$
 
 The logical status matters: normalization and additivity are the assumptions, while empty-set probability and inclusion-exclusion are useful consequences.
 
@@ -114,9 +114,9 @@ $$A = \{\text{odd roll}\} = \{1,3,5\}$$
 
 $$B = \{\text{roll is 4 or greater}\} = \{4,5,6\}.$$
 
-Then $Pr[A] = 3/6$, $Pr[B] = 3/6$, and $Pr[A \cap B] = 1/6$, so $Pr[A \cup B] = 5/6$.
+Then $\mathbb{P}(A) = 3/6$, $\mathbb{P}(B) = 3/6$, and $\mathbb{P}(A \cap B) = 1/6$, so $\mathbb{P}(A \cup B) = 5/6$.
 
-The step-by-step computation is worth stating explicitly. Event $A$ contains three elementary outcomes, so $Pr[A]=3/6$. Event $B$ also contains three elementary outcomes, so $Pr[B]=3/6$. Their intersection is the single outcome $\{5\}$, so $Pr[A \cap B]=1/6$. If we simply added $3/6+3/6$, we would count outcome $5$ twice, so we subtract $1/6$ and obtain $5/6$.
+The step-by-step computation is worth stating explicitly. Event $A$ contains three elementary outcomes, so $\mathbb{P}(A)=3/6$. Event $B$ also contains three elementary outcomes, so $\mathbb{P}(B)=3/6$. Their intersection is the single outcome $\{5\}$, so $\mathbb{P}(A \cap B)=1/6$. If we simply added $3/6+3/6$, we would count outcome $5$ twice, so we subtract $1/6$ and obtain $5/6$.
 
 ### Random Variables
 
@@ -126,7 +126,7 @@ $$X \in \{1,\dots,d\},$$
 
 then the events $X = 1, \dots, X = d$ are mutually exclusive and cover all outcomes, so
 
-$$\sum_{i=1}^d Pr[X=i] = 1.$$
+$$\sum_{i=1}^d \mathbb{P}(X=i) = 1.$$
 
 The possible values are called the states of the variable, and the set of all possible values is its domain. For discrete variables, the probability mass function is often written as $p(X=x)$ or simply $p(x)$ when the variable is clear from context.
 
@@ -150,11 +150,11 @@ $$X \in \{0,1\}.$$
 
 If
 
-$$Pr[X=1] = \rho,$$
+$$\mathbb{P}(X=1) = \rho,$$
 
 then automatically
 
-$$Pr[X=0] = 1-\rho.$$
+$$\mathbb{P}(X=0) = 1-\rho.$$
 
 We can write the distribution as
 
@@ -180,7 +180,7 @@ So the compact formula is not magic notation; it is just a switch that selects t
 
 If $X \in \{1,\dots,d\}$, then a discrete distribution is just a probability table:
 
-$$Pr[X=i] = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.$$
+$$\mathbb{P}(X=i) = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.$$
 
 Only $d-1$ of those values are free, because the last one is determined by normalization. One compact representation is
 
@@ -224,7 +224,7 @@ So the distribution puts its largest mass at zero and then decays geometrically 
 
 The mean under this zero-based convention is
 
-$$E[X]=\frac{1-\rho}{\rho}.$$
+$$\mathbb{E}[X]=\frac{1-\rho}{\rho}.$$
 
 If $\rho=0.2$, the expected number of failures before the first success is therefore $4$. A different but equally common convention counts the total number of trials until the first success. Under that one-based convention the support starts at $1$ instead of $0$, the PMF becomes $p(Y=y)=(1-\rho)^{y-1}\rho$, and the mean becomes $1/\rho$. When using a software library, one should always check which convention the library adopts before interpreting the samples.
 
@@ -455,21 +455,21 @@ The three tables correspond exactly to three conceptual operations. The first ta
 
 The expectation of a discrete variable is a weighted average:
 
-$$E[X] = \sum_x x \, p(x).$$
+$$\mathbb{E}[X] = \sum_x x \, p(x).$$
 
-For a Bernoulli variable, $E[X] = \rho$, which is why the Bernoulli parameter is also the mean.
+For a Bernoulli variable, $\mathbb{E}[X] = \rho$, which is why the Bernoulli parameter is also the mean.
 
 A full worked example shows why expectation is called a weighted average. Suppose
 
-$$Pr[X=0]=0.7, \qquad Pr[X=1]=0.3.$$
+$$\mathbb{P}(X=0)=0.7, \qquad \mathbb{P}(X=1)=0.3.$$
 
 Then
 
-$$E[X]=0 \cdot 0.7 + 1 \cdot 0.3 = 0.3.$$
+$$\mathbb{E}[X]=0 \cdot 0.7 + 1 \cdot 0.3 = 0.3.$$
 
 For a die roll with values $1$ through $6$,
 
-$$E[X] = \sum_{x=1}^6 x \cdot \frac{1}{6} = \frac{1+2+3+4+5+6}{6}=3.5.$$
+$$\mathbb{E}[X] = \sum_{x=1}^6 x \cdot \frac{1}{6} = \frac{1+2+3+4+5+6}{6}=3.5.$$
 
 So expectation is not required to be a value the variable actually takes. A fair die never lands on $3.5$, but $3.5$ is still the mean location of the distribution.
 
@@ -477,7 +477,7 @@ So expectation is not required to be a value the variable actually takes. A fair
 
 Expectation is linear:
 
-$$E[aX+bY+c]=aE[X]+bE[Y]+c.$$
+$$\mathbb{E}[aX+bY+c]=a\mathbb{E}[X]+b\mathbb{E}[Y]+c.$$
 
 No independence assumption is required. That point is easy to miss because many later formulas do require independence, but linearity of expectation does not. The rule holds even when $X$ and $Y$ are strongly dependent.
 
@@ -487,11 +487,11 @@ $$N=H_1+H_2+H_3$$
 
 denote the total number of heads. Then
 
-$$E[N]=E[H_1]+E[H_2]+E[H_3].$$
+$$\mathbb{E}[N]=\mathbb{E}[H_1]+\mathbb{E}[H_2]+\mathbb{E}[H_3].$$
 
-If each flip has head probability $\rho$, then $E[H_i]=\rho$ for every $i$, so
+If each flip has head probability $\rho$, then $\mathbb{E}[H_i]=\rho$ for every $i$, so
 
-$$E[N]=3\rho.$$
+$$\mathbb{E}[N]=3\rho.$$
 
 This conclusion does not require us to enumerate all eight outcomes explicitly. Linearity lets us decompose a complicated count into simple indicator expectations and add them back together.
 
@@ -499,15 +499,15 @@ This conclusion does not require us to enumerate all eight outcomes explicitly. 
 
 Expectation gives the center of a distribution, but it does not describe spread. The basic spread measure is variance:
 
-$$\mathrm{Var}(X)=E[(X-E[X])^2].$$
+$$\mathrm{Var}(X)=\mathbb{E}[(X-\mathbb{E}[X])^2].$$
 
 Expanding the square gives the useful identity
 
-$$\mathrm{Var}(X)=E[X^2]-E[X]^2.$$
+$$\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2.$$
 
 For two variables, covariance is
 
-$$\mathrm{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])].$$
+$$\mathrm{Cov}(X,Y)=\mathbb{E}[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])].$$
 
 The normalized version is correlation:
 
@@ -521,7 +521,7 @@ These formulas show what each quantity measures. Adding a constant shifts the lo
 
 A diagnostic example shows why mean and variance are genuinely different summaries. Let $X$ be constant at $3$, and let $Y$ equal $0$ or $6$ with probabilities $1/2$ and $1/2$. Then
 
-$$E[X]=3, \qquad E[Y]=0 \cdot \frac{1}{2}+6 \cdot \frac{1}{2}=3,$$
+$$\mathbb{E}[X]=3, \qquad \mathbb{E}[Y]=0 \cdot \frac{1}{2}+6 \cdot \frac{1}{2}=3,$$
 
 so both variables have the same mean. But
 
@@ -529,7 +529,7 @@ $$\mathrm{Var}(X)=0$$
 
 because $X$ never moves, while
 
-$$\mathrm{Var}(Y)=E[Y^2]-E[Y]^2 =\left(0^2 \cdot \frac{1}{2}+6^2 \cdot \frac{1}{2}\right)-3^2 =18-9=9.$$
+$$\mathrm{Var}(Y)=\mathbb{E}[Y^2]-\mathbb{E}[Y]^2 =\left(0^2 \cdot \frac{1}{2}+6^2 \cdot \frac{1}{2}\right)-3^2 =18-9=9.$$
 
 So two distributions can agree perfectly on their center and still differ sharply in uncertainty.
 
@@ -539,11 +539,11 @@ $$Y=X^2.$$
 
 Then $Y$ is completely determined by $X$, so the variables are dependent. But
 
-$$E[X]=0, \qquad E[XY]=E[X^3]=0,$$
+$$\mathbb{E}[X]=0, \qquad \mathbb{E}[XY]=\mathbb{E}[X^3]=0,$$
 
 which gives
 
-$$\mathrm{Cov}(X,Y)=E[XY]-E[X]E[Y]=0.$$
+$$\mathrm{Cov}(X,Y)=\mathbb{E}[XY]-\mathbb{E}[X]\mathbb{E}[Y]=0.$$
 
 So zero covariance does not imply independence. It only rules out linear dependence in the centered variables.
 
@@ -821,13 +821,13 @@ $$\int p(x)\,dx = 1.$$
 
 The density defines the probability of any event $X \in A \subseteq \mathbb{R}$ by
 
-$$Pr[X \in A] = \int_A p(x)\,dx.$$
+$$\mathbb{P}(X \in A) = \int_A p(x)\,dx.$$
 
-This is the first major structural difference from the discrete case. For a continuous variable, the number $p(x)$ is not the probability of the event $X=x$; in fact $Pr[X=x]=0$ for every individual point. A density only becomes a probability after integrating it over an interval or region. That is why a density is allowed to exceed one locally, provided the total area under the curve is still one.
+This is the first major structural difference from the discrete case. For a continuous variable, the number $p(x)$ is not the probability of the event $X=x$; in fact $\mathbb{P}(X=x)=0$ for every individual point. A density only becomes a probability after integrating it over an interval or region. That is why a density is allowed to exceed one locally, provided the total area under the curve is still one.
 
 A concrete interval computation makes this precise. If $X$ is uniform on $[0,2]$, then $p(x)=1/2$ on that interval. The probability that $X$ falls between $0.3$ and $0.9$ is
 
-$$Pr[0.3 \le X \le 0.9] = \int_{0.3}^{0.9} \frac{1}{2}\,dx = \frac{1}{2}(0.9-0.3)=0.3.$$
+$$\mathbb{P}(0.3 \le X \le 0.9) = \int_{0.3}^{0.9} \frac{1}{2}\,dx = \frac{1}{2}(0.9-0.3)=0.3.$$
 
 The point $x=0.4$ itself still has probability zero. What matters is the width of the interval, not the existence of an individual point.
 
@@ -835,13 +835,13 @@ The point $x=0.4$ itself still has probability zero. What matters is the width o
 
 The cumulative distribution function is the most universal object for a real-valued random variable:
 
-$$F_X(x)=Pr[X \le x].$$
+$$F_X(x)=\mathbb{P}(X \le x).$$
 
 Every real-valued random variable has a CDF, whether it is discrete, continuous, or mixed. A PMF exists when probability is concentrated on isolated states. A PDF exists only when the distribution is absolutely continuous with respect to ordinary length or volume. So PMFs and PDFs are special representations, while the CDF always exists.
 
 This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution can contain both an atom and a continuous part. For example, suppose
 
-$$Pr[X=0]=0.7,$$
+$$\mathbb{P}(X=0)=0.7,$$
 
 and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is
 
@@ -1177,17 +1177,17 @@ $$\nabla_\theta L(\theta) = \sum_i \phi(x^{(i)}) - m \nabla_\theta A(\theta).$$
 
 For exponential families,
 
-$$\nabla_\theta A(\theta) = E_\theta[\phi(X)],$$
+$$\nabla_\theta A(\theta) = \mathbb{E}_\theta[\phi(X)],$$
 
 so the first-order optimality condition becomes
 
-$$\frac{1}{m}\sum_i \phi(x^{(i)}) = E_\theta[\phi(X)].$$
+$$\frac{1}{m}\sum_i \phi(x^{(i)}) = \mathbb{E}_\theta[\phi(X)].$$
 
 This is the explicit moment-matching statement: the fitted model reproduces the empirical averages of the sufficient statistics. That identity is one of the main reasons exponential families are so useful.
 
 For Bernoulli, the sufficient statistic is just $X$, so moment matching says
 
-$$E_\theta[X] = \frac{1}{m}\sum_i x^{(i)}.$$
+$$\mathbb{E}_\theta[X] = \frac{1}{m}\sum_i x^{(i)}.$$
 
 But the model expectation of $X$ is exactly $\rho$, so the condition reduces to
 
@@ -1275,7 +1275,7 @@ This is the multi-class pseudo-count interpretation in explicit form. The prior 
 
 The posterior mean is
 
-$$E[\theta \mid D] = ( \frac{5}{10}, \frac{3}{10}, \frac{2}{10} ) =(0.5,0.3,0.2).$$
+$$\mathbb{E}[\theta \mid D] = ( \frac{5}{10}, \frac{3}{10}, \frac{2}{10} ) =(0.5,0.3,0.2).$$
 
 The posterior therefore still leaves positive mass on the unobserved third class, because the prior did not allow its probability to collapse to zero after only four observations. That is exactly the smoothing effect one usually wants from a Bayesian categorical model.
 
@@ -1283,9 +1283,9 @@ The posterior therefore still leaves positive mass on the unobserved third class
 
 Two common point estimates derived from the posterior are the posterior mean and the MAP estimate:
 
-$$\hat\theta_{\text{PM}} = E_{p(\theta \mid D)}[\theta],$$
+$$\hat\theta_{\text{PM}} = \mathbb{E}_{p(\theta \mid D)}[\theta],$$
 
-$$\hat\theta_{\text{MAP}} = \mathrm{argmax}_\theta \log p(\theta \mid D).$$
+$$\hat\theta_{\text{MAP}} = \arg\max_\theta \log p(\theta \mid D).$$
 
 For Bernoulli/Beta,
 
@@ -1479,7 +1479,7 @@ That is the convexity inequality in explicit algebraic form. Geometrically, it s
 
 Jensen's inequality is the probability version of convexity:
 
-$$E[f(X)] \ge f(E[X])$$
+$$\mathbb{E}[f(X)] \ge f(\mathbb{E}[X])$$
 
 for convex $f$.
 
@@ -1487,7 +1487,7 @@ for convex $f$.
 
 The negative log-likelihood of a canonical exponential-family model is convex in its natural parameters. The reason is explicit:
 
-$$\frac{\partial A(\theta)}{\partial \theta_j} = E_\theta[\phi_j(X)], \qquad \frac{\partial^2 A(\theta)}{\partial \theta_j \partial \theta_k} = \mathrm{Cov}_\theta(\phi_j(X), \phi_k(X)).$$
+$$\frac{\partial A(\theta)}{\partial \theta_j} = \mathbb{E}_\theta[\phi_j(X)], \qquad \frac{\partial^2 A(\theta)}{\partial \theta_j \partial \theta_k} = \mathrm{Cov}_\theta(\phi_j(X), \phi_k(X)).$$
 
 The Hessian of the log-partition function is therefore a covariance matrix of the sufficient statistics, hence positive semidefinite. Once the terms that are constant or linear in $\theta$ are separated out, the remaining negative log-likelihood inherits that convexity.
 
@@ -1744,7 +1744,7 @@ The inverse map scales coordinates by $(1/2,1/3)$, so the determinant of the inv
 
 Copulas separate marginal distributions from dependence structure. For two variables,
 
-$$Pr[X_1 \le x_1, X_2 \le x_2] = C(P_1(x_1), P_2(x_2)),$$
+$$\mathbb{P}(X_1 \le x_1, X_2 \le x_2) = C(P_1(x_1), P_2(x_2)),$$
 
 where $P_1$ and $P_2$ are the marginal CDFs. This is the content of Sklar's theorem in the two-variable case: once the marginals are pushed into the uniform scale, the remaining object $C$ captures only dependence.
 

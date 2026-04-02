@@ -12,13 +12,13 @@ This exercise set is organized to match the reconstructed Chapter 2 note. Each s
 - Let $X$ be the parity variable for a die roll, with $X=0$ for even and $X=1$ for odd. Write the full distribution of $X$ and verify normalization.
 - In the dentist table from the main note, compute $p(C=1)$, $p(D=1)$, and $p(T=1,D=1)$ directly from the joint rows.
 - Using the same table, compute $p(C=1 \mid T=1)$ by Bayes' rule and then again by restrict-marginalize-normalize table arithmetic.
-- Let $X$ take values $\{1,2,3\}$ with probabilities $(0.2,0.5,0.3)$. Compute $E[X]$.
+- Let $X$ take values $\{1,2,3\}$ with probabilities $(0.2,0.5,0.3)$. Compute $\mathbb{E}[X]$.
 
 ### Conceptual Questions
 
 - Explain why a random variable is a function rather than a container of randomness.
 - Explain why the statement $X=x$ should be read as an event.
-- Give an example in which $E[X]$ is not one of the possible realized values of $X$, and explain why this is not a contradiction.
+- Give an example in which $\mathbb{E}[X]$ is not one of the possible realized values of $X$, and explain why this is not a contradiction.
 - Explain why conditioning is not the same as causal intervention.
 - In the screening example from the main note, explain in words why a positive test result can still leave the disease probability relatively small.
 
@@ -79,7 +79,7 @@ This exercise set is organized to match the reconstructed Chapter 2 note. Each s
 - Derive the Bernoulli MLE by differentiating the log-likelihood and checking the second derivative.
 - Derive the Gaussian mean MLE from the log-likelihood with fixed variance.
 - Prove the moment-matching condition for a canonical exponential family:
-$$\frac{1}{m}\sum_i \phi(x^{(i)})=E_\theta[\phi(X)].$$
+$$\frac{1}{m}\sum_i \phi(x^{(i)})=\mathbb{E}_\theta[\phi(X)].$$
 - Derive the Beta-Bernoulli posterior by multiplying kernels and identifying the resulting family.
 - Derive the Dirichlet-Categorical posterior by multiplying kernels and identifying the updated concentration parameters.
 
@@ -89,7 +89,7 @@ $$\frac{1}{m}\sum_i \phi(x^{(i)})=E_\theta[\phi(X)].$$
 
 - Verify the convexity inequality directly for $f(x)=x^2$ at the points $x=1$, $x'=3$, and $\alpha=1/4$.
 - Compute the derivative and second derivative of $f(x)=e^x$ and use them to explain why it is convex.
-- Let $f(x)=x^2$ and $X$ be a fair $\pm 1$ random variable. Compute $E[f(X)]$ and $f(E[X])$ to verify Jensen's inequality numerically.
+- Let $f(x)=x^2$ and $X$ be a fair $\pm 1$ random variable. Compute $\mathbb{E}[f(X)]$ and $f(\mathbb{E}[X])$ to verify Jensen's inequality numerically.
 - For a one-dimensional quadratic $f(x)=ax^2+bx+c$, identify the condition on $a$ that makes $f$ convex.
 - If a Hessian matrix is positive definite everywhere, explain what that implies about local versus global minima.
 
