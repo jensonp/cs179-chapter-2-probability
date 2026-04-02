@@ -40,7 +40,7 @@ Probability is the language we use when a system is uncertain or too complex to 
 
 At a more formal level, a probabilistic model starts with a probability space
 
-$$ (\Omega,\mathcal{F},P). $$
+$$(\Omega,\mathcal{F},P).$$
 
 Here $\Omega$ is the sample space of possible outcomes, $\mathcal{F}$ is the collection of events on which probabilities are defined, and $P$ is the probability measure. The measure assigns a number to each event and satisfies nonnegativity, normalization, and countable additivity.
 
@@ -48,11 +48,11 @@ In elementary finite examples, one usually suppresses $\mathcal{F}$ because ever
 
 A random variable is a measurable function
 
-$$ X:\Omega \to \mathbb{R}. $$
+$$X:\Omega \to \mathbb{R}.$$
 
 This explains an important notation point. A statement such as $X=x$ is not a mysterious new kind of object; it is shorthand for the event
 
-$$ \{\omega \in \Omega : X(\omega)=x\}. $$
+$$\{\omega \in \Omega : X(\omega)=x\}.$$
 
 Likewise, the event $X \le t$ means the subset of worlds whose assigned values are at most $t$. This distinction matters because probabilities are fundamentally attached to events, while PMFs, PDFs, and CDFs are devices derived from the way a random variable pushes that event-level probability structure onto its value space.
 
@@ -60,43 +60,43 @@ Likewise, the event $X \le t$ means the subset of worlds whose assigned values a
 
 Now fix a probability space $(\Omega,\mathcal{F},P)$. The actual axioms are:
 
-$$ 0 \le Pr[A] $$
+$$0 \le Pr[A]$$
 
 for every event $A \in \mathcal{F}$,
 
-$$ Pr[\Omega] = 1, $$
+$$Pr[\Omega] = 1,$$
 
 and countable additivity:
 
-$$ Pr\!\left[\bigcup_{i=1}^{\infty} A_i\right] = \sum_{i=1}^{\infty} Pr[A_i] $$
+$$Pr\!\left[\bigcup_{i=1}^{\infty} A_i\right] = \sum_{i=1}^{\infty} Pr[A_i]$$
 
 whenever the events $A_1,A_2,\dots$ are pairwise disjoint.
 
 Several familiar rules are consequences of these axioms rather than additional axioms. For example,
 
-$$ Pr[\varnothing]=0 $$
+$$Pr[\varnothing]=0$$
 
 follows because $\Omega$ and $\Omega \cup \varnothing$ are the same event, while finite additivity for disjoint sets is the finite case of countable additivity.
 
 Inclusion-exclusion is also derived, not assumed. Write
 
-$$ A \cup B = A \cup (B \setminus A), $$
+$$A \cup B = A \cup (B \setminus A),$$
 
 where the two pieces are disjoint. Then
 
-$$ Pr[A \cup B] = Pr[A] + Pr[B \setminus A]. $$
+$$Pr[A \cup B] = Pr[A] + Pr[B \setminus A].$$
 
 But $B$ itself decomposes as the disjoint union
 
-$$ B = (B \setminus A) \cup (A \cap B), $$
+$$B = (B \setminus A) \cup (A \cap B),$$
 
 so
 
-$$ Pr[B] = Pr[B \setminus A] + Pr[A \cap B]. $$
+$$Pr[B] = Pr[B \setminus A] + Pr[A \cap B].$$
 
 Eliminating $Pr[B \setminus A]$ yields
 
-$$ Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B]. $$
+$$Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B].$$
 
 The logical status matters: normalization and additivity are the assumptions, while empty-set probability and inclusion-exclusion are useful consequences.
 
@@ -106,13 +106,13 @@ For a beginner, the safest way to use these axioms is to think in terms of bookk
 
 Suppose we roll a standard six-sided die. The event space is
 
-$$ \Omega = \{1,2,3,4,5,6\}. $$
+$$\Omega = \{1,2,3,4,5,6\}.$$
 
 Two events are:
 
-$$ A = \{\text{odd roll}\} = \{1,3,5\} $$
+$$A = \{\text{odd roll}\} = \{1,3,5\}$$
 
-$$ B = \{\text{roll is 4 or greater}\} = \{4,5,6\}. $$
+$$B = \{\text{roll is 4 or greater}\} = \{4,5,6\}.$$
 
 Then $Pr[A] = 3/6$, $Pr[B] = 3/6$, and $Pr[A \cap B] = 1/6$, so $Pr[A \cup B] = 5/6$.
 
@@ -122,11 +122,11 @@ The step-by-step computation is worth stating explicitly. Event $A$ contains thr
 
 A random variable partitions the event space into disjoint and exhaustive cases and assigns each case a symbolic value. If
 
-$$ X \in \{1,\dots,d\}, $$
+$$X \in \{1,\dots,d\},$$
 
 then the events $X = 1, \dots, X = d$ are mutually exclusive and cover all outcomes, so
 
-$$ \sum_{i=1}^d Pr[X=i] = 1. $$
+$$\sum_{i=1}^d Pr[X=i] = 1.$$
 
 The possible values are called the states of the variable, and the set of all possible values is its domain. For discrete variables, the probability mass function is often written as $p(X=x)$ or simply $p(x)$ when the variable is clear from context.
 
@@ -134,11 +134,11 @@ A full beginner-to-expert way to read this is the following. At the beginner lev
 
 A concrete example helps. Let the world be a die roll and define
 
-$$ X=0 \text{ if the roll is even}, \qquad X=1 \text{ if the roll is odd.} $$
+$$X=0 \text{ if the roll is even}, \qquad X=1 \text{ if the roll is odd.}$$
 
 Then the six raw outcomes collapse into only two states. Since $\{2,4,6\}$ map to $0$ and $\{1,3,5\}$ map to $1$,
 
-$$ p(X=0)=3/6, \qquad p(X=1)=3/6. $$
+$$p(X=0)=3/6, \qquad p(X=1)=3/6.$$
 
 The random variable therefore compresses a detailed world description into the part of the world we care about.
 
@@ -146,33 +146,33 @@ The random variable therefore compresses a detailed world description into the p
 
 A Bernoulli random variable is binary:
 
-$$ X \in \{0,1\}. $$
+$$X \in \{0,1\}.$$
 
 If
 
-$$ Pr[X=1] = \rho, $$
+$$Pr[X=1] = \rho,$$
 
 then automatically
 
-$$ Pr[X=0] = 1-\rho. $$
+$$Pr[X=0] = 1-\rho.$$
 
 We can write the distribution as
 
-$$ p(X) = Ber(X;\rho) = \rho^X (1-\rho)^{1-X}. $$
+$$p(X) = Ber(X;\rho) = \rho^X (1-\rho)^{1-X}.$$
 
 This evaluates to $\rho$ when $X = 1$ and to $1-\rho$ when $X = 0$.
 
 An equivalent representation is
 
-$$ p(X) = \rho \mathbf{1}[X=1] + (1-\rho)\mathbf{1}[X=0]. $$
+$$p(X) = \rho \mathbf{1}[X=1] + (1-\rho)\mathbf{1}[X=0].$$
 
 To see this mechanically, plug in the only two possible values. If $X=1$, then
 
-$$ \rho^X(1-\rho)^{1-X} = \rho^1(1-\rho)^0 = \rho. $$
+$$\rho^X(1-\rho)^{1-X} = \rho^1(1-\rho)^0 = \rho.$$
 
 If $X=0$, then
 
-$$ \rho^X(1-\rho)^{1-X} = \rho^0(1-\rho)^1 = 1-\rho. $$
+$$\rho^X(1-\rho)^{1-X} = \rho^0(1-\rho)^1 = 1-\rho.$$
 
 So the compact formula is not magic notation; it is just a switch that selects the correct probability for the realized binary outcome.
 
@@ -180,25 +180,25 @@ So the compact formula is not magic notation; it is just a switch that selects t
 
 If $X \in \{1,\dots,d\}$, then a discrete distribution is just a probability table:
 
-$$ Pr[X=i] = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1. $$
+$$Pr[X=i] = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.$$
 
 Only $d-1$ of those values are free, because the last one is determined by normalization. One compact representation is
 
-$$ p(X) = \prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}. $$
+$$p(X) = \prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}.$$
 
 This simply selects the probability attached to the realized state and turns the others off.
 
 A concrete three-state example makes the structure explicit. Suppose weather tomorrow is modeled as
 
-$$ X \in \{\text{sun}, \text{cloud}, \text{rain}\} $$
+$$X \in \{\text{sun}, \text{cloud}, \text{rain}\}$$
 
 with
 
-$$ \rho_{\text{sun}}=0.5,\qquad \rho_{\text{cloud}}=0.3,\qquad \rho_{\text{rain}}=0.2. $$
+$$\rho_{\text{sun}}=0.5,\qquad \rho_{\text{cloud}}=0.3,\qquad \rho_{\text{rain}}=0.2.$$
 
 If the realized state is rain, then the product form becomes
 
-$$ \rho_{\text{sun}}^0 \rho_{\text{cloud}}^0 \rho_{\text{rain}}^1 = 0.2. $$
+$$\rho_{\text{sun}}^0 \rho_{\text{cloud}}^0 \rho_{\text{rain}}^1 = 0.2.$$
 
 The exponents are indicators, so all irrelevant states are raised to the zero power and disappear.
 
@@ -208,23 +208,23 @@ Another basic discrete family is the Geometric distribution. It models repeated 
 
 In these notes, and in the course homework workflow built around Pyro, the random variable counts the number of failures before the first success. Its support is therefore
 
-$$ X \in \{0,1,2,\dots\}, $$
+$$X \in \{0,1,2,\dots\},$$
 
 and its PMF is
 
-$$ p(X=x)=(1-\rho)^x\rho. $$
+$$p(X=x)=(1-\rho)^x\rho.$$
 
 The formula is easy to derive once the event is stated explicitly. The event $X=x$ means the first $x$ trials fail and the next trial succeeds. Because the trials are independent, we multiply the probabilities of those pieces: $x$ failures contribute $(1-\rho)^x$ and the final success contributes $\rho$.
 
 For example, if $\rho=0.2$, then
 
-$$ p(X=0)=0.2,\qquad p(X=1)=0.8 \cdot 0.2=0.16,\qquad p(X=2)=0.8^2 \cdot 0.2=0.128. $$
+$$p(X=0)=0.2,\qquad p(X=1)=0.8 \cdot 0.2=0.16,\qquad p(X=2)=0.8^2 \cdot 0.2=0.128.$$
 
 So the distribution puts its largest mass at zero and then decays geometrically to the right. That is why its histogram has a tall first bar and a long right tail.
 
 The mean under this zero-based convention is
 
-$$ E[X]=\frac{1-\rho}{\rho}. $$
+$$E[X]=\frac{1-\rho}{\rho}.$$
 
 If $\rho=0.2$, the expected number of failures before the first success is therefore $4$. A different but equally common convention counts the total number of trials until the first success. Under that one-based convention the support starts at $1$ instead of $0$, the PMF becomes $p(Y=y)=(1-\rho)^{y-1}\rho$, and the mean becomes $1/\rho$. When using a software library, one should always check which convention the library adopts before interpreting the samples.
 
@@ -257,15 +257,15 @@ It is useful to say exactly how to read one row. The row $111$ means toothache, 
 
 To get the probability of one variable, add up all joint entries consistent with that value.
 
-$$ p(T=0) = \sum_{d,c} p(T=0,D=d,C=c) $$
+$$p(T=0) = \sum_{d,c} p(T=0,D=d,C=c)$$
 
-$$ = 0.576 + 0.008 + 0.144 + 0.072 = 0.80. $$
+$$= 0.576 + 0.008 + 0.144 + 0.072 = 0.80.$$
 
 Marginalization is just "add all ways the event can happen."
 
 A second marginal shows the same procedure from another angle. To compute the chance of a cavity, sum every row with $C=1$:
 
-$$ p(C=1)=0.008+0.072+0.012+0.108=0.20. $$
+$$p(C=1)=0.008+0.072+0.012+0.108=0.20.$$
 
 This explains why a marginal is called a marginal: it is what remains after the other coordinates have been summed away.
 
@@ -273,17 +273,17 @@ This explains why a marginal is called a marginal: it is what remains after the 
 
 Conditioning means restricting attention to worlds where the condition holds:
 
-$$ p(D=d \mid T=t) = \frac{p(D=d,T=t)}{p(T=t)}. $$
+$$p(D=d \mid T=t) = \frac{p(D=d,T=t)}{p(T=t)}.$$
 
 The numerator is the probability that both things happen; the denominator is the total probability of the condition. The result is a normalized probability distribution over $D$ given $T=t$.
 
 For the dentist table, conditioning on $T=1$ means we throw away every row with $T=0$ and keep only the four rows with toothache. Inside that restricted world, the total probability mass is
 
-$$ p(T=1)=0.064+0.012+0.016+0.108=0.20. $$
+$$p(T=1)=0.064+0.012+0.016+0.108=0.20.$$
 
 Now the conditional probability of a probe catch becomes
 
-$$ p(D=1 \mid T=1)=\frac{0.016+0.108}{0.20}=\frac{0.124}{0.20}=0.62. $$
+$$p(D=1 \mid T=1)=\frac{0.016+0.108}{0.20}=\frac{0.124}{0.20}=0.62.$$
 
 The key beginner intuition is "restrict first, renormalize second."
 
@@ -293,37 +293,37 @@ It is also important to separate conditioning from intervention. The quantity $p
 
 Bayes rule converts a forward model into a reverse one:
 
-$$ p(C=c \mid D=d) = \frac{p(D=d \mid C=c)p(C=c)}{p(D=d)}. $$
+$$p(C=c \mid D=d) = \frac{p(D=d \mid C=c)p(C=c)}{p(D=d)}.$$
 
 Read it as:
 
-$$ \text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}. $$
+$$\text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}.$$
 
 For two competing hypotheses $H_1$ and $H_0$, Bayes' rule also has an odds form:
 
-$$ \frac{p(H_1 \mid E)}{p(H_0 \mid E)} = \frac{p(E \mid H_1)}{p(E \mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}. $$
+$$\frac{p(H_1 \mid E)}{p(H_0 \mid E)} = \frac{p(E \mid H_1)}{p(E \mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}.$$
 
 This factorization is often more informative than the scalar formula because it separates three roles cleanly. The prior odds tell us how plausible the hypotheses were before seeing evidence. The likelihood ratio tells us how strongly the evidence favors one hypothesis over the other. The posterior odds are the updated result after those two effects are combined.
 
 For the dentist example, suppose:
 
-$$ p(T=1 \mid C=0) = 0.1, \qquad p(T=1 \mid C=1) = 0.6 $$
+$$p(T=1 \mid C=0) = 0.1, \qquad p(T=1 \mid C=1) = 0.6$$
 
-$$ p(C=0) = 0.8, \qquad p(C=1) = 0.2. $$
+$$p(C=0) = 0.8, \qquad p(C=1) = 0.2.$$
 
 Then
 
-$$ p(C=1 \mid T=1) = \frac{0.6 \cdot 0.2}{0.6 \cdot 0.2 + 0.1 \cdot 0.8} = \frac{0.12}{0.20} = 0.60. $$
+$$p(C=1 \mid T=1) = \frac{0.6 \cdot 0.2}{0.6 \cdot 0.2 + 0.1 \cdot 0.8} = \frac{0.12}{0.20} = 0.60.$$
 
 Observing a toothache raises the cavity probability from $0.20$ to $0.60$.
 
 The derivation can also be unpacked from the definition of conditional probability itself. Start with
 
-$$ p(C=1 \mid T=1)=\frac{p(C=1,T=1)}{p(T=1)}. $$
+$$p(C=1 \mid T=1)=\frac{p(C=1,T=1)}{p(T=1)}.$$
 
 Then factor the numerator using the product rule:
 
-$$ p(C=1,T=1)=p(T=1 \mid C=1)p(C=1). $$
+$$p(C=1,T=1)=p(T=1 \mid C=1)p(C=1).$$
 
 Substituting this into the conditional formula gives Bayes' rule. So Bayes' rule is not an extra axiom; it is the conditional-probability definition plus the product rule written in a convenient direction.
 
@@ -331,29 +331,29 @@ Substituting this into the conditional formula gives Bayes' rule. So Bayes' rule
 
 If $B_1,\dots,B_k$ form a partition of the sample space, then any event $A$ satisfies
 
-$$ p(A)=\sum_{i=1}^k p(A \mid B_i)p(B_i). $$
+$$p(A)=\sum_{i=1}^k p(A \mid B_i)p(B_i).$$
 
 The law is simple but foundational. It says that if the worlds are first split into mutually exclusive cases, then the total probability of $A$ is the weighted average of its conditional probabilities inside those cases. In the dentist example, the denominator in Bayes' rule is exactly
 
 The formula follows directly from disjoint decomposition. Because the sets $B_1,\dots,B_k$ form a partition, the event $A$ can be written as the disjoint union
 
-$$ A=(A \cap B_1)\cup \cdots \cup (A \cap B_k). $$
+$$A=(A \cap B_1)\cup \cdots \cup (A \cap B_k).$$
 
 Therefore additivity gives
 
-$$ p(A)=\sum_{i=1}^k p(A \cap B_i). $$
+$$p(A)=\sum_{i=1}^k p(A \cap B_i).$$
 
 Applying the product rule to each summand yields
 
-$$ p(A \cap B_i)=p(A \mid B_i)p(B_i), $$
+$$p(A \cap B_i)=p(A \mid B_i)p(B_i),$$
 
 and substituting those terms back into the sum gives the law of total probability. So the law is not an extra identity to memorize; it is the ordinary additivity axiom plus the product rule applied to a partition.
 
-$$ p(T=1)=p(T=1 \mid C=1)p(C=1)+p(T=1 \mid C=0)p(C=0). $$
+$$p(T=1)=p(T=1 \mid C=1)p(C=1)+p(T=1 \mid C=0)p(C=0).$$
 
 Plugging in the numbers gives
 
-$$ p(T=1)=0.6 \cdot 0.2 + 0.1 \cdot 0.8 = 0.20. $$
+$$p(T=1)=0.6 \cdot 0.2 + 0.1 \cdot 0.8 = 0.20.$$
 
 So the evidence term is not mysterious. It is the ordinary total probability of the observation, computed by averaging over the hidden hypothesis cases.
 
@@ -361,27 +361,27 @@ So the evidence term is not mysterious. It is the ordinary total probability of 
 
 Suppose a rare disease has prevalence
 
-$$ p(D=1)=0.01. $$
+$$p(D=1)=0.01.$$
 
 A screening test has sensitivity
 
-$$ p(T=+ \mid D=1)=0.95 $$
+$$p(T=+ \mid D=1)=0.95$$
 
 and false-positive rate
 
-$$ p(T=+ \mid D=0)=0.10. $$
+$$p(T=+ \mid D=0)=0.10.$$
 
 If a patient tests positive, the posterior disease probability is
 
-$$ p(D=1 \mid T=+)=\frac{p(T=+ \mid D=1)p(D=1)}{p(T=+)}. $$
+$$p(D=1 \mid T=+)=\frac{p(T=+ \mid D=1)p(D=1)}{p(T=+)}.$$
 
 The denominator comes from the law of total probability:
 
-$$ p(T=+)=0.95 \cdot 0.01 + 0.10 \cdot 0.99 = 0.1085. $$
+$$p(T=+)=0.95 \cdot 0.01 + 0.10 \cdot 0.99 = 0.1085.$$
 
 Therefore
 
-$$ p(D=1 \mid T=+)=\frac{0.95 \cdot 0.01}{0.1085}\approx 0.0876. $$
+$$p(D=1 \mid T=+)=\frac{0.95 \cdot 0.01}{0.1085}\approx 0.0876.$$
 
 So even after a positive test, the posterior probability is only about $8.8\%$. The test is informative, because the probability rose from $1\%$ to almost $9\%$, but the disease remains unlikely because the base rate was extremely small to begin with. This is exactly the setting in which base-rate neglect causes intuitive mistakes.
 
@@ -455,21 +455,21 @@ The three tables correspond exactly to three conceptual operations. The first ta
 
 The expectation of a discrete variable is a weighted average:
 
-$$ E[X] = \sum_x x \, p(x). $$
+$$E[X] = \sum_x x \, p(x).$$
 
 For a Bernoulli variable, $E[X] = \rho$, which is why the Bernoulli parameter is also the mean.
 
 A full worked example shows why expectation is called a weighted average. Suppose
 
-$$ Pr[X=0]=0.7, \qquad Pr[X=1]=0.3. $$
+$$Pr[X=0]=0.7, \qquad Pr[X=1]=0.3.$$
 
 Then
 
-$$ E[X]=0 \cdot 0.7 + 1 \cdot 0.3 = 0.3. $$
+$$E[X]=0 \cdot 0.7 + 1 \cdot 0.3 = 0.3.$$
 
 For a die roll with values $1$ through $6$,
 
-$$ E[X] = \sum_{x=1}^6 x \cdot \frac{1}{6} = \frac{1+2+3+4+5+6}{6}=3.5. $$
+$$E[X] = \sum_{x=1}^6 x \cdot \frac{1}{6} = \frac{1+2+3+4+5+6}{6}=3.5.$$
 
 So expectation is not required to be a value the variable actually takes. A fair die never lands on $3.5$, but $3.5$ is still the mean location of the distribution.
 
@@ -477,21 +477,21 @@ So expectation is not required to be a value the variable actually takes. A fair
 
 Expectation is linear:
 
-$$ E[aX+bY+c]=aE[X]+bE[Y]+c. $$
+$$E[aX+bY+c]=aE[X]+bE[Y]+c.$$
 
 No independence assumption is required. That point is easy to miss because many later formulas do require independence, but linearity of expectation does not. The rule holds even when $X$ and $Y$ are strongly dependent.
 
 For a concrete example, suppose three coin flips have indicator variables $H_1,H_2,H_3$, where $H_i=1$ if flip $i$ is heads and $0$ otherwise. Let
 
-$$ N=H_1+H_2+H_3 $$
+$$N=H_1+H_2+H_3$$
 
 denote the total number of heads. Then
 
-$$ E[N]=E[H_1]+E[H_2]+E[H_3]. $$
+$$E[N]=E[H_1]+E[H_2]+E[H_3].$$
 
 If each flip has head probability $\rho$, then $E[H_i]=\rho$ for every $i$, so
 
-$$ E[N]=3\rho. $$
+$$E[N]=3\rho.$$
 
 This conclusion does not require us to enumerate all eight outcomes explicitly. Linearity lets us decompose a complicated count into simple indicator expectations and add them back together.
 
@@ -499,51 +499,51 @@ This conclusion does not require us to enumerate all eight outcomes explicitly. 
 
 Expectation gives the center of a distribution, but it does not describe spread. The basic spread measure is variance:
 
-$$ \mathrm{Var}(X)=E[(X-E[X])^2]. $$
+$$\mathrm{Var}(X)=E[(X-E[X])^2].$$
 
 Expanding the square gives the useful identity
 
-$$ \mathrm{Var}(X)=E[X^2]-E[X]^2. $$
+$$\mathrm{Var}(X)=E[X^2]-E[X]^2.$$
 
 For two variables, covariance is
 
-$$ \mathrm{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])]. $$
+$$\mathrm{Cov}(X,Y)=E[(X-E[X])(Y-E[Y])].$$
 
 The normalized version is correlation:
 
-$$ \mathrm{Corr}(X,Y)=\frac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}. $$
+$$\mathrm{Corr}(X,Y)=\frac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}.$$
 
 Variance reacts predictably to affine transformations:
 
-$$ \mathrm{Var}(aX+b)=a^2 \mathrm{Var}(X), \qquad \mathrm{Cov}(aX+b,cY+d)=ac\,\mathrm{Cov}(X,Y). $$
+$$\mathrm{Var}(aX+b)=a^2 \mathrm{Var}(X), \qquad \mathrm{Cov}(aX+b,cY+d)=ac\,\mathrm{Cov}(X,Y).$$
 
 These formulas show what each quantity measures. Adding a constant shifts the location but does not change spread. Multiplying by $a$ rescales the spread by $a^2$. Covariance records whether large values of one variable tend to occur with large or small values of the other.
 
 A diagnostic example shows why mean and variance are genuinely different summaries. Let $X$ be constant at $3$, and let $Y$ equal $0$ or $6$ with probabilities $1/2$ and $1/2$. Then
 
-$$ E[X]=3, \qquad E[Y]=0 \cdot \frac{1}{2}+6 \cdot \frac{1}{2}=3, $$
+$$E[X]=3, \qquad E[Y]=0 \cdot \frac{1}{2}+6 \cdot \frac{1}{2}=3,$$
 
 so both variables have the same mean. But
 
-$$ \mathrm{Var}(X)=0 $$
+$$\mathrm{Var}(X)=0$$
 
 because $X$ never moves, while
 
-$$ \mathrm{Var}(Y)=E[Y^2]-E[Y]^2 =\left(0^2 \cdot \frac{1}{2}+6^2 \cdot \frac{1}{2}\right)-3^2 =18-9=9. $$
+$$\mathrm{Var}(Y)=E[Y^2]-E[Y]^2 =\left(0^2 \cdot \frac{1}{2}+6^2 \cdot \frac{1}{2}\right)-3^2 =18-9=9.$$
 
 So two distributions can agree perfectly on their center and still differ sharply in uncertainty.
 
 Covariance also does not capture every form of dependence. Let $X$ take values $-1$, $0$, and $1$ with equal probability, and define
 
-$$ Y=X^2. $$
+$$Y=X^2.$$
 
 Then $Y$ is completely determined by $X$, so the variables are dependent. But
 
-$$ E[X]=0, \qquad E[XY]=E[X^3]=0, $$
+$$E[X]=0, \qquad E[XY]=E[X^3]=0,$$
 
 which gives
 
-$$ \mathrm{Cov}(X,Y)=E[XY]-E[X]E[Y]=0. $$
+$$\mathrm{Cov}(X,Y)=E[XY]-E[X]E[Y]=0.$$
 
 So zero covariance does not imply independence. It only rules out linear dependence in the centered variables.
 
@@ -551,27 +551,27 @@ So zero covariance does not imply independence. It only rules out linear depende
 
 Two random variables $X$ and $Y$ are independent if
 
-$$ p(X,Y) = p(X)p(Y). $$
+$$p(X,Y) = p(X)p(Y).$$
 
 Equivalently, observing one does not change the distribution of the other:
 
-$$ p(X \mid Y) = p(X). $$
+$$p(X \mid Y) = p(X).$$
 
 The equivalence between these two definitions is worth writing out because it gets used constantly. If
 
-$$ p(X,Y)=p(X)p(Y), $$
+$$p(X,Y)=p(X)p(Y),$$
 
 then for any value of $Y$ with positive probability,
 
-$$ p(X \mid Y)=\frac{p(X,Y)}{p(Y)}=\frac{p(X)p(Y)}{p(Y)}=p(X). $$
+$$p(X \mid Y)=\frac{p(X,Y)}{p(Y)}=\frac{p(X)p(Y)}{p(Y)}=p(X).$$
 
 Conversely, if
 
-$$ p(X \mid Y)=p(X) $$
+$$p(X \mid Y)=p(X)$$
 
 for every value of $Y$ with $p(Y)>0$, then multiplying both sides by $p(Y)$ gives
 
-$$ p(X,Y)=p(X \mid Y)p(Y)=p(X)p(Y). $$
+$$p(X,Y)=p(X \mid Y)p(Y)=p(X)p(Y).$$
 
 So the factorization view and the "observing $Y$ changes nothing" view are two algebraically equivalent ways to state the same independence claim. The caveat about $p(Y)>0$ is important: conditional probability is only defined when the conditioning event has nonzero probability.
 
@@ -605,15 +605,15 @@ Representative joint entries:
 
 To verify independence explicitly, check one conditional. Since
 
-$$ p(X=1,Y=4)=0.03 $$
+$$p(X=1,Y=4)=0.03$$
 
 and
 
-$$ p(Y=4)=0.1, $$
+$$p(Y=4)=0.1,$$
 
 we have
 
-$$ p(X=1 \mid Y=4)=\frac{0.03}{0.1}=0.3=p(X=1). $$
+$$p(X=1 \mid Y=4)=\frac{0.03}{0.1}=0.3=p(X=1).$$
 
 The observation of $Y$ leaves the distribution of $X$ unchanged, which is the operational meaning of independence.
 
@@ -621,25 +621,25 @@ The observation of $Y$ leaves the distribution of $X$ unchanged, which is the op
 
 Independence among more than two variables needs careful wording. Variables $X_1,\dots,X_n$ are mutually independent if every subcollection factorizes:
 
-$$ p(X_{i_1},\dots,X_{i_k})=\prod_{j=1}^k p(X_{i_j}) $$
+$$p(X_{i_1},\dots,X_{i_k})=\prod_{j=1}^k p(X_{i_j})$$
 
 for every subset of indices. Pairwise independence is weaker. It only requires each pair to be independent, not every triple or larger group.
 
 A standard counterexample makes the distinction explicit. Let $U$ and $V$ be independent fair bits, and define
 
-$$ W = U \oplus V, $$
+$$W = U \oplus V,$$
 
 their exclusive-or. The four possible triples are
 
-$$ (U,V,W) \in \{(0,0,0),(0,1,1),(1,0,1),(1,1,0)\}, $$
+$$(U,V,W) \in \{(0,0,0),(0,1,1),(1,0,1),(1,1,0)\},$$
 
 each with probability $1/4$. Every pair is independent: for instance, $p(U=0,V=0)=1/4=(1/2)(1/2)$, and the same factorization holds for $(U,W)$ and $(V,W)$. But the three variables are not mutually independent, because
 
-$$ p(U=0,V=0,W=0)=\frac{1}{4} $$
+$$p(U=0,V=0,W=0)=\frac{1}{4}$$
 
 while the product of marginals would be
 
-$$ p(U=0)p(V=0)p(W=0)=\frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}=\frac{1}{8}. $$
+$$p(U=0)p(V=0)p(W=0)=\frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}=\frac{1}{8}.$$
 
 The failure occurs because once two of the variables are known, the third is completely determined. Pairwise checks are therefore not enough to certify full mutual independence.
 
@@ -647,7 +647,7 @@ The failure occurs because once two of the variables are known, the third is com
 
 It is rare for variables to be completely independent, but they are often conditionally independent given a mediating variable $Z$:
 
-$$ p(X,Y \mid Z) = p(X \mid Z)p(Y \mid Z). $$
+$$p(X,Y \mid Z) = p(X \mid Z)p(Y \mid Z).$$
 
 Once $Z$ is known, $X$ and $Y$ stop giving extra information about each other.
 
@@ -674,11 +674,11 @@ The key point is that $p(D \mid C,T)$ does not actually depend on $T$.
 
 We can check that explicitly from the table. For cavity-free teeth,
 
-$$ p(D=1 \mid C=0,T=0)=0.2, \qquad p(D=1 \mid C=0,T=1)=0.2. $$
+$$p(D=1 \mid C=0,T=0)=0.2, \qquad p(D=1 \mid C=0,T=1)=0.2.$$
 
 For cavity teeth,
 
-$$ p(D=1 \mid C=1,T=0)=0.9, \qquad p(D=1 \mid C=1,T=1)=0.9. $$
+$$p(D=1 \mid C=1,T=0)=0.9, \qquad p(D=1 \mid C=1,T=1)=0.9.$$
 
 So once the cavity variable is fixed, knowing the toothache value adds no further information about the probe outcome. That is precisely what conditional independence means in this example.
 
@@ -692,11 +692,11 @@ The conditional independence machinery above is exactly what one uses in simple 
 
 Assume
 
-$$ p(H=1)=0.1,\qquad p(C=1)=0.1, $$
+$$p(H=1)=0.1,\qquad p(C=1)=0.1,$$
 
 and assume $H$ and $C$ are independent. Then
 
-$$ p(H,C)=p(H)p(C). $$
+$$p(H,C)=p(H)p(C).$$
 
 The warning light is a noisy sensor whose probability of turning on depends on the hidden causes:
 
@@ -709,41 +709,41 @@ The warning light is a noisy sensor whose probability of turning on depends on t
 
 The first posterior query is the probability that coolant is low after seeing the warning light:
 
-$$ p(C=1 \mid W=1)=\frac{p(C=1,W=1)}{p(W=1)}. $$
+$$p(C=1 \mid W=1)=\frac{p(C=1,W=1)}{p(W=1)}.$$
 
 Compute the denominator by summing the last column:
 
-$$ p(W=1)=0.081+0.072+0.072+0.009=0.234. $$
+$$p(W=1)=0.081+0.072+0.072+0.009=0.234.$$
 
 Compute the numerator by summing only the rows with $C=1$:
 
-$$ p(C=1,W=1)=0.072+0.009=0.081. $$
+$$p(C=1,W=1)=0.072+0.009=0.081.$$
 
 Therefore
 
-$$ p(C=1 \mid W=1)=\frac{0.081}{0.234}=\frac{9}{26}\approx 0.346. $$
+$$p(C=1 \mid W=1)=\frac{0.081}{0.234}=\frac{9}{26}\approx 0.346.$$
 
 The second posterior query uses extra evidence. Once we also learn that the engine is hot,
 
-$$ p(C=1 \mid W=1,H=1)=\frac{p(C=1,W=1,H=1)}{p(W=1,H=1)}. $$
+$$p(C=1 \mid W=1,H=1)=\frac{p(C=1,W=1,H=1)}{p(W=1,H=1)}.$$
 
 The numerator is just the row $(H,C)=(1,1)$:
 
-$$ p(C=1,W=1,H=1)=0.009. $$
+$$p(C=1,W=1,H=1)=0.009.$$
 
 The denominator sums the two rows with $H=1$:
 
-$$ p(W=1,H=1)=0.072+0.009=0.081. $$
+$$p(W=1,H=1)=0.072+0.009=0.081.$$
 
 So the updated posterior is
 
-$$ p(C=1 \mid W=1,H=1)=\frac{0.009}{0.081}=\frac{1}{9}\approx 0.111. $$
+$$p(C=1 \mid W=1,H=1)=\frac{0.009}{0.081}=\frac{1}{9}\approx 0.111.$$
 
 This drop is not a paradox. Before checking the engine, the warning light could have been explained by either low coolant or overheating. After verifying that overheating is already present, much of the evidence carried by the light has already been explained away, so the extra need to blame low coolant becomes smaller.
 
 This example is also useful for structural counting. The full joint model over $(H,C,W)$ has
 
-$$ 2^3=8 $$
+$$2^3=8$$
 
 possible states. But the number of distinct real values we actually specified is much smaller. We used one shared prior number $0.1$ for both $H$ and $C$, and three distinct sensor probabilities $0.9$, $0.8$, and $0.1$ for the three qualitative parent cases "both true," "exactly one true," and "neither true." So the model was specified using only four distinct numbers. The gap between eight states and four numbers is exactly the payoff from independence plus parameter sharing.
 
@@ -751,11 +751,11 @@ possible states. But the number of distinct real values we actually specified is
 
 Suppose $A$, $B$, and $C$ are binary variables and we want to compute
 
-$$ p(A=1 \mid B=1,C=1). $$
+$$p(A=1 \mid B=1,C=1).$$
 
 Bayes' rule exposes the information requirement immediately:
 
-$$ p(A=1 \mid B=1,C=1) = \frac{p(B=1,C=1 \mid A=1)p(A=1)}{p(B=1,C=1)}. $$
+$$p(A=1 \mid B=1,C=1) = \frac{p(B=1,C=1 \mid A=1)p(A=1)}{p(B=1,C=1)}.$$
 
 So, with no conditional independence assumptions, three ingredients are needed:
 
@@ -769,33 +769,33 @@ Now consider three candidate information sets.
 
 Set 1 gives
 
-$$ p(B=1,C=1),\qquad p(A=1),\qquad p(B=1 \mid A=1),\qquad p(C=1 \mid A=1). $$
+$$p(B=1,C=1),\qquad p(A=1),\qquad p(B=1 \mid A=1),\qquad p(C=1 \mid A=1).$$
 
 Without further assumptions, this set is not sufficient. The separate conditionals $p(B=1 \mid A=1)$ and $p(C=1 \mid A=1)$ do not determine the joint conditional probability $p(B=1,C=1 \mid A=1)$. Many different joint distributions of $(B,C)$ given $A=1$ can share the same one-variable conditionals.
 
 Set 2 gives
 
-$$ p(B=1,C=1),\qquad p(A=1),\qquad p(B=1,C=1 \mid A=1). $$
+$$p(B=1,C=1),\qquad p(A=1),\qquad p(B=1,C=1 \mid A=1).$$
 
 This set is sufficient, because it contains exactly the three ingredients needed by Bayes' rule.
 
 Set 3 gives
 
-$$ p(A=1),\qquad p(B=1 \mid A=1),\qquad p(C=1 \mid A=1). $$
+$$p(A=1),\qquad p(B=1 \mid A=1),\qquad p(C=1 \mid A=1).$$
 
 This set is not sufficient. Even if one somehow recovered the numerator, the denominator $p(B=1,C=1)$ is still missing, so the posterior cannot be normalized.
 
 Now suppose we are also told that
 
-$$ p(B \mid A,C)=p(B \mid A) $$
+$$p(B \mid A,C)=p(B \mid A)$$
 
 for all values of the variables, which is the conditional independence statement
 
-$$ B \perp C \mid A. $$
+$$B \perp C \mid A.$$
 
 Then Set 1 becomes sufficient, because the missing joint conditional factor can now be reconstructed as
 
-$$ p(B=1,C=1 \mid A=1)=p(B=1 \mid A=1)p(C=1 \mid A=1). $$
+$$p(B=1,C=1 \mid A=1)=p(B=1 \mid A=1)p(C=1 \mid A=1).$$
 
 Set 2 remains sufficient for the same reason as before: it already contained the full joint conditional term. Set 3 is still not sufficient, because the marginal evidence probability $p(B=1,C=1)$ is still absent. Conditional independence can reduce the amount of information needed to specify a numerator, but it does not make the denominator appear by magic.
 
@@ -817,17 +817,17 @@ Set 2 remains sufficient for the same reason as before: it already contained the
 
 Sometimes we model systems with real-valued random variables $X \in \mathbb{R}$. In that setting we define a probability density function $p(x)$ with $p(x) \ge 0$ for all $x$ and
 
-$$ \int p(x)\,dx = 1. $$
+$$\int p(x)\,dx = 1.$$
 
 The density defines the probability of any event $X \in A \subseteq \mathbb{R}$ by
 
-$$ Pr[X \in A] = \int_A p(x)\,dx. $$
+$$Pr[X \in A] = \int_A p(x)\,dx.$$
 
 This is the first major structural difference from the discrete case. For a continuous variable, the number $p(x)$ is not the probability of the event $X=x$; in fact $Pr[X=x]=0$ for every individual point. A density only becomes a probability after integrating it over an interval or region. That is why a density is allowed to exceed one locally, provided the total area under the curve is still one.
 
 A concrete interval computation makes this precise. If $X$ is uniform on $[0,2]$, then $p(x)=1/2$ on that interval. The probability that $X$ falls between $0.3$ and $0.9$ is
 
-$$ Pr[0.3 \le X \le 0.9] = \int_{0.3}^{0.9} \frac{1}{2}\,dx = \frac{1}{2}(0.9-0.3)=0.3. $$
+$$Pr[0.3 \le X \le 0.9] = \int_{0.3}^{0.9} \frac{1}{2}\,dx = \frac{1}{2}(0.9-0.3)=0.3.$$
 
 The point $x=0.4$ itself still has probability zero. What matters is the width of the interval, not the existence of an individual point.
 
@@ -835,13 +835,13 @@ The point $x=0.4$ itself still has probability zero. What matters is the width o
 
 The cumulative distribution function is the most universal object for a real-valued random variable:
 
-$$ F_X(x)=Pr[X \le x]. $$
+$$F_X(x)=Pr[X \le x].$$
 
 Every real-valued random variable has a CDF, whether it is discrete, continuous, or mixed. A PMF exists when probability is concentrated on isolated states. A PDF exists only when the distribution is absolutely continuous with respect to ordinary length or volume. So PMFs and PDFs are special representations, while the CDF always exists.
 
 This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution can contain both an atom and a continuous part. For example, suppose
 
-$$ Pr[X=0]=0.7, $$
+$$Pr[X=0]=0.7,$$
 
 and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is
 
@@ -865,17 +865,17 @@ For a continuous-valued random variable $X$ defined on $[0,T]$, the uniform dist
 
 Then
 
-$$ \int_0^T p(x)\,dx = T \cdot \frac{1}{T} = 1. $$
+$$\int_0^T p(x)\,dx = T \cdot \frac{1}{T} = 1.$$
 
 Unlike discrete distributions, the density value may be larger than one, as long as its integral over the support is one. The important normalization object is area, not height.
 
 For example, if $X$ is uniform on the very short interval $[0,0.2]$, then
 
-$$ p(x)=5 $$
+$$p(x)=5$$
 
 on that interval. The density value exceeds one, but the total probability is still
 
-$$ \int_0^{0.2} 5\,dx = 1. $$
+$$\int_0^{0.2} 5\,dx = 1.$$
 
 So there is no contradiction between a large density and a valid probability model.
 
@@ -883,11 +883,11 @@ So there is no contradiction between a large density and a valid probability mod
 
 The Gaussian distribution is one of the most important continuous families. In one dimension,
 
-$$ p(x) = \mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right). $$
+$$p(x) = \mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).$$
 
 In multiple dimensions,
 
-$$ p(x) = \mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2} |\Sigma|^{-1/2} \exp\!\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right). $$
+$$p(x) = \mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2} |\Sigma|^{-1/2} \exp\!\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right).$$
 
 The mean vector $\mu$ sets the center, and the covariance matrix $\Sigma$ sets the shape and spread. The quadratic term $(x-\mu)^T \Sigma^{-1}(x-\mu)$ is the squared Mahalanobis distance from $x$ to the mean, measured in the geometry induced by $\Sigma$. In two dimensions, the level sets of constant density are ellipses; in higher dimensions, they are ellipsoids. For this formula to define a proper density, $\Sigma$ must be symmetric and positive definite, so that the quadratic form is nonnegative, the inverse exists, and the determinant term $|\Sigma|^{-1/2}$ is well-defined.
 
@@ -897,11 +897,11 @@ The three panels show the same family viewed three ways. The one-dimensional cur
 
 A concrete one-dimensional example is
 
-$$ X \sim \mathcal{N}(2, 9), $$
+$$X \sim \mathcal{N}(2, 9),$$
 
 so the mean is $2$ and the standard deviation is $3$. About two-thirds of the mass lies within one standard deviation of the mean, namely in the interval $[-1,5]$, and almost all of the mass lies within a few standard deviations. In two dimensions, if
 
-$$ \mu=(0,0)^T, \qquad \Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0, $$
+$$\mu=(0,0)^T, \qquad \Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0,$$
 
 then the contours are ellipses stretched more strongly along the first coordinate than along the second. Off-diagonal covariance terms rotate those ellipses and encode correlation.
 
@@ -909,21 +909,21 @@ then the contours are ellipses stretched more strongly along the first coordinat
 
 The Bernoulli distribution can be written in exponential-family form:
 
-$$ \rho^X (1-\rho)^{1-X} = \exp\!\Bigl(\log(\rho)X + \log(1-\rho)(1-X)\Bigr). $$
+$$\rho^X (1-\rho)^{1-X} = \exp\!\Bigl(\log(\rho)X + \log(1-\rho)(1-X)\Bigr).$$
 
 This highlights the feature $\phi(X)=X$ and the natural parameter $\eta = \log(\rho/(1-\rho))$. Writing Bernoulli in this way makes the log-odds parameter explicit and shows how a nonlinear parameter such as $\rho$ becomes a linear coefficient in the exponent.
 
 One more step makes the canonical form fully explicit. Since
 
-$$ \log(\rho)X + \log(1-\rho)(1-X) = X \log \frac{\rho}{1-\rho} + \log(1-\rho), $$
+$$\log(\rho)X + \log(1-\rho)(1-X) = X \log \frac{\rho}{1-\rho} + \log(1-\rho),$$
 
 we can write
 
-$$ p(X) = \exp\!\bigl(\eta X - A(\eta)\bigr) $$
+$$p(X) = \exp\!\bigl(\eta X - A(\eta)\bigr)$$
 
 with
 
-$$ \eta = \log \frac{\rho}{1-\rho}, \qquad A(\eta)=\log(1+e^\eta). $$
+$$\eta = \log \frac{\rho}{1-\rho}, \qquad A(\eta)=\log(1+e^\eta).$$
 
 This shows exactly how the Bernoulli distribution fits the general exponential-family template.
 
@@ -931,7 +931,7 @@ This shows exactly how the Bernoulli distribution fits the general exponential-f
 
 We can also write an over-parameterized Bernoulli distribution with two parameters:
 
-$$ p(X;\eta_0,\eta_1) = \frac{\exp\bigl(\eta_1 X + \eta_0(1-X)\bigr)}{\exp(\eta_0)+\exp(\eta_1)}. $$
+$$p(X;\eta_0,\eta_1) = \frac{\exp\bigl(\eta_1 X + \eta_0(1-X)\bigr)}{\exp(\eta_0)+\exp(\eta_1)}.$$
 
 Only the difference $\eta_1 - \eta_0$ matters, so different parameter values can represent the same distribution. This is an explicit structural redundancy: the model has two coordinates, but the actual Bernoulli family still has only one degree of freedom.
 
@@ -941,13 +941,13 @@ For example, the parameter pairs $(\eta_0,\eta_1)=(0,2)$ and $(5,7)$ define the 
 
 Another important continuous distribution is the Beta distribution on $[0,1]$:
 
-$$ p(x) = \mathrm{Beta}(x;a,b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^{a-1}(1-x)^{b-1}. $$
+$$p(x) = \mathrm{Beta}(x;a,b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} x^{a-1}(1-x)^{b-1}.$$
 
 The Gamma-function ratio is the normalization constant that forces the integral over $[0,1]$ to equal one. When $a=b=1$, the Beta distribution is uniform. When $a,b > 1$, it is unimodal and places most of its mass in the interior. When either parameter is less than one, the density can spike at the boundary. That does not violate probability rules, because the integral over any interval is still finite even if the pointwise density becomes very large near $0$ or $1$.
 
 The Dirichlet distribution generalizes Beta to vectors on the simplex:
 
-$$ p(x) = \mathrm{Dir}(x;\alpha) = \frac{\Gamma(\sum_j \alpha_j)}{\prod_j \Gamma(\alpha_j)} \prod_j x_j^{\alpha_j - 1}, $$
+$$p(x) = \mathrm{Dir}(x;\alpha) = \frac{\Gamma(\sum_j \alpha_j)}{\prod_j \Gamma(\alpha_j)} \prod_j x_j^{\alpha_j - 1},$$
 
 with $x_j \ge 0$ and $\sum_j x_j = 1$. The simplex constraint means the domain has one fewer free dimension than the number of coordinates: once $x_1,\dots,x_{d-1}$ are chosen, the last coordinate is fixed by normalization. When all concentration parameters are large and equal, the mass sits near the center of the simplex; when some coordinates of $\alpha$ are less than one, the density shifts toward edges or corners. For $d=2$, Dirichlet reduces exactly to Beta, so Beta is the one-dimensional simplex case.
 
@@ -959,11 +959,11 @@ The Beta grid makes the parameter effects explicit: symmetric parameters above o
 
 A full prior example helps fix intuition. Suppose $\rho$ is the head probability of a coin. A prior
 
-$$ \rho \sim \mathrm{Beta}(20,20) $$
+$$\rho \sim \mathrm{Beta}(20,20)$$
 
 encodes a strong belief that the coin is close to fair, because the mass is tightly concentrated around $0.5$. By contrast,
 
-$$ \rho \sim \mathrm{Beta}(0.3,0.3) $$
+$$\rho \sim \mathrm{Beta}(0.3,0.3)$$
 
 puts much more mass near $0$ and $1$, expressing the belief that the coin is likely to be strongly biased in one direction or the other. In the Dirichlet case, the same logic applies to a probability vector rather than a single number.
 
@@ -971,17 +971,17 @@ puts much more mass near $0$ and $1$, expressing the belief that the coin is lik
 
 The distributions discussed so far are examples of the exponential family:
 
-$$ p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr). $$
+$$p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr).$$
 
 The vector $\phi(x)$ contains the sufficient statistics, $h(x)$ is the base measure, $\theta$ is the natural parameter, and $A(\theta)$ is the log-partition function
 
-$$ A(\theta) = \log \int h(x)\exp\!\bigl(\theta^T\phi(x)\bigr)\,dx. $$
+$$A(\theta) = \log \int h(x)\exp\!\bigl(\theta^T\phi(x)\bigr)\,dx.$$
 
 Writing the model this way makes the structure explicit: the log-density is affine in the fixed feature vector $\phi(x)$, while all normalization is absorbed into $A(\theta)$. That structure is what gives exponential families their clean moment-matching and convexity properties. It is also a genuine limitation: only distributions whose log-density can be expressed using a fixed finite-dimensional feature map belong to a finite-dimensional exponential family.
 
 It is helpful to see the template instantiated twice. For Bernoulli,
 
-$$ h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\eta)=\log(1+e^\eta). $$
+$$h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\eta)=\log(1+e^\eta).$$
 
 For a Gaussian with known variance $\sigma^2$, one can write the density in exponential-family form with sufficient statistics $x$ and $x^2$. The point is not that every distribution looks identical, but that once the pieces are identified, the same structural tools apply across many families.
 
@@ -1013,11 +1013,11 @@ Both views use many of the same formulas, but they answer slightly different que
 
 The same coin-toss example makes the contrast concrete. Suppose we observe five flips with outcomes
 
-$$ D=\{1,1,0,1,0\}. $$
+$$D=\{1,1,0,1,0\}.$$
 
 A frequentist summary is the single estimate $\hat\rho=3/5=0.6$. A Bayesian summary with prior $\mathrm{Beta}(2,2)$ produces the full posterior
 
-$$ \rho \mid D \sim \mathrm{Beta}(5,4), $$
+$$\rho \mid D \sim \mathrm{Beta}(5,4),$$
 
 which still centers near $0.56$ but also quantifies uncertainty around that value.
 
@@ -1025,25 +1025,25 @@ which still centers near $0.56$ but also quantifies uncertainty around that valu
 
 For i.i.d. data $D = {x^{(1)}, \dots, x^{(m)}}$, the likelihood is
 
-$$ p(D;\theta) = \prod_i p(x^{(i)};\theta) $$
+$$p(D;\theta) = \prod_i p(x^{(i)};\theta)$$
 
 and the log-likelihood is
 
-$$ L(\theta) = \sum_i \log p(x^{(i)};\theta). $$
+$$L(\theta) = \sum_i \log p(x^{(i)};\theta).$$
 
 The principle of maximum likelihood says to choose the parameter value that makes the observed data look most probable. It is important to state explicitly what varies and what stays fixed: after we have observed $D$, the data are treated as fixed, and the likelihood is a function of $\theta$. It is not a probability distribution over $\theta$, and it does not have to integrate to one over parameter space.
 
 For the small Bernoulli sample
 
-$$ D=\{1,0,1\}, $$
+$$D=\{1,0,1\},$$
 
 the likelihood is
 
-$$ p(D \mid \rho)=\rho(1-\rho)\rho=\rho^2(1-\rho). $$
+$$p(D \mid \rho)=\rho(1-\rho)\rho=\rho^2(1-\rho).$$
 
 If we try three candidate parameters, we get
 
-$$ p(D \mid 0.2)=0.032,\qquad p(D \mid 0.5)=0.125,\qquad p(D \mid 0.8)=0.128. $$
+$$p(D \mid 0.2)=0.032,\qquad p(D \mid 0.5)=0.125,\qquad p(D \mid 0.8)=0.128.$$
 
 So among those candidates, $\rho=0.8$ explains the observed data slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly.
 
@@ -1053,7 +1053,7 @@ The same algebraic expression can play two different roles depending on what is 
 
 For Bernoulli data, if we observe a single success $x=1$, then
 
-$$ p(x=1 \mid \rho)=\rho. $$
+$$p(x=1 \mid \rho)=\rho.$$
 
 Viewed as a function of the data, this is a perfectly ordinary probability rule: for fixed $\rho$, the probabilities of $x=0$ and $x=1$ add to one. But viewed as a function of $\rho$ after observing $x=1$, the same expression becomes the likelihood $L(\rho)=\rho$. That likelihood does not integrate to one over $\rho \in [0,1]$, nor is it supposed to. Its job is only to rank parameter values by how well they explain the observation.
 
@@ -1061,7 +1061,7 @@ Viewed as a function of the data, this is a perfectly ordinary probability rule:
 
 Suppose we observe $m$ Bernoulli samples, with $m_1$ ones and $m_0$ zeros. Then
 
-$$ L(\rho) = m_1 \log \rho + m_0 \log(1-\rho). $$
+$$L(\rho) = m_1 \log \rho + m_0 \log(1-\rho).$$
 
 The likelihood is maximized at the empirical frequency of ones. If the observed sample is all zeros or all ones, the maximizer lies on the boundary $\rho=0$ or $\rho=1$. Otherwise the unique optimum lies in the interior of the interval.
 
@@ -1071,7 +1071,7 @@ Each panel holds the observed data fixed and varies only the parameter $\rho$. T
 
 For the data set $D=\{0,1\}$, the likelihood is
 
-$$ p(D \mid \rho)=\rho(1-\rho), $$
+$$p(D \mid \rho)=\rho(1-\rho),$$
 
 which is zero at $\rho=0$ and $\rho=1$ because either extreme makes one of the two observations impossible. The peak therefore occurs in the interior, specifically at $\rho=1/2$.
 
@@ -1085,7 +1085,7 @@ The dots along the top of each panel are the observed samples. The curve below t
 
 If the observed values are $-0.5$, $0.4$, and $1.3$, then the Gaussian likelihood in $\mu$ is largest near the arithmetic average
 
-$$ \bar x = \frac{-0.5+0.4+1.3}{3}=0.4. $$
+$$\bar x = \frac{-0.5+0.4+1.3}{3}=0.4.$$
 
 The entire curve is simply another way of visualizing how much squared-error penalty is paid for choosing a mean away from that center.
 
@@ -1093,49 +1093,49 @@ The entire curve is simply another way of visualizing how much squared-error pen
 
 For a Bernoulli distribution,
 
-$$ L(\rho) = m_1 \log \rho + m_0 \log(1-\rho). $$
+$$L(\rho) = m_1 \log \rho + m_0 \log(1-\rho).$$
 
 Differentiating gives
 
-$$ \frac{\partial L}{\partial \rho} = \frac{m_1}{\rho} - \frac{m_0}{1-\rho}. $$
+$$\frac{\partial L}{\partial \rho} = \frac{m_1}{\rho} - \frac{m_0}{1-\rho}.$$
 
 Setting this to zero yields
 
-$$ \hat\rho_{\text{MLE}} = \frac{m_1}{m}. $$
+$$\hat\rho_{\text{MLE}} = \frac{m_1}{m}.$$
 
 The algebra is worth writing out explicitly:
 
-$$ \frac{m_1}{\rho} - \frac{m_0}{1-\rho} = 0 \quad \Longrightarrow \quad m_1(1-\rho) = m_0\rho \quad \Longrightarrow \quad m_1 = (m_0+m_1)\rho. $$
+$$\frac{m_1}{\rho} - \frac{m_0}{1-\rho} = 0 \quad \Longrightarrow \quad m_1(1-\rho) = m_0\rho \quad \Longrightarrow \quad m_1 = (m_0+m_1)\rho.$$
 
 Since $m_0+m_1 = m$, we obtain $\hat\rho_{\text{MLE}} = m_1/m$. The second derivative is
 
-$$ \frac{\partial^2 L}{\partial \rho^2} = -\frac{m_1}{\rho^2} - \frac{m_0}{(1-\rho)^2} < 0, $$
+$$\frac{\partial^2 L}{\partial \rho^2} = -\frac{m_1}{\rho^2} - \frac{m_0}{(1-\rho)^2} < 0,$$
 
 so the stationary point is a strict global maximum whenever it lies in the interior.
 
 For a Gaussian with mean $\mu$ and variance $\nu = \sigma^2$,
 
-$$ \hat\mu_{\text{MLE}} = \frac{1}{m}\sum_i x^{(i)} $$
+$$\hat\mu_{\text{MLE}} = \frac{1}{m}\sum_i x^{(i)}$$
 
-$$ \hat\nu_{\text{MLE}} = \frac{1}{m}\sum_i (x^{(i)} - \hat\mu)^2. $$
+$$\hat\nu_{\text{MLE}} = \frac{1}{m}\sum_i (x^{(i)} - \hat\mu)^2.$$
 
 For the mean parameter, the derivation comes from expanding the log-likelihood into a constant minus a squared-error term:
 
-$$ L(\mu) = \text{const} - \frac{1}{2\nu}\sum_i (x^{(i)}-\mu)^2. $$
+$$L(\mu) = \text{const} - \frac{1}{2\nu}\sum_i (x^{(i)}-\mu)^2.$$
 
 Differentiating with respect to $\mu$ gives
 
-$$ \frac{\partial L}{\partial \mu} = \frac{1}{\nu}\sum_i (x^{(i)}-\mu), $$
+$$\frac{\partial L}{\partial \mu} = \frac{1}{\nu}\sum_i (x^{(i)}-\mu),$$
 
 so setting the derivative to zero forces $\mu$ to equal the arithmetic average of the observations. The variance estimate is then the average squared deviation around that fitted mean. For a discrete distribution with probabilities $\rho_x$, the MLE is the empirical frequency of each state.
 
 An explicit discrete example makes the frequency rule concrete. Suppose the data over states $\{a,b,c\}$ are
 
-$$ D=\{a,c,a,b,a,c\}. $$
+$$D=\{a,c,a,b,a,c\}.$$
 
 Then the counts are $m_a=3$, $m_b=1$, and $m_c=2$, so the MLE is
 
-$$ \hat\rho_a=3/6,\qquad \hat\rho_b=1/6,\qquad \hat\rho_c=2/6. $$
+$$\hat\rho_a=3/6,\qquad \hat\rho_b=1/6,\qquad \hat\rho_c=2/6.$$
 
 The estimate simply copies empirical proportions into the model.
 
@@ -1143,21 +1143,21 @@ The estimate simply copies empirical proportions into the model.
 
 If $m_1$ of the $m$ observations are ones, then
 
-$$ \hat\rho = \frac{m_1}{m}. $$
+$$\hat\rho = \frac{m_1}{m}.$$
 
 ### Example 2-15: Gaussian MLE
 
 The Gaussian MLE is the sample mean and sample variance:
 
-$$ \hat\mu = \frac{1}{m}\sum_i x^{(i)}, $$
+$$\hat\mu = \frac{1}{m}\sum_i x^{(i)},$$
 
-$$ \hat\nu = \frac{1}{m}\sum_i (x^{(i)}-\hat\mu)^2. $$
+$$\hat\nu = \frac{1}{m}\sum_i (x^{(i)}-\hat\mu)^2.$$
 
 ### Example 2-16: Discrete MLE
 
 For a discrete distribution over states $x$, the MLE is
 
-$$ \hat\rho_x = \frac{m_x}{m}, $$
+$$\hat\rho_x = \frac{m_x}{m},$$
 
 where $m_x$ is the count of state $x$ in the data.
 
@@ -1165,33 +1165,33 @@ where $m_x$ is the count of state $x$ in the data.
 
 For a canonical exponential-family model
 
-$$ p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr), $$
+$$p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr),$$
 
 the log-likelihood of i.i.d. data is
 
-$$ L(\theta) = \sum_i \log h(x^{(i)}) + \theta^T \sum_i \phi(x^{(i)}) - m A(\theta). $$
+$$L(\theta) = \sum_i \log h(x^{(i)}) + \theta^T \sum_i \phi(x^{(i)}) - m A(\theta).$$
 
 Differentiating with respect to $\theta$ gives
 
-$$ \nabla_\theta L(\theta) = \sum_i \phi(x^{(i)}) - m \nabla_\theta A(\theta). $$
+$$\nabla_\theta L(\theta) = \sum_i \phi(x^{(i)}) - m \nabla_\theta A(\theta).$$
 
 For exponential families,
 
-$$ \nabla_\theta A(\theta) = E_\theta[\phi(X)], $$
+$$\nabla_\theta A(\theta) = E_\theta[\phi(X)],$$
 
 so the first-order optimality condition becomes
 
-$$ \frac{1}{m}\sum_i \phi(x^{(i)}) = E_\theta[\phi(X)]. $$
+$$\frac{1}{m}\sum_i \phi(x^{(i)}) = E_\theta[\phi(X)].$$
 
 This is the explicit moment-matching statement: the fitted model reproduces the empirical averages of the sufficient statistics. That identity is one of the main reasons exponential families are so useful.
 
 For Bernoulli, the sufficient statistic is just $X$, so moment matching says
 
-$$ E_\theta[X] = \frac{1}{m}\sum_i x^{(i)}. $$
+$$E_\theta[X] = \frac{1}{m}\sum_i x^{(i)}.$$
 
 But the model expectation of $X$ is exactly $\rho$, so the condition reduces to
 
-$$ \rho = \text{sample mean}, $$
+$$\rho = \text{sample mean},$$
 
 which reproduces the familiar Bernoulli MLE immediately.
 
@@ -1209,25 +1209,25 @@ The three histograms make the overfitting mechanism visible. With one bin the mo
 
 In the Bayesian view, we keep a distribution over parameters:
 
-$$ p(\theta \mid D) \propto p(D \mid \theta)p(\theta). $$
+$$p(\theta \mid D) \propto p(D \mid \theta)p(\theta).$$
 
 The missing normalization constant is the evidence
 
-$$ p(D) = \int p(D \mid \theta)p(\theta)\,d\theta. $$
+$$p(D) = \int p(D \mid \theta)p(\theta)\,d\theta.$$
 
 So Bayes' rule in full form is
 
-$$ p(\theta \mid D) = \frac{p(D \mid \theta)p(\theta)}{p(D)}. $$
+$$p(\theta \mid D) = \frac{p(D \mid \theta)p(\theta)}{p(D)}.$$
 
 The posterior trades a point estimate for uncertainty about plausible parameter values. This is conceptually important and computationally consequential: exact inference is easy only when the evidence integral can be computed analytically or when the prior-likelihood pair has a conjugate form.
 
 For a concrete update, start with
 
-$$ \rho \sim \mathrm{Beta}(2,2) $$
+$$\rho \sim \mathrm{Beta}(2,2)$$
 
 and observe $D=\{1,0,1\}$. The posterior becomes
 
-$$ \rho \mid D \sim \mathrm{Beta}(4,3). $$
+$$\rho \mid D \sim \mathrm{Beta}(4,3).$$
 
 The prior contributes two pseudo-observations toward heads and two toward tails, while the real data contribute two heads and one tail. The posterior therefore behaves like a total of seven weighted observations.
 
@@ -1235,25 +1235,25 @@ The prior contributes two pseudo-observations toward heads and two toward tails,
 
 If the likelihood is Bernoulli and the prior is $Beta(a,b)$, then the posterior is still Beta:
 
-$$ \rho \mid D \sim Beta(a+m_1, b+m_0). $$
+$$\rho \mid D \sim Beta(a+m_1, b+m_0).$$
 
 The derivation is short enough to write explicitly. The prior contributes
 
-$$ p(\rho) \propto \rho^{a-1}(1-\rho)^{b-1}, $$
+$$p(\rho) \propto \rho^{a-1}(1-\rho)^{b-1},$$
 
 and the Bernoulli likelihood contributes
 
-$$ p(D \mid \rho) \propto \rho^{m_1}(1-\rho)^{m_0}. $$
+$$p(D \mid \rho) \propto \rho^{m_1}(1-\rho)^{m_0}.$$
 
 Multiplying them gives
 
-$$ p(\rho \mid D) \propto \rho^{a+m_1-1}(1-\rho)^{b+m_0-1}, $$
+$$p(\rho \mid D) \propto \rho^{a+m_1-1}(1-\rho)^{b+m_0-1},$$
 
 which is exactly the kernel of another Beta density. This is the simplest example of conjugacy.
 
 If we plug in $a=b=2$ and observe $m_1=3$, $m_0=1$, then
 
-$$ \rho \mid D \sim \mathrm{Beta}(5,3). $$
+$$\rho \mid D \sim \mathrm{Beta}(5,3).$$
 
 The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros.
 
@@ -1261,21 +1261,21 @@ The posterior is more concentrated than the prior because more information has b
 
 The categorical analogue of Beta-Bernoulli conjugacy is Dirichlet-Categorical conjugacy. Let a three-class probability vector satisfy
 
-$$ \theta=(\theta_1,\theta_2,\theta_3) \sim \mathrm{Dir}(2,2,2). $$
+$$\theta=(\theta_1,\theta_2,\theta_3) \sim \mathrm{Dir}(2,2,2).$$
 
 Now observe four class labels with counts
 
-$$ m=(3,1,0). $$
+$$m=(3,1,0).$$
 
 The posterior is obtained by adding counts coordinatewise:
 
-$$ \theta \mid D \sim \mathrm{Dir}(5,3,2). $$
+$$\theta \mid D \sim \mathrm{Dir}(5,3,2).$$
 
 This is the multi-class pseudo-count interpretation in explicit form. The prior behaves like two virtual observations in each class. The data then add three more observations to class $1$, one to class $2$, and none to class $3$.
 
 The posterior mean is
 
-$$ E[\theta \mid D] = ( \frac{5}{10}, \frac{3}{10}, \frac{2}{10} ) =(0.5,0.3,0.2). $$
+$$E[\theta \mid D] = ( \frac{5}{10}, \frac{3}{10}, \frac{2}{10} ) =(0.5,0.3,0.2).$$
 
 The posterior therefore still leaves positive mass on the unobserved third class, because the prior did not allow its probability to collapse to zero after only four observations. That is exactly the smoothing effect one usually wants from a Bayesian categorical model.
 
@@ -1283,23 +1283,23 @@ The posterior therefore still leaves positive mass on the unobserved third class
 
 Two common point estimates derived from the posterior are the posterior mean and the MAP estimate:
 
-$$ \hat\theta_{\text{PM}} = E_{p(\theta \mid D)}[\theta], $$
+$$\hat\theta_{\text{PM}} = E_{p(\theta \mid D)}[\theta],$$
 
-$$ \hat\theta_{\text{MAP}} = \mathrm{argmax}_\theta \log p(\theta \mid D). $$
+$$\hat\theta_{\text{MAP}} = \mathrm{argmax}_\theta \log p(\theta \mid D).$$
 
 For Bernoulli/Beta,
 
-$$ \hat\rho_{\text{PM}} = \frac{a+m_1}{a+b+m_1+m_0} $$
+$$\hat\rho_{\text{PM}} = \frac{a+m_1}{a+b+m_1+m_0}$$
 
 and
 
-$$ \hat\rho_{\text{MAP}} = \frac{a-1+m_1}{a+b-2+m_1+m_0}. $$
+$$\hat\rho_{\text{MAP}} = \frac{a-1+m_1}{a+b-2+m_1+m_0}.$$
 
 The posterior mean averages with respect to the full posterior and therefore always exists for $a,b>0$. The MAP estimator is different: it looks for the mode of the posterior density, and if either updated shape parameter is at most one, the mode moves to the boundary rather than the interior. That boundary behavior is another structural feature that is easy to miss if one only memorizes the closed form.
 
 With the posterior $\mathrm{Beta}(5,3)$, the two estimators are
 
-$$ \hat\rho_{\text{PM}}=\frac{5}{8}=0.625, \qquad \hat\rho_{\text{MAP}}=\frac{4}{6}\approx 0.667. $$
+$$\hat\rho_{\text{PM}}=\frac{5}{8}=0.625, \qquad \hat\rho_{\text{MAP}}=\frac{4}{6}\approx 0.667.$$
 
 The MAP estimate is slightly more aggressive because it chooses the mode, while the posterior mean averages over the whole posterior mass.
 
@@ -1309,7 +1309,7 @@ The posterior mean smooths the empirical frequency by the prior. The MAP estimat
 
 For the sample $D=\{1,1,0\}$, the MLE is $2/3 \approx 0.667$. With prior $\mathrm{Beta}(2,2)$, the posterior mean becomes
 
-$$ \frac{2+2}{2+2+2+1}=\frac{4}{7}\approx 0.571. $$
+$$\frac{2+2}{2+2+2+1}=\frac{4}{7}\approx 0.571.$$
 
 So the prior pulls the estimate back toward $0.5$, which is exactly what regularization is supposed to do.
 
@@ -1323,7 +1323,7 @@ The figure is deliberately procedural: first combine the prior with the first da
 
 For example, begin with $\mathrm{Beta}(2,2)$. After the first batch $D_1=\{1,0,1\}$, the posterior is $\mathrm{Beta}(4,3)$. If a second batch $D_2=\{1,1\}$ arrives later, the new posterior is
 
-$$ \mathrm{Beta}(6,3). $$
+$$\mathrm{Beta}(6,3).$$
 
 If we had processed all five observations at once, we would obtain exactly the same answer. Sequential updating is therefore not an approximation; it is algebraically equivalent to batch updating when the model assumptions are unchanged.
 
@@ -1349,7 +1349,7 @@ The uniform prior on $\rho$ is $Beta(\rho;1,1)$. Under a log-odds parameterizati
 
 The Bayesian marginal likelihood is
 
-$$ \log p(D) = \log \int p(D \mid \theta)p(\theta)\,d\theta. $$
+$$\log p(D) = \log \int p(D \mid \theta)p(\theta)\,d\theta.$$
 
 It automatically penalizes overly flexible models that spread prior mass too thinly. This happens because the marginal likelihood averages $p(D \mid \theta)$ over the prior rather than looking only at the single best parameter value. A highly flexible model can fit some parameter settings extremely well, but if most of its prior mass corresponds to poor fits, the average score can still be small.
 
@@ -1357,7 +1357,7 @@ That difference is easiest to see by contrasting two models. Model A may have a 
 
 The BIC approximation is
 
-$$ L_{\text{BIC}} = \max_\theta \log p(D \mid \theta) - \frac{d}{2}\log m, $$
+$$L_{\text{BIC}} = \max_\theta \log p(D \mid \theta) - \frac{d}{2}\log m,$$
 
 where $d$ is the number of parameters and $m$ is the number of observations.
 
@@ -1375,57 +1375,57 @@ Read the graph from left to right as a complexity sweep. Moving right means addi
 
 Suppose a first batch of flips is
 
-$$ D_A=\{H,T,T\}, $$
+$$D_A=\{H,T,T\},$$
 
 and a second batch is
 
-$$ D_B=\{T,H,H\}. $$
+$$D_B=\{T,H,H\}.$$
 
 If there is only one coin, all six flips share a common head probability $\rho$. Since there are three heads out of six observations,
 
-$$ \hat{\rho}=\frac{3}{6}=0.5. $$
+$$\hat{\rho}=\frac{3}{6}=0.5.$$
 
 If there are two different coins, the first coin gets its own parameter $\rho_A$ and the second gets $\rho_B$. Their MLEs are just the within-batch head frequencies:
 
-$$ \hat{\rho}_A=\frac{1}{3},\qquad \hat{\rho}_B=\frac{2}{3}. $$
+$$\hat{\rho}_A=\frac{1}{3},\qquad \hat{\rho}_B=\frac{2}{3}.$$
 
 The maximized average log-likelihood under the one-coin model is
 
-$$ \text{one-coin average log-likelihood} = (3 \log 0.5 + 3 \log 0.5)/6 = \log 0.5 \approx -0.693. $$
+$$\text{one-coin average log-likelihood} = (3 \log 0.5 + 3 \log 0.5)/6 = \log 0.5 \approx -0.693.$$
 
 For the two-coin model it is
 
-$$ \text{two-coin average log-likelihood} = \bigl(2 \log(1/3)+4 \log(2/3)\bigr)/6 \approx -0.637. $$
+$$\text{two-coin average log-likelihood} = \bigl(2 \log(1/3)+4 \log(2/3)\bigr)/6 \approx -0.637.$$
 
 So raw fit prefers the two-coin model, because extra parameters always help match the data more closely.
 
 BIC adds a complexity penalty. The one-coin model has $d=1$ parameter and the two-coin model has $d=2$ parameters, so with $m=6$ observations the penalized average scores are
 
-$$ \text{one-coin BIC average} = -0.693-(\log 6)/12 \approx -0.842, $$
+$$\text{one-coin BIC average} = -0.693-(\log 6)/12 \approx -0.842,$$
 
-$$ \text{two-coin BIC average} = -0.637-(\log 6)/6 \approx -0.935. $$
+$$\text{two-coin BIC average} = -0.637-(\log 6)/6 \approx -0.935.$$
 
 After penalization, the one-coin model wins. The extra flexibility of the two-coin model is not justified by only six flips.
 
 Now increase the data while keeping the same qualitative split:
 
-$$ D_A=\{H,T,T,T,T\},\qquad D_B=\{T,H,H,H,H\}. $$
+$$D_A=\{H,T,T,T,T\},\qquad D_B=\{T,H,H,H,H\}.$$
 
 The one-coin MLE is still
 
-$$ \hat{\rho}=0.5, $$
+$$\hat{\rho}=0.5,$$
 
 while the two-coin MLEs become
 
-$$ \hat{\rho}_A=0.2,\qquad \hat{\rho}_B=0.8. $$
+$$\hat{\rho}_A=0.2,\qquad \hat{\rho}_B=0.8.$$
 
 The one-coin penalized average score is now
 
-$$ \text{one-coin BIC average} \approx -0.808, $$
+$$\text{one-coin BIC average} \approx -0.808,$$
 
 while the two-coin penalized average score is
 
-$$ \text{two-coin BIC average} \approx -0.731. $$
+$$\text{two-coin BIC average} \approx -0.731.$$
 
 Now the two-coin model wins even after the penalty. The lesson is structural: with small data, the simpler model is often preferred because complexity costs dominate. With more data, a genuine difference between the two batches can become strong enough that the richer model earns back its penalty.
 
@@ -1449,37 +1449,37 @@ This section is supporting background rather than core probability machinery. Fo
 
 A convex function satisfies
 
-$$ f(\alpha x + (1-\alpha)x') \le \alpha f(x) + (1-\alpha)f(x') $$
+$$f(\alpha x + (1-\alpha)x') \le \alpha f(x) + (1-\alpha)f(x')$$
 
 for all $\alpha \in [0,1]$. Strict convexity makes the inequality strict for distinct points.
 
 Equivalent characterizations are:
 
-$$ f(x') \ge f(x) + \nabla f(x)\cdot(x'-x) $$
+$$f(x') \ge f(x) + \nabla f(x)\cdot(x'-x)$$
 
 and, when second derivatives exist,
 
-$$ \nabla^2 f(x) \succeq 0. $$
+$$\nabla^2 f(x) \succeq 0.$$
 
 Convex functions are useful because every local minimum is global, and a strictly convex function has a unique minimum. Positive semidefinite curvature allows flat directions, so multiple minimizers can still exist. Positive definite curvature removes those flat directions and forces uniqueness.
 
 A full worked example is $f(x)=x^2$. For any $x$ and $x'$ and any $\alpha \in [0,1]$,
 
-$$ f(\alpha x + (1-\alpha)x') = (\alpha x + (1-\alpha)x')^2 $$
+$$f(\alpha x + (1-\alpha)x') = (\alpha x + (1-\alpha)x')^2$$
 
 expands to
 
-$$ \alpha x^2 + (1-\alpha)x'^2 - \alpha(1-\alpha)(x-x')^2. $$
+$$\alpha x^2 + (1-\alpha)x'^2 - \alpha(1-\alpha)(x-x')^2.$$
 
 Since the last term is nonpositive, we obtain
 
-$$ (\alpha x + (1-\alpha)x')^2 \le \alpha x^2 + (1-\alpha)x'^2. $$
+$$(\alpha x + (1-\alpha)x')^2 \le \alpha x^2 + (1-\alpha)x'^2.$$
 
 That is the convexity inequality in explicit algebraic form. Geometrically, it says the parabola lies below every secant line connecting two points on its graph.
 
 Jensen's inequality is the probability version of convexity:
 
-$$ E[f(X)] \ge f(E[X]) $$
+$$E[f(X)] \ge f(E[X])$$
 
 for convex $f$.
 
@@ -1487,7 +1487,7 @@ for convex $f$.
 
 The negative log-likelihood of a canonical exponential-family model is convex in its natural parameters. The reason is explicit:
 
-$$ \frac{\partial A(\theta)}{\partial \theta_j} = E_\theta[\phi_j(X)], \qquad \frac{\partial^2 A(\theta)}{\partial \theta_j \partial \theta_k} = \mathrm{Cov}_\theta(\phi_j(X), \phi_k(X)). $$
+$$\frac{\partial A(\theta)}{\partial \theta_j} = E_\theta[\phi_j(X)], \qquad \frac{\partial^2 A(\theta)}{\partial \theta_j \partial \theta_k} = \mathrm{Cov}_\theta(\phi_j(X), \phi_k(X)).$$
 
 The Hessian of the log-partition function is therefore a covariance matrix of the sufficient statistics, hence positive semidefinite. Once the terms that are constant or linear in $\theta$ are separated out, the remaining negative log-likelihood inherits that convexity.
 
@@ -1515,13 +1515,13 @@ This section is worth reading for conceptual maturity, but it is partly second-p
 
 Entropy measures uncertainty:
 
-$$ H[X] = -\sum_x p(x)\log p(x). $$
+$$H[X] = -\sum_x p(x)\log p(x).$$
 
 If the logarithm is base 2, entropy is measured in bits. A deterministic variable has entropy zero, and a uniform distribution maximizes entropy for a fixed finite support. Entropy is therefore not just "randomness" in an informal sense; it is the expected code length of the optimal lossless code and the expected information revealed by one observation.
 
 A useful comparison is between a fair coin and a biased coin with probabilities $(0.9,0.1)$. The fair coin has entropy $1$ bit, while the biased coin has
 
-$$ H[X] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47 \text{ bits}. $$
+$$H[X] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47 \text{ bits}.$$
 
 The biased coin is more predictable, so it carries less uncertainty and requires fewer average bits to encode.
 
@@ -1529,11 +1529,11 @@ The biased coin is more predictable, so it carries less uncertainty and requires
 
 For a fair coin,
 
-$$ H[X] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}. $$
+$$H[X] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}.$$
 
 For a fair die,
 
-$$ H[X] = -6 \cdot \frac{1}{6}\log_2 \frac{1}{6} \approx 2.58 \text{ bits}. $$
+$$H[X] = -6 \cdot \frac{1}{6}\log_2 \frac{1}{6} \approx 2.58 \text{ bits}.$$
 
 ### Example 2-25: Lottery
 
@@ -1545,7 +1545,7 @@ To make that explicit, imagine a lottery-notification variable that is $1$ only 
 
 The KL divergence is
 
-$$ D(p \,\|\, q) = \sum_x p(x)\log\frac{p(x)}{q(x)}. $$
+$$D(p \,\|\, q) = \sum_x p(x)\log\frac{p(x)}{q(x)}.$$
 
 It is always nonnegative and zero only when $p=q$, but it is not symmetric. There is also an important support condition: if $q(x)=0$ for some $x$ with $p(x)>0$, then the divergence is infinite, because $q$ assigns impossible status to an outcome that actually occurs under $p$.
 
@@ -1553,15 +1553,15 @@ In learning, maximum likelihood can be viewed as minimizing the KL divergence fr
 
 A concrete Bernoulli example makes the asymmetry visible. Let
 
-$$ p=(0.8,0.2), \qquad q=(0.5,0.5). $$
+$$p=(0.8,0.2), \qquad q=(0.5,0.5).$$
 
 Then
 
-$$ D(p \,\|\, q)=0.8\log \frac{0.8}{0.5} + 0.2\log \frac{0.2}{0.5}. $$
+$$D(p \,\|\, q)=0.8\log \frac{0.8}{0.5} + 0.2\log \frac{0.2}{0.5}.$$
 
 If we reverse the arguments, we compute a different number:
 
-$$ D(q \,\|\, p)=0.5\log \frac{0.5}{0.8} + 0.5\log \frac{0.5}{0.2}. $$
+$$D(q \,\|\, p)=0.5\log \frac{0.5}{0.8} + 0.5\log \frac{0.5}{0.2}.$$
 
 So KL divergence is a directed discrepancy, not an ordinary symmetric distance.
 
@@ -1569,33 +1569,33 @@ So KL divergence is a directed discrepancy, not an ordinary symmetric distance.
 
 Mutual information measures how much observing one variable tells us about another:
 
-$$ I[X,Y] = D(p(X,Y) \,\|\, p(X)p(Y)) = H[X] + H[Y] - H[X,Y]. $$
+$$I[X,Y] = D(p(X,Y) \,\|\, p(X)p(Y)) = H[X] + H[Y] - H[X,Y].$$
 
 That identity is important enough to derive once in full. Start from the KL form:
 
-$$ I[X,Y]=\sum_{x,y} p(x,y)\log \frac{p(x,y)}{p(x)p(y)}. $$
+$$I[X,Y]=\sum_{x,y} p(x,y)\log \frac{p(x,y)}{p(x)p(y)}.$$
 
 Split the logarithm into three pieces:
 
-$$ I[X,Y]=\sum_{x,y} p(x,y)\log p(x,y)-\sum_{x,y} p(x,y)\log p(x)-\sum_{x,y} p(x,y)\log p(y). $$
+$$I[X,Y]=\sum_{x,y} p(x,y)\log p(x,y)-\sum_{x,y} p(x,y)\log p(x)-\sum_{x,y} p(x,y)\log p(y).$$
 
 Now simplify the second and third sums by marginalizing:
 
-$$ \sum_{x,y} p(x,y)\log p(x)=\sum_x p(x)\log p(x), $$
+$$\sum_{x,y} p(x,y)\log p(x)=\sum_x p(x)\log p(x),$$
 
-$$ \sum_{x,y} p(x,y)\log p(y)=\sum_y p(y)\log p(y). $$
+$$\sum_{x,y} p(x,y)\log p(y)=\sum_y p(y)\log p(y).$$
 
 Substituting those back in gives
 
-$$ I[X,Y]=-H[X,Y]+H[X]+H[Y]. $$
+$$I[X,Y]=-H[X,Y]+H[X]+H[Y].$$
 
 Since conditional entropy satisfies
 
-$$ H[X \mid Y]=H[X,Y]-H[Y], $$
+$$H[X \mid Y]=H[X,Y]-H[Y],$$
 
 we immediately obtain the second common identity
 
-$$ I[X,Y]=H[X]-H[X \mid Y]. $$
+$$I[X,Y]=H[X]-H[X \mid Y].$$
 
 So mutual information can be read either as a divergence from independence or as the drop in uncertainty after observation.
 
@@ -1603,11 +1603,11 @@ If $X$ and $Y$ are independent, mutual information is zero.
 
 At the opposite extreme, if $Y=X$ exactly, then learning $Y$ reveals $X$ completely, so
 
-$$ H[X \mid Y]=0 $$
+$$H[X \mid Y]=0$$
 
 and therefore
 
-$$ I[X,Y]=H[X]. $$
+$$I[X,Y]=H[X].$$
 
 So mutual information ranges from zero for complete independence up to the full entropy of one variable when the other variable determines it exactly.
 
@@ -1615,15 +1615,15 @@ So mutual information ranges from zero for complete independence up to the full 
 
 Conditional entropy is
 
-$$ H[X \mid Y] = H[X,Y] - H[Y]. $$
+$$H[X \mid Y] = H[X,Y] - H[Y].$$
 
 Equivalently,
 
-$$ H[X \mid Y] = \sum_y p(y) H[X \mid Y=y], $$
+$$H[X \mid Y] = \sum_y p(y) H[X \mid Y=y],$$
 
 so it is the average remaining uncertainty in $X$ after the value of $Y$ is revealed. It satisfies
 
-$$ I[X,Y] = H[X] - H[X \mid Y] \ge 0, $$
+$$I[X,Y] = H[X] - H[X \mid Y] \ge 0,$$
 
 so conditioning reduces uncertainty on average.
 
@@ -1642,19 +1642,19 @@ Suppose we model commuting behavior $C \in \{\text{walk}, \text{bike}, \text{dri
 
 With $p(R=\text{rain}) = 0.1$, the marginals are
 
-$$ p(C=\text{walk}) = 0.86, \quad p(C=\text{bike}) = 0.09, \quad p(C=\text{drive}) = 0.05. $$
+$$p(C=\text{walk}) = 0.86, \quad p(C=\text{bike}) = 0.09, \quad p(C=\text{drive}) = 0.05.$$
 
 The entropy of the commute alone is about $0.72$ bits. Conditioning on weather gives a lower average entropy, around $0.52$ bits, so the mutual information is about $0.2$ bits. Writing the quantities this way makes the interpretation explicit: knowing the weather removes about two-tenths of a bit of uncertainty about how the commute will happen.
 
 The full step-by-step calculation is:
 
-$$ H[C \mid R=\text{clear}] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47, $$
+$$H[C \mid R=\text{clear}] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47,$$
 
-$$ H[C \mid R=\text{rain}] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1. $$
+$$H[C \mid R=\text{rain}] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1.$$
 
 Averaging over weather gives
 
-$$ H[C \mid R] = 0.9 \cdot 0.47 + 0.1 \cdot 1 \approx 0.52. $$
+$$H[C \mid R] = 0.9 \cdot 0.47 + 0.1 \cdot 1 \approx 0.52.$$
 
 The unconditional commute entropy is larger, so the difference between them is exactly the information weather provides.
 
@@ -1680,39 +1680,39 @@ For the course core, the main required idea is the Jacobian correction in scalar
 
 If $X = f(Z)$ is invertible and $g = f^{-1}$, then
 
-$$ p_X(x) = p_Z(g(x)) \lvert g'(x) \rvert. $$
+$$p_X(x) = p_Z(g(x)) \lvert g'(x) \rvert.$$
 
 The derivative corrects for stretching or compression under the transformation. A small interval around $x$ corresponds to an interval around $z=g(x)$ of width approximately $|g'(x)|dx$, so probability conservation forces the density to scale by that same factor. This formula requires invertibility on the region of interest; if the map has multiple inverse branches, the correct density is a sum over branches rather than a single Jacobian term.
 
 The derivation is short and worth seeing explicitly. Probability conservation says that for a very small interval,
 
-$$ p_X(x)\,dx \approx p_Z(z)\,dz. $$
+$$p_X(x)\,dx \approx p_Z(z)\,dz.$$
 
 Because $z=g(x)$, the interval widths are related by
 
-$$ dz = g'(x)\,dx. $$
+$$dz = g'(x)\,dx.$$
 
 Taking absolute values to account for orientation reversal gives
 
-$$ \lvert dz \rvert = \lvert g'(x) \rvert\,dx. $$
+$$\lvert dz \rvert = \lvert g'(x) \rvert\,dx.$$
 
 Substituting into the probability-conservation identity yields
 
-$$ p_X(x)\,dx = p_Z(g(x)) \lvert g'(x) \rvert\,dx, $$
+$$p_X(x)\,dx = p_Z(g(x)) \lvert g'(x) \rvert\,dx,$$
 
 and dividing by $dx$ gives
 
-$$ p_X(x)=p_Z(g(x)) \lvert g'(x) \rvert. $$
+$$p_X(x)=p_Z(g(x)) \lvert g'(x) \rvert.$$
 
 The absolute value is not optional. If the inverse map decreases rather than increases, the raw derivative is negative, but a density must remain nonnegative. The Jacobian magnitude is therefore the correct local scaling factor.
 
 A minimal worked example is $X=2Z$ with $Z$ uniform on $[0,1]$. Then $g(x)=x/2$ and $g'(x)=1/2$, so
 
-$$ p_X(x)=p_Z(x/2)\cdot \frac{1}{2}. $$
+$$p_X(x)=p_Z(x/2)\cdot \frac{1}{2}.$$
 
 Since $p_Z(z)=1$ on $[0,1]$, we get
 
-$$ p_X(x)=\frac{1}{2} $$
+$$p_X(x)=\frac{1}{2}$$
 
 on $[0,2]$. Stretching the variable by a factor of $2$ cuts the density height by a factor of $2$.
 
@@ -1722,7 +1722,7 @@ If $Z = \log X$ is Gaussian, then $X$ is lognormal. The density of $X$ is obtain
 
 Writing the full expression gives
 
-$$ p_X(x)=\frac{1}{x \sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right), \qquad x>0. $$
+$$p_X(x)=\frac{1}{x \sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right), \qquad x>0.$$
 
 The extra factor $1/x$ is exactly the Jacobian term. Without it, the transformed density would no longer integrate to one.
 
@@ -1730,13 +1730,13 @@ The extra factor $1/x$ is exactly the Jacobian term. Without it, the transformed
 
 In multiple dimensions,
 
-$$ p_X(x) = p_Z(g(x)) \lvert \det J_g(x) \rvert, $$
+$$p_X(x) = p_Z(g(x)) \lvert \det J_g(x) \rvert,$$
 
 where $J_g$ is the Jacobian matrix of the inverse transformation. The determinant plays the same role as $|g'(x)|$ in one dimension: it is the local volume scaling factor. If the transformation doubles area near one point, the density there must be cut in half to preserve total probability.
 
 An explicit two-dimensional example is
 
-$$ X_1=2Z_1, \qquad X_2=3Z_2. $$
+$$X_1=2Z_1, \qquad X_2=3Z_2.$$
 
 The inverse map scales coordinates by $(1/2,1/3)$, so the determinant of the inverse Jacobian is $1/6$. Every small area element is expanded by a factor of $6$ in data space, so the density must shrink by the same factor.
 
@@ -1744,7 +1744,7 @@ The inverse map scales coordinates by $(1/2,1/3)$, so the determinant of the inv
 
 Copulas separate marginal distributions from dependence structure. For two variables,
 
-$$ Pr[X_1 \le x_1, X_2 \le x_2] = C(P_1(x_1), P_2(x_2)), $$
+$$Pr[X_1 \le x_1, X_2 \le x_2] = C(P_1(x_1), P_2(x_2)),$$
 
 where $P_1$ and $P_2$ are the marginal CDFs. This is the content of Sklar's theorem in the two-variable case: once the marginals are pushed into the uniform scale, the remaining object $C$ captures only dependence.
 
@@ -1766,21 +1766,21 @@ The step-by-step reason this works is that CDF transforms preserve order. If an 
 
 Normalizing flows define an invertible transform $X = f(Z)$ and use the change-of-variables formula to evaluate likelihoods. The transformation is often built as a composition of simple steps:
 
-$$ f(Z) = f_T(f_{T-1}(\cdots f_1(Z))) $$
+$$f(Z) = f_T(f_{T-1}(\cdots f_1(Z)))$$
 
 with
 
-$$ \log p_X(X) = \log p_Z(f^{-1}(X)) - \sum_t \log |\det J_{f_t}|. $$
+$$\log p_X(X) = \log p_Z(f^{-1}(X)) - \sum_t \log |\det J_{f_t}|.$$
 
 The computational reason this works is that the Jacobian determinant of a composition decomposes into a sum in log-space. A flow is therefore practical only when each layer is invertible and has a determinant that can be evaluated cheaply.
 
 A one-layer sanity check is the scaling flow
 
-$$ X = aZ + b $$
+$$X = aZ + b$$
 
 with $a \neq 0$. Then the inverse is $(X-b)/a$ and
 
-$$ \log p_X(X)=\log p_Z\!\left(\frac{X-b}{a}\right)-\log |a|. $$
+$$\log p_X(X)=\log p_Z\!\left(\frac{X-b}{a}\right)-\log |a|.$$
 
 Normalizing flows are just more elaborate versions of this same accounting rule, composed many times.
 
@@ -1794,11 +1794,11 @@ At the beginner level, this means "bend each axis without folding it over itself
 
 A particularly convenient flow layer is conditional affine:
 
-$$ Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1). $$
+$$Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1).$$
 
 Because the Jacobian is triangular, the determinant is easy to compute: for the first layer it is simply $\alpha_1(Z_1)$, so the log-determinant is $\log |\alpha_1(Z_1)|$. A second layer can then swap roles and transform the other coordinate:
 
-$$ Z_1'' = \alpha_2(Z_2')Z_1' + \beta_2(Z_2'), \qquad Z_2'' = Z_2'. $$
+$$Z_1'' = \alpha_2(Z_2')Z_1' + \beta_2(Z_2'), \qquad Z_2'' = Z_2'.$$
 
 ![Normalizing flow deformation panels](../notes/02_probability_reconstructed/assets/figure_2_6_affine_flow_panels.png)
 
@@ -1806,15 +1806,15 @@ The deformation panels show what the algebra means geometrically. A rectangular 
 
 A full worked determinant calculation makes the affine layer concrete. For
 
-$$ Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1), $$
+$$Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1),$$
 
 the Jacobian matrix is
 
-$$ J_{11}=1,\qquad J_{12}=0,\qquad J_{21}=\frac{\partial Z_2'}{\partial Z_1},\qquad J_{22}=\alpha_1(Z_1), $$
+$$J_{11}=1,\qquad J_{12}=0,\qquad J_{21}=\frac{\partial Z_2'}{\partial Z_1},\qquad J_{22}=\alpha_1(Z_1),$$
 
 so
 
-$$ \det J = \alpha_1(Z_1). $$
+$$\det J = \alpha_1(Z_1).$$
 
 The lower-left derivative can be complicated, but the determinant ignores it because the matrix is triangular. That is the key design principle: choose transformations that are expressive enough to bend the density, yet structured enough that the determinant remains cheap to evaluate exactly.
 
