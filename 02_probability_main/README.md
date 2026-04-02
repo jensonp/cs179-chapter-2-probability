@@ -4,11 +4,37 @@ Source: ../notes/02_probability_reconstructed/source/02_probability.pdf
 
 This is a full note-style reconstruction of Chapter 2. It keeps the chapter's section structure, worked examples, key tables, and core derivations, while normalizing some prose and keeping the main visuals in the chapter assets directory under ../notes/02_probability_reconstructed/assets/.
 
+## How to Use This Chapter
+
+This main note is the readable core of the chapter. Read it first if you want definitions, intuition, worked examples, and the minimum formal structure needed to use the material correctly without turning the chapter into a proof-only reference.
+
+- [Formal supplement](../02_probability_formal_supplement/): use this if you want theorem-style statements, tighter derivations, and the parts of the logical scaffolding that would otherwise slow down the narrative.
+- [Exercises](../02_probability_exercises/): use this if you want direct computation drills, conceptual checks, and proof-style practice after reading the main note.
+- [Computational appendix](../02_probability_computational_appendix/): use this if you want sampling, plotting, histogram workflows, and numerical sanity checks that support the theory.
+
+## Scope Guide
+
+Use this table as a reading filter. "Required" means material a student should be comfortable using for the course's core probability work. "Reach" means enrichment: useful, interesting, and connected to the course, but not first-pass material if the goal is simply to stay on pace.
+
+| Area | Required for the course | Reach / enrichment |
+|---|---|---|
+| `2.1` events, Bayes, table operations, expectation, independence | all of it | the measure-theoretic framing is useful rigor, but not first-pass exam material |
+| Geometric distribution | yes | none; this is directly homework-relevant |
+| `2.2` continuous variables, CDF/PDF distinction, Gaussian, Beta/Dirichlet basics | yes | exponential-family parameterization details and two-parameter Bernoulli redundancy |
+| `2.3` likelihood, MLE, Beta-Bernoulli updates, basic model selection | yes | hyper-priors, weakly informative priors, and some of the broader Bayesian-model-selection discussion |
+| `2.4` convexity | supporting background only | full optimization interpretation and Hessian viewpoint |
+| `2.5` entropy, KL, mutual information | conceptually useful and worth reading | derivation-heavy identities beyond the main examples |
+| `2.6` scalar and multivariate Jacobians | useful background | copulas and normalizing flows are the clearest "beyond the course core" topics in this chapter |
+
+If time is short, read `2.1`, the Geometric section, the core parts of `2.2`, and the likelihood / MLE / conjugacy / BIC parts of `2.3` first. Then return to `2.4`-`2.6` as second-pass material.
+
+## Notation Policy
+
+Throughout the note, `Pr[A]` denotes the probability of an event $A$, while $p(x)$ denotes a PMF or PDF value when such an object exists. Random variables are written with uppercase letters, realized values with lowercase letters, $F_X(x)$ denotes a CDF, and $\Omega$ denotes the sample space. When a formula is valid only in a discrete setting, only for densities, only for invertible maps, or only away from a boundary case, that restriction is stated explicitly rather than left implicit.
+
 ## 2.1 Probability, Events, Random Variables
 
 Probability is the language we use when a system is uncertain or too complex to model exactly. In AI, the uncertainty often comes less from true randomness than from missing information and limited modeling power. A useful probabilistic model does two things: it describes our assumptions about the world, and it gives rules for combining evidence and updating those assumptions when observations arrive.
-
-This main note is paired with a formal supplement, an exercise set, and a computational appendix elsewhere in this repository. The main chapter keeps the narrative readable, but it now makes the foundational objects explicit instead of leaving them implicit.
 
 ### Formal Foundations
 
@@ -36,27 +62,69 @@ $$
 
 Likewise, the event $X \le t$ means the subset of worlds whose assigned values are at most $t$. This distinction matters because probabilities are fundamentally attached to events, while PMFs, PDFs, and CDFs are devices derived from the way a random variable pushes that event-level probability structure onto its value space.
 
-### Axioms of Probability
+### Probability Axioms and First Consequences
 
-Let $S$ denote the event space, the set of all possible outcomes or possible worlds. A random event is any subset $A \subseteq S$. A probability measure assigns values to events and must satisfy:
-
-$$
-0 \le Pr[A] \le 1
-$$
+Now fix a probability space $(\Omega,\mathcal{F},P)$. The actual axioms are:
 
 $$
-Pr[S] = 1
+0 \le Pr[A]
 $$
 
-$$
-Pr[\varnothing] = 0
-$$
+for every event $A \in \mathcal{F}$,
 
 $$
-Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B]
+Pr[\Omega] = 1,
 $$
 
-The last rule is inclusion-exclusion: add the worlds where $A$ happens and the worlds where $B$ happens, then subtract the overlap because it was counted twice.
+and countable additivity:
+
+$$
+Pr\!\left[\bigcup_{i=1}^{\infty} A_i\right]
+=
+\sum_{i=1}^{\infty} Pr[A_i]
+$$
+
+whenever the events $A_1,A_2,\dots$ are pairwise disjoint.
+
+Several familiar rules are consequences of these axioms rather than additional axioms. For example,
+
+$$
+Pr[\varnothing]=0
+$$
+
+follows because $\Omega$ and $\Omega \cup \varnothing$ are the same event, while finite additivity for disjoint sets is the finite case of countable additivity.
+
+Inclusion-exclusion is also derived, not assumed. Write
+
+$$
+A \cup B = A \cup (B \setminus A),
+$$
+
+where the two pieces are disjoint. Then
+
+$$
+Pr[A \cup B] = Pr[A] + Pr[B \setminus A].
+$$
+
+But $B$ itself decomposes as the disjoint union
+
+$$
+B = (B \setminus A) \cup (A \cap B),
+$$
+
+so
+
+$$
+Pr[B] = Pr[B \setminus A] + Pr[A \cap B].
+$$
+
+Eliminating $Pr[B \setminus A]$ yields
+
+$$
+Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B].
+$$
+
+The logical status matters: normalization and additivity are the assumptions, while empty-set probability and inclusion-exclusion are useful consequences.
 
 For a beginner, the safest way to use these axioms is to think in terms of bookkeeping over possible worlds. First list the worlds that belong to the event. Then check whether those worlds overlap with the worlds of another event. If they do, inclusion-exclusion is the correction term that prevents double counting. For a die roll, if $A=\{1,3,5\}$ and $B=\{4,5,6\}$, the union is not six outcomes but five, because the world $5$ sits in both sets.
 
@@ -65,7 +133,7 @@ For a beginner, the safest way to use these axioms is to think in terms of bookk
 Suppose we roll a standard six-sided die. The event space is
 
 $$
-S = \{1,2,3,4,5,6\}.
+\Omega = \{1,2,3,4,5,6\}.
 $$
 
 Two events are:
@@ -98,7 +166,7 @@ $$
 
 The possible values are called the states of the variable, and the set of all possible values is its domain. For discrete variables, the probability mass function is often written as $p(X=x)$ or simply $p(x)$ when the variable is clear from context.
 
-A full beginner-to-expert way to read this is the following. At the beginner level, a random variable is a label attached to each outcome. At the intermediate level, it is a partition of the event space into mutually exclusive cases. At the expert level, it is a measurable map from worlds in $S$ to values in a codomain, and the induced distribution on those values is obtained by pushing probability mass through that map.
+A full beginner-to-expert way to read this is the following. At the beginner level, a random variable is a label attached to each outcome. At the intermediate level, it is a partition of the event space into mutually exclusive cases. At the expert level, it is a measurable map from worlds in $\Omega$ to values in a codomain, and the induced distribution on those values is obtained by pushing probability mass through that map.
 
 A concrete example helps. Let the world be a die roll and define
 
@@ -376,6 +444,26 @@ $$
 
 The law is simple but foundational. It says that if the worlds are first split into mutually exclusive cases, then the total probability of $A$ is the weighted average of its conditional probabilities inside those cases. In the dentist example, the denominator in Bayes' rule is exactly
 
+The formula follows directly from disjoint decomposition. Because the sets $B_1,\dots,B_k$ form a partition, the event $A$ can be written as the disjoint union
+
+$$
+A=(A \cap B_1)\cup \cdots \cup (A \cap B_k).
+$$
+
+Therefore additivity gives
+
+$$
+p(A)=\sum_{i=1}^k p(A \cap B_i).
+$$
+
+Applying the product rule to each summand yields
+
+$$
+p(A \cap B_i)=p(A \mid B_i)p(B_i),
+$$
+
+and substituting those terms back into the sum gives the law of total probability. So the law is not an extra identity to memorize; it is the ordinary additivity axiom plus the product rule applied to a partition.
+
 $$
 p(T=1)=p(T=1 \mid C=1)p(C=1)+p(T=1 \mid C=0)p(C=0).
 $$
@@ -431,6 +519,8 @@ So even after a positive test, the posterior probability is only about $8.8\%$. 
 ### Example 2-6: Table-Based Computation
 
 The same Bayes update can be done by manipulating tables directly. Start with the full table of $p(T,D,C)$, extract the subtable where $T=1$, sum over $D$, then normalize.
+
+![Restriction, marginalization, and normalization pipeline](../notes/02_probability_reconstructed/assets/figure_2_table_update_pipeline.png)
 
 <!-- table-stack:start -->
 <table border="0" cellpadding="0" cellspacing="16">
@@ -648,6 +738,32 @@ $$
 p(X \mid Y) = p(X).
 $$
 
+The equivalence between these two definitions is worth writing out because it gets used constantly. If
+
+$$
+p(X,Y)=p(X)p(Y),
+$$
+
+then for any value of $Y$ with positive probability,
+
+$$
+p(X \mid Y)=\frac{p(X,Y)}{p(Y)}=\frac{p(X)p(Y)}{p(Y)}=p(X).
+$$
+
+Conversely, if
+
+$$
+p(X \mid Y)=p(X)
+$$
+
+for every value of $Y$ with $p(Y)>0$, then multiplying both sides by $p(Y)$ gives
+
+$$
+p(X,Y)=p(X \mid Y)p(Y)=p(X)p(Y).
+$$
+
+So the factorization view and the "observing $Y$ changes nothing" view are two algebraically equivalent ways to state the same independence claim. The caveat about $p(Y)>0$ is important: conditional probability is only defined when the conditioning event has nonzero probability.
+
 Independence also simplifies the joint distribution. If $X$ and $Y$ are $d$-ary variables, the full joint has $d^2 - 1$ degrees of freedom, while independence reduces that to $2d - 2$.
 
 That parameter-count reduction is the structural reward for independence. Without independence, every pair $(x,y)$ needs its own joint probability, subject only to one normalization constraint. With independence, the entire table is reconstructed from two marginal vectors. This is a dramatic simplification, but it is also a strong modeling claim, so it should only be used when it is substantively justified.
@@ -743,6 +859,8 @@ $$
 Once $Z$ is known, $X$ and $Y$ stop giving extra information about each other.
 
 A good way to read this is as a statement about information flow. Before conditioning, $X$ and $Y$ may be correlated because they both respond to the hidden cause $Z$. After conditioning on $Z$, that common cause has been fixed, so the leftover association disappears. Conditional independence is therefore weaker than independence in general but often much more realistic in structured probabilistic models.
+
+![Common-cause and explaining-away structures](../notes/02_probability_reconstructed/assets/figure_2_conditional_independence_structures.png)
 
 ### Example 2-8: Conditional Independence, Dentist
 
@@ -932,6 +1050,20 @@ $$
 
 Set 2 remains sufficient for the same reason as before: it already contained the full joint conditional term. Set 3 is still not sufficient, because the marginal evidence probability $p(B=1,C=1)$ is still absent. Conditional independence can reduce the amount of information needed to specify a numerator, but it does not make the denominator appear by magic.
 
+### Retain from 2.1
+
+- Probability is defined on events first; random-variable formulas are induced from that event structure.
+- Bayes updates can be read either as algebra on conditional probabilities or as the operational sequence restrict, marginalize, normalize.
+- Independence means factorization or, equivalently, that conditioning on one variable leaves the other unchanged.
+- Conditional independence is weaker than independence and is the key structural simplification behind diagnostic models.
+
+### Do Not Confuse in 2.1
+
+- Do not confuse an event such as $X=x$ with the random variable $X$ itself.
+- Do not confuse conditioning with intervention; $p(Y \mid X=x)$ is not automatically a causal statement.
+- Do not confuse pairwise independence with mutual independence.
+- Do not assume a set of conditional probabilities is sufficient for a posterior unless the required numerator and denominator are actually determined.
+
 ## 2.2 Continuous Random Variables
 
 Sometimes we model systems with real-valued random variables $X \in \mathbb{R}$. In that setting we define a probability density function $p(x)$ with $p(x) \ge 0$ for all $x$ and
@@ -1049,7 +1181,7 @@ so the mean is $2$ and the standard deviation is $3$. About two-thirds of the ma
 $$
 \mu=(0,0)^T,
 \qquad
-\Sigma=[[4,0],[0,1]],
+\Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0,
 $$
 
 then the contours are ellipses stretched more strongly along the first coordinate than along the second. Off-diagonal covariance terms rotate those ellipses and encode correlation.
@@ -1165,6 +1297,20 @@ h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\eta)=\log(1+e^\eta).
 $$
 
 For a Gaussian with known variance $\sigma^2$, one can write the density in exponential-family form with sufficient statistics $x$ and $x^2$. The point is not that every distribution looks identical, but that once the pieces are identified, the same structural tools apply across many families.
+
+### Retain from 2.2
+
+- Every real-valued random variable has a CDF, but not every one has a density.
+- A density value is not a point probability; probabilities come from integrals over regions.
+- In Gaussian models, the covariance structure controls geometry, not just scale.
+- Beta and Dirichlet distributions live on constrained supports, so their formulas only make sense together with those support conditions.
+
+### Do Not Confuse in 2.2
+
+- Do not confuse PMFs, PDFs, and CDFs; they are related but not interchangeable objects.
+- Do not conclude that $p(x)>1$ is invalid for a density; only the integral must equal one.
+- Do not use a continuous density formula on a mixed distribution that has point masses.
+- Do not treat exponential-family form as universal; it is a structural class, not every distribution.
 
 ## 2.3 Learning and Parameter Estimation
 
@@ -1763,7 +1909,23 @@ $$
 
 Now the two-coin model wins even after the penalty. The lesson is structural: with small data, the simpler model is often preferred because complexity costs dominate. With more data, a genuine difference between the two batches can become strong enough that the richer model earns back its penalty.
 
+### Retain from 2.3
+
+- Likelihood is a function of parameters with the data held fixed; it is not itself a probability distribution over parameters.
+- MLE fits the data as well as possible inside the chosen model class but does not by itself control overfitting.
+- Conjugate Bayesian updates preserve uncertainty and make pseudo-count interpretations explicit.
+- Model selection is not just about best fit; it is about fit relative to complexity.
+
+### Do Not Confuse in 2.3
+
+- Do not confuse probability with likelihood; they are the same algebraic expression used in different roles.
+- Do not confuse posterior mean, MAP, and MLE; they agree only in special cases.
+- Do not treat a prior declared "flat" in one parameterization as uninformative in every parameterization.
+- Do not assume a richer model is better just because its training likelihood is higher.
+
 ## 2.4 Convexity
+
+This section is supporting background rather than core probability machinery. For the course, the main reason to read it is to understand why some likelihood objectives are well behaved and why exponential-family optimization often has a clean global structure.
 
 A convex function satisfies
 
@@ -1834,7 +1996,21 @@ The blue secant line lies above the black graph, which is the geometric definiti
 
 For exponential families, the most concrete beginner-to-expert takeaway is that optimization is well behaved in natural-parameter space because the curvature comes from a covariance matrix. Covariances cannot be negative in the matrix sense, so the Hessian cannot create spurious local minima.
 
+### Retain from 2.4
+
+- Convexity is the structural reason some estimation problems avoid bad local minima.
+- First-order and second-order convexity tests are equivalent viewpoints on the same property.
+- In exponential families, covariance structure is what drives the positive-semidefinite Hessian.
+
+### Do Not Confuse in 2.4
+
+- Do not confuse convexity of a function with convexity of a set.
+- Do not assume every likelihood problem is convex just because some exponential-family examples are.
+- Do not read positive semidefinite Hessian as meaning "strictly" convex; flat directions can remain.
+
 ## 2.5 Information Theory
+
+This section is worth reading for conceptual maturity, but it is partly second-pass material if your immediate goal is to stay on top of the course core. The required ideas are what entropy, KL divergence, and mutual information mean and how they differ from one another.
 
 Entropy measures uncertainty:
 
@@ -1913,6 +2089,48 @@ I[X,Y] = D(p(X,Y) \,\|\, p(X)p(Y))
 = H[X] + H[Y] - H[X,Y].
 $$
 
+That identity is important enough to derive once in full. Start from the KL form:
+
+$$
+I[X,Y]=\sum_{x,y} p(x,y)\log \frac{p(x,y)}{p(x)p(y)}.
+$$
+
+Split the logarithm into three pieces:
+
+$$
+I[X,Y]=\sum_{x,y} p(x,y)\log p(x,y)-\sum_{x,y} p(x,y)\log p(x)-\sum_{x,y} p(x,y)\log p(y).
+$$
+
+Now simplify the second and third sums by marginalizing:
+
+$$
+\sum_{x,y} p(x,y)\log p(x)=\sum_x p(x)\log p(x),
+$$
+
+$$
+\sum_{x,y} p(x,y)\log p(y)=\sum_y p(y)\log p(y).
+$$
+
+Substituting those back in gives
+
+$$
+I[X,Y]=-H[X,Y]+H[X]+H[Y].
+$$
+
+Since conditional entropy satisfies
+
+$$
+H[X \mid Y]=H[X,Y]-H[Y],
+$$
+
+we immediately obtain the second common identity
+
+$$
+I[X,Y]=H[X]-H[X \mid Y].
+$$
+
+So mutual information can be read either as a divergence from independence or as the drop in uncertainty after observation.
+
 If $X$ and $Y$ are independent, mutual information is zero.
 
 At the opposite extreme, if $Y=X$ exactly, then learning $Y$ reveals $X$ completely, so
@@ -1990,9 +2208,23 @@ $$
 
 The unconditional commute entropy is larger, so the difference between them is exactly the information weather provides.
 
+### Retain from 2.5
+
+- Entropy measures uncertainty, KL divergence measures directed discrepancy, and mutual information measures departure from independence.
+- Mutual information can be read either as a KL divergence or as reduction in uncertainty after observation.
+- Conditional entropy is an average over the conditioning variable, not a single conditional calculation at one value.
+
+### Do Not Confuse in 2.5
+
+- Do not confuse entropy with variance or spread; it is a distributional uncertainty measure, not a geometric one.
+- Do not confuse KL divergence with a symmetric distance.
+- Do not forget the support condition in KL; assigning zero probability where the data distribution has mass makes the divergence infinite.
+
 ## 2.6 Change-of-Variable Models
 
 The classical probability distributions above are useful, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
+
+For the course core, the main required idea is the Jacobian correction in scalar and multivariate change of variables. The copula and normalizing-flow subsections are explicit reach material: they show how the same principle scales into more modern modeling constructions.
 
 ### Scalar Change of Variables
 
@@ -2003,6 +2235,38 @@ p_X(x) = p_Z(g(x)) \lvert g'(x) \rvert.
 $$
 
 The derivative corrects for stretching or compression under the transformation. A small interval around $x$ corresponds to an interval around $z=g(x)$ of width approximately $|g'(x)|dx$, so probability conservation forces the density to scale by that same factor. This formula requires invertibility on the region of interest; if the map has multiple inverse branches, the correct density is a sum over branches rather than a single Jacobian term.
+
+The derivation is short and worth seeing explicitly. Probability conservation says that for a very small interval,
+
+$$
+p_X(x)\,dx \approx p_Z(z)\,dz.
+$$
+
+Because $z=g(x)$, the interval widths are related by
+
+$$
+dz = g'(x)\,dx.
+$$
+
+Taking absolute values to account for orientation reversal gives
+
+$$
+\lvert dz \rvert = \lvert g'(x) \rvert\,dx.
+$$
+
+Substituting into the probability-conservation identity yields
+
+$$
+p_X(x)\,dx = p_Z(g(x)) \lvert g'(x) \rvert\,dx,
+$$
+
+and dividing by $dx$ gives
+
+$$
+p_X(x)=p_Z(g(x)) \lvert g'(x) \rvert.
+$$
+
+The absolute value is not optional. If the inverse map decreases rather than increases, the raw derivative is negative, but a density must remain nonnegative. The Jacobian magnitude is therefore the correct local scaling factor.
 
 A minimal worked example is $X=2Z$ with $Z$ uniform on $[0,1]$. Then $g(x)=x/2$ and $g'(x)=1/2$, so
 
@@ -2065,6 +2329,8 @@ where $P_1$ and $P_2$ are the marginal CDFs. This is the content of Sklar's theo
 The Gaussian copula is a special case in which the transformed variables are Gaussian. The visual sequence shows the separation explicitly: start with the original marginals, map each one to a uniform scale, then map those uniform variables to a Gaussian scale where the dependence is easy to model.
 
 This gives a clean division of labor. The marginal CDFs control one-dimensional shape, skewness, and heavy tails. The copula controls only how coordinates move together after those marginal effects have been removed.
+
+![Copula and flow transformation pipeline](../notes/02_probability_reconstructed/assets/figure_2_copula_flow_pipeline.png)
 
 ### Example 2-27: Copula Transforms
 
@@ -2135,8 +2401,7 @@ $$
 the Jacobian matrix is
 
 $$
-J=
-[[1,0],[\frac{\partial Z_2'}{\partial Z_1},\alpha_1(Z_1)]],
+J_{11}=1,\qquad J_{12}=0,\qquad J_{21}=\frac{\partial Z_2'}{\partial Z_1},\qquad J_{22}=\alpha_1(Z_1),
 $$
 
 so
@@ -2146,3 +2411,15 @@ $$
 $$
 
 The lower-left derivative can be complicated, but the determinant ignores it because the matrix is triangular. That is the key design principle: choose transformations that are expressive enough to bend the density, yet structured enough that the determinant remains cheap to evaluate exactly.
+
+### Retain from 2.6
+
+- Change of variables is probability conservation plus a local stretching factor.
+- Invertibility is the structural condition that makes the simple Jacobian formula valid.
+- Copulas separate marginals from dependence, while flows compose simple invertible maps into flexible densities.
+
+### Do Not Confuse in 2.6
+
+- Do not forget the absolute value on the Jacobian determinant.
+- Do not use the one-branch formula when the transformation has multiple inverse branches; then contributions must be summed.
+- Do not treat copulas or normalizing flows as core required course material unless your instructor says so; they are here as enrichment built from the same change-of-variables principle.

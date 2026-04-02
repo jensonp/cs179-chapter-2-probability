@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -957,10 +958,291 @@ def write_sequential_update_assets(assets_dir: Path) -> None:
     doc.close()
 
 
+def _draw_arrow(page: fitz.Page, start: tuple[float, float], end: tuple[float, float], color: tuple[float, float, float], width: float = 2.6) -> None:
+    x0, y0 = start
+    x1, y1 = end
+    dx = x1 - x0
+    dy = y1 - y0
+    length = math.hypot(dx, dy) or 1.0
+    ux = dx / length
+    uy = dy / length
+    head_len = 10
+    head_half = 4
+    base_x = x1 - head_len * ux
+    base_y = y1 - head_len * uy
+    perp_x = -uy
+    perp_y = ux
+
+    page.draw_line(fitz.Point(x0, y0), fitz.Point(base_x, base_y), color=color, width=width)
+    page.draw_line(fitz.Point(base_x + head_half * perp_x, base_y + head_half * perp_y), fitz.Point(x1, y1), color=color, width=width)
+    page.draw_line(fitz.Point(base_x - head_half * perp_x, base_y - head_half * perp_y), fitz.Point(x1, y1), color=color, width=width)
+
+
+def _draw_labeled_box(
+    page: fitz.Page,
+    rect: fitz.Rect,
+    title: str,
+    subtitle: str,
+    fill: tuple[float, float, float],
+    stroke: tuple[float, float, float],
+    title_color: tuple[float, float, float] = (0.19, 0.23, 0.31),
+    subtitle_color: tuple[float, float, float] = (0.28, 0.33, 0.41),
+) -> None:
+    page.draw_rect(rect, fill=fill, color=stroke, width=2)
+    page.insert_textbox(
+        fitz.Rect(rect.x0 + 8, rect.y0 + 8, rect.x1 - 8, rect.y0 + 34),
+        title,
+        fontname="bodybold",
+        fontfile=str(FONT_FILES["bodybold"]),
+        fontsize=15,
+        color=title_color,
+        align=1,
+    )
+    if subtitle:
+        page.insert_textbox(
+            fitz.Rect(rect.x0 + 10, rect.y0 + 36, rect.x1 - 10, rect.y1 - 8),
+            subtitle,
+            fontname="body",
+            fontfile=str(FONT_FILES["body"]),
+            fontsize=10.5,
+            color=subtitle_color,
+            align=1,
+        )
+
+
+def write_table_update_pipeline_assets(assets_dir: Path) -> None:
+    dot_path = assets_dir / "figure_2_table_update_pipeline.dot"
+    dot_path.write_text(
+        "\n".join(
+            [
+                "digraph TableUpdate {",
+                '  rankdir=LR;',
+                '  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
+                '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
+                '  joint [label="Full joint\\np(T,D,C)"];',
+                '  restrict [label="Restrict evidence\\nkeep rows with T = 1"];',
+                '  marginal [label="Marginalize\\nsum over D"];',
+                '  normalize [label="Normalize\\nobtain p(C | T = 1)"];',
+                '  joint -> restrict -> marginal -> normalize;',
+                "}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    png_path = assets_dir / "figure_2_table_update_pipeline.png"
+    doc = fitz.open()
+    page = doc.new_page(width=920, height=230)
+    page.draw_rect(page.rect, fill=(1, 1, 1))
+    for alias, path in FONT_FILES.items():
+        page.insert_font(fontname=alias, fontfile=str(path))
+
+    boxes = [
+        (40, 54, 220, 142, "Full joint", "p(T,D,C)", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (260, 54, 440, 142, "Restrict evidence", "keep rows with T = 1", (0.992, 0.973, 0.941), (0.773, 0.631, 0.416)),
+        (480, 54, 660, 142, "Marginalize", "sum over D", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (700, 54, 880, 142, "Normalize", "obtain p(C | T = 1)", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+    ]
+    for x0, y0, x1, y1, title, subtitle, fill, stroke in boxes:
+        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
+
+    for start_x, end_x in [(220, 260), (440, 480), (660, 700)]:
+        _draw_arrow(page, (start_x, 98), (end_x, 98), (0.49, 0.56, 0.7), width=3)
+
+    page.insert_textbox(
+        fitz.Rect(56, 166, 864, 204),
+        "Table inference is an operator sequence: restrict to evidence, sum out hidden variables, then renormalize.",
+        fontname="body",
+        fontfile=str(FONT_FILES["body"]),
+        fontsize=13.5,
+        color=(0.33, 0.39, 0.46),
+        align=1,
+    )
+
+    pix = page.get_pixmap(matrix=fitz.Matrix(2.0, 2.0), alpha=False)
+    pix.save(png_path)
+    doc.close()
+
+
+def write_conditional_structure_assets(assets_dir: Path) -> None:
+    dot_path = assets_dir / "figure_2_conditional_independence_structures.dot"
+    dot_path.write_text(
+        "\n".join(
+            [
+                "digraph ConditionalStructures {",
+                '  graph [fontname="Helvetica"];',
+                '  node [shape=ellipse, style="filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
+                '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
+                '  subgraph cluster_common {',
+                '    label="Common cause";',
+                '    color="#d4dde9";',
+                '    C [label="Cavity"];',
+                '    T [label="Toothache"];',
+                '    D [label="Probe catch"];',
+                '    C -> T;',
+                '    C -> D;',
+                '  }',
+                '  subgraph cluster_collider {',
+                '    label="Explaining away";',
+                '    color="#d4dde9";',
+                '    H [label="Hot engine"];',
+                '    L [label="Low coolant"];',
+                '    W [label="Warning light"];',
+                '    H -> W;',
+                '    L -> W;',
+                '  }',
+                "}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    png_path = assets_dir / "figure_2_conditional_independence_structures.png"
+    doc = fitz.open()
+    page = doc.new_page(width=960, height=320)
+    page.draw_rect(page.rect, fill=(1, 1, 1))
+    for alias, path in FONT_FILES.items():
+        page.insert_font(fontname=alias, fontfile=str(path))
+
+    page.draw_rect(fitz.Rect(28, 24, 456, 290), color=(0.83, 0.87, 0.91), width=1.4)
+    page.draw_rect(fitz.Rect(504, 24, 932, 290), color=(0.83, 0.87, 0.91), width=1.4)
+    page.insert_textbox(fitz.Rect(40, 32, 444, 60), "Common Cause", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
+    page.insert_textbox(fitz.Rect(516, 32, 920, 60), "Explaining Away", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
+
+    left_nodes = {
+        "Cavity": fitz.Rect(172, 78, 312, 136),
+        "Toothache": fitz.Rect(66, 184, 206, 242),
+        "Probe catch": fitz.Rect(278, 184, 418, 242),
+    }
+    for title, rect in left_nodes.items():
+        _draw_labeled_box(page, rect, title, "", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761))
+    _draw_arrow(page, (242, 136), (136, 184), (0.49, 0.56, 0.7))
+    _draw_arrow(page, (242, 136), (348, 184), (0.49, 0.56, 0.7))
+    page.insert_textbox(
+        fitz.Rect(54, 252, 430, 280),
+        "Conditioning on the common cause blocks the path between symptoms.",
+        fontname="body",
+        fontfile=str(FONT_FILES["body"]),
+        fontsize=12.2,
+        color=(0.33, 0.39, 0.46),
+        align=1,
+    )
+
+    right_nodes = {
+        "Hot engine": fitz.Rect(536, 78, 676, 136),
+        "Low coolant": fitz.Rect(760, 78, 900, 136),
+        "Warning light": fitz.Rect(648, 184, 788, 242),
+    }
+    for title, rect in right_nodes.items():
+        _draw_labeled_box(page, rect, title, "", (0.992, 0.973, 0.941), (0.773, 0.631, 0.416))
+    _draw_arrow(page, (606, 136), (700, 184), (0.49, 0.56, 0.7))
+    _draw_arrow(page, (830, 136), (736, 184), (0.49, 0.56, 0.7))
+    page.insert_textbox(
+        fitz.Rect(528, 252, 908, 280),
+        "After observing the effect, evidence for one cause lowers belief in the other.",
+        fontname="body",
+        fontfile=str(FONT_FILES["body"]),
+        fontsize=12.2,
+        color=(0.33, 0.39, 0.46),
+        align=1,
+    )
+
+    pix = page.get_pixmap(matrix=fitz.Matrix(2.0, 2.0), alpha=False)
+    pix.save(png_path)
+    doc.close()
+
+
+def write_copula_flow_pipeline_assets(assets_dir: Path) -> None:
+    dot_path = assets_dir / "figure_2_copula_flow_pipeline.dot"
+    dot_path.write_text(
+        "\n".join(
+            [
+                "digraph CopulaFlow {",
+                '  rankdir=TB;',
+                '  node [shape=box, style="rounded,filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];',
+                '  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];',
+                '  obs [label="Observed data x"];',
+                '  uni [label="Marginal CDFs\\nu = P(x)"];',
+                '  gauss [label="Gaussianized variables\\nz = Φ^{-1}(u)"];',
+                '  dep [label="Dependence model\\nfit copula in z-space"];',
+                '  base [label="Base density\\nz ~ p_Z"];',
+                '  layers [label="Invertible layers\\nf_1, f_2, ... , f_T"];',
+                '  data [label="Complex density\\nx = f(z)"];',
+                '  obs -> uni -> gauss -> dep;',
+                '  base -> layers -> data;',
+                "}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    png_path = assets_dir / "figure_2_copula_flow_pipeline.png"
+    doc = fitz.open()
+    page = doc.new_page(width=980, height=360)
+    page.draw_rect(page.rect, fill=(1, 1, 1))
+    for alias, path in FONT_FILES.items():
+        page.insert_font(fontname=alias, fontfile=str(path))
+
+    page.draw_rect(fitz.Rect(32, 24, 948, 160), color=(0.83, 0.87, 0.91), width=1.4)
+    page.draw_rect(fitz.Rect(32, 192, 948, 328), color=(0.83, 0.87, 0.91), width=1.4)
+    page.insert_textbox(fitz.Rect(40, 32, 940, 58), "Copula Pipeline", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
+    page.insert_textbox(fitz.Rect(40, 200, 940, 226), "Normalizing Flow Pipeline", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
+
+    top_boxes = [
+        (58, 72, 242, 132, "Observed data x", "non-Gaussian marginals"),
+        (286, 72, 470, 132, "Marginal CDFs", "u = P(x)"),
+        (514, 72, 698, 132, "Gaussianize", "z = Φ⁻¹(u)"),
+        (742, 72, 926, 132, "Dependence model", "fit Gaussian copula"),
+    ]
+    bottom_boxes = [
+        (132, 240, 316, 300, "Base density", "z ~ p_Z"),
+        (398, 240, 582, 300, "Invertible layers", "f₁, f₂, ... , f_T"),
+        (664, 240, 848, 300, "Complex density", "x = f(z)"),
+    ]
+    for x0, y0, x1, y1, title, subtitle in top_boxes:
+        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, (0.965, 0.973, 0.988), (0.556, 0.631, 0.761))
+    for x0, y0, x1, y1, title, subtitle in bottom_boxes:
+        _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, (0.933, 0.969, 0.953), (0.494, 0.655, 0.561))
+
+    for start_x, end_x in [(242, 286), (470, 514), (698, 742)]:
+        _draw_arrow(page, (start_x, 102), (end_x, 102), (0.49, 0.56, 0.7), width=3)
+    for start_x, end_x in [(316, 398), (582, 664)]:
+        _draw_arrow(page, (start_x, 270), (end_x, 270), (0.49, 0.56, 0.7), width=3)
+
+    page.insert_textbox(
+        fitz.Rect(80, 140, 900, 156),
+        "Copulas separate marginal shape from dependence by mapping through CDF space.",
+        fontname="body",
+        fontfile=str(FONT_FILES["body"]),
+        fontsize=12.5,
+        color=(0.33, 0.39, 0.46),
+        align=1,
+    )
+    page.insert_textbox(
+        fitz.Rect(80, 308, 900, 324),
+        "Flows compose simple invertible maps so exact likelihoods remain tractable.",
+        fontname="body",
+        fontfile=str(FONT_FILES["body"]),
+        fontsize=12.5,
+        color=(0.33, 0.39, 0.46),
+        align=1,
+    )
+
+    pix = page.get_pixmap(matrix=fitz.Matrix(2.0, 2.0), alpha=False)
+    pix.save(png_path)
+    doc.close()
+
+
 def build(markdown_path: Path, source_pdf: Path, assets_dir: Path, output_pdf: Path) -> None:
     if markdown_uses_images(markdown_path):
         extract_figures(source_pdf, assets_dir)
         write_sequential_update_assets(assets_dir)
+        write_table_update_pipeline_assets(assets_dir)
+        write_conditional_structure_assets(assets_dir)
+        write_copula_flow_pipeline_assets(assets_dir)
     blocks = parse_markdown(markdown_path)
     render_blocks(blocks, output_pdf)
 

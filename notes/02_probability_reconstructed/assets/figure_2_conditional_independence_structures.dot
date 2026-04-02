@@ -1,0 +1,23 @@
+digraph ConditionalStructures {
+  graph [fontname="Helvetica"];
+  node [shape=ellipse, style="filled", fillcolor="#f6f8fc", color="#8ea1c2", fontname="Helvetica"];
+  edge [color="#7d8fb2", penwidth=1.3, arrowsize=0.8];
+  subgraph cluster_common {
+    label="Common cause";
+    color="#d4dde9";
+    C [label="Cavity"];
+    T [label="Toothache"];
+    D [label="Probe catch"];
+    C -> T;
+    C -> D;
+  }
+  subgraph cluster_collider {
+    label="Explaining away";
+    color="#d4dde9";
+    H [label="Hot engine"];
+    L [label="Low coolant"];
+    W [label="Warning light"];
+    H -> W;
+    L -> W;
+  }
+}
