@@ -347,7 +347,9 @@ Bayes rule starts from a model of how likely an observation is under each hypoth
 
 $$p(C=c \mid D=d) = \frac{p(D=d \mid C=c)p(C=c)}{p(D=d)}.$$
 
-Before using shorthand language, it helps to name each term explicitly. The prior is $p(C=c)$, which is the probability assigned to the hypothesis before seeing the observation. The likelihood is $p(D=d \mid C=c)$, which measures how compatible the observation is with that hypothesis. The evidence is $p(D=d)$, which is the total probability of the observation after averaging over every way that observation could occur. The posterior is $p(C=c \mid D=d)$, which is the updated probability after the observation has been taken into account.
+In this formula, the hypothesis is the value of $C$, meaning the statement "the cavity variable equals $c$." The observation is the value of $D$, meaning the statement "the probe variable equals $d$." So this example is not talking about an abstract unnamed hypothesis. It is specifically asking how probable each cavity state is after we observe the probe outcome.
+
+Before using shorthand language, it helps to name each term explicitly. The prior is $p(C=c)$, which is the probability assigned to the cavity-state hypothesis before seeing the probe observation. The likelihood is $p(D=d \mid C=c)$, which measures how compatible the observed probe result is with that cavity state. The evidence is $p(D=d)$, which is the total probability of seeing that probe result after averaging over every cavity case. The posterior is $p(C=c \mid D=d)$, which is the updated probability of the cavity state after the probe result has been taken into account.
 
 With those names in place, the formula can be read as the sentence
 
