@@ -82,6 +82,24 @@ $$A_i \cap A_j = \varnothing \qquad \text{whenever } i \ne j.$$
 
 So countable additivity applies only when the events do not overlap. In that case there is no double counting, so the probability of the union is exactly the sum of the individual probabilities. The phrase pairwise disjoint is stronger than saying only that the whole collection has empty total intersection. It requires every two-event overlap to be empty, because any such overlap would otherwise be counted twice in the sum.
 
+An inline finite example confirms the meaning. For a fair die, let
+
+$$A_1=\{1\},\qquad A_2=\{2\},\qquad A_3=\{3\}.$$
+
+These events are pairwise disjoint because no die outcome can be both $1$ and $2$, etc. Their union is the event "roll at most $3$":
+
+$$A_1 \cup A_2 \cup A_3 = \{1,2,3\}.$$
+
+So
+
+$$\mathbb{P}(A_1 \cup A_2 \cup A_3)=3/6=0.5,$$
+
+while the sum of individual probabilities is
+
+$$\mathbb{P}(A_1)+\mathbb{P}(A_2)+\mathbb{P}(A_3)=1/6+1/6+1/6=3/6=0.5.$$
+
+The equality holds because the three events do not overlap.
+
 Several familiar rules are consequences of these axioms rather than additional axioms. For example,
 
 $$\mathbb{P}(\varnothing)=0$$
@@ -431,7 +449,29 @@ If $B_1,\dots,B_k$ form a partition of the sample space, then any event $A$ sati
 
 $$p(A)=\sum_{i=1}^k p(A \mid B_i)p(B_i).$$
 
-The law is simple but foundational. It says that if the worlds are first split into mutually exclusive cases, then the total probability of $A$ is the weighted average of its conditional probabilities inside those cases. In the dentist example, the denominator in Bayes' rule is exactly
+The law is simple but foundational. It says that if the worlds are first split into mutually exclusive and exhaustive cases, then the total probability of $A$ is the weighted average of its conditional probabilities inside those cases. Here mutually exclusive means at most one case can hold at a time, and exhaustive means at least one case must hold. So exactly one of the $B_i$ happens in every world.
+
+An inline numerical example makes the averaging interpretation concrete. Suppose the hidden situation has three cases:
+
+$$B_1=\{\text{route 1}\},\qquad B_2=\{\text{route 2}\},\qquad B_3=\{\text{route 3}\},$$
+
+with
+
+$$p(B_1)=0.5,\qquad p(B_2)=0.3,\qquad p(B_3)=0.2.$$
+
+Let the event $A$ be "arrive within 30 minutes." Suppose the on-time probabilities depend on the route:
+
+$$p(A \mid B_1)=0.9,\qquad p(A \mid B_2)=0.6,\qquad p(A \mid B_3)=0.4.$$
+
+Then the law of total probability says
+
+$$p(A)=p(A \mid B_1)p(B_1)+p(A \mid B_2)p(B_2)+p(A \mid B_3)p(B_3).$$
+
+Substituting the numbers gives
+
+$$p(A)=0.9 \cdot 0.5 + 0.6 \cdot 0.3 + 0.4 \cdot 0.2 = 0.45 + 0.18 + 0.08 = 0.71.$$
+
+Each product $p(A \mid B_i)p(B_i)$ is the probability that both "case $B_i$ happens" and "event $A$ happens" occur together. The sum adds those disjoint ways for $A$ to happen.
 
 The formula follows directly from disjoint decomposition. Because the sets $B_1,\dots,B_k$ form a partition, the event $A$ can be written as the disjoint union
 
@@ -446,6 +486,8 @@ Applying the product rule to each summand yields
 $$p(A \cap B_i)=p(A \mid B_i)p(B_i),$$
 
 and substituting those terms back into the sum gives the law of total probability. So the law is not an extra identity to memorize; it is the ordinary additivity axiom plus the product rule applied to a partition.
+
+In the dentist example, the evidence term $p(T=1)$ is exactly a law-of-total-probability computation over the cavity cases. The two cases $C=1$ and $C=0$ form a partition, so
 
 $$p(T=1)=p(T=1 \mid C=1)p(C=1)+p(T=1 \mid C=0)p(C=0).$$
 
@@ -606,6 +648,20 @@ $$\mathrm{Var}(X)=\mathbb{E}[(X-\mathbb{E}[X])^2].$$
 Expanding the square gives the useful identity
 
 $$\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2.$$
+
+An inline Bernoulli example shows how to use the identity mechanically. If $X \in \{0,1\}$ with $p(X=1)=\rho$, then $X^2=X$ for both possible values, so
+
+$$\mathbb{E}[X]=\rho,$$
+
+and
+
+$$\mathbb{E}[X^2]=\mathbb{E}[X]=\rho.$$
+
+Therefore
+
+$$\mathrm{Var}(X)=\rho-\rho^2=\rho(1-\rho).$$
+
+So for a Bernoulli random variable, the spread is largest near $\rho=1/2$ and shrinks to zero as $\rho$ approaches $0$ or $1$.
 
 For two variables, covariance is
 
