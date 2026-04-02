@@ -540,7 +540,7 @@ $$
 the Jacobian matrix is triangular:
 
 $$
-J=[[1,0],[\frac{\partial Z_2'}{\partial Z_1},\alpha_1(Z_1)]].
+J_{11}=1,\qquad J_{12}=0,\qquad J_{21}=\frac{\partial Z_2'}{\partial Z_1},\qquad J_{22}=\alpha_1(Z_1).
 $$
 
 Its determinant is therefore just
