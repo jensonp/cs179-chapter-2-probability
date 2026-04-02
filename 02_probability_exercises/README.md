@@ -79,9 +79,7 @@ This exercise set is organized to match the reconstructed Chapter 2 note. Each s
 - Derive the Bernoulli MLE by differentiating the log-likelihood and checking the second derivative.
 - Derive the Gaussian mean MLE from the log-likelihood with fixed variance.
 - Prove the moment-matching condition for a canonical exponential family:
-  $$
-  \frac{1}{m}\sum_i \phi(x^{(i)})=E_\theta[\phi(X)].
-  $$
+$$ \frac{1}{m}\sum_i \phi(x^{(i)})=E_\theta[\phi(X)]. $$
 - Derive the Beta-Bernoulli posterior by multiplying kernels and identifying the resulting family.
 - Derive the Dirichlet-Categorical posterior by multiplying kernels and identifying the updated concentration parameters.
 
@@ -134,9 +132,7 @@ This exercise set is organized to match the reconstructed Chapter 2 note. Each s
 - Prove that entropy is maximized by the uniform distribution on a finite support.
 - Prove that mutual information is nonnegative by writing it as a KL divergence.
 - Starting from the chain rule definitions, derive
-  $$
-  I(X;Y)=H(X)-H(X \mid Y).
-  $$
+$$ I(X;Y)=H(X)-H(X \mid Y). $$
 - Prove that if $X$ and $Y$ are independent, then $I(X;Y)=0$.
 - Give an example where $I(X;Y)=0$ but neither variable is deterministic.
 

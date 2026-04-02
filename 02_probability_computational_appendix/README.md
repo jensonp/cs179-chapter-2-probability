@@ -16,9 +16,7 @@ These should not be conflated computationally. An event probability is a sum or 
 
 Likelihood notation has its own role. For observed data $D$ and parameter $\theta$,
 
-$$
-L(\theta)=p(D \mid \theta)
-$$
+$$ L(\theta)=p(D \mid \theta) $$
 
 is treated as a function of $\theta$ with $D$ fixed. It is therefore a scoring function for parameter values, not a probability distribution over parameters.
 
@@ -49,9 +47,7 @@ Using the dentist example, the full joint table is
 
 The first numerical audit is normalization:
 
-$$
-0.576+0.008+0.144+0.072+0.064+0.012+0.016+0.108=1.
-$$
+$$ 0.576+0.008+0.144+0.072+0.064+0.012+0.016+0.108=1. $$
 
 Without that check, every later conditional or marginal can inherit a silent error.
 
@@ -73,9 +69,7 @@ Marginalizing out $D$ gives the unnormalized vector over $C$:
 
 The sum of that vector is
 
-$$
-0.080+0.120=0.200.
-$$
+$$ 0.080+0.120=0.200. $$
 
 That number is the evidence probability $p(T=1)$. After normalization,
 
@@ -98,13 +92,7 @@ The computational lesson is that Bayes' rule in table form is just the sequence 
 
 The scalar Bayes formula is often numerically less transparent than the odds form. For two hypotheses $H_1$ and $H_0$ and evidence $E$,
 
-$$
-\frac{p(H_1 \mid E)}{p(H_0 \mid E)}
-=
-\frac{p(E \mid H_1)}{p(E \mid H_0)}
-\cdot
-\frac{p(H_1)}{p(H_0)}.
-$$
+$$ \frac{p(H_1 \mid E)}{p(H_0 \mid E)} = \frac{p(E \mid H_1)}{p(E \mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}. $$
 
 This should be computed as three separate pieces:
 
@@ -116,37 +104,23 @@ This should be computed as three separate pieces:
 
 Suppose
 
-$$
-p(D=1)=0.01,
-\qquad
-p(T=+ \mid D=1)=0.95,
-\qquad
-p(T=+ \mid D=0)=0.10.
-$$
+$$ p(D=1)=0.01, \qquad p(T=+ \mid D=1)=0.95, \qquad p(T=+ \mid D=0)=0.10. $$
 
 The prior odds of disease are
 
-$$
-\frac{0.01}{0.99}\approx 0.0101.
-$$
+$$ \frac{0.01}{0.99}\approx 0.0101. $$
 
 The likelihood ratio of a positive test is
 
-$$
-\frac{0.95}{0.10}=9.5.
-$$
+$$ \frac{0.95}{0.10}=9.5. $$
 
 So the posterior odds are
 
-$$
-9.5 \times 0.0101 \approx 0.096.
-$$
+$$ 9.5 \times 0.0101 \approx 0.096. $$
 
 Converting odds back to a probability gives
 
-$$
-\frac{0.096}{1+0.096}\approx 0.0876.
-$$
+$$ \frac{0.096}{1+0.096}\approx 0.0876. $$
 
 This computation is the same as the direct posterior formula, but it makes the structure more explicit. The evidence is favorable, because the likelihood ratio is larger than one, yet the posterior remains small because the prior odds were extremely small.
 
@@ -154,15 +128,11 @@ This computation is the same as the direct posterior formula, but it makes the s
 
 Monte Carlo estimation replaces exact expectations by empirical averages from simulated samples. If
 
-$$
-X^{(1)},\dots,X^{(m)}
-$$
+$$ X^{(1)},\dots,X^{(m)} $$
 
 are samples from a model, then the empirical estimate of the mean is
 
-$$
-\hat{\mu}_m=\frac{1}{m}\sum_{i=1}^m X^{(i)}.
-$$
+$$ \hat{\mu}_m=\frac{1}{m}\sum_{i=1}^m X^{(i)}. $$
 
 The law of large numbers says that this quantity should stabilize near $E[X]$ as $m$ grows. The practical purpose of the simulation is not merely to approximate a number, but to develop intuition for which exact formulas are averages in disguise.
 
@@ -170,21 +140,15 @@ The law of large numbers says that this quantity should stabilize near $E[X]$ as
 
 If $X \sim \mathrm{Bernoulli}(0.3)$, then the exact expectation is
 
-$$
-E[X]=0.3.
-$$
+$$ E[X]=0.3. $$
 
 Suppose a small simulation produces the ten outcomes
 
-$$
-1,0,0,1,0,0,0,1,0,0.
-$$
+$$ 1,0,0,1,0,0,0,1,0,0. $$
 
 Then the empirical mean is
 
-$$
-\hat{\mu}_{10}=\frac{3}{10}=0.3.
-$$
+$$ \hat{\mu}_{10}=\frac{3}{10}=0.3. $$
 
 A different run might produce $0.2$ or $0.4$ instead, because ten samples is still small. The computational point is that the empirical frequency of ones is itself a Monte Carlo estimate of the Bernoulli mean. The exact expectation and the MLE are connected by the same averaging operation.
 
@@ -192,21 +156,15 @@ A different run might produce $0.2$ or $0.4$ instead, because ten samples is sti
 
 For a fair die,
 
-$$
-E[X]=3.5.
-$$
+$$ E[X]=3.5. $$
 
 If a simulation produces the six values
 
-$$
-2,5,1,6,3,4,
-$$
+$$ 2,5,1,6,3,4, $$
 
 then the empirical mean is
 
-$$
-\hat{\mu}_6=\frac{2+5+1+6+3+4}{6}=3.5.
-$$
+$$ \hat{\mu}_6=\frac{2+5+1+6+3+4}{6}=3.5. $$
 
 That exact match is accidental, not guaranteed. The important check is that as more rolls are accumulated, the running average should drift toward $3.5$ rather than away from it.
 
@@ -222,21 +180,15 @@ A histogram is not just a picture; it is an empirical approximation to a PMF or 
 
 The Beta$(3,2)$ law is continuous on the interval $[0,1]$. Its density is proportional to
 
-$$
-x^2(1-x).
-$$
+$$ x^2(1-x). $$
 
 That immediately implies several qualitative facts. The support is only the unit interval, so no sampled value should fall below $0$ or above $1$. The density is zero at both boundaries, so the histogram should taper toward both ends rather than spike exactly at $0$ or $1$. The mean is
 
-$$
-\frac{3}{3+2}=0.6,
-$$
+$$ \frac{3}{3+2}=0.6, $$
 
 and the mode is
 
-$$
-\frac{3-1}{3+2-2}=\frac{2}{3},
-$$
+$$ \frac{3-1}{3+2-2}=\frac{2}{3}, $$
 
 so the histogram should peak somewhat to the right of the center, around $0.6$ to $0.7$.
 
@@ -246,25 +198,17 @@ For $1000$ samples, a moderate number of bins is usually best. Too few bins hide
 
 For the homework's Pyro workflow, the Geometric distribution uses the zero-based convention:
 
-$$
-p(X=x)=(1-0.2)^x(0.2),
-\qquad
-x \in \{0,1,2,\dots\}.
-$$
+$$ p(X=x)=(1-0.2)^x(0.2), \qquad x \in \{0,1,2,\dots\}. $$
 
 So a sampled value of $0$ means success occurred on the first trial, a sampled value of $1$ means one failure occurred before the first success, and so on. The first few probabilities are
 
-$$
-p(0)=0.2,\qquad p(1)=0.16,\qquad p(2)=0.128,\qquad p(3)=0.1024.
-$$
+$$ p(0)=0.2,\qquad p(1)=0.16,\qquad p(2)=0.128,\qquad p(3)=0.1024. $$
 
 The histogram should therefore start high at zero and then decrease steadily as the value grows. It should be right-skewed with a visibly long tail.
 
 The theoretical mean under this convention is
 
-$$
-\frac{1-0.2}{0.2}=4.
-$$
+$$ \frac{1-0.2}{0.2}=4. $$
 
 So while many samples will be small integers, the average over $1000$ draws should be somewhere near $4$. That does not mean most samples equal $4$; it means the long right tail pulls the average to the right even though the most likely outcome is still $0$.
 
@@ -282,15 +226,11 @@ The histogram for a Geometric sample should use bins centered on the integers. I
 
 Likelihood surfaces are easiest to understand numerically by evaluating them on a parameter grid. For Bernoulli data
 
-$$
-D=\{1,0,1\},
-$$
+$$ D=\{1,0,1\}, $$
 
 the likelihood is
 
-$$
-L(\rho)=\rho^2(1-\rho).
-$$
+$$ L(\rho)=\rho^2(1-\rho). $$
 
 Evaluating a few candidate values gives
 
@@ -306,15 +246,11 @@ The ranking is identical whether one compares likelihood or log-likelihood, beca
 
 Suppose $m=100$ independent observations each contribute a factor near $0.01$. The raw product is roughly
 
-$$
-10^{-200},
-$$
+$$ 10^{-200}, $$
 
 which is numerically tiny. The corresponding log-likelihood is roughly
 
-$$
-100 \log(0.01),
-$$
+$$ 100 \log(0.01), $$
 
 which is a moderate negative number rather than an underflowed zero. The computation is the same in mathematical content, but the log representation is far more stable.
 
@@ -322,21 +258,15 @@ which is a moderate negative number rather than an underflowed zero. The computa
 
 For Gaussian observations
 
-$$
-D=\{-0.5,0.4,1.3\}
-$$
+$$ D=\{-0.5,0.4,1.3\} $$
 
 with variance fixed at one, the log-likelihood in $\mu$ differs from
 
-$$
--\frac{1}{2}\sum_i (x^{(i)}-\mu)^2
-$$
+$$ -\frac{1}{2}\sum_i (x^{(i)}-\mu)^2 $$
 
 only by an additive constant. A parameter sweep over candidate means is therefore just a sweep over total squared error. The maximizing mean should coincide with the sample mean
 
-$$
-\bar{x}=0.4.
-$$
+$$ \bar{x}=0.4. $$
 
 That is the numerical reason the Gaussian MLE is the arithmetic average.
 
@@ -348,33 +278,23 @@ Bayesian updates are computationally attractive when the posterior stays in the 
 
 Start with
 
-$$
-\rho \sim \mathrm{Beta}(2,2).
-$$
+$$ \rho \sim \mathrm{Beta}(2,2). $$
 
 Interpret this as prior pseudo-counts of two heads and two tails. After observing
 
-$$
-D_1=\{1,0,1\},
-$$
+$$ D_1=\{1,0,1\}, $$
 
 the posterior is
 
-$$
-\mathrm{Beta}(4,3).
-$$
+$$ \mathrm{Beta}(4,3). $$
 
 If a second batch
 
-$$
-D_2=\{1,1\}
-$$
+$$ D_2=\{1,1\} $$
 
 arrives, the update becomes
 
-$$
-\mathrm{Beta}(6,3).
-$$
+$$ \mathrm{Beta}(6,3). $$
 
 The entire computation can be recorded as a simple count table:
 
@@ -390,27 +310,19 @@ This table view makes it obvious that sequential and batch updating agree whenev
 
 Let the prior be
 
-$$
-\theta \sim \mathrm{Dir}(2,2,2),
-$$
+$$ \theta \sim \mathrm{Dir}(2,2,2), $$
 
 and suppose the observed class counts are
 
-$$
-(3,1,0).
-$$
+$$ (3,1,0). $$
 
 Then the posterior is
 
-$$
-\mathrm{Dir}(5,3,2).
-$$
+$$ \mathrm{Dir}(5,3,2). $$
 
 The corresponding posterior mean is
 
-$$
-(\frac{5}{10},\frac{3}{10},\frac{2}{10})=(0.5,0.3,0.2).
-$$
+$$ (\frac{5}{10},\frac{3}{10},\frac{2}{10})=(0.5,0.3,0.2). $$
 
 The unobserved third category still keeps positive mass because the prior prevented the model from collapsing its probability to zero after only four observations.
 
@@ -418,15 +330,11 @@ The unobserved third category still keeps positive mass because the prior preven
 
 For a discrete distribution $p$, entropy is
 
-$$
-H(p)=-\sum_i p_i \log p_i.
-$$
+$$ H(p)=-\sum_i p_i \log p_i. $$
 
 For two distributions $p$ and $q$ on the same support, KL divergence is
 
-$$
-D(p \,\|\, q)=\sum_i p_i \log \frac{p_i}{q_i}.
-$$
+$$ D(p \,\|\, q)=\sum_i p_i \log \frac{p_i}{q_i}. $$
 
 The computational hazard is not the formula itself but support mismatches and zero entries.
 
@@ -434,15 +342,11 @@ The computational hazard is not the formula itself but support mismatches and ze
 
 For
 
-$$
-p=(0.9,0.1),
-$$
+$$ p=(0.9,0.1), $$
 
 the entropy in bits is
 
-$$
-H(p)= -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.469.
-$$
+$$ H(p)= -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.469. $$
 
 This is smaller than the fair-coin value of one bit because the outcome is more predictable.
 
@@ -450,33 +354,15 @@ This is smaller than the fair-coin value of one bit because the outcome is more 
 
 Let
 
-$$
-p=(0.8,0.2),
-\qquad
-q=(0.5,0.5).
-$$
+$$ p=(0.8,0.2), \qquad q=(0.5,0.5). $$
 
 Then
 
-$$
-D(p \,\|\, q)
-=
-0.8 \log \frac{0.8}{0.5}
-+
-0.2 \log \frac{0.2}{0.5}
-\approx 0.193
-$$
+$$ D(p \,\|\, q) = 0.8 \log \frac{0.8}{0.5} + 0.2 \log \frac{0.2}{0.5} \approx 0.193 $$
 
 when natural logarithms are used. Reversing the arguments gives
 
-$$
-D(q \,\|\, p)
-=
-0.5 \log \frac{0.5}{0.8}
-+
-0.5 \log \frac{0.5}{0.2}
-\approx 0.223.
-$$
+$$ D(q \,\|\, p) = 0.5 \log \frac{0.5}{0.8} + 0.5 \log \frac{0.5}{0.2} \approx 0.223. $$
 
 The two numbers differ, so KL divergence is not symmetric.
 
@@ -484,9 +370,7 @@ The two numbers differ, so KL divergence is not symmetric.
 
 Before evaluating KL divergence, check each state with $p_i>0$. If any corresponding $q_i=0$, then
 
-$$
-D(p \,\|\, q)=\infty.
-$$
+$$ D(p \,\|\, q)=\infty. $$
 
 That is not a numerical nuisance but a mathematically meaningful statement: $q$ declared impossible an outcome that actually occurs under $p$.
 
@@ -503,27 +387,19 @@ For scalar transforms, the computational recipe is:
 
 Let $Z$ be uniform on $[0,1]$ and define
 
-$$
-X=3Z.
-$$
+$$ X=3Z. $$
 
 The inverse is
 
-$$
-z=\frac{x}{3},
-$$
+$$ z=\frac{x}{3}, $$
 
 and the derivative of the inverse is
 
-$$
-\frac{dz}{dx}=\frac{1}{3}.
-$$
+$$ \frac{dz}{dx}=\frac{1}{3}. $$
 
 Since the base density is $1$ on $[0,1]$, the transformed density is
 
-$$
-p_X(x)=\frac{1}{3}
-$$
+$$ p_X(x)=\frac{1}{3} $$
 
 on $[0,3]$. Stretching the support by a factor of three compresses the density by the same factor.
 
@@ -531,23 +407,15 @@ on $[0,3]$. Stretching the support by a factor of three compresses the density b
 
 For the affine coupling layer
 
-$$
-Z_1' = Z_1,
-\qquad
-Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1),
-$$
+$$ Z_1' = Z_1, \qquad Z_2' = \alpha_1(Z_1)Z_2 + \beta_1(Z_1), $$
 
 the Jacobian matrix is triangular:
 
-$$
-J_{11}=1,\qquad J_{12}=0,\qquad J_{21}=\frac{\partial Z_2'}{\partial Z_1},\qquad J_{22}=\alpha_1(Z_1).
-$$
+$$ J_{11}=1,\qquad J_{12}=0,\qquad J_{21}=\frac{\partial Z_2'}{\partial Z_1},\qquad J_{22}=\alpha_1(Z_1). $$
 
 Its determinant is therefore just
 
-$$
-\det J = \alpha_1(Z_1).
-$$
+$$ \det J = \alpha_1(Z_1). $$
 
 The lower-left derivative may be algebraically messy, but it does not affect the determinant. This is the implementation reason triangular layers are popular: they preserve expressive transforms while keeping exact density evaluation cheap.
 
