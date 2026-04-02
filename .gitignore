@@ -27,6 +27,8 @@ scripts/notes/*
 !scripts/notes/build_02_probability_reconstructed.py
 !scripts/notes/build_02_probability_bundle.py
 !scripts/setup_hw1_latex_workspace.py
+!scripts/autocommit.py
+!scripts/autocommit.launchagent.plist
 
 .DS_Store
 **/.DS_Store
