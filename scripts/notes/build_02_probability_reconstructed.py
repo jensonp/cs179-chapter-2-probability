@@ -34,6 +34,21 @@ FONT_FILES = {
     "math": FONT_ARCHIVE_DIR / "Arial Unicode.ttf",
 }
 FONT_METRICS = {name: fitz.Font(fontfile=str(path)) for name, path in FONT_FILES.items()}
+DIAGRAM_FONT_FILES = {
+    "diagram": FONT_ARCHIVE_DIR / "STIXTwoText.ttf",
+    "diagrambold": FONT_ARCHIVE_DIR / "STIXTwoText.ttf",
+}
+
+DIAGRAM_TEXT = (0.18, 0.2, 0.24)
+DIAGRAM_SUBTEXT = (0.31, 0.34, 0.39)
+DIAGRAM_ARROW = (0.45, 0.49, 0.57)
+DIAGRAM_PANEL = (0.87, 0.89, 0.92)
+DIAGRAM_NEUTRAL_FILL = (0.989, 0.99, 0.992)
+DIAGRAM_NEUTRAL_STROKE = (0.58, 0.63, 0.72)
+DIAGRAM_WARM_FILL = (0.992, 0.988, 0.976)
+DIAGRAM_WARM_STROKE = (0.76, 0.68, 0.52)
+DIAGRAM_ACCENT_FILL = (0.974, 0.987, 0.978)
+DIAGRAM_ACCENT_STROKE = (0.53, 0.66, 0.57)
 
 INLINE_MATH_RE = re.compile(r"\$(.+?)\$")
 IMAGE_RE = re.compile(r"^!\[(?P<alt>[^\]]*)\]\((?P<path>[^)]+)\)\s*$")
@@ -445,8 +460,7 @@ def style_for(kind: str) -> tuple[str, float, float]:
 def new_page(doc: fitz.Document, page_num: int) -> fitz.Page:
     page = doc.new_page(width=PAGE_WIDTH, height=PAGE_HEIGHT)
     page.draw_rect(page.rect, fill=(1, 1, 1))
-    for alias, path in FONT_FILES.items():
-        page.insert_font(fontname=alias, fontfile=str(path))
+    insert_fonts(page)
     page.insert_text(
         fitz.Point(MARGIN_X, 28),
         f"{TITLE} ({SUBTITLE}) - page {page_num}",
@@ -456,6 +470,14 @@ def new_page(doc: fitz.Document, page_num: int) -> fitz.Page:
         color=(0.42, 0.48, 0.56),
     )
     return page
+
+
+def insert_fonts(page: fitz.Page, include_diagram: bool = False) -> None:
+    for alias, path in FONT_FILES.items():
+        page.insert_font(fontname=alias, fontfile=str(path))
+    if include_diagram:
+        for alias, path in DIAGRAM_FONT_FILES.items():
+            page.insert_font(fontname=alias, fontfile=str(path))
 
 
 def add_page(doc: fitz.Document, page_num: int) -> tuple[fitz.Page, float]:
@@ -915,41 +937,40 @@ def write_sequential_update_assets(assets_dir: Path) -> None:
     doc = fitz.open()
     page = doc.new_page(width=820, height=220)
     page.draw_rect(page.rect, fill=(1, 1, 1))
-    for alias, path in FONT_FILES.items():
-        page.insert_font(fontname=alias, fontfile=str(path))
+    insert_fonts(page, include_diagram=True)
 
     boxes = [
-        (36, 56, 168, 128, (0.965, 0.973, 0.988), (0.556, 0.631, 0.761), "Prior"),
-        (194, 56, 326, 128, (0.992, 0.973, 0.941), (0.773, 0.631, 0.416), "Data 1"),
-        (352, 56, 484, 128, (0.965, 0.973, 0.988), (0.556, 0.631, 0.761), "Posterior"),
-        (510, 56, 642, 128, (0.992, 0.973, 0.941), (0.773, 0.631, 0.416), "Data 2"),
-        (668, 56, 800, 128, (0.933, 0.969, 0.953), (0.494, 0.655, 0.561), "Updated belief"),
+        (36, 56, 168, 128, DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE, "Prior"),
+        (194, 56, 326, 128, DIAGRAM_WARM_FILL, DIAGRAM_WARM_STROKE, "Data 1"),
+        (352, 56, 484, 128, DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE, "Posterior"),
+        (510, 56, 642, 128, DIAGRAM_WARM_FILL, DIAGRAM_WARM_STROKE, "Data 2"),
+        (668, 56, 800, 128, DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE, "Updated belief"),
     ]
     for x0, y0, x1, y1, fill, stroke, title in boxes:
         page.draw_rect(fitz.Rect(x0, y0, x1, y1), fill=fill, color=stroke, width=2)
         page.insert_textbox(
             fitz.Rect(x0, y0 + 12, x1, y1 - 10),
             title,
-            fontname="bodybold",
-            fontfile=str(FONT_FILES["bodybold"]),
+            fontname="diagrambold",
+            fontfile=str(DIAGRAM_FONT_FILES["diagrambold"]),
             fontsize=18,
-            color=(0.2, 0.24, 0.33),
+            color=DIAGRAM_TEXT,
             align=1,
         )
 
     arrow_y = 92
     for start_x, end_x in [(168, 194), (326, 352), (484, 510), (642, 668)]:
-        page.draw_line(fitz.Point(start_x, arrow_y), fitz.Point(end_x - 6, arrow_y), color=(0.49, 0.56, 0.7), width=3)
-        page.draw_line(fitz.Point(end_x - 12, arrow_y - 6), fitz.Point(end_x, arrow_y), color=(0.49, 0.56, 0.7), width=3)
-        page.draw_line(fitz.Point(end_x - 12, arrow_y + 6), fitz.Point(end_x, arrow_y), color=(0.49, 0.56, 0.7), width=3)
+        page.draw_line(fitz.Point(start_x, arrow_y), fitz.Point(end_x - 6, arrow_y), color=DIAGRAM_ARROW, width=3)
+        page.draw_line(fitz.Point(end_x - 12, arrow_y - 6), fitz.Point(end_x, arrow_y), color=DIAGRAM_ARROW, width=3)
+        page.draw_line(fitz.Point(end_x - 12, arrow_y + 6), fitz.Point(end_x, arrow_y), color=DIAGRAM_ARROW, width=3)
 
     page.insert_textbox(
         fitz.Rect(40, 162, 780, 194),
         "Bayesian updating treats the posterior after D1 as the prior before incorporating D2.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=14,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
 
@@ -985,15 +1006,15 @@ def _draw_labeled_box(
     subtitle: str,
     fill: tuple[float, float, float],
     stroke: tuple[float, float, float],
-    title_color: tuple[float, float, float] = (0.19, 0.23, 0.31),
-    subtitle_color: tuple[float, float, float] = (0.28, 0.33, 0.41),
+    title_color: tuple[float, float, float] = DIAGRAM_TEXT,
+    subtitle_color: tuple[float, float, float] = DIAGRAM_SUBTEXT,
 ) -> None:
     page.draw_rect(rect, fill=fill, color=stroke, width=2)
     page.insert_textbox(
         fitz.Rect(rect.x0 + 8, rect.y0 + 8, rect.x1 - 8, rect.y0 + 34),
         title,
-        fontname="bodybold",
-        fontfile=str(FONT_FILES["bodybold"]),
+        fontname="diagrambold",
+        fontfile=str(DIAGRAM_FONT_FILES["diagrambold"]),
         fontsize=15,
         color=title_color,
         align=1,
@@ -1002,8 +1023,8 @@ def _draw_labeled_box(
         page.insert_textbox(
             fitz.Rect(rect.x0 + 10, rect.y0 + 36, rect.x1 - 10, rect.y1 - 8),
             subtitle,
-            fontname="body",
-            fontfile=str(FONT_FILES["body"]),
+            fontname="diagram",
+            fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
             fontsize=10.5,
             color=subtitle_color,
             align=1,
@@ -1035,28 +1056,27 @@ def write_table_update_pipeline_assets(assets_dir: Path) -> None:
     doc = fitz.open()
     page = doc.new_page(width=920, height=230)
     page.draw_rect(page.rect, fill=(1, 1, 1))
-    for alias, path in FONT_FILES.items():
-        page.insert_font(fontname=alias, fontfile=str(path))
+    insert_fonts(page, include_diagram=True)
 
     boxes = [
-        (40, 54, 220, 142, "Full joint", "p(T,D,C)", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (260, 54, 440, 142, "Restrict evidence", "keep rows with T = 1", (0.992, 0.973, 0.941), (0.773, 0.631, 0.416)),
-        (480, 54, 660, 142, "Marginalize", "sum over D", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (700, 54, 880, 142, "Normalize", "obtain p(C | T = 1)", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+        (40, 54, 220, 142, "Full joint", "all rows of the table", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (260, 54, 440, 142, "Restrict evidence", "keep only rows with T = 1", DIAGRAM_WARM_FILL, DIAGRAM_WARM_STROKE),
+        (480, 54, 660, 142, "Marginalize", "sum over D", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (700, 54, 880, 142, "Normalize", "turn the result into a posterior", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
     ]
     for x0, y0, x1, y1, title, subtitle, fill, stroke in boxes:
         _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
 
     for start_x, end_x in [(220, 260), (440, 480), (660, 700)]:
-        _draw_arrow(page, (start_x, 98), (end_x, 98), (0.49, 0.56, 0.7), width=3)
+        _draw_arrow(page, (start_x, 98), (end_x, 98), DIAGRAM_ARROW, width=3)
 
     page.insert_textbox(
         fitz.Rect(56, 166, 864, 204),
         "Table inference is an operator sequence: restrict to evidence, sum out hidden variables, then renormalize.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=13.5,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
 
@@ -1092,13 +1112,12 @@ def write_indicator_product_assets(assets_dir: Path) -> None:
     doc = fitz.open()
     page = doc.new_page(width=980, height=290)
     page.draw_rect(page.rect, fill=(1, 1, 1))
-    for alias, path in FONT_FILES.items():
-        page.insert_font(fontname=alias, fontfile=str(path))
+    insert_fonts(page, include_diagram=True)
 
     boxes = [
-        (58, 56, 238, 154, "State: sun", "selected exponent = 0\nthis factor is turned off", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (286, 56, 466, 154, "State: cloud", "selected exponent = 0\nthis factor is turned off", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (514, 56, 694, 154, "State: rain", "selected exponent = 1\nthis factor stays active", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+        (58, 56, 238, 154, "State: sun", "selected exponent = 0\nthis factor is turned off", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (286, 56, 466, 154, "State: cloud", "selected exponent = 0\nthis factor is turned off", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (514, 56, 694, 154, "State: rain", "selected exponent = 1\nthis factor stays active", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
     ]
     for x0, y0, x1, y1, title, subtitle, fill, stroke in boxes:
         _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
@@ -1109,21 +1128,21 @@ def write_indicator_product_assets(assets_dir: Path) -> None:
         product_rect,
         "Product form when X = rain",
         "off · off · on = 1 · 1 · 0.2 = 0.2",
-        (0.992, 0.973, 0.941),
-        (0.773, 0.631, 0.416),
+        DIAGRAM_WARM_FILL,
+        DIAGRAM_WARM_STROKE,
     )
 
-    _draw_arrow(page, (148, 154), (372, 196), (0.49, 0.56, 0.7), width=3)
-    _draw_arrow(page, (376, 154), (490, 196), (0.49, 0.56, 0.7), width=3)
-    _draw_arrow(page, (604, 154), (608, 196), (0.49, 0.56, 0.7), width=3)
+    _draw_arrow(page, (148, 154), (372, 196), DIAGRAM_ARROW, width=3)
+    _draw_arrow(page, (376, 154), (490, 196), DIAGRAM_ARROW, width=3)
+    _draw_arrow(page, (604, 154), (608, 196), DIAGRAM_ARROW, width=3)
 
     page.insert_textbox(
         fitz.Rect(84, 8, 896, 34),
         "Indicator exponents only mark which state was realized; they do not store probabilities.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=13.5,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
 
@@ -1170,13 +1189,28 @@ def write_conditional_structure_assets(assets_dir: Path) -> None:
     doc = fitz.open()
     page = doc.new_page(width=960, height=320)
     page.draw_rect(page.rect, fill=(1, 1, 1))
-    for alias, path in FONT_FILES.items():
-        page.insert_font(fontname=alias, fontfile=str(path))
+    insert_fonts(page, include_diagram=True)
 
-    page.draw_rect(fitz.Rect(28, 24, 456, 290), color=(0.83, 0.87, 0.91), width=1.4)
-    page.draw_rect(fitz.Rect(504, 24, 932, 290), color=(0.83, 0.87, 0.91), width=1.4)
-    page.insert_textbox(fitz.Rect(40, 32, 444, 60), "Common Cause", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
-    page.insert_textbox(fitz.Rect(516, 32, 920, 60), "Explaining Away", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
+    page.draw_rect(fitz.Rect(28, 24, 456, 290), color=DIAGRAM_PANEL, width=1.4)
+    page.draw_rect(fitz.Rect(504, 24, 932, 290), color=DIAGRAM_PANEL, width=1.4)
+    page.insert_textbox(
+        fitz.Rect(40, 32, 444, 60),
+        "Common Cause",
+        fontname="diagrambold",
+        fontfile=str(DIAGRAM_FONT_FILES["diagrambold"]),
+        fontsize=18,
+        color=DIAGRAM_TEXT,
+        align=1,
+    )
+    page.insert_textbox(
+        fitz.Rect(516, 32, 920, 60),
+        "Explaining Away",
+        fontname="diagrambold",
+        fontfile=str(DIAGRAM_FONT_FILES["diagrambold"]),
+        fontsize=18,
+        color=DIAGRAM_TEXT,
+        align=1,
+    )
 
     left_nodes = {
         "Cavity": fitz.Rect(172, 78, 312, 136),
@@ -1184,16 +1218,16 @@ def write_conditional_structure_assets(assets_dir: Path) -> None:
         "Probe catch": fitz.Rect(278, 184, 418, 242),
     }
     for title, rect in left_nodes.items():
-        _draw_labeled_box(page, rect, title, "", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761))
-    _draw_arrow(page, (242, 136), (136, 184), (0.49, 0.56, 0.7))
-    _draw_arrow(page, (242, 136), (348, 184), (0.49, 0.56, 0.7))
+        _draw_labeled_box(page, rect, title, "", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE)
+    _draw_arrow(page, (242, 136), (136, 184), DIAGRAM_ARROW)
+    _draw_arrow(page, (242, 136), (348, 184), DIAGRAM_ARROW)
     page.insert_textbox(
         fitz.Rect(54, 252, 430, 280),
         "Conditioning on the common cause blocks the path between symptoms.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=12.2,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
 
@@ -1203,16 +1237,16 @@ def write_conditional_structure_assets(assets_dir: Path) -> None:
         "Warning light": fitz.Rect(648, 184, 788, 242),
     }
     for title, rect in right_nodes.items():
-        _draw_labeled_box(page, rect, title, "", (0.992, 0.973, 0.941), (0.773, 0.631, 0.416))
-    _draw_arrow(page, (606, 136), (700, 184), (0.49, 0.56, 0.7))
-    _draw_arrow(page, (830, 136), (736, 184), (0.49, 0.56, 0.7))
+        _draw_labeled_box(page, rect, title, "", DIAGRAM_WARM_FILL, DIAGRAM_WARM_STROKE)
+    _draw_arrow(page, (606, 136), (700, 184), DIAGRAM_ARROW)
+    _draw_arrow(page, (830, 136), (736, 184), DIAGRAM_ARROW)
     page.insert_textbox(
         fitz.Rect(528, 252, 908, 280),
         "After observing the effect, evidence for one cause lowers belief in the other.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=12.2,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
 
@@ -1250,24 +1284,39 @@ def write_copula_flow_pipeline_assets(assets_dir: Path) -> None:
     doc = fitz.open()
     page = doc.new_page(width=980, height=360)
     page.draw_rect(page.rect, fill=(1, 1, 1))
-    for alias, path in FONT_FILES.items():
-        page.insert_font(fontname=alias, fontfile=str(path))
+    insert_fonts(page, include_diagram=True)
 
-    page.draw_rect(fitz.Rect(32, 24, 948, 160), color=(0.83, 0.87, 0.91), width=1.4)
-    page.draw_rect(fitz.Rect(32, 192, 948, 328), color=(0.83, 0.87, 0.91), width=1.4)
-    page.insert_textbox(fitz.Rect(40, 32, 940, 58), "Copula Pipeline", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
-    page.insert_textbox(fitz.Rect(40, 200, 940, 226), "Normalizing Flow Pipeline", fontname="bodybold", fontfile=str(FONT_FILES["bodybold"]), fontsize=18, color=(0.19, 0.23, 0.31), align=1)
+    page.draw_rect(fitz.Rect(32, 24, 948, 160), color=DIAGRAM_PANEL, width=1.4)
+    page.draw_rect(fitz.Rect(32, 192, 948, 328), color=DIAGRAM_PANEL, width=1.4)
+    page.insert_textbox(
+        fitz.Rect(40, 32, 940, 58),
+        "Copula Pipeline",
+        fontname="diagrambold",
+        fontfile=str(DIAGRAM_FONT_FILES["diagrambold"]),
+        fontsize=18,
+        color=DIAGRAM_TEXT,
+        align=1,
+    )
+    page.insert_textbox(
+        fitz.Rect(40, 200, 940, 226),
+        "Normalizing Flow Pipeline",
+        fontname="diagrambold",
+        fontfile=str(DIAGRAM_FONT_FILES["diagrambold"]),
+        fontsize=18,
+        color=DIAGRAM_TEXT,
+        align=1,
+    )
 
     top_boxes = [
-        (58, 72, 242, 132, "Observed data", "raw coordinates and marginals", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (286, 72, 470, 132, "Marginal CDFs", "convert each coordinate to a percentile", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (514, 72, 698, 132, "Gaussianize", "map percentiles to Gaussian scale", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
-        (742, 72, 926, 132, "Dependence model", "fit the copula after the transform", (0.965, 0.973, 0.988), (0.556, 0.631, 0.761)),
+        (58, 72, 242, 132, "Observed data", "raw coordinates and marginals", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (286, 72, 470, 132, "Marginal CDFs", "convert each coordinate to a percentile", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (514, 72, 698, 132, "Gaussianize", "map percentiles to Gaussian scale", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
+        (742, 72, 926, 132, "Dependence model", "fit the copula after the transform", DIAGRAM_NEUTRAL_FILL, DIAGRAM_NEUTRAL_STROKE),
     ]
     bottom_boxes = [
-        (132, 240, 316, 300, "Base density", "start from a simple latent distribution", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
-        (398, 240, 582, 300, "Invertible layers", "compose simple reversible transforms", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
-        (664, 240, 848, 300, "Complex density", "obtain a flexible observed distribution", (0.933, 0.969, 0.953), (0.494, 0.655, 0.561)),
+        (132, 240, 316, 300, "Base density", "start from a simple latent distribution", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
+        (398, 240, 582, 300, "Invertible layers", "compose simple reversible transforms", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
+        (664, 240, 848, 300, "Complex density", "obtain a flexible observed distribution", DIAGRAM_ACCENT_FILL, DIAGRAM_ACCENT_STROKE),
     ]
     for x0, y0, x1, y1, title, subtitle, fill, stroke in top_boxes:
         _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
@@ -1275,26 +1324,26 @@ def write_copula_flow_pipeline_assets(assets_dir: Path) -> None:
         _draw_labeled_box(page, fitz.Rect(x0, y0, x1, y1), title, subtitle, fill, stroke)
 
     for start_x, end_x in [(242, 286), (470, 514), (698, 742)]:
-        _draw_arrow(page, (start_x, 102), (end_x, 102), (0.49, 0.56, 0.7), width=3)
+        _draw_arrow(page, (start_x, 102), (end_x, 102), DIAGRAM_ARROW, width=3)
     for start_x, end_x in [(316, 398), (582, 664)]:
-        _draw_arrow(page, (start_x, 270), (end_x, 270), (0.49, 0.56, 0.7), width=3)
+        _draw_arrow(page, (start_x, 270), (end_x, 270), DIAGRAM_ARROW, width=3)
 
     page.insert_textbox(
         fitz.Rect(80, 140, 900, 156),
         "Copulas separate marginal shape from dependence by mapping through CDF space.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=12.5,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
     page.insert_textbox(
         fitz.Rect(80, 308, 900, 324),
         "Flows compose simple invertible maps so exact likelihoods remain tractable.",
-        fontname="body",
-        fontfile=str(FONT_FILES["body"]),
+        fontname="diagram",
+        fontfile=str(DIAGRAM_FONT_FILES["diagram"]),
         fontsize=12.5,
-        color=(0.33, 0.39, 0.46),
+        color=DIAGRAM_SUBTEXT,
         align=1,
     )
 
