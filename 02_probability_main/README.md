@@ -381,11 +381,39 @@ $$p(T=1 \mid C=0) = 0.1, \qquad p(T=1 \mid C=1) = 0.6$$
 
 $$p(C=0) = 0.8, \qquad p(C=1) = 0.2.$$
 
-Then
+Here the hypothesis of interest is $C=1$, meaning "the patient has a cavity," and the observation is $T=1$, meaning "the patient has a toothache." We now apply Bayes' rule with those two specific events:
 
-$$p(C=1 \mid T=1) = \frac{0.6 \cdot 0.2}{0.6 \cdot 0.2 + 0.1 \cdot 0.8} = \frac{0.12}{0.20} = 0.60.$$
+$$p(C=1 \mid T=1)=\frac{p(T=1 \mid C=1)p(C=1)}{p(T=1)}.$$
 
-Observing a toothache raises the cavity probability from $0.20$ to $0.60$.
+Now fill in each term one at a time. The likelihood term
+
+$$p(T=1 \mid C=1)=0.6$$
+
+means that among the worlds where a cavity is present, toothache occurs with probability $0.6$. The prior term
+
+$$p(C=1)=0.2$$
+
+means that before observing any toothache, the cavity probability is $0.2$. Multiplying these two quantities uses the product rule and gives the joint probability that both events occur:
+
+$$p(T=1,C=1)=p(T=1 \mid C=1)p(C=1)=0.6 \cdot 0.2 = 0.12.$$
+
+So the numerator $0.12$ is not an arbitrary number. It is the probability of the conjunction "toothache and cavity."
+
+Next compute the denominator $p(T=1)$, which is the total probability of observing a toothache. There are two mutually exclusive ways for toothache to occur in this model: either there is a cavity or there is not. So we apply the law of total probability over the two cavity cases:
+
+$$p(T=1)=p(T=1 \mid C=1)p(C=1)+p(T=1 \mid C=0)p(C=0).$$
+
+Now substitute the given numbers:
+
+$$p(T=1)=0.6 \cdot 0.2 + 0.1 \cdot 0.8 = 0.12 + 0.08 = 0.20.$$
+
+The second term $0.1 \cdot 0.8 = 0.08$ is the probability of "toothache and no cavity." Adding $0.12$ and $0.08$ gives the full toothache probability $0.20$.
+
+Now divide the numerator by the denominator:
+
+$$p(C=1 \mid T=1)=\frac{0.12}{0.20}=0.60.$$
+
+This final number means that after observing a toothache, the probability of a cavity rises to $0.60$. So the observation has changed the cavity probability from the prior value $0.20$ to the posterior value $0.60$.
 
 The derivation can also be unpacked from the definition of conditional probability itself. Start with
 
