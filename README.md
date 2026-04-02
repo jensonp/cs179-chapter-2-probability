@@ -12,8 +12,10 @@ If you want GitHub to render each note automatically, open:
 - `02_probability_formal_supplement/`: rendered formal supplement
 - `02_probability_exercises/`: rendered exercises
 - `02_probability_computational_appendix/`: rendered computational appendix
+- `hw1_reading_guide/`: explicit reading instructions for Homework 1
 
 If you only want one file, start with `02_probability_main/`.
+If you want the homework-specific reading flow, start with `hw1_reading_guide/`.
 
 ## Source Layout
 
