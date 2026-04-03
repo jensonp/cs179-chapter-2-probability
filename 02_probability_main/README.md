@@ -180,11 +180,23 @@ $$p(X=x)=\mathbb{P}(X=x).$$
 
 So a PMF is not a new kind of probability. It is simply the probability of the event $X=x$, viewed as a function of the value $x$.
 
+In beginner language, a PMF is just a probability table written as a function. For example, if a three-state weather variable has
+
+$$p(X=\text{sun})=0.5,\qquad p(X=\text{cloud})=0.3,\qquad p(X=\text{rain})=0.2,$$
+
+then the PMF is the rule that returns $0.5$ at sun, $0.3$ at cloud, and $0.2$ at rain. The table view and the function view are the same object described in two different ways.
+
 The second piece of notation is the indicator function
 
 $$\mathbf{1}[X=x],$$
 
 which equals $1$ when the statement inside the brackets is true and equals $0$ when it is false. Indicator notation is useful because it turns a logical statement such as "the realized state is rain" into a numerical exponent or coefficient. That is exactly what happens in the Bernoulli and categorical product forms below.
+
+For example, if the realized weather state is rain, then
+
+$$\mathbf{1}[X=\text{sun}]=0,\qquad \mathbf{1}[X=\text{cloud}]=0,\qquad \mathbf{1}[X=\text{rain}]=1.$$
+
+So indicator notation is not mysterious symbolism. It is just a numerical way to mark which statement is true in the realized outcome.
 
 ### Example 2-2: Bernoulli Distribution
 
@@ -279,6 +291,21 @@ That is why the exponents look like $0,0,1$: they are not probabilities, they ar
 </p>
 
 The main structural idea is that a categorical PMF can be written either as an explicit table or as a product that automatically selects the row corresponding to the realized state. The table form is easier to read at first; the product form becomes useful later when we write more complicated models compactly.
+
+It is helpful to keep one explicit table in mind while reading the formulas. For the three-state weather example,
+
+<table align="center">
+  <thead>
+    <tr><th>state</th><th>$p(X=\text{state})$</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>sun</td><td>$0.5$</td></tr>
+    <tr><td>cloud</td><td>$0.3$</td></tr>
+    <tr><td>rain</td><td>$0.2$</td></tr>
+  </tbody>
+</table>
+
+The PMF notation, the table notation, and the indicator-product notation are all describing this same distribution. The only difference is the representation. The table is easiest for direct reading, while the product form is easier for algebraic manipulation.
 
 ### Geometric Distribution
 
@@ -2455,51 +2482,129 @@ The estimate simply copies empirical proportions into the model.
 
 ### Example 2-14: Bernoulli MLE
 
-If $m_1$ of the $m$ observations are ones, then
+This example should be read as the most basic MLE computation in the chapter.
+
+Suppose we observe Bernoulli data with
+
+$$m_1 \quad \text{ones}, \qquad m_0 \quad \text{zeros}, \qquad m=m_1+m_0.$$
+
+From the earlier likelihood derivation,
+
+$$p(D \mid \rho)=\rho^{m_1}(1-\rho)^{m_0}.$$
+
+The maximizer is
 
 $$\hat{\rho} = \frac{m_1}{m}$$
 
-For a concrete sample such as $D=\{1,1,0,1,0\}$, we have $m_1=3$ and $m=5$, so
+because the model fits best when its predicted success probability matches the observed success frequency.
+
+Now do one concrete sample slowly. Let
+
+$$D=\{1,1,0,1,0\}.$$
+
+Then
+
+$$m_1=3,\qquad m_0=2,\qquad m=5.$$
+
+So the likelihood is
+
+$$p(D \mid \rho)=\rho^3(1-\rho)^2.$$
+
+The MLE is therefore
 
 $$\hat{\rho}=\frac{3}{5}=0.6$$
 
-This means the fitted Bernoulli model predicts success with probability $0.6$ on future draws, because that is the sample proportion that best matches the observed data under the Bernoulli family.
+The interpretation is immediate: the fitted Bernoulli model predicts success with probability $0.6$ on future draws, because $60\%$ of the observed sample consisted of successes.
+
+It is worth checking the logic against two nearby parameter values. At $\rho=0.6$, the model agrees with the sample proportion exactly. At $\rho=0.2$, the model says successes are rare, which clashes with the data because the sample contains three successes out of five. At $\rho=0.9$, the model says failures are rare, which also clashes with the data because the sample contains two failures. The MLE sits between those extremes at the value that best balances both kinds of observations.
 
 ### Example 2-15: Gaussian MLE
 
-The Gaussian MLE is the sample mean and sample variance:
+For a one-dimensional Gaussian with both mean and variance unknown, the MLEs are the sample mean and the average squared deviation around that mean:
 
 $$\hat{\mu} = \frac{1}{m}\sum_i x^{(i)}$$
 
 $$\hat{\nu} = \frac{1}{m}\sum_i (x^{(i)}-\hat{\mu})^2$$
 
-For example, if the observations are $2$, $4$, and $7$, then
+Now compute them explicitly for the sample
+
+$$D=\{2,4,7\}.$$
+
+There are
+
+$$m=3$$
+
+observations, so the fitted mean is
 
 $$\hat{\mu}=\frac{2+4+7}{3}=\frac{13}{3}$$
 
-The fitted variance is then the average squared deviation from that fitted mean:
+This number is about $4.33$, which sits near the visual center of the three observations.
+
+Next compute the squared deviations from that fitted center:
+
+$$2-\frac{13}{3}=-\frac{7}{3},\qquad 4-\frac{13}{3}=-\frac{1}{3},\qquad 7-\frac{13}{3}=\frac{8}{3}.$$
+
+Square them:
+
+$$\left(-\frac{7}{3}\right)^2=\frac{49}{9},\qquad \left(-\frac{1}{3}\right)^2=\frac{1}{9},\qquad \left(\frac{8}{3}\right)^2=\frac{64}{9}.$$
+
+Add them:
+
+$$\frac{49}{9}+\frac{1}{9}+\frac{64}{9}=\frac{114}{9}=\frac{38}{3}.$$
+
+Now divide by $m=3$ to get the Gaussian MLE for the variance:
 
 $$\hat{\nu}=\frac{1}{3}\left[\left(2-\frac{13}{3}\right)^2+\left(4-\frac{13}{3}\right)^2+\left(7-\frac{13}{3}\right)^2\right]$$
 
-So the Gaussian fit is built in two stages: first choose the center that minimizes squared deviations, then measure the average residual spread around that center.
+which simplifies to
+
+$$\hat{\nu}=\frac{1}{3}\cdot \frac{38}{3}=\frac{38}{9}\approx 4.22.$$
+
+So the Gaussian fit is built in two explicit stages:
+
+1. choose the center that minimizes total squared error;
+2. measure the average squared residual size around that fitted center.
+
+That second number is not the unbiased sample variance from introductory statistics. It is the Gaussian maximum-likelihood variance, which uses division by $m$ because it comes from maximizing the likelihood.
 
 ### Example 2-16: Discrete MLE
 
-For a discrete distribution over states $x$, the MLE is
+For a discrete distribution over states $x$, the MLE copies empirical frequencies into the probability table:
 
 $$\hat{\rho}_x = \frac{m_x}{m}$$
 
 where $m_x$ is the count of state $x$ in the data.
 
-If the sample is $D=\{a,c,a,b,a,c\}$, then the counts are
+Work through the concrete sample
+
+$$D=\{a,c,a,b,a,c\}.$$
+
+There are
+
+$$m=6$$
+
+observations. Count each state:
 
 $$m_a=3,\qquad m_b=1,\qquad m_c=2$$
 
-so the fitted PMF is
+Now divide each count by the total sample size:
 
 $$\hat{\rho}_a=\frac{3}{6},\qquad \hat{\rho}_b=\frac{1}{6},\qquad \hat{\rho}_c=\frac{2}{6}$$
 
-This example is the direct multi-state analogue of the Bernoulli MLE: the estimate just copies observed proportions into the model.
+so the fitted PMF is
+
+<table align="center">
+  <thead>
+    <tr><th>state</th><th>count</th><th>MLE probability</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>$a$</td><td>$3$</td><td>$3/6=0.5$</td></tr>
+    <tr><td>$b$</td><td>$1$</td><td>$1/6 \approx 0.167$</td></tr>
+    <tr><td>$c$</td><td>$2$</td><td>$2/6 \approx 0.333$</td></tr>
+  </tbody>
+</table>
+
+This example is the direct multi-state analogue of the Bernoulli MLE. In the Bernoulli case, we copy the fraction of ones into the single success-probability parameter. In the multi-state case, we copy each observed relative frequency into the corresponding row of the probability table.
 
 ### Maximum Likelihood and Exponential Families
 
@@ -3232,11 +3337,25 @@ The biased coin is more predictable, so it carries less uncertainty and requires
 
 ### Example 2-24: Entropy
 
-For a fair coin,
+Start with the simplest nontrivial case: a fair coin. The two outcomes are equally likely, so each carries one bit of surprise:
 
 $$H[X] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}.$$
 
-For a fair die,
+This can be unpacked one step further. Because
+
+$$\log_2 0.5 = -1,$$
+
+each term is
+
+$$-0.5(-1)=0.5,$$
+
+and the two equal contributions add to
+
+$$0.5+0.5=1.$$
+
+So one fair coin flip carries one bit of uncertainty. In coding language, it takes one yes/no choice to specify the outcome.
+
+Now compare that with a fair die:
 
 $$H[X] = -6 \cdot \frac{1}{6}\log_2 \frac{1}{6} \approx 2.58 \text{ bits}.$$
 
@@ -3247,7 +3366,9 @@ $$H[X]=-\sum_{x=1}^6 \frac{1}{6}\log_2\frac{1}{6}
 =-\log_2\frac{1}{6}
 =\log_2 6.$$
 
-That is why the answer is about $2.58$ bits. The die has larger entropy than the coin because it has more possible outcomes and therefore more uncertainty before observation.
+That is why the answer is about $2.58$ bits. The die has larger entropy than the coin because it has more equally plausible outcomes and therefore more uncertainty before observation.
+
+The important comparison is not merely "six is bigger than two." The deeper point is that entropy grows when the outcome remains hard to predict. A fair die spreads its probability mass across six equally plausible states, so observing the result resolves more uncertainty than observing one fair coin flip.
 
 ### Example 2-25: Lottery
 
@@ -3263,7 +3384,15 @@ So the entropy is
 
 $$H[X] = -0.999\log_2 0.999 - 0.001\log_2 0.001 \approx 0.011 \text{ bits}.$$
 
-That is far below $1$ bit. So the lesson is not merely "rare events are compressible." The more precise lesson is that a source with highly unequal probabilities carries very little uncertainty per symbol, and entropy measures exactly how little.
+It helps to understand why this number is so small. The outcome $X=0$ is almost certain, so seeing another zero reveals almost no new information. The rare event $X=1$ is very surprising when it happens, but it happens so infrequently that its contribution to the average remains small.
+
+So the average uncertainty per symbol is only about
+
+$$0.011$$
+
+bits, far below the one-bit cost of a naive fixed code. This does not mean any single day can literally be encoded in $0.011$ bits. It means that over long sequences, the average cost per day can approach that number when the code is designed well.
+
+That is the real compression lesson. A source with highly unequal probabilities carries very little uncertainty per symbol, and entropy measures exactly how little.
 
 ### Kullback-Leibler Divergence
 
