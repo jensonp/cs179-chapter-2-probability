@@ -842,29 +842,102 @@ The observation of $Y$ leaves the distribution of $X$ unchanged, which is the op
 
 ### Pairwise Versus Mutual Independence
 
-Independence among more than two variables needs careful wording. Variables $X_1,\dots,X_n$ are mutually independent if every subcollection factorizes:
+Independence among more than two variables needs careful wording, because there are multiple strength levels that sound similar but are not equivalent.
+
+Variables $X_1,\dots,X_n$ are mutually independent if every subcollection factorizes:
 
 $$p(X_{i_1},\dots,X_{i_k})=\prod_{j=1}^k p(X_{i_j})$$
 
-for every subset of indices. Pairwise independence is weaker. It only requires each pair to be independent, not every triple or larger group.
+for every subset of indices $\{i_1,\dots,i_k\}$. In words: no matter which subset of variables you look at, their joint distribution is the product of their marginals.
 
-A standard counterexample makes the distinction explicit. Let $U$ and $V$ be independent fair bits, and define
+Pairwise independence is weaker. It only requires that every pair factorizes:
+
+$$p(X_i,X_j)=p(X_i)p(X_j)\qquad \text{for every } i \ne j.$$
+
+In words: looking at any single pair, observing one variable does not change the distribution of the other. But pairwise independence does not say anything about three-way or higher-order structure.
+
+A clean motive for caring about the distinction is that mutual independence is strong enough to reconstruct the full joint distribution from the marginals, while pairwise independence is not.
+
+If each $X_i$ is $d$-ary, then an unconstrained full joint table over $(X_1,\dots,X_n)$ has $d^n$ entries and one normalization constraint, so it has $d^n-1$ degrees of freedom. Under mutual independence, you only specify the $n$ marginal tables. Each marginal has $d-1$ degrees of freedom, so mutual independence reduces the parameter count to $n(d-1)$. Pairwise independence does not lead to an equally clean reduction, because it does not force a single global factorized form.
+
+Two explicit examples anchor the definitions.
+
+Example A (mutual independence). Let $H_1,H_2,H_3$ be three independent fair coin-flip indicators, where $H_i=1$ means heads and $H_i=0$ means tails. Because each flip is fair,
+
+$$p(H_i=1)=\frac{1}{2},\qquad p(H_i=0)=\frac{1}{2}.$$
+
+Mutual independence says the probability of any triple is the product of the three one-flip probabilities. For example,
+
+$$p(H_1=1,H_2=0,H_3=1)=p(H_1=1)p(H_2=0)p(H_3=1)=\frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}=\frac{1}{8}.$$
+
+It also implies every subcollection factorizes. For instance,
+
+$$p(H_1=1,H_2=0)=\frac{1}{4}=\frac{1}{2}\cdot\frac{1}{2}=p(H_1=1)p(H_2=0).$$
+
+Example B (pairwise independent but not mutually independent). Let $U$ and $V$ be independent fair bits:
+
+$$p(U=0)=p(U=1)=\frac{1}{2},\qquad p(V=0)=p(V=1)=\frac{1}{2},$$
+
+and define a third bit
 
 $$W = U \oplus V,$$
 
-their exclusive-or. The four possible triples are
+where $\oplus$ is exclusive-or: $W=1$ when the bits differ and $W=0$ when the bits are equal. The truth table is:
 
-$$(U,V,W) \in \{(0,0,0),(0,1,1),(1,0,1),(1,1,0)\},$$
+| $U$ | $V$ | $W=U \oplus V$ |
+|---|---|---|
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
 
-each with probability $1/4$. Every pair is independent: for instance, $p(U=0,V=0)=1/4=(1/2)(1/2)$, and the same factorization holds for $(U,W)$ and $(V,W)$. But the three variables are not mutually independent, because
+Because $(U,V)$ is uniform over its four possibilities, each triple row above occurs with probability $1/4$. So the joint distribution of $(U,V,W)$ is supported on exactly these four states, each with probability $1/4$.
 
-$$p(U=0,V=0,W=0)=\frac{1}{4}$$
+First compute the marginals. For $U$ and $V$, the marginals are still uniform by construction. For $W$, two of the four states have $W=0$ and two have $W=1$, so
 
-while the product of marginals would be
+$$p(W=0)=\frac{1}{2},\qquad p(W=1)=\frac{1}{2}.$$
+
+Now check pairwise independence explicitly.
+
+For the pair $(U,V)$, we have
+
+$$p(U=0,V=0)=\frac{1}{4}=\frac{1}{2}\cdot\frac{1}{2}=p(U=0)p(V=0),$$
+
+and the same factorization holds for the other three pairs of values, so $U$ and $V$ are independent.
+
+For the pair $(U,W)$, list the four joint outcomes of $(U,W)$ and their probabilities. From the truth table:
+
+- $(U,W)=(0,0)$ occurs in row $(U,V,W)=(0,0,0)$, so $p(U=0,W=0)=1/4$.
+- $(U,W)=(0,1)$ occurs in row $(0,1,1)$, so $p(U=0,W=1)=1/4$.
+- $(U,W)=(1,1)$ occurs in row $(1,0,1)$, so $p(U=1,W=1)=1/4$.
+- $(U,W)=(1,0)$ occurs in row $(1,1,0)$, so $p(U=1,W=0)=1/4$.
+
+So the $(U,W)$ joint table is
+
+| $U$ | $W$ | $p(U,W)$ |
+|---|---|---:|
+| 0 | 0 | 1/4 |
+| 0 | 1 | 1/4 |
+| 1 | 0 | 1/4 |
+| 1 | 1 | 1/4 |
+
+Since $p(U=u)=1/2$ and $p(W=w)=1/2$, every entry factorizes as
+
+$$p(U=u,W=w)=\frac{1}{4}=\frac{1}{2}\cdot\frac{1}{2}=p(U=u)p(W=w).$$
+
+So $U$ and $W$ are independent. By symmetry, the same is true for the pair $(V,W)$. Therefore $(U,V,W)$ are pairwise independent.
+
+However, they are not mutually independent, because the triple distribution does not factorize. For example,
+
+$$p(U=0,V=0,W=0)=\frac{1}{4},$$
+
+but the product of marginals would be
 
 $$p(U=0)p(V=0)p(W=0)=\frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}=\frac{1}{8}.$$
 
-The failure occurs because once two of the variables are known, the third is completely determined. Pairwise checks are therefore not enough to certify full mutual independence.
+So the equality required by mutual independence fails. The structural reason is that $W$ is a deterministic function of $(U,V)$: once you know $U$ and $V$, the value of $W$ is forced. This creates a three-way constraint that is invisible to any single pairwise marginal.
+
+Two common wrong notions are worth stating explicitly. First, "pairwise independent" does not mean "no dependence remains." It only rules out dependence that can be detected by looking at any one pair in isolation. Second, pairwise independence is not strong enough to justify multiplying three marginals to get a triple probability. The XOR example is exactly the case in which that intuition fails.
 
 ### Conditional Independence
 
@@ -875,6 +948,28 @@ $$p(X,Y \mid Z) = p(X \mid Z)p(Y \mid Z).$$
 Once $Z$ is known, $X$ and $Y$ stop giving extra information about each other.
 
 A good way to read this is as a statement about information flow. Before conditioning, $X$ and $Y$ may be correlated because they both respond to the hidden cause $Z$. After conditioning on $Z$, that common cause has been fixed, so the leftover association disappears. Conditional independence is therefore weaker than independence in general but often much more realistic in structured probabilistic models.
+
+An explicit numeric check shows what the factorization means mechanically. In the dentist model, let $Z=C$ (cavity), $X=T$ (toothache), and $Y=D$ (probe catch). The model claims
+
+$$p(T,D \mid C)=p(T \mid C)p(D \mid C).$$
+
+To check one entry, compute the left-hand side for the case $T=1$, $D=1$, and $C=1$ using the joint table:
+
+$$p(T=1,D=1 \mid C=1)=\frac{p(T=1,D=1,C=1)}{p(C=1)}=\frac{0.108}{0.20}=0.54.$$
+
+Now compute the two right-hand-side factors. From the same model,
+
+$$p(T=1 \mid C=1)=0.6,\qquad p(D=1 \mid C=1)=0.9.$$
+
+So the factorized right-hand side is
+
+$$p(T=1 \mid C=1)p(D=1 \mid C=1)=0.6\cdot 0.9=0.54,$$
+
+which matches the left-hand side exactly. A similar calculation holds for $C=0$:
+
+$$p(T=1,D=1 \mid C=0)=\frac{0.016}{0.80}=0.02,\qquad p(T=1 \mid C=0)p(D=1 \mid C=0)=0.1\cdot 0.2=0.02.$$
+
+This is the core meaning of conditional independence: once $C$ is fixed, the toothache information is already accounted for, so it does not further change the distribution of the probe outcome.
 
 ![Common-cause and explaining-away structures](../notes/02_probability_reconstructed/assets/figure_2_conditional_independence_structures.png)
 
@@ -1062,6 +1157,20 @@ $$F_X(x)=\mathbb{P}(X \le x).$$
 
 Every real-valued random variable has a CDF, whether it is discrete, continuous, or mixed. A PMF exists when probability is concentrated on isolated states. A PDF exists only when the distribution is absolutely continuous with respect to ordinary length or volume. So PMFs and PDFs are special representations, while the CDF always exists.
 
+An explicit discrete CDF example helps fix intuition. Suppose $X$ is Bernoulli with
+
+$$p(X=1)=0.3,\qquad p(X=0)=0.7.$$
+
+Then the CDF $F_X(x)=\mathbb{P}(X \le x)$ is a step function:
+
+| range | $F_X(x)$ |
+|---|---:|
+| $x<0$ | $0$ |
+| $0 \le x < 1$ | $0.7$ |
+| $x \ge 1$ | $1$ |
+
+The jump at $x=0$ has size $0.7$ because $p(X=0)=0.7$. The jump at $x=1$ adds the remaining $0.3$ mass. This is why CDFs are the most universal representation: they handle point masses (jumps) and continuous density (smooth rise) in one object.
+
 This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution can contain both an atom and a continuous part. For example, suppose
 
 $$\mathbb{P}(X=0)=0.7,$$
@@ -1127,6 +1236,16 @@ so the mean is $2$ and the standard deviation is $3$. About two-thirds of the ma
 $$\mu=(0,0)^T, \qquad \Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0,$$
 
 then the contours are ellipses stretched more strongly along the first coordinate than along the second. Off-diagonal covariance terms rotate those ellipses and encode correlation.
+
+An explicit off-diagonal example: let $\Sigma$ be the $2\times 2$ covariance matrix with
+
+$$\Sigma_{11}=1,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0.8.$$
+
+The correlation coefficient between coordinates is
+
+$$\mathrm{Corr}(X_1,X_2)=\frac{\Sigma_{12}}{\sqrt{\Sigma_{11}\Sigma_{22}}}=\frac{0.8}{\sqrt{1\cdot 1}}=0.8.$$
+
+So large values of $X_1$ tend to appear with large values of $X_2$, and the Gaussian contours are elongated along the diagonal direction $x_1 \approx x_2$. If instead $\Sigma_{12}$ were negative, the elongation would run along $x_1 \approx -x_2$. This is the geometric meaning of off-diagonal covariance: it couples the coordinates and rotates the principal axes of the density.
 
 ### Example 2-10: Bernoulli Exponential Family Form
 
@@ -1208,6 +1327,26 @@ $$h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\eta)=\log(1+e^\eta).$$
 
 For a Gaussian with known variance $\sigma^2$, one can write the density in exponential-family form with sufficient statistics $x$ and $x^2$. The point is not that every distribution looks identical, but that once the pieces are identified, the same structural tools apply across many families.
 
+A concrete reason the term sufficient statistics appears is that, for i.i.d. data, the likelihood depends on the data only through sums of these feature functions. If
+
+$$p(x;\theta)=h(x)\exp\!\bigl(\theta^T\phi(x)-A(\theta)\bigr),$$
+
+and $D=\{x^{(1)},\dots,x^{(m)}\}$ are i.i.d., then
+
+$$p(D;\theta)=\prod_{i=1}^m h(x^{(i)})\exp\!\bigl(\theta^T\phi(x^{(i)})-A(\theta)\bigr).$$
+
+Taking logs gives
+
+$$\log p(D;\theta)=\sum_{i=1}^m \log h(x^{(i)}) + \theta^T\left(\sum_{i=1}^m \phi(x^{(i)})\right) - mA(\theta).$$
+
+So the data influence the likelihood through the single vector
+
+$$S(D)=\sum_{i=1}^m \phi(x^{(i)}).$$
+
+That is the mechanical meaning of sufficiency here: once you know $S(D)$, the rest of the data values affect the likelihood only through the $\sum \log h(x^{(i)})$ term, which does not involve $\theta$ in many common families.
+
+For Bernoulli, $\phi(x)=x$, so $S(D)=\sum_i x^{(i)}$ is simply the number of ones in the sample. Two different sequences with the same number of ones, such as $D_1=\{1,0,1,0\}$ and $D_2=\{0,1,0,1\}$, have the same likelihood as a function of $\rho$ because both have $S(D)=2$ successes.
+
 ### Retain from 2.2
 
 - Every real-valued random variable has a CDF, but not every one has a density.
@@ -1269,6 +1408,16 @@ If we try three candidate parameters, we get
 $$p(D \mid 0.2)=0.032,\qquad p(D \mid 0.5)=0.125,\qquad p(D \mid 0.8)=0.128.$$
 
 So among those candidates, $\rho=0.8$ explains the observed data slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly.
+
+A common wrong notion is to treat $p(D \mid \rho)$ as if it were a probability distribution over $\rho$. It is not. One concrete way to see this is that it does not normalize over parameter space. For this data,
+
+$$p(D \mid \rho)=\rho^2(1-\rho).$$
+
+If we integrate this function over $\rho \in [0,1]$, we get
+
+$$\int_0^1 \rho^2(1-\rho)\,d\rho=\int_0^1 (\rho^2-\rho^3)\,d\rho=\left[\frac{\rho^3}{3}-\frac{\rho^4}{4}\right]_0^1=\frac{1}{3}-\frac{1}{4}=\frac{1}{12},$$
+
+not $1$. So likelihood is not meant to be "the probability that $\rho$ equals a value." Likelihood ranks parameters by data fit. To get a probability distribution over $\rho$, you must multiply by a prior and renormalize. For example, with a uniform prior $\rho \sim \mathrm{Beta}(1,1)$, the posterior is $\mathrm{Beta}(3,2)$, whose (normalized) density is proportional to the same kernel $\rho^2(1-\rho)$.
 
 ### Probability Versus Likelihood
 
@@ -1453,6 +1602,36 @@ and observe $D=\{1,0,1\}$. The posterior becomes
 $$\rho \mid D \sim \mathrm{Beta}(4,3).$$
 
 The prior contributes two pseudo-observations toward heads and two toward tails, while the real data contribute two heads and one tail. The posterior therefore behaves like a total of seven weighted observations.
+
+It is also worth computing the evidence term once, because it is often treated as mysterious. Here the likelihood kernel is
+
+$$p(D \mid \rho)=\rho^2(1-\rho),$$
+
+and the $\mathrm{Beta}(2,2)$ prior density is
+
+$$p(\rho)=6\rho(1-\rho).$$
+
+So the unnormalized posterior is
+
+$$p(D \mid \rho)p(\rho)=6\rho^3(1-\rho)^2.$$
+
+The evidence is the integral of this quantity:
+
+$$p(D)=\int_0^1 6\rho^3(1-\rho)^2\,d\rho.$$
+
+Expand the polynomial and integrate term by term:
+
+$$\int_0^1 \rho^3(1-\rho)^2\,d\rho=\int_0^1 (\rho^3-2\rho^4+\rho^5)\,d\rho=\left[\frac{1}{4}-\frac{2}{5}+\frac{1}{6}\right]=\frac{1}{60}.$$
+
+Therefore
+
+$$p(D)=6\cdot \frac{1}{60}=\frac{1}{10}.$$
+
+Dividing the unnormalized posterior by $p(D)$ gives the normalized posterior density:
+
+$$p(\rho \mid D)=\frac{6\rho^3(1-\rho)^2}{1/10}=60\rho^3(1-\rho)^2,$$
+
+which is exactly the $\mathrm{Beta}(4,3)$ density. So the evidence is simply the normalization constant that makes the posterior integrate to one.
 
 ### Example 2-18: Beta-Bernoulli Conjugacy
 
