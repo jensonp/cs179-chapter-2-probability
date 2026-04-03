@@ -2164,9 +2164,9 @@ So Beta is not a new model for coin-flip outcomes themselves. It is a model for 
 
 The Beta density is
 
-$$p(\rho)=\mathrm{Beta}(\rho;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\rho^{a-1}(1-\rho)^{b-1}, \qquad 0 \le \rho \le 1,$$
+$$p(\rho)=\mathrm{Beta}(\rho;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\rho^{a-1}(1-\rho)^{b-1}.$$
 
-where $a>0$ and $b>0$ are shape parameters.
+This formula applies on the interval from $0$ to $1$, and the shape parameters satisfy $a>0$ and $b>0$.
 
 The symbol $\Gamma$ is the Gamma function. For positive integers it satisfies
 
@@ -2217,26 +2217,48 @@ This is also the place to explain why boundary spikes are not a paradox. When ei
 
 Two summary formulas are useful after the intuition is in place.
 
-The mean is $\mathbb{E}[\rho]=\frac{a}{a+b}$.
+The mean is
+
+$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
 
 So the ratio $a:b$ controls which side of the interval is favored.
 
-When $a>1$ and $b>1$, the mode is $\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}$.
+When both shape parameters are greater than $1$, the mode is
+
+$$\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}.$$
 
 This is the location of the peak when the density has a genuine interior maximum. The condition matters: if one of the parameters is at most $1$, the density may peak at a boundary instead, so the interior mode formula no longer applies.
 
-The second structural quantity is the total concentration $a+b$.
+The second structural quantity is the total concentration
+
+$$a+b.$$
 
 Here the two parameters play two different roles, and it is worth separating them carefully.
 
-- The **ratio** $a:b$ controls which values of $\rho$ are favored relative to each other. If $a=b$, the distribution is symmetric around $0.5$. If $a>b$, values closer to $1$ receive more weight than values closer to $0$. If $a<b$, the situation reverses.
-- The **sum** $a+b$ controls how strongly that preference is enforced. Increasing $a+b$ while keeping the ratio fixed makes the density more concentrated around its central region. Decreasing $a+b$ while keeping the ratio fixed makes the density more spread out.
+- The **ratio** of the two parameters controls which success probabilities are favored relative to each other. If the parameters are equal, the distribution is symmetric around $0.5$. If the first parameter is larger, values closer to $1$ receive more weight than values closer to $0$. If the second parameter is larger, the situation reverses.
+- The **sum** of the two parameters controls how strongly that preference is enforced. Increasing the sum while keeping the ratio fixed makes the density more concentrated around its central region. Decreasing the sum while keeping the ratio fixed makes the density more spread out.
 
-One way to see this is through the mean $\mathbb{E}[\rho]=\frac{a}{a+b}$.
+One way to see this is through the mean formula
 
-If we multiply both parameters by the same constant, this mean stays fixed, because the ratio $a/(a+b)$ does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
+$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
 
-For example, $\mathrm{Beta}(2,2)$ and $\mathrm{Beta}(20,20)$ are both centered at $0.5$, because in both cases $\frac{a}{a+b}=0.5$.
+If we multiply both parameters by the same constant, this mean stays fixed, because the ratio
+
+$$\frac{a}{a+b}$$
+
+does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
+
+For example, compare the two distributions
+
+$$\mathrm{Beta}(2,2)$$
+
+and
+
+$$\mathrm{Beta}(20,20).$$
+
+They are both centered at $0.5$, because in both cases
+
+$$\frac{a}{a+b}=0.5.$$
 
 But $\mathrm{Beta}(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
 
