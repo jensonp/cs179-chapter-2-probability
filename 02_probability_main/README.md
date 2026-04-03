@@ -2084,75 +2084,152 @@ Adding the same constant to both coordinates changes the raw scores by the same 
 
 ### Beta and Dirichlet Distributions
 
-The next question is natural: if a Bernoulli or categorical model has an unknown probability parameter, what distribution should we place on that parameter itself?
+The next question is different from all the examples so far. Up to this point, the random variable was usually an observed outcome such as a coin flip, a die roll, or a measurement. Now we want a distribution over a **parameter**.
 
-For a Bernoulli model, the unknown parameter is a single number $\rho$ in the interval $[0,1]$. The standard prior family on such a quantity is the Beta distribution:
+For a Bernoulli model, the parameter is
+
+$$\rho=\mathbb{P}(X=1).$$
+
+This number is itself constrained:
+
+$$0 \le \rho \le 1.$$
+
+So if we want a probability distribution over possible values of $\rho$, we need a density whose support is the interval $[0,1]$. The standard family for that job is the Beta distribution.
+
+That is the first conceptual point to keep explicit:
+
+- Bernoulli is a distribution over outcomes $X \in \{0,1\}$.
+- Beta is a distribution over possible Bernoulli parameters $\rho \in [0,1]$.
+
+So Beta is not a new model for coin-flip outcomes themselves. It is a model for uncertainty about the coin's success probability.
+
+The Beta density is
 
 $$p(\rho)=\mathrm{Beta}(\rho;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\rho^{a-1}(1-\rho)^{b-1}, \qquad 0 \le \rho \le 1,$$
 
-with shape parameters $a>0$ and $b>0$.
+where $a>0$ and $b>0$ are shape parameters.
 
-The support condition matters. This density is only defined on $[0,1]$ because $\rho$ is a probability. Outside that interval the density is zero. The Gamma-function ratio is the normalization constant that makes the total area under the curve equal to one.
+The Gamma-function ratio is only a normalization constant. Its job is to make the total area equal to one:
 
-Before worrying about the full formula, it helps to know what the parameters do qualitatively.
+$$\int_0^1 p(\rho)\,d\rho=1.$$
 
-- The ratio $a:b$ controls which part of $[0,1]$ is favored.
-- The sum $a+b$ controls how concentrated the prior is.
+For understanding the shape of the distribution, the most important part is the factor
 
-Two especially important summaries are
+$$\rho^{a-1}(1-\rho)^{b-1}.$$
 
-$$\mathbb{E}[\rho]=\frac{a}{a+b}$$
+That factor tells us how the density behaves near $0$, near $1$, and in between.
 
-and, when $a>1$ and $b>1$, the interior mode
+Several vocabulary words need to be made explicit before going further.
 
-$$\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}.$$
+- The **interior** of $[0,1]$ means the values strictly between $0$ and $1$.
+- The **boundaries** are the endpoints $0$ and $1$.
+- **Unimodal** means the density has one main peak.
+- The **mode** is the point where the density is largest.
 
-So $a$ and $b$ can be read as directional counts that pull the density toward one side or the other.
+So if someone says "the Beta density is unimodal and places mass in the interior," they mean the curve has one peak somewhere between $0$ and $1$, rather than piling up at one or both endpoints.
 
-Here are the most important shape regimes.
+Before the general formulas, it is best to build intuition from concrete examples.
 
-- If $a=b=1$, then the density is constant on $[0,1]$, so Beta$(1,1)$ is the uniform distribution on that interval.
-- If $a,b>1$, the density is pushed toward the interior and usually has one peak.
-- If one parameter is less than $1$, the density can spike near the corresponding boundary.
-- If both are less than $1$, the density can concentrate near both boundaries, favoring extreme probabilities.
+First example: uniform uncertainty.
 
-Those boundary spikes do not violate any probability rule. A density can become very large near a point as long as its integral over the whole support remains one.
+If
 
-A concrete example helps. If
+$$a=b=1,$$
+
+then
+
+$$p(\rho)=1 \qquad \text{for } 0 \le \rho \le 1.$$
+
+So Beta$(1,1)$ is just the uniform distribution on $[0,1]$. This says every equal-length interval of possible probabilities receives the same prior mass. It does **not** say every exact value of $\rho$ is equally likely as a point event, because point probabilities are zero in continuous distributions.
+
+Second example: one interior peak.
+
+If
+
+$$\rho \sim \mathrm{Beta}(5,5),$$
+
+then the density is symmetric around $0.5$ and has a single peak near the center. This is what "unimodal" means in this context: there is one bell-like high region rather than two separated spikes. This prior expresses the belief that values near $0.5$ are more plausible than values near $0$ or $1$.
+
+Third example: favoring one side.
+
+If
 
 $$\rho \sim \mathrm{Beta}(2,5),$$
 
-then
+then the mean is
 
 $$\mathbb{E}[\rho]=\frac{2}{7}\approx 0.286.$$
 
-So before seeing data, this prior says values below $0.5$ are more plausible than values above $0.5$. By contrast, if
+So this prior leans toward smaller probabilities. In plain language, it says "before seeing data, I regard success probabilities below one-half as more plausible than success probabilities above one-half."
 
-$$\rho \sim \mathrm{Beta}(20,20),$$
+Fourth example: favoring extremes.
 
-then
+If
 
-$$\mathbb{E}[\rho]=\frac{20}{40}=0.5,$$
+$$\rho \sim \mathrm{Beta}(0.3,0.3),$$
 
-but the much larger total concentration $20+20=40$ means the density is tightly concentrated near $0.5$. So these two priors can have the same central tendency while expressing very different certainty.
+then the density is high near $0$ and near $1$, and relatively low in the middle. This says the coin is believed to be more likely strongly biased than close to fair.
 
-The Dirichlet distribution is the categorical analogue of Beta. If a categorical variable has $d$ possible outcomes, then its parameter is a probability vector
+This is also the place to explain why boundary spikes are not a paradox. When either shape parameter is below $1$, the density can become very large near $0$ or $1$. That does not violate probability rules, because a density value is not itself a probability. What matters is the area under the curve over an interval, and that total area remains finite and equal to one.
 
-$$\theta=(\theta_1,\ldots,\theta_d)$$
+Two summary formulas are useful after the intuition is in place.
 
-with
+The mean is
+
+$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
+
+So the ratio $a:b$ controls which side of the interval is favored.
+
+When
+
+$$a>1 \qquad \text{and} \qquad b>1,$$
+
+the mode is
+
+$$\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}.$$
+
+This is the location of the peak when the density has a genuine interior maximum. The condition matters: if one of the parameters is at most $1$, the density may peak at a boundary instead, so the interior mode formula no longer applies.
+
+The second structural quantity is the total concentration
+
+$$a+b.$$
+
+Roughly speaking:
+
+- the ratio $a:b$ says **where** the distribution is centered;
+- the sum $a+b$ says **how tightly** it is concentrated around that preference.
+
+For example,
+
+$$\mathrm{Beta}(2,2) \qquad \text{and} \qquad \mathrm{Beta}(20,20)$$
+
+are both centered at $0.5$, because in both cases
+
+$$\frac{a}{a+b}=0.5.$$
+
+But Beta$(20,20)$ is much more concentrated near $0.5$. So the first prior says "probably around fair, but with a lot of uncertainty," while the second says "strongly concentrated near fair."
+
+The Dirichlet distribution is the multi-state version of this same idea.
+
+Suppose a categorical variable has $d$ possible outcomes. Then its parameter is not one number but a probability vector
+
+$$\theta=(\theta_1,\ldots,\theta_d),$$
+
+where each coordinate is nonnegative and all coordinates sum to one:
 
 $$\theta_j \ge 0 \quad \text{for all } j, \qquad \sum_{j=1}^d \theta_j=1.$$
 
-The set of all such vectors is called the simplex. For $d=3$, a point on the simplex could be
+So for a three-outcome variable, a legal parameter might be
 
 $$\theta=(0.2,0.5,0.3).$$
 
-Once the first two coordinates are chosen, the third is forced to be
+The set of all such probability vectors is called the simplex. In the three-state case, the simplex is a filled triangle. Each point inside that triangle represents one legal categorical probability table.
 
-$$1-0.2-0.5=0.3.$$
+The reason the simplex has one fewer free dimension than the number of coordinates is normalization. Once two coordinates are chosen, the last one is forced. In the example above,
 
-That is why the simplex has one fewer free dimension than the number of coordinates.
+$$\theta_3=1-0.2-0.5=0.3.$$
+
+So even though the vector has three entries, only two of them are independent.
 
 The Dirichlet density is
 
@@ -2162,12 +2239,13 @@ where
 
 $$\alpha_0=\sum_{j=1}^d \alpha_j.$$
 
-The vector $\alpha=(\alpha_1,\ldots,\alpha_d)$ plays the same two roles that $(a,b)$ played for Beta:
+This looks more complicated than Beta only because there are more coordinates. Conceptually it plays the same role:
 
+- it is a distribution over possible categorical probability tables;
 - the relative sizes of the $\alpha_j$ values say which categories are favored;
-- the total concentration $\alpha_0$ says how strongly the mass is pulled away from the boundaries.
+- the total concentration $\alpha_0$ says how tightly the mass is pulled toward or away from the center.
 
-The coordinate-wise posterior mean is
+The coordinate-wise mean is
 
 $$\mathbb{E}[\theta_j]=\frac{\alpha_j}{\alpha_0}.$$
 
@@ -2175,29 +2253,37 @@ So if
 
 $$\alpha=(8,2,2),$$
 
-then the prior mean is
+then
 
-$$\left(\frac{8}{12},\frac{2}{12},\frac{2}{12}\right)=\left(\frac{2}{3},\frac{1}{6},\frac{1}{6}\right).$$
+$$\mathbb{E}[\theta]=\left(\frac{8}{12},\frac{2}{12},\frac{2}{12}\right)=\left(\frac{2}{3},\frac{1}{6},\frac{1}{6}\right).$$
 
-That prior says the first category is expected to dominate. If instead
+That prior says the first category is expected to be much more common than the other two.
+
+If instead
 
 $$\alpha=(2,2,2),$$
 
-the prior mean is symmetric:
+then
 
-$$\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right).$$
+$$\mathbb{E}[\theta]=\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right).$$
 
-If we keep the same proportions but increase concentration to
+So the prior is symmetric across categories.
+
+Now compare concentration while keeping the same proportions. If we increase to
 
 $$\alpha=(20,20,20),$$
 
-the mean stays at the center while the distribution becomes much more concentrated there. If we decrease concentration to
+the mean stays
+
+$$\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right),$$
+
+but the distribution becomes much more concentrated near the center of the simplex. If we decrease to
 
 $$\alpha=(0.2,0.2,0.2),$$
 
-the mass is pushed toward corners and edges, favoring sparse probability vectors in which one category gets most of the mass.
+the mass is pushed toward corners and edges. In plain language, that means the prior prefers sparse probability vectors in which one category gets most of the mass.
 
-For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution, so Beta is not a separate idea; it is the two-category simplex case.
+For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution. So Beta is not a separate disconnected topic. It is simply the two-category version of the same family.
 
 <table align="center" border="0" cellpadding="0" cellspacing="12">
   <tbody>
@@ -2212,9 +2298,9 @@ For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution, 
   </tbody>
 </table>
 
-The Beta grid makes the parameter effects explicit: symmetric parameters above one create a peak in the middle, while parameters below one push mass toward the boundaries. The Dirichlet simplex panels show the same phenomenon in two free dimensions. Mass near the center means balanced proportions; mass near an edge or corner means one or more coordinates dominate.
+The Beta grid makes the parameter effects explicit. Curves with parameters above one usually have a single interior peak. Curves with parameters below one can pile up near the boundaries. The Dirichlet simplex panels show the same phenomenon in the multi-category setting: mass near the center means balanced proportions, while mass near an edge or corner means one or more categories dominate.
 
-A full prior example helps fix intuition. Suppose $\rho$ is the head probability of a coin. A prior
+A final pair of coin examples fixes the interpretation. Suppose $\rho$ is the head probability of a coin. A prior
 
 $$\rho \sim \mathrm{Beta}(20,20)$$
 
@@ -2222,17 +2308,27 @@ encodes a strong belief that the coin is close to fair, because the mass is tigh
 
 $$\rho \sim \mathrm{Beta}(0.3,0.3)$$
 
-puts much more mass near $0$ and $1$, expressing the belief that the coin is likely to be strongly biased in one direction or the other. In the Dirichlet case, the same logic applies to a probability vector rather than a single number: large, balanced concentration parameters favor interior balanced proportions, while small concentration parameters favor sparse near-corner probability vectors.
+puts much more mass near $0$ and $1$, expressing the belief that the coin is likely to be strongly biased in one direction or the other. In the Dirichlet case, the same logic applies to a probability vector rather than a single number: large, balanced concentration parameters favor balanced interior probability tables, while small concentration parameters favor sparse near-corner tables.
 
 ### The Exponential Family
 
 The exponential family is a modeling template, not one specific distribution. Its purpose is to expose a shared algebraic structure that appears in Bernoulli, categorical, Gaussian, Poisson, Gamma, Beta, Dirichlet, and many other common models.
 
+The phrase "family" matters here. It means a collection of distributions indexed by parameters. The phrase "exponential family" means this collection can be written in a common exponential-shaped algebraic form. The value of that form is not aesthetic. It lets many different models share the same optimization and inference machinery.
+
 The general form is
 
 $$p_{\theta}(x)=h(x)\exp\left(\theta^{\top}\phi(x)-A(\theta)\right).$$
 
-Every symbol in that expression has a specific role.
+Before unpacking symbols, say what stays fixed and what changes.
+
+- The observation $x$ is the realized data value.
+- The model family fixes the functions $h(x)$ and $\phi(x)$ ahead of time.
+- The parameter $\theta$ is what moves from one member of the family to another.
+
+So the family is "all distributions obtained by varying $\theta$ while keeping the structural form fixed."
+
+Every symbol in the expression has a specific role.
 
 - $x$ is the observed value.
 - $\phi(x)$ is a fixed feature vector computed from $x$. Its components are called sufficient statistics.
@@ -2246,12 +2342,7 @@ $$A(\theta)=\log \int h(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx,$$
 
 with the integral replaced by a sum in discrete settings.
 
-There are two important "what changes and what stays fixed" points here.
-
-- When we fit the model, $\theta$ changes.
-- The feature map $\phi(x)$ is fixed by the model family ahead of time.
-
-So an exponential family is a family whose log-density is linear in a fixed set of features of the data. That is the structural reason it behaves so well analytically.
+This definition is abstract, so the interpretation should be stated plainly. The log-density is linear in the fixed feature vector $\phi(x)$, while the function $A(\theta)$ is the correction term that makes the whole expression normalize properly. That is why exponential-family models are so tractable: all the nontrivial dependence on the parameter is concentrated into a relatively clean algebraic form.
 
 Bernoulli is the simplest example. From the previous subsection,
 
