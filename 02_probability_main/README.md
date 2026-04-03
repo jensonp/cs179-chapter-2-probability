@@ -1666,15 +1666,124 @@ One structural limit should also be stated explicitly: a continuous uniform dist
 
 ### Gaussian Distributions
 
-The Gaussian distribution is one of the most important continuous families. In one dimension,
+The Gaussian distribution is one of the most important continuous families because it appears whenever many small effects combine, whenever measurement noise is modeled, and whenever we want a smooth bell-shaped distribution controlled by a center and a spread.
+
+Before writing the formula, it helps to say what kind of object we are describing. A one-dimensional Gaussian is a continuous distribution on the whole real line. So:
+
+- the variable can in principle take any real value $x \in \mathbb{R}$,
+- single points still have probability zero,
+- and probabilities come from integrating the density over intervals.
+
+What makes the Gaussian special is its shape: it is symmetric around a central value, highest at the center, and decreases smoothly as we move away from that center.
+
+In one dimension, the density is
 
 $$p(x) = \mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).$$
 
-In multiple dimensions,
+Every symbol should be read explicitly:
+
+- $x$ is the location where we evaluate the density,
+- $\mu$ is the mean, which sets the center of the bell curve,
+- $\sigma^2$ is the variance, which measures spread,
+- $\sigma$ is the standard deviation, so $\sigma=\sqrt{\sigma^2}$,
+- the prefactor $\frac{1}{\sqrt{2\pi\sigma^2}}$ is the normalization constant,
+- and the exponential term controls how fast the density decays as $x$ moves away from $\mu$.
+
+The formula becomes much easier to interpret if we read the exponent first:
+
+$$-\frac{(x-\mu)^2}{2\sigma^2}.$$
+
+The numerator $(x-\mu)^2$ is the squared distance from $x$ to the mean. So the farther $x$ is from $\mu$, the more negative the exponent becomes, and the smaller the density becomes. The denominator $2\sigma^2$ controls how quickly that decay happens. Large $\sigma^2$ means the penalty for being far from the mean is weaker, so the curve is wider. Small $\sigma^2$ means the penalty is stronger, so the curve is narrower.
+
+Three basic facts follow immediately from the formula.
+
+First, the density is symmetric around $\mu$, because replacing $(x-\mu)$ by $-(x-\mu)$ does not change the square:
+
+$$p(\mu+a)=p(\mu-a).$$
+
+Second, the density is largest at $x=\mu$, because that is where the squared term is smallest, namely zero:
+
+$$p(\mu)=\frac{1}{\sqrt{2\pi\sigma^2}}.$$
+
+Third, two values that are the same number of standard deviations away from the mean have the same density. This is easiest to see by standardizing:
+
+$$z=\frac{x-\mu}{\sigma}.$$
+
+Then the exponent becomes $-z^2/2$, so the Gaussian really depends on distance from the mean measured in standard-deviation units.
+
+It is also important not to misread the density value. Even though $p(\mu)$ is the highest point on the curve, it is **not** the probability that $X=\mu$. For a continuous Gaussian,
+
+$$\mathbb{P}(X=\mu)=0.$$
+
+The height of the curve tells us relative density, not point probability.
+
+A full one-dimensional example makes the parameters concrete. Suppose
+
+$$X \sim \mathcal{N}(2,9).$$
+
+Then
+
+- the mean is $\mu=2$,
+- the variance is $\sigma^2=9$,
+- and the standard deviation is $\sigma=3$.
+
+So the curve is centered at $2$, and one standard deviation corresponds to moving $3$ units left or right. The interval within one standard deviation of the mean is therefore
+
+$$[\mu-\sigma,\mu+\sigma]=[2-3,2+3]=[-1,5].$$
+
+For a Gaussian, about $68\%$ of the total probability lies in that interval. About $95\%$ lies within two standard deviations, namely in
+
+$$[2-6,2+6]=[-4,8],$$
+
+and about $99.7\%$ lies within three standard deviations, namely in
+
+$$[2-9,2+9]=[-7,11].$$
+
+These are approximation rules rather than exact identities, but they are fundamental for intuition. They say that the standard deviation is not just an abstract parameter; it gives a direct spatial scale for where most of the probability mass sits.
+
+The normalization constant also deserves a brief explanation. The exponential term by itself gives the bell shape, but it does not automatically integrate to one. The factor
+
+$$\frac{1}{\sqrt{2\pi\sigma^2}}$$
+
+rescales the curve so that the total area under it over the whole real line is exactly one:
+
+$$\int_{-\infty}^{\infty} p(x)\,dx=1.$$
+
+So the Gaussian formula should be read as "bell-shaped decay" multiplied by "whatever constant is needed to make this a valid density."
+
+In multiple dimensions, the same idea reappears with vectors and matrices. The density is
 
 $$p(x) = \mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2} |\Sigma|^{-1/2} \exp\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right).$$
 
-The mean vector $\mu$ sets the center, and the covariance matrix $\Sigma$ sets the shape and spread. The quadratic term $(x-\mu)^T \Sigma^{-1}(x-\mu)$ is the squared Mahalanobis distance from $x$ to the mean, measured in the geometry induced by $\Sigma$. In two dimensions, the level sets of constant density are ellipses; in higher dimensions, they are ellipsoids. For this formula to define a proper density, $\Sigma$ must be symmetric and positive definite, so that the quadratic form is nonnegative, the inverse exists, and the determinant term $|\Sigma|^{-1/2}$ is well-defined.
+Again, every object has a specific role:
+
+- $x$ is now an $n$-dimensional vector,
+- $\mu$ is the mean vector, which sets the center of the cloud,
+- $\Sigma$ is the covariance matrix, which sets spread and dependence,
+- $|\Sigma|$ is the determinant of the covariance matrix,
+- and the quadratic term
+
+$$
+(x-\mu)^T \Sigma^{-1}(x-\mu)
+$$
+
+is the squared Mahalanobis distance from $x$ to the mean.
+
+Mahalanobis distance means distance measured in the geometry of the covariance structure rather than ordinary Euclidean distance. If a direction has large variance, then moving in that direction is less surprising, so the density decays more slowly there. If a direction has small variance, moving the same Euclidean amount is more surprising, so the density decays more quickly there.
+
+In two dimensions, the sets of points with equal density are ellipses. In higher dimensions, they are ellipsoids. So the multivariate Gaussian is still a bell-shaped distribution, but now the bell can be stretched, compressed, and rotated.
+
+The covariance matrix $\Sigma$ contains two kinds of information:
+
+- diagonal entries such as $\Sigma_{11}$ and $\Sigma_{22}$ are variances of individual coordinates,
+- off-diagonal entries such as $\Sigma_{12}$ are covariances that describe how coordinates move together.
+
+For this formula to define a proper density, $\Sigma$ must be symmetric and positive definite. Each condition matters:
+
+- symmetric means $\Sigma_{ij}=\Sigma_{ji}$, which is required of covariance matrices,
+- positive definite means $v^T\Sigma v > 0$ for every nonzero vector $v$,
+- that guarantees the inverse $\Sigma^{-1}$ exists,
+- and it guarantees the quadratic form is positive, so the exponential decays rather than exploding.
 
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_1_gaussian.png" alt="Gaussian distribution plots" width="860">
@@ -1686,11 +1795,15 @@ A concrete one-dimensional example is
 
 $$X \sim \mathcal{N}(2, 9),$$
 
-so the mean is $2$ and the standard deviation is $3$. About two-thirds of the mass lies within one standard deviation of the mean, namely in the interval $[-1,5]$, and almost all of the mass lies within a few standard deviations. In two dimensions, if
+so the mean is $2$ and the standard deviation is $3$. About two-thirds of the mass lies within one standard deviation of the mean, namely in the interval $[-1,5]$, and almost all of the mass lies within a few standard deviations.
+
+Now move to two dimensions. If
 
 $$\mu=(0,0)^T, \qquad \Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0,$$
 
-then the contours are ellipses stretched more strongly along the first coordinate than along the second. Off-diagonal covariance terms rotate those ellipses and encode correlation.
+then the first coordinate has variance $4$ and the second coordinate has variance $1$. So the spread in the first direction is larger than the spread in the second direction. That is why the contours are ellipses stretched more strongly along the first coordinate than along the second.
+
+Because the off-diagonal terms are zero in this example, there is no rotational tilt. The principal axes of the ellipse line up with the coordinate axes.
 
 An explicit off-diagonal example: let $\Sigma$ be the $2\times 2$ covariance matrix with
 
@@ -1700,7 +1813,23 @@ The correlation coefficient between coordinates is
 
 $$\mathrm{Corr}(X_1,X_2)=\frac{\Sigma_{12}}{\sqrt{\Sigma_{11}\Sigma_{22}}}=\frac{0.8}{\sqrt{1\cdot 1}}=0.8.$$
 
-So large values of $X_1$ tend to appear with large values of $X_2$, and the Gaussian contours are elongated along the diagonal direction $x_1 \approx x_2$. If instead $\Sigma_{12}$ were negative, the elongation would run along $x_1 \approx -x_2$. This is the geometric meaning of off-diagonal covariance: it couples the coordinates and rotates the principal axes of the density.
+This means the two coordinates tend to move together. So large values of $X_1$ tend to appear with large values of $X_2$, and small values of $X_1$ tend to appear with small values of $X_2$. Geometrically, the Gaussian contours are elongated along the diagonal direction
+
+$$x_1 \approx x_2.$$
+
+If instead $\Sigma_{12}$ were negative, then large values of one coordinate would tend to appear with small values of the other, and the elongation would run along
+
+$$x_1 \approx -x_2.$$
+
+This is the geometric meaning of off-diagonal covariance: it couples the coordinates and rotates the principal axes of the density.
+
+The main mastery-level takeaway is that a Gaussian is not just "the bell curve formula." It is a model whose parameters have direct geometric meaning:
+
+- the mean says where the mass is centered,
+- the variance says how widely the mass is spread,
+- and the covariance matrix says how the cloud is stretched and rotated in multiple dimensions.
+
+That is why Gaussians appear everywhere in probability, statistics, and AI. They are mathematically tractable, but they are also unusually interpretable.
 
 ### Example 2-10: Bernoulli Exponential Family Form
 
