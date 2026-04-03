@@ -178,9 +178,9 @@ For a discrete random variable, the probability mass function, or PMF, is the fu
 
 $$p(X=x)=\mathbb{P}(X=x).$$
 
-So a PMF is not a new kind of probability. It is simply the probability of the event $X=x$, viewed as a function of the value $x$.
+So a PMF is not a second probability law layered on top of ordinary probability. It is the same event probability $\mathbb{P}(X=x)$, written in a way that emphasizes how the value changes as the state $x$ changes.
 
-In beginner language, a PMF is just a probability table written as a function. For example, if a three-state weather variable has
+In beginner language, a PMF can be viewed as a probability table written in function form. For example, if a three-state weather variable has
 
 $$p(X=\text{sun})=0.5,\qquad p(X=\text{cloud})=0.3,\qquad p(X=\text{rain})=0.2,$$
 
@@ -196,7 +196,7 @@ For example, if the realized weather state is rain, then
 
 $$\mathbf{1}[X=\text{sun}]=0,\qquad \mathbf{1}[X=\text{cloud}]=0,\qquad \mathbf{1}[X=\text{rain}]=1.$$
 
-So indicator notation is not mysterious symbolism. It is just a numerical way to mark which statement is true in the realized outcome.
+So indicator notation is not a separate probabilistic concept. It is a bookkeeping device that converts a yes-or-no statement into the numbers $1$ or $0$, which lets one formula select the correct term automatically.
 
 ### Example 2-2: Bernoulli Distribution
 
@@ -230,11 +230,11 @@ If $X=0$, then
 
 $$\rho^X(1-\rho)^{1-X} = \rho^0(1-\rho)^1 = 1-\rho.$$
 
-So the compact formula is not magic notation; it is just a switch that selects the correct probability for the realized binary outcome.
+So the compact formula is not hiding any extra mechanism. The exponents are acting as selectors: the factor attached to the realized state is kept with exponent $1$, while the factor attached to the unrealized state is neutralized by exponent $0$.
 
 ### Example 2-3: Discrete Distribution
 
-If $X \in \{1,\dots,d\}$, then a discrete distribution is just a probability table:
+If $X \in \{1,\dots,d\}$, then a discrete distribution can be represented by a probability table:
 
 $$\mathbb{P}(X=i) = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.$$
 
@@ -389,7 +389,7 @@ $$p(T=0) = \sum_{d,c} p(T=0,D=d,C=c)$$
 
 $$= 0.576 + 0.008 + 0.144 + 0.072 = 0.80.$$
 
-Marginalization is just "add all ways the event can happen."
+This is the operational meaning of marginalization: keep the value of interest fixed, and sum over every possible value of the hidden variables that could accompany it.
 
 A second marginal shows the same procedure from another angle. To compute the chance of a cavity, sum every row with $C=1$:
 
@@ -429,13 +429,13 @@ In this formula, the hypothesis is the value of $C$, meaning the statement "the 
 
 Before using shorthand language, it helps to name each term explicitly. The prior is $p(C=c)$, which is the probability assigned to the cavity-state hypothesis before seeing the probe observation. The likelihood is $p(D=d \mid C=c)$, which measures how compatible the observed probe result is with that cavity state. The evidence is $p(D=d)$, which is the total probability of seeing that probe result after averaging over every cavity case. The posterior is $p(C=c \mid D=d)$, which is the updated probability of the cavity state after the probe result has been taken into account.
 
-The word posterior should not feel like a new mysterious object. It is just a conditional probability, using the same conditioning idea introduced earlier in the chapter. The only difference is what is being conditioned on. Earlier we conditioned one ordinary event on another ordinary event. Here we are conditioning a hypothesis about the cavity state on observed evidence from the probe result. So "posterior" means "the probability after the observation has been incorporated."
+The word posterior does not name a new kind of probability rule. It is an ordinary conditional probability, using the same conditioning idea introduced earlier in the chapter. The only difference is the roles of the events. Earlier we conditioned one observable event on another observable event. Here we condition a hypothesis about the cavity state on the observed probe result. So "posterior" means the probability of the hypothesis after the observation has been taken into account.
 
 With those names in place, the formula can be read as the sentence
 
 $$\text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}.$$
 
-This sentence is only a mnemonic for the roles played by the four terms. It is not a second formula that must be memorized separately. It simply says that the updated belief equals the old belief, reweighted by how strongly the data supports that hypothesis, and then normalized by the total probability of the observation.
+This sentence is only a mnemonic for the roles played by the four terms. It is not a second formula that must be memorized separately. What it means operationally is: start from the old hypothesis probability, multiply by how compatible the observation is with that hypothesis, and then divide by the total probability of the observation so the final answers across all hypotheses sum to one.
 
 To describe the odds form, suppose $H_1$ and $H_0$ are two mutually exclusive hypotheses, meaning two competing explanations that cannot both be true at the same time. Let $E$ denote the observed evidence. Bayes' rule then implies
 
@@ -878,7 +878,7 @@ This reduction is the main motive for using independence or conditional independ
 
 ### Example 2-7: Independence
 
-Let $X$ be a biased coin and $Y$ a weighted four-sided die. If they are independent, then the joint is just the product of the marginals.
+Let $X$ be a biased coin and $Y$ a weighted four-sided die. If they are independent, then every joint entry is obtained by multiplying one marginal probability from $X$ with one marginal probability from $Y$. Independence means the probability assigned to a pair $(x,y)$ factors into the probability of $x$ alone and the probability of $y$ alone.
 
 <table align="center" border="0" cellpadding="0" cellspacing="16">
   <tbody>
@@ -2142,7 +2142,7 @@ then
 
 $$p(\rho)=1 \qquad \text{for } 0 \le \rho \le 1.$$
 
-So Beta$(1,1)$ is just the uniform distribution on $[0,1]$. This says every equal-length interval of possible probabilities receives the same prior mass. It does **not** say every exact value of $\rho$ is equally likely as a point event, because point probabilities are zero in continuous distributions.
+So Beta$(1,1)$ is the uniform distribution on $[0,1]$. This means equal-length intervals of possible probabilities receive equal prior mass. It does **not** mean that a single exact value of $\rho$ has positive probability as a point event, because continuous distributions assign probability through interval area rather than point mass.
 
 Second example: one interior peak.
 
@@ -2578,7 +2578,7 @@ $$\text{``If this were the parameter value, how compatible would the observed da
 
 So likelihood should be read as a **relative compatibility score** over parameter values for the fixed observed sample. Larger likelihood means the candidate parameter makes the actual sample less surprising under the model. Smaller likelihood means the candidate parameter makes the actual sample more surprising. This is why likelihood is used to rank or compare parameter values rather than to assign posterior probabilities to them.
 
-Another useful boundary on the concept is this: likelihood values should only be compared when the observed data are being held fixed. Comparing $p(D_1 \mid \theta)$ and $p(D_2 \mid \theta)$ across two different data sets is usually not the question likelihood is designed to answer. The likelihood framework is primarily for comparing parameter values for the same observed sample, or comparing models carefully on the same data with the right normalizations and penalties.
+Another boundary on the concept should be stated explicitly: likelihood values should only be compared when the observed data are being held fixed. Comparing $p(D_1 \mid \theta)$ and $p(D_2 \mid \theta)$ across two different data sets is usually not the question likelihood is designed to answer. The likelihood framework is primarily for comparing parameter values for the same observed sample, or for comparing models on the same observed sample with the right normalizations and complexity penalties.
 
 To get a probability distribution over $\rho$, you must multiply by a prior and renormalize. For example, with a uniform prior
 
@@ -2954,7 +2954,7 @@ This is the explicit moment-matching statement: the fitted model reproduces the 
 
 The phrase moment matching should be read literally. The left-hand side is the empirical average of the sufficient statistics computed from the observed sample. The right-hand side is the model's expected value of those same statistics under parameter $\theta$. At the optimum, those two objects agree.
 
-For Bernoulli, the sufficient statistic is just $X$, so moment matching says
+For Bernoulli, the sufficient statistic is the observed variable $X$ itself, so moment matching says
 
 $$\mathbb{E}_\theta[X] = \frac{1}{m}\sum_i x^{(i)}.$$
 
@@ -3065,7 +3065,7 @@ Now the pseudo-count interpretation can be stated cleanly. The prior Beta$(2,2)$
 
 That pseudo-count language is an interpretation of the algebra, not a literal story that extra coin flips physically occurred. What is literally true is simpler: the prior contributes exponents, the data contribute exponents, and multiplication adds those exponents. The pseudo-count mnemonic is useful only because it mirrors that exponent bookkeeping.
 
-It is also worth computing the evidence term once, because it is often treated as mysterious. Here the likelihood contributes the unnormalized factor
+It is also worth computing the evidence term once, because students often see the symbol $p(D)$ and are told that it is "just a normalization constant" without ever seeing where it comes from. Here the likelihood contributes the unnormalized factor
 
 $$p(D \mid \rho)=\rho^2(1-\rho),$$
 
@@ -3093,7 +3093,7 @@ Dividing the unnormalized posterior by $p(D)$ gives the normalized posterior den
 
 $$p(\rho \mid D)=\frac{6\rho^3(1-\rho)^2}{1/10}=60\rho^3(1-\rho)^2,$$
 
-which is exactly the $\mathrm{Beta}(4,3)$ density. So the evidence is simply the normalization constant that makes the posterior integrate to one.
+which is exactly the $\mathrm{Beta}(4,3)$ density. In this example, the evidence plays a precise role: it is the number obtained by integrating the unnormalized posterior over all possible values of $\rho$, and dividing by that number forces the posterior density to have total area one. That is why $p(D)$ functions as the normalization constant.
 
 ### Example 2-18: Beta-Bernoulli Conjugacy
 
@@ -3946,14 +3946,14 @@ we also obtain
 
 $$I[X,Y]=H[X]-H[X \mid Y].$$
 
-This second identity is often the most intuitive reading. It says mutual information is the amount of uncertainty in $X$ that disappears after $Y$ is revealed.
+This second identity is often the clearest operational reading. It says mutual information is the amount of uncertainty in $X$ that disappears, on average, after the value of $Y$ is revealed.
 
 Two extreme cases fix the interpretation.
 
 - If $X$ and $Y$ are independent, then observing $Y$ tells us nothing about $X$, so $I[X,Y]=0$.
 - If $Y=X$ exactly, then observing $Y$ reveals $X$ completely, so $H[X \mid Y]=0$ and therefore $I[X,Y]=H[X]$.
 
-So mutual information is not just a generic dependence score. It measures the reduction in uncertainty caused by observation.
+So mutual information is not merely a generic dependence score. It measures a specific quantity: the average reduction in uncertainty caused by observation.
 
 ### Conditional Entropy
 
@@ -3967,7 +3967,7 @@ or, more explicitly,
 
 $$H[X \mid Y]=\sum_y p(y)H[X \mid Y=y].$$
 
-The second form is the most useful for interpretation. It says:
+The second form is the most direct interpretation formula. It says:
 
 1. For each possible value $y$, compute the entropy of the conditional distribution of $X$ given $Y=y$.
 2. Average those entropies using the probabilities $p(y)$.
@@ -4083,7 +4083,7 @@ That number is not huge, and that interpretation matters. Weather is informative
 
 ## 2.6 Change-of-Variable Models
 
-The classical probability distributions above are useful, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
+The classical probability distributions above are important, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
 
 The modeling motive is the following. Simple base distributions, such as Gaussians, are mathematically convenient but often too rigid to fit real data directly. Change-of-variables methods let us start from a simple distribution we understand well and then warp it into a more realistic one. The price of that warping is the Jacobian correction.
 
@@ -4157,7 +4157,7 @@ Because $1-x \in [0,1]$ exactly when $x \in [0,1]$, the transformed density is s
 
 ### Example: Lognormal Distribution
 
-If $Z = \log X$ is Gaussian, then $X$ is lognormal. This example is useful because it shows exactly how exponentiating a symmetric variable produces an asymmetric one.
+If $Z = \log X$ is Gaussian, then $X$ is lognormal. This example matters because it shows explicitly how exponentiating a variable that is symmetric on the log scale produces a variable that is asymmetric on the original scale.
 
 Start with
 
@@ -4259,7 +4259,7 @@ where $F_1$ and $F_2$ are the marginal CDFs. The key construction is to define
 
 $$U_1=F_1(X_1),\qquad U_2=F_2(X_2).$$
 
-When the marginals are continuous, each $U_i$ is uniformly distributed on $[0,1]$. This is the probability integral transform. So the copula is simply the joint CDF of these transformed uniform variables:
+When the marginals are continuous, each $U_i$ is uniformly distributed on $[0,1]$. This is the probability integral transform. The copula $C$ is therefore the joint CDF of these transformed uniform variables:
 
 $$C(u_1,u_2)=\mathbb{P}(U_1 \le u_1, U_2 \le u_2).$$
 
@@ -4288,7 +4288,7 @@ The Gaussian copula is a special case in which the transformed variables are the
 
 This gives a clean division of labor. The marginal CDFs control one-dimensional shape, skewness, and heavy tails. The copula controls only how coordinates move together after those marginal effects have been removed.
 
-That separation is the main reason copulas are useful. They let us answer two modeling questions separately instead of mixing them together: "what does each variable look like on its own?" and "how do the variables depend on one another?"
+That separation is the main modeling advantage of copulas. They let us answer two different questions separately instead of forcing one model component to answer both at once: "what does each variable look like on its own?" and "how do the variables depend on one another?"
 
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_copula_flow_pipeline.png" alt="Copula and flow transformation pipeline" width="860">
@@ -4382,13 +4382,13 @@ That tiny example already contains the entire logic of a flow:
 - evaluate the simple base density there;
 - subtract the log-volume expansion.
 
-Normalizing flows are just more elaborate versions of this same accounting rule, composed many times.
+Normalizing flows repeat this same accounting rule layer after layer. Each layer contributes one inverse transformation step and one Jacobian term, and composing many such layers produces a flexible global density while preserving exact likelihood evaluation.
 
 So a flow should be read as repeated change-of-variables bookkeeping, not as a fundamentally different probability law.
 
 ### Example 2-28: Copula-Like Normalizing Flow
 
-One useful construction is to start with a Gaussian base distribution and parameterize one-dimensional monotone transforms for each feature. This is a flexible stand-in for explicit CDF modeling. The monotonicity constraint is not optional: without it, the map would stop being invertible and the simple change-of-variables formula would break.
+One common construction is to start with a Gaussian base distribution and parameterize one-dimensional monotone transforms for each feature. This plays the same role as explicit marginal CDF transforms, but the transforms are learned from data rather than written down analytically. The monotonicity constraint is not optional: without it, the map would stop being invertible and the change-of-variables formula would no longer have a single valid inverse branch.
 
 At the beginner level, this means "bend each axis without folding it over itself." At the expert level, it means each scalar transform must remain strictly monotone so that the inverse exists and the Jacobian diagonal stays nonzero everywhere.
 
@@ -4414,7 +4414,11 @@ $$Z_1 = Z_1', \qquad Z_2 = \frac{Z_2' - \beta_1(Z_1')}{\alpha_1(Z_1')}.$$
 
 So invertibility requires the scale factor never to cross zero.
 
-Because the Jacobian is triangular, the determinant is easy to compute: for the first layer it is simply $\alpha_1(Z_1)$, so the log-determinant is $\log |\alpha_1(Z_1)|$. A second layer can then swap roles and transform the other coordinate:
+Because the Jacobian is triangular, the determinant is easy to compute: for the first layer the diagonal entries are $1$ and $\alpha_1(Z_1)$, so the determinant is their product,
+
+$$\det J = 1 \cdot \alpha_1(Z_1)=\alpha_1(Z_1),$$
+
+and therefore the log-determinant is $\log |\alpha_1(Z_1)|$. A second layer can then swap roles and transform the other coordinate:
 
 $$Z_1'' = \alpha_2(Z_2')Z_1' + \beta_2(Z_2'), \qquad Z_2'' = Z_2'.$$
 
@@ -4454,7 +4458,7 @@ To invert, use the same $Z_1'=1$ and solve
 
 $$Z_2=\frac{Z_2'-\beta_1(Z_1')}{\alpha_1(Z_1')}=\frac{5-(-1)}{2}=3.$$
 
-The determinant at that point is simply
+The determinant at that point is
 
 $$\det J = 2,$$
 
