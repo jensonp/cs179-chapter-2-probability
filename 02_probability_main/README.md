@@ -2478,9 +2478,19 @@ The posterior still centers near the empirical proportion, but it does not colla
 
 ### Likelihood
 
-For i.i.d. data $D = \{x^{(1)}, \dots, x^{(m)}\}$, the likelihood is
+Likelihood answers a specific learning question:
 
-$$p(D \mid \theta) = \prod_i p(x^{(i)} \mid \theta)$$
+If the data have already been observed, which parameter values make those observed data look more compatible with the model, and which make them look less compatible?
+
+That is a different question from the forward probability question studied earlier. Earlier the model was known and we asked about possible observations. Now the observations are known and we are using them to compare possible parameter values.
+
+For i.i.d. data
+
+$$D=\{x^{(1)},\dots,x^{(m)}\},$$
+
+the likelihood is
+
+$$p(D \mid \theta)=\prod_{i=1}^m p(x^{(i)} \mid \theta).$$
 
 The abbreviation i.i.d. stands for **independent and identically distributed**. Each word matters.
 
@@ -2500,15 +2510,25 @@ is i.i.d. because
 
 By contrast, if the first observation came from one coin, the second from a different coin, and the third from a third coin, then the sample would not be identically distributed. If each observation depended on the previous one through a Markov rule, then the sample would not be independent.
 
-The product form comes directly from the independence assumption. If the $m$ observations are conditionally independent given $\theta$, then the probability of observing the entire data set is the product of the per-observation probabilities.
+The product form comes directly from the independence assumption. For two observations, independence gives
+
+$$p(x^{(1)},x^{(2)} \mid \theta)=p(x^{(1)} \mid \theta)p(x^{(2)} \mid \theta).$$
+
+Repeating that same rule for $m$ observations gives the full product
+
+$$p(D \mid \theta)=\prod_{i=1}^m p(x^{(i)} \mid \theta).$$
 
 The log-likelihood is
 
-$$\ell(\theta) = \sum_i \log p(x^{(i)} \mid \theta).$$
+$$\ell(\theta)=\log p(D \mid \theta)=\sum_{i=1}^m \log p(x^{(i)} \mid \theta).$$
 
-Taking logs does not change which parameter maximizes the objective, because the logarithm is strictly increasing. It only turns products into sums, which are easier to differentiate and reason about.
+Taking logs does not change which parameter maximizes the objective, because the logarithm is strictly increasing. It only turns products into sums, which are easier to differentiate, plot, and reason about.
 
-The principle of maximum likelihood says to choose the parameter value that makes the observed data look most probable under the model. It is important to state explicitly what varies and what stays fixed: after we have observed $D$, the data are treated as fixed, and the likelihood is a function of $\theta$. It is not a probability distribution over $\theta$, and it does not have to integrate to one over parameter space.
+The most important conceptual rule is: after the sample has been observed, the data are treated as fixed and the parameter is allowed to vary. That is what makes the expression a likelihood rather than an ordinary probability model over data.
+
+So likelihood should be read as a **score for parameter values given fixed data**. Large likelihood means "this parameter makes the observed sample look relatively compatible with the model." Small likelihood means "this parameter makes the observed sample look relatively incompatible with the model."
+
+That wording matters because likelihood is comparative, not absolute. A likelihood value by itself does not certify truth. It is only useful relative to other parameter values under the same model and the same observed data.
 
 For the small Bernoulli sample
 
@@ -2518,13 +2538,19 @@ the likelihood is
 
 $$p(D \mid \rho)=\rho(1-\rho)\rho=\rho^2(1-\rho).$$
 
-This expression is worth unpacking mechanically. The first factor $\rho$ comes from the first success, the factor $(1-\rho)$ comes from the observed failure, and the final factor $\rho$ comes from the last success. The whole product is therefore "multiply the probability of each observed outcome under the candidate parameter."
+This expression is worth unpacking mechanically. The first factor $\rho$ comes from the first success, the factor $(1-\rho)$ comes from the observed failure, and the final factor $\rho$ comes from the last success. So the whole product is literally "multiply the model probability of each observed outcome under the candidate parameter."
 
-If we try three candidate parameters, we get
+Now compare a few candidate values:
 
-$$p(D \mid 0.2)=0.032,\qquad p(D \mid 0.5)=0.125,\qquad p(D \mid 0.8)=0.128.$$
+$$p(D \mid 0.2)=0.2^2(0.8)=0.032,$$
 
-So among those candidates, $\rho=0.8$ explains the observed data slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly. That does not mean the true parameter is definitely $0.8$; it means only that, within this comparison, the observed sample looks more compatible with $\rho=0.8$ than with the other two candidates.
+$$p(D \mid 0.5)=0.5^2(0.5)=0.125,$$
+
+$$p(D \mid 0.8)=0.8^2(0.2)=0.128.$$
+
+So among these three candidates, $\rho=0.8$ explains the observed sample slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly. That does **not** mean the true parameter is definitely $0.8$. It means only that, within this comparison and for this data set, the sample is more compatible with $\rho=0.8$ than with the other two candidates.
+
+This illustrates an important implication. Likelihood can tell you which parameter values are relatively better supported by the data, but it does not by itself tell you how uncertain you should remain. For that, you need either a frequentist uncertainty analysis or a Bayesian posterior.
 
 A common wrong notion is to treat $p(D \mid \rho)$ as if it were a probability distribution over $\rho$. It is not. One concrete way to see this is that it does not normalize over parameter space. For this data,
 
@@ -2534,7 +2560,15 @@ If we integrate this function over $\rho \in [0,1]$, we get
 
 $$\int_0^1 \rho^2(1-\rho)\,d\rho=\int_0^1 (\rho^2-\rho^3)\,d\rho=\left[\frac{\rho^3}{3}-\frac{\rho^4}{4}\right]_0^1=\frac{1}{3}-\frac{1}{4}=\frac{1}{12},$$
 
-not $1$. So likelihood is not meant to be "the probability that $\rho$ equals a value." Likelihood ranks parameters by data fit. To get a probability distribution over $\rho$, you must multiply by a prior and renormalize. For example, with a uniform prior $\rho \sim \mathrm{Beta}(1,1)$, the posterior is $\mathrm{Beta}(3,2)$, whose (normalized) density is proportional to the same kernel $\rho^2(1-\rho)$.
+not $1$. So likelihood is not meant to be "the probability that $\rho$ equals a value." Likelihood ranks parameters by data fit.
+
+Another useful boundary on the concept is this: likelihood values should only be compared when the observed data are being held fixed. Comparing $p(D_1 \mid \theta)$ and $p(D_2 \mid \theta)$ across two different data sets is usually not the question likelihood is designed to answer. The likelihood framework is primarily for comparing parameter values for the same observed sample, or comparing models carefully on the same data with the right normalizations and penalties.
+
+To get a probability distribution over $\rho$, you must multiply by a prior and renormalize. For example, with a uniform prior
+
+$$\rho \sim \mathrm{Beta}(1,1),$$
+
+the posterior is $\mathrm{Beta}(3,2)$, whose normalized density is proportional to the same kernel $\rho^2(1-\rho)$.
 
 That last sentence is worth unpacking once. A $\mathrm{Beta}(1,1)$ prior has density
 
@@ -2549,6 +2583,8 @@ by the prior changes nothing except the eventual normalization. The exponents ar
 $$2 \quad \text{on } \rho \qquad \text{and} \qquad 1 \quad \text{on } (1-\rho),$$
 
 which is exactly the Beta$(3,2)$ pattern. So the posterior family label is not magic notation; it is just the normalized version of the same kernel.
+
+The deep point is that likelihood is the bridge between observed data and parameter inference. It is the object that tells us how the data reweight parameter values before any extra notions of regularization, prior information, or uncertainty summaries are added.
 
 ### Probability Versus Likelihood
 
@@ -2593,7 +2629,22 @@ So the log-likelihood is
 
 $$\ell(\rho) = m_1 \log \rho + m_0 \log(1-\rho).$$
 
-This expression has a transparent interpretation. The term $m_1 \log \rho$ rewards large $\rho$ when many ones were observed. The term $m_0 \log(1-\rho)$ rewards small $\rho$ when many zeros were observed. The maximizing value of $\rho$ balances those two pressures and ends up at the empirical frequency of ones.
+This expression has a transparent interpretation. The term
+
+$$m_1 \log \rho$$
+
+rewards large $\rho$ when many ones were observed. The term
+
+$$m_0 \log(1-\rho)$$
+
+rewards small $\rho$ when many zeros were observed. The maximizing value of $\rho$ balances those two pressures and ends up at the empirical frequency of ones.
+
+That is an important structural lesson. The log-likelihood separates the sample into only two summaries:
+
+- how many successes were seen;
+- how many failures were seen.
+
+The exact order of the flips no longer matters. For Bernoulli likelihood, the data influence the fit only through the counts $m_1$ and $m_0$.
 
 If the observed sample is all zeros or all ones, the maximizer lies on the boundary $\rho=0$ or $\rho=1$. Otherwise the unique optimum lies in the interior of the interval.
 
@@ -2611,9 +2662,11 @@ which is zero at $\rho=0$ and $\rho=1$ because either extreme makes one of the t
 
 This example is useful because it isolates the logic of likelihood fitting. The sample contains one success and one failure, so the best-fitting Bernoulli parameter is exactly the balanced value that makes both outcomes equally plausible.
 
+An implication worth remembering is that likelihood naturally pushes toward boundary values when the sample itself sits at a boundary. If every observed flip is heads, the Bernoulli likelihood is largest at $\rho=1$. That is mathematically correct for pure maximum likelihood, but it also hints at why regularization or priors may be useful: with very small samples, boundary-hugging estimates can be too brittle.
+
 ### Example 2-13: Gaussian Likelihood
 
-For a one-dimensional Gaussian with variance fixed at one, the likelihood as a function of $\mu$ becomes more sharply peaked as the number of samples grows. That sharpening is the visual signature that more data reduce parameter uncertainty: many values of $\mu$ may explain three observations reasonably well, but far fewer values remain plausible once twenty observations cluster around the same region.
+For a one-dimensional Gaussian with variance fixed at one, the likelihood as a function of $\mu$ becomes more sharply peaked as the number of samples grows. That sharpening is the visual signature that more data constrain the mean more strongly: many values of $\mu$ may explain three observations reasonably well, but far fewer values remain compatible once twenty observations cluster around the same region.
 
 The algebra behind that picture is worth stating. If
 
@@ -2652,6 +2705,8 @@ At $\mu=1.0$ the squared-error total is
 $$(-0.5-1.0)^2+(0.4-1.0)^2+(1.3-1.0)^2=2.25+0.36+0.09=2.70.$$
 
 Because the second total is larger, the log-likelihood at $\mu=1.0$ is smaller. So the Gaussian-likelihood picture is just another way of seeing the penalty for choosing a mean too far from the data cloud.
+
+This example exposes an important connection that reappears throughout statistics: for Gaussian models, maximizing likelihood is the same as minimizing squared error. That is why least squares appears so often. It is not a disconnected optimization trick. It is the Gaussian likelihood principle written in another form.
 
 ### Maximum Likelihood Estimation
 
