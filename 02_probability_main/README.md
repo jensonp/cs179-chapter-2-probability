@@ -429,6 +429,8 @@ In this formula, the hypothesis is the value of $C$, meaning the statement "the 
 
 Before using shorthand language, it helps to name each term explicitly. The prior is $p(C=c)$, which is the probability assigned to the cavity-state hypothesis before seeing the probe observation. The likelihood is $p(D=d \mid C=c)$, which measures how compatible the observed probe result is with that cavity state. The evidence is $p(D=d)$, which is the total probability of seeing that probe result after averaging over every cavity case. The posterior is $p(C=c \mid D=d)$, which is the updated probability of the cavity state after the probe result has been taken into account.
 
+The word posterior should not feel like a new mysterious object. It is just a conditional probability, using the same conditioning idea introduced earlier in the chapter. The only difference is what is being conditioned on. Earlier we conditioned one ordinary event on another ordinary event. Here we are conditioning a hypothesis about the cavity state on observed evidence from the probe result. So "posterior" means "the probability after the observation has been incorporated."
+
 With those names in place, the formula can be read as the sentence
 
 $$\text{posterior} = \text{likelihood} \cdot \text{prior} / \text{evidence}.$$
@@ -2480,7 +2482,23 @@ For i.i.d. data $D = \{x^{(1)}, \dots, x^{(m)}\}$, the likelihood is
 
 $$p(D \mid \theta) = \prod_i p(x^{(i)} \mid \theta)$$
 
-Here i.i.d. means independent and identically distributed. Independent means that once the parameter $\theta$ is fixed, the probability of observing one sample does not depend on the realized values of the others. Identically distributed means each sample is generated from the same model $p_{\theta}(x)$ rather than from a different parameter at each time step.
+The abbreviation i.i.d. stands for **independent and identically distributed**. Each word matters.
+
+- **Independent** means that once the parameter $\theta$ is fixed, learning one sample value does not change the model probability assigned to the others.
+- **Identically distributed** means each sample is generated from the same probability law $p_{\theta}(x)$, not from a different distribution at each time step.
+
+So an i.i.d. sample is a collection of observations produced by repeatedly using the same model in the same way, with no extra dependence between draws after $\theta$ has been fixed.
+
+A tiny coin-flip example makes this concrete. If we flip the same Bernoulli coin three times with head probability $\rho$, then
+
+$$D=\{1,0,1\}$$
+
+is i.i.d. because
+
+- each flip uses the same Bernoulli law;
+- and, once $\rho$ is fixed, the result of one flip does not alter the probability rule for the others.
+
+By contrast, if the first observation came from one coin, the second from a different coin, and the third from a third coin, then the sample would not be identically distributed. If each observation depended on the previous one through a Markov rule, then the sample would not be independent.
 
 The product form comes directly from the independence assumption. If the $m$ observations are conditionally independent given $\theta$, then the probability of observing the entire data set is the product of the per-observation probabilities.
 
@@ -2896,6 +2914,12 @@ The key lesson is that "higher likelihood" is not enough unless we specify on wh
 In the Bayesian view, we keep a distribution over parameters:
 
 $$p(\theta \mid D) \propto p(D \mid \theta)p(\theta).$$
+
+The notation
+
+$$p(\theta \mid D)$$
+
+should be read in the most literal possible way: it is the conditional distribution of the parameter $\theta$ given the observed data $D$. So the posterior is not a brand-new kind of mathematical object. It is the ordinary conditional-probability idea from earlier in the chapter, now applied to parameter uncertainty instead of ordinary events.
 
 The missing normalization constant is the evidence
 
