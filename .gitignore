@@ -32,6 +32,9 @@ scripts/notes/*
 !scripts/autocommit.launchagent.plist
 !scripts/render_hw1_latex_answers.py
 !scripts/hw1_layout.py
+!scripts/tests/
+scripts/tests/*
+!scripts/tests/test_hw1_render.py
 
 !output/
 output/*

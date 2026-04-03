@@ -21,7 +21,7 @@ BUILD_DIR_NAME = "build"
 REPO_ROOT = SCRIPT_DIR.parents[3]
 
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
-from hw1_layout import ALL_FIELD_NAMES  # noqa: E402
+from hw1_layout import ALL_FIELD_NAMES, validate_layout_specs  # noqa: E402
 from render_hw1_latex_answers import load_answers, render_answers_tex  # noqa: E402
 
 
@@ -328,6 +328,7 @@ def warn_if_answers_sources_diverge(doc_path: Path) -> None:
 
 
 def regenerate_answers_tex_from_toml(doc_path: Path) -> None:
+    validate_layout_specs()
     answers_path = doc_path.parent / "answers.tex"
     answers_toml_path = doc_path.parent / "answers.toml"
     if not answers_toml_path.exists():
@@ -341,6 +342,34 @@ def regenerate_answers_tex_from_toml(doc_path: Path) -> None:
     if existing != rendered_from_toml:
         answers_path.write_text(rendered_from_toml, encoding="utf-8")
         print(f"note: Regenerated {answers_path.name} from {answers_toml_path.name}", file=sys.stderr)
+
+
+OVERFULL_RE = re.compile(r"^(Overfull \\\\[hv]box .*?)$", re.MULTILINE)
+UNDERFULL_RE = re.compile(r"^(Underfull \\\\[hv]box .*?)$", re.MULTILINE)
+
+
+def check_log_for_layout_issues(doc_path: Path) -> None:
+    log_path = doc_path.parent.parent / BUILD_DIR_NAME / "main.log"
+    if not log_path.exists():
+        return
+
+    log_text = log_path.read_text(encoding="utf-8", errors="replace")
+    overfull = OVERFULL_RE.findall(log_text)
+    underfull = UNDERFULL_RE.findall(log_text)
+
+    if underfull:
+        preview = "; ".join(underfull[:3])
+        suffix = "" if len(underfull) <= 3 else f"; ... ({len(underfull)} underfull warnings total)"
+        print(f"note: LaTeX underfull box warnings detected: {preview}{suffix}", file=sys.stderr)
+
+    if overfull:
+        preview = "; ".join(overfull[:3])
+        suffix = "" if len(overfull) <= 3 else f"; ... ({len(overfull)} overfull warnings total)"
+        raise RuntimeError(
+            "Detected rendered content overflow in build/main.log: "
+            f"{preview}{suffix}. Shorten the content, move work into a larger field, "
+            "or adjust the layout/font settings."
+        )
 
 
 def parse_args() -> argparse.Namespace:
@@ -384,6 +413,8 @@ def main() -> None:
     print(f"note: Using compiler {kind} ({executable})", file=sys.stderr)
     command, cwd = compiler_command(kind, executable, doc_path)
     result = subprocess.run(command, cwd=cwd, check=False)
+    if result.returncode == 0:
+        check_log_for_layout_issues(doc_path)
     raise SystemExit(result.returncode)
 
 

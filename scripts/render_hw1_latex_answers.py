@@ -24,6 +24,7 @@ from hw1_layout import (
     TEXT_FIELDS,
     CheckboxSpec,
     TextFieldSpec,
+    validate_layout_specs,
 )
 
 
@@ -40,6 +41,16 @@ BLOCK_MATH_MARKERS = (
     r"\begin{multline",
     r"\begin{cases",
     r"\begin{array",
+)
+RAW_BLOCK_HINTS = BLOCK_MATH_MARKERS + (
+    r"\begin{",
+    r"\item",
+    r"\includegraphics",
+    r"\tikz",
+    r"\par",
+    r"\vspace",
+    r"\medskip",
+    r"\smallskip",
 )
 
 
@@ -139,16 +150,51 @@ def default_toml_template() -> str:
     return render_answers_toml({})
 
 
-def answer_to_tex(name: str, value: object) -> str:
+def _looks_like_raw_latex_block(text: str) -> bool:
+    stripped = text.lstrip()
+    return any(marker in stripped for marker in RAW_BLOCK_HINTS)
+
+
+def preserve_user_linebreaks(text: str) -> str:
+    paragraphs: list[str] = []
+    current_lines: list[str] = []
+
+    def flush_current_lines() -> None:
+        if not current_lines:
+            return
+        paragraph = "\n".join(current_lines).strip("\n")
+        current_lines.clear()
+        if not paragraph:
+            return
+        if _looks_like_raw_latex_block(paragraph):
+            paragraphs.append(paragraph)
+            return
+        paragraph_lines = [line.rstrip() for line in paragraph.splitlines() if line.strip()]
+        paragraphs.append(r"\\ ".join(paragraph_lines))
+
+    for raw_line in text.splitlines():
+        if raw_line.strip():
+            current_lines.append(raw_line)
+            continue
+        flush_current_lines()
+
+    flush_current_lines()
+    return "\n\\par\n".join(paragraphs)
+
+
+def answer_to_tex(field: TextFieldSpec | CheckboxSpec, value: object) -> str:
     if value is None:
         return ""
-    if name in CHECKBOX_NAMES and isinstance(value, bool):
+    if field.name in CHECKBOX_NAMES and isinstance(value, bool):
         return r"\Checkmark" if value else ""
     if isinstance(value, bool):
         return "true" if value else "false"
     if isinstance(value, (int, float)):
         return str(value)
-    return str(value)
+    text = str(value)
+    if isinstance(field, TextFieldSpec) and field.preserve_linebreaks:
+        return preserve_user_linebreaks(text)
+    return text
 
 
 def validate_answers_content(answers: dict[str, object]) -> None:
@@ -186,6 +232,7 @@ def validate_answers_content(answers: dict[str, object]) -> None:
 
 
 def render_answers_tex(answers: dict[str, object]) -> str:
+    validate_layout_specs()
     validate_answers_content(answers)
     pages = fields_by_page()
     lines = [
@@ -203,7 +250,7 @@ def render_answers_tex(answers: dict[str, object]) -> str:
         if not page_fields:
             lines.append("% No mapped fields on this page.")
         for field in page_fields:
-            value = answer_to_tex(field.name, answers.get(field.name, False if field.name in CHECKBOX_NAMES else ""))
+            value = answer_to_tex(field, answers.get(field.name, False if field.name in CHECKBOX_NAMES else ""))
             lines.append(rf"\SetAnswer{{{field.name}}}{{{value}}}")
         lines.append("")
     return "\n".join(lines).rstrip() + "\n"
@@ -273,6 +320,8 @@ def render_readme() -> str:
         Notes:
         - Answer content is raw LaTeX, so math, aligned equations, and `\\includegraphics` all work.
         - Keep short answer fields inline. Use `*_work`, `*_reasoning`, and notes fields for multi-line derivations or `$$...$$`.
+        - Block/work fields preserve manual line breaks for plain text and auto-scale content down to fit their boxes.
+        - Local builds fail fast on invalid field usage and on overfull LaTeX boxes, which catches layout collisions/overflow early.
         - Checkbox markers accept `\\Checkmark` in `source/answers.tex`, or `true` / `false` in `source/answers.toml`.
         - The layout is faithful because the original `source/cs179-hw1.pdf` is embedded page-for-page.
         """
@@ -291,9 +340,10 @@ def render_overlay_command(field: TextFieldSpec | CheckboxSpec) -> str:
     content_y = y0 + field.box_padding
     width = field.width - 2 * field.box_padding
     height = field.height - 2 * field.box_padding
-    baseline = field.font_size + 2
-    content = rf"\fontsize{{{field.font_size}}}{{{baseline}}}\selectfont \Answer{{{field.name}}}"
-    return rf"\PlaceTextAnswer{{{content_x:.2f}}}{{{content_y:.2f}}}{{{width:.2f}}}{{{height:.2f}}}{{{content}}}"
+    return (
+        rf"\PlaceTextAnswer{{{content_x:.2f}}}{{{content_y:.2f}}}{{{width:.2f}}}"
+        rf"{{{height:.2f}}}{{{field.font_size:.2f}}}{{\Answer{{{field.name}}}}}"
+    )
 
 
 def render_box_command(field: TextFieldSpec | CheckboxSpec) -> str | None:
@@ -305,6 +355,7 @@ def render_box_command(field: TextFieldSpec | CheckboxSpec) -> str | None:
 
 
 def render_main_tex() -> str:
+    validate_layout_specs()
     page_commands = []
     pages = fields_by_page()
     for page in range(1, 10):
@@ -340,15 +391,55 @@ def render_main_tex() -> str:
               (0,2.3) -- (2.4,0) -- (6.1,6.1);
           }}%
         }}
-        \newcommand{{\PlaceTextAnswer}}[5]{{%
+        \ExplSyntaxOn
+        \box_new:N \l__hw_answer_box
+        \fp_new:N \l__hw_answer_scale_fp
+        \cs_new_protected:Npn \__hw_answer_fit:nnnn #1#2#3#4
+          {{
+            \exp_args:Ne \tl_if_blank:nTF {{#4}}
+              {{}}
+              {{
+                \hbox_set:Nn \l__hw_answer_box
+                  {{
+                    \begin{{minipage}}[t]{{#1pt}}
+                    \raggedright
+                    \setlength{{\parskip}}{{0.25em}}
+                    \fontsize{{#3}}{{\fp_eval:n {{ round(#3 + 2, 2) }} }}\selectfont
+                    #4
+                    \end{{minipage}}
+                  }}
+                \fp_set:Nn \l__hw_answer_scale_fp {{ 1 }}
+                \dim_compare:nNnT {{ \box_wd:N \l__hw_answer_box }} > {{ #1pt }}
+                  {{
+                    \fp_set:Nn \l__hw_answer_scale_fp
+                      {{
+                        min(
+                          \l__hw_answer_scale_fp,
+                          \dim_to_fp:n {{ #1pt }} / \dim_to_fp:n {{ \box_wd:N \l__hw_answer_box }}
+                        )
+                      }}
+                  }}
+                \dim_compare:nNnT {{ \box_ht:N \l__hw_answer_box + \box_dp:N \l__hw_answer_box }} > {{ #2pt }}
+                  {{
+                    \fp_set:Nn \l__hw_answer_scale_fp
+                      {{
+                        min(
+                          \l__hw_answer_scale_fp,
+                          \dim_to_fp:n {{ #2pt }} /
+                          \dim_to_fp:n {{ \box_ht:N \l__hw_answer_box + \box_dp:N \l__hw_answer_box }}
+                        )
+                      }}
+                  }}
+                \scalebox{{\fp_eval:n {{ round(\l__hw_answer_scale_fp, 5) }} }}{{\box_use:N \l__hw_answer_box}}
+              }}
+          }}
+        \cs_new_eq:NN \HWAnswerFit \__hw_answer_fit:nnnn
+        \ExplSyntaxOff
+        \newcommand{{\PlaceTextAnswer}}[6]{{%
           \begin{{tikzpicture}}[remember picture,overlay]
             \node[anchor=north west,inner sep=0pt,outer sep=0pt] at
               ([xshift=#1pt,yshift=-#2pt]current page.north west) {{%
-                \begin{{minipage}}[t][#4pt][t]{{#3pt}}
-                \raggedright
-                \setlength{{\parskip}}{{0.25em}}
-                #5
-                \end{{minipage}}%
+                \HWAnswerFit{{#3}}{{#4}}{{#5}}{{#6}}%
               }};
           \end{{tikzpicture}}%
         }}

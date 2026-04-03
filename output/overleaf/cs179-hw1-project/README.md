@@ -17,5 +17,7 @@ Workflow options:
 Notes:
 - Answer content is raw LaTeX, so math, aligned equations, and `\includegraphics` all work.
 - Keep short answer fields inline. Use `*_work`, `*_reasoning`, and notes fields for multi-line derivations or `$$...$$`.
+- Block/work fields preserve manual line breaks for plain text and auto-scale content down to fit their boxes.
+- Local builds fail fast on invalid field usage and on overfull LaTeX boxes, which catches layout collisions/overflow early.
 - Checkbox markers accept `\Checkmark` in `source/answers.tex`, or `true` / `false` in `source/answers.toml`.
 - The layout is faithful because the original `source/cs179-hw1.pdf` is embedded page-for-page.
