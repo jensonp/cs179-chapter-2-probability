@@ -2495,7 +2495,7 @@ $$D=\{1,1,0,1,0\}.$$
 
 A frequentist summary is the single estimate
 
-$$\hat{\rho}=3/5=0.6.$$
+$$\rho_{\mathrm{MLE}}=3/5=0.6.$$
 
 This answers the question "which one number best summarizes the data under the chosen estimation rule?"
 
@@ -2787,11 +2787,13 @@ This example exposes an important connection that reappears throughout statistic
 
 Maximum likelihood estimation, or MLE, means choosing the parameter value that maximizes the likelihood of the observed data:
 
-$$\hat{\theta}_{\text{MLE}}=\arg\max_\theta p(D \mid \theta).$$
+$$\theta_{\mathrm{MLE}}=\arg\max_\theta p(D \mid \theta).$$
+
+These notes write fitted estimates with an explicit subscript such as $\theta_{\mathrm{MLE}}$ rather than a hat such as $\hat{\theta}$. The meaning is the same: this symbol denotes the parameter value selected by the estimation rule.
 
 Because the logarithm is strictly increasing, this is equivalent to
 
-$$\hat{\theta}_{\text{MLE}}=\arg\max_\theta \ell(\theta),$$
+$$\theta_{\mathrm{MLE}}=\arg\max_\theta \ell(\theta),$$
 
 where $\ell(\theta)$ denotes the log-likelihood. In practice one almost always works with the log-likelihood because products become sums and derivatives become manageable.
 
@@ -2805,13 +2807,13 @@ $$\frac{\partial \ell}{\partial \rho} = \frac{m_1}{\rho} - \frac{m_0}{1-\rho}.$$
 
 Setting this to zero yields
 
-$$\hat{\rho}_{\text{MLE}} = \frac{m_1}{m}.$$
+$$\rho_{\mathrm{MLE}} = \frac{m_1}{m}.$$
 
 The algebra is worth writing out explicitly:
 
 $$\frac{m_1}{\rho} - \frac{m_0}{1-\rho} = 0 \quad \Longrightarrow \quad m_1(1-\rho) = m_0\rho \quad \Longrightarrow \quad m_1 = (m_0+m_1)\rho.$$
 
-Since $m_0+m_1 = m$, we obtain $\hat{\rho}_{\text{MLE}} = m_1/m$. The second derivative is
+Since $m_0+m_1 = m$, we obtain $\rho_{\mathrm{MLE}} = m_1/m$. The second derivative is
 
 $$\frac{\partial^2 \ell}{\partial \rho^2} = -\frac{m_1}{\rho^2} - \frac{m_0}{(1-\rho)^2} < 0,$$
 
@@ -2821,9 +2823,9 @@ This result has a clear interpretation. The model parameter $\rho$ is the probab
 
 For a Gaussian with mean $\mu$ and variance $\nu = \sigma^2$,
 
-$$\hat{\mu}_{\text{MLE}} = \frac{1}{m}\sum_i x^{(i)}$$
+$$\mu_{\mathrm{MLE}} = \frac{1}{m}\sum_i x^{(i)}$$
 
-$$\hat{\nu}_{\text{MLE}} = \frac{1}{m}\sum_i (x^{(i)} - \hat{\mu})^2.$$
+$$\nu_{\mathrm{MLE}} = \frac{1}{m}\sum_i \left(x^{(i)} - \mu_{\mathrm{MLE}}\right)^2.$$
 
 For the mean parameter, the derivation comes from expanding the log-likelihood into a constant minus a squared-error term:
 
@@ -2837,7 +2839,7 @@ so setting the derivative to zero forces $\mu$ to equal the arithmetic average o
 
 The variance formula often causes confusion because many statistics courses also teach
 
-$$\frac{1}{m-1}\sum_i (x^{(i)}-\hat{\mu})^2.$$
+$$\frac{1}{m-1}\sum_i \left(x^{(i)}-\mu_{\mathrm{MLE}}\right)^2.$$
 
 That is the unbiased sample-variance estimator. It is not the Gaussian maximum-likelihood estimator. The MLE uses $1/m$ because it is chosen to maximize the likelihood, not to make the estimator unbiased across repeated samples. These are different optimization goals, so they produce different formulas.
 
@@ -2855,7 +2857,7 @@ $$D=\{a,c,a,b,a,c\}.$$
 
 Then the counts are $m_a=3$, $m_b=1$, and $m_c=2$, so the MLE is
 
-$$\hat{\rho}_a=3/6,\qquad \hat{\rho}_b=1/6,\qquad \hat{\rho}_c=2/6$$
+$$\rho_{a,\mathrm{MLE}}=3/6,\qquad \rho_{b,\mathrm{MLE}}=1/6,\qquad \rho_{c,\mathrm{MLE}}=2/6$$
 
 The estimate is obtained by normalizing the observed counts so they sum to one. Nothing more complicated is happening in this discrete MLE: each row of the fitted probability table is the observed relative frequency of that state in the sample.
 
@@ -2873,7 +2875,7 @@ $$p(D \mid \rho)=\rho^{m_1}(1-\rho)^{m_0}.$$
 
 The maximizer is
 
-$$\hat{\rho} = \frac{m_1}{m}$$
+$$\rho_{\mathrm{MLE}} = \frac{m_1}{m}$$
 
 because the model fits best when its predicted success probability matches the observed success frequency.
 
@@ -2891,7 +2893,7 @@ $$p(D \mid \rho)=\rho^3(1-\rho)^2.$$
 
 The MLE is therefore
 
-$$\hat{\rho}=\frac{3}{5}=0.6$$
+$$\rho_{\mathrm{MLE}}=\frac{3}{5}=0.6$$
 
 The interpretation is immediate: the fitted Bernoulli model predicts success with probability $0.6$ on future draws, because $60\%$ of the observed sample consisted of successes.
 
@@ -2901,9 +2903,9 @@ It is worth checking the logic against two nearby parameter values. At $\rho=0.6
 
 For a one-dimensional Gaussian with both mean and variance unknown, the MLEs are the sample mean and the average squared deviation around that mean:
 
-$$\hat{\mu} = \frac{1}{m}\sum_i x^{(i)}$$
+$$\mu_{\mathrm{MLE}} = \frac{1}{m}\sum_i x^{(i)}$$
 
-$$\hat{\nu} = \frac{1}{m}\sum_i (x^{(i)}-\hat{\mu})^2$$
+$$\nu_{\mathrm{MLE}} = \frac{1}{m}\sum_i \left(x^{(i)}-\mu_{\mathrm{MLE}}\right)^2$$
 
 Now compute them explicitly for the sample
 
@@ -2915,7 +2917,7 @@ $$m=3$$
 
 observations, so the fitted mean is
 
-$$\hat{\mu}=\frac{2+4+7}{3}=\frac{13}{3}$$
+$$\mu_{\mathrm{MLE}}=\frac{2+4+7}{3}=\frac{13}{3}$$
 
 This number is about $4.33$, which sits near the visual center of the three observations.
 
@@ -2933,11 +2935,11 @@ $$\frac{49}{9}+\frac{1}{9}+\frac{64}{9}=\frac{114}{9}=\frac{38}{3}.$$
 
 Now divide by $m=3$ to get the Gaussian MLE for the variance:
 
-$$\hat{\nu}=\frac{1}{3}\left[\left(2-\frac{13}{3}\right)^2+\left(4-\frac{13}{3}\right)^2+\left(7-\frac{13}{3}\right)^2\right]$$
+$$\nu_{\mathrm{MLE}}=\frac{1}{3}\left[\left(2-\frac{13}{3}\right)^2+\left(4-\frac{13}{3}\right)^2+\left(7-\frac{13}{3}\right)^2\right]$$
 
 which simplifies to
 
-$$\hat{\nu}=\frac{1}{3}\cdot \frac{38}{3}=\frac{38}{9}\approx 4.22.$$
+$$\nu_{\mathrm{MLE}}=\frac{1}{3}\cdot \frac{38}{3}=\frac{38}{9}\approx 4.22.$$
 
 So the Gaussian fit is built in two explicit stages:
 
@@ -2950,7 +2952,7 @@ That second number is not the unbiased sample variance from introductory statist
 
 For a discrete distribution over states $x$, the MLE copies empirical frequencies into the probability table:
 
-$$\hat{\rho}_x = \frac{m_x}{m}$$
+$$\rho_{x,\mathrm{MLE}} = \frac{m_x}{m}$$
 
 where $m_x$ is the count of state $x$ in the data.
 
@@ -2968,7 +2970,7 @@ $$m_a=3,\qquad m_b=1,\qquad m_c=2$$
 
 Now divide each count by the total sample size:
 
-$$\hat{\rho}_a=\frac{3}{6},\qquad \hat{\rho}_b=\frac{1}{6},\qquad \hat{\rho}_c=\frac{2}{6}$$
+$$\rho_{a,\mathrm{MLE}}=\frac{3}{6},\qquad \rho_{b,\mathrm{MLE}}=\frac{1}{6},\qquad \rho_{c,\mathrm{MLE}}=\frac{2}{6}$$
 
 so the fitted PMF is
 
@@ -3073,7 +3075,7 @@ Each term has a separate role.
 - The evidence $p(D)$ is the total probability of the data after averaging over all parameter values allowed by the prior.
 - The posterior $p(\theta \mid D)$ is the normalized result after combining the first two pieces.
 
-The posterior therefore does something different from point estimation. A point estimator returns one preferred number, such as $\hat{\rho}=0.6$. A posterior returns a whole distribution over $\rho$, which tells us not only where the plausible values are centered but also how spread out that uncertainty still is after observing the data. This matters conceptually because it keeps uncertainty visible rather than hiding it inside one summary number, and it matters computationally because such full updates are easy to compute exactly only in special cases, such as conjugate prior-likelihood pairs.
+The posterior therefore does something different from point estimation. A point estimator returns one preferred number, such as $\rho_{\mathrm{MLE}}=0.6$. A posterior returns a whole distribution over $\rho$, which tells us not only where the plausible values are centered but also how spread out that uncertainty still is after observing the data. This matters conceptually because it keeps uncertainty visible rather than hiding it inside one summary number, and it matters computationally because such full updates are easy to compute exactly only in special cases, such as conjugate prior-likelihood pairs.
 
 For a concrete update, start with
 
@@ -3267,13 +3269,15 @@ When a single number is required, two common choices are the posterior mean and 
 
 The posterior mean is
 
-$$\hat{\theta}_{\mathrm{PM}}=\mathbb{E}_{p(\theta \mid D)}[\theta].$$
+$$\theta_{\mathrm{PM}}=\mathbb{E}_{p(\theta \mid D)}[\theta].$$
+
+Here $\theta_{\mathrm{PM}}$ means posterior mean and $\theta_{\mathrm{MAP}}$ below means maximum a posteriori. This is only a notation choice. Many books would write the same estimators with hats.
 
 This is literally the average of $\theta$ under the posterior distribution. It uses the entire posterior shape, not just one high-density point.
 
 The MAP estimate is
 
-$$\hat{\theta}_{\mathrm{MAP}}=\arg\max_{\theta} p(\theta \mid D).$$
+$$\theta_{\mathrm{MAP}}=\arg\max_{\theta} p(\theta \mid D).$$
 
 This is the mode of the posterior: the single parameter value at which the posterior density is largest.
 
@@ -3290,11 +3294,11 @@ $$\mathrm{Beta}(a+m_1,b+m_0).$$
 
 The posterior mean is therefore
 
-$$\hat{\rho}_{\mathrm{PM}}=\frac{a+m_1}{a+b+m_1+m_0}.$$
+$$\rho_{\mathrm{PM}}=\frac{a+m_1}{a+b+m_1+m_0}.$$
 
 If the updated Beta parameters are both greater than $1$, the interior MAP estimate is
 
-$$\hat{\rho}_{\mathrm{MAP}}=\frac{a+m_1-1}{a+b+m_1+m_0-2}.$$
+$$\rho_{\mathrm{MAP}}=\frac{a+m_1-1}{a+b+m_1+m_0-2}.$$
 
 The condition matters. If either updated shape parameter is at most $1$, then the posterior mode moves to a boundary point, so the simple interior formula no longer applies. That is a structural limit, not a cosmetic detail.
 
@@ -3304,11 +3308,11 @@ $$\rho \mid D \sim \mathrm{Beta}(5,3).$$
 
 Then
 
-$$\hat{\rho}_{\mathrm{PM}}=\frac{5}{8}=0.625$$
+$$\rho_{\mathrm{PM}}=\frac{5}{8}=0.625$$
 
 and
 
-$$\hat{\rho}_{\mathrm{MAP}}=\frac{5-1}{5+3-2}=\frac{4}{6}\approx 0.667.$$
+$$\rho_{\mathrm{MAP}}=\frac{5-1}{5+3-2}=\frac{4}{6}\approx 0.667.$$
 
 The MAP is larger because it selects the peak of the density, while the posterior mean averages over all values of $\rho$ weighted by posterior mass. If the distribution is asymmetric, those two operations do not coincide.
 
@@ -3334,7 +3338,7 @@ $$p(D \mid \rho)=\rho^2(1-\rho)^1.$$
 
 If we ignore the prior and compute MLE, we maximize this likelihood over $\rho$. For Bernoulli data, the MLE is the empirical fraction of ones:
 
-$$\hat{\rho}_{\mathrm{MLE}}=\frac{2}{3}\approx 0.667.$$
+$$\rho_{\mathrm{MLE}}=\frac{2}{3}\approx 0.667.$$
 
 Now include the prior
 
@@ -3356,19 +3360,19 @@ Now compute three different point summaries.
 
 The posterior mean is
 
-$$\hat{\rho}_{\mathrm{PM}}=\frac{4}{4+3}=\frac{4}{7}\approx 0.571.$$
+$$\rho_{\mathrm{PM}}=\frac{4}{4+3}=\frac{4}{7}\approx 0.571.$$
 
 The MAP estimate is
 
-$$\hat{\rho}_{\mathrm{MAP}}=\frac{4-1}{4+3-2}=\frac{3}{5}=0.6.$$
+$$\rho_{\mathrm{MAP}}=\frac{4-1}{4+3-2}=\frac{3}{5}=0.6.$$
 
 The MLE, from above, is
 
-$$\hat{\rho}_{\mathrm{MLE}}=\frac{2}{3}\approx 0.667.$$
+$$\rho_{\mathrm{MLE}}=\frac{2}{3}\approx 0.667.$$
 
 Putting them side by side,
 
-$$\hat{\rho}_{\mathrm{PM}} \approx 0.571, \qquad \hat{\rho}_{\mathrm{MAP}}=0.6, \qquad \hat{\rho}_{\mathrm{MLE}}\approx 0.667.$$
+$$\rho_{\mathrm{PM}} \approx 0.571, \qquad \rho_{\mathrm{MAP}}=0.6, \qquad \rho_{\mathrm{MLE}}\approx 0.667.$$
 
 This ordering makes the prior effect visible. The prior $\mathrm{Beta}(2,2)$ is centered at $0.5$, so both Bayesian estimators are pulled back toward $0.5$ relative to MLE. The posterior mean moves farther because it averages over the whole posterior. The MAP moves less because it only tracks the posterior peak.
 
@@ -3579,11 +3583,11 @@ We will compare two models.
 
 If there is only one coin, all six flips share the same head probability $\rho$. Across both batches there are three heads out of six observations, so
 
-$$\hat{\rho}=\frac{3}{6}=0.5.$$
+$$\rho_{\mathrm{MLE}}=\frac{3}{6}=0.5.$$
 
 If there are two different coins, the first batch gets parameter $\rho_A$ and the second gets parameter $\rho_B$. Their MLEs are the within-batch head frequencies:
 
-$$\hat{\rho}_A=\frac{1}{3},\qquad \hat{\rho}_B=\frac{2}{3}.$$
+$$\rho_{A,\mathrm{MLE}}=\frac{1}{3},\qquad \rho_{B,\mathrm{MLE}}=\frac{2}{3}.$$
 
 Now compute the maximized average log-likelihood under each model.
 
@@ -3627,11 +3631,11 @@ $$D_A=\{H,T,T,T,T\},\qquad D_B=\{T,H,H,H,H\}.$$
 
 The one-coin MLE is still
 
-$$\hat{\rho}=0.5,$$
+$$\rho_{\mathrm{MLE}}=0.5,$$
 
 while the two-coin MLEs become
 
-$$\hat{\rho}_A=0.2,\qquad \hat{\rho}_B=0.8.$$
+$$\rho_{A,\mathrm{MLE}}=0.2,\qquad \rho_{B,\mathrm{MLE}}=0.8.$$
 
 The one-coin penalized average score is now
 
