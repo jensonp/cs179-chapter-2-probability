@@ -2196,10 +2196,16 @@ The second structural quantity is the total concentration
 
 $$a+b.$$
 
-Roughly speaking:
+Here the two parameters play two different roles, and it is worth separating them carefully.
 
-- the ratio $a:b$ says **where** the distribution is centered;
-- the sum $a+b$ says **how tightly** it is concentrated around that preference.
+- The **ratio** $a:b$ controls which values of $\rho$ are favored relative to each other. If $a=b$, the distribution is symmetric around $0.5$. If $a>b$, values closer to $1$ receive more weight than values closer to $0$. If $a<b$, the situation reverses.
+- The **sum** $a+b$ controls how strongly that preference is enforced. Increasing $a+b$ while keeping the ratio fixed makes the density more concentrated around its central region. Decreasing $a+b$ while keeping the ratio fixed makes the density more spread out.
+
+One way to see this is through the mean
+
+$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
+
+If we multiply both parameters by the same constant, this mean stays fixed, because the ratio $a/(a+b)$ does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
 
 For example,
 
@@ -2548,9 +2554,11 @@ $$p(D \mid 0.5)=0.5^2(0.5)=0.125,$$
 
 $$p(D \mid 0.8)=0.8^2(0.2)=0.128.$$
 
-So among these three candidates, $\rho=0.8$ explains the observed sample slightly better than $\rho=0.5$, while $\rho=0.2$ fits badly. That does **not** mean the true parameter is definitely $0.8$. It means only that, within this comparison and for this data set, the sample is more compatible with $\rho=0.8$ than with the other two candidates.
+Now interpret these three numbers structurally rather than treating them as mysterious scores. The observed data contain two successes in three trials. A candidate such as $\rho=0.8$ says that success is common, so it assigns a reasonably large probability to a sequence with two successes. A candidate such as $\rho=0.2$ says that success is rare, so the same observed sequence receives much less probability under that parameter. The likelihood comparison is therefore answering a narrow question: **which parameter values make the observed sample less surprising?**
 
-This illustrates an important implication. Likelihood can tell you which parameter values are relatively better supported by the data, but it does not by itself tell you how uncertain you should remain. For that, you need either a frequentist uncertainty analysis or a Bayesian posterior.
+This comparison is relative, not absolute. The fact that $0.128 > 0.125 > 0.032$ does **not** prove that the true parameter is exactly $0.8$. It says only that, among these three candidates and for this fixed data set, the sample is more compatible with $\rho=0.8$ than with $\rho=0.5$, and much more compatible with $\rho=0.8$ than with $\rho=0.2$.
+
+This also shows a structural limitation of likelihood by itself. Likelihood can rank parameter values for a fixed model and a fixed observed data set, but it does not by itself tell you how much uncertainty remains after seeing the data. To quantify uncertainty, you need an additional layer such as confidence sets, asymptotic theory, or a Bayesian posterior distribution over $\rho$.
 
 A common wrong notion is to treat $p(D \mid \rho)$ as if it were a probability distribution over $\rho$. It is not. One concrete way to see this is that it does not normalize over parameter space. For this data,
 
@@ -2660,7 +2668,7 @@ $$p(D \mid \rho)=\rho(1-\rho),$$
 
 which is zero at $\rho=0$ and $\rho=1$ because either extreme makes one of the two observations impossible. The peak therefore occurs in the interior, specifically at $\rho=1/2$.
 
-This example is useful because it isolates the logic of likelihood fitting. The sample contains one success and one failure, so the best-fitting Bernoulli parameter is exactly the balanced value that makes both outcomes equally plausible.
+This example isolates the logic of likelihood fitting in the smallest possible nontrivial case. The sample contains one success and one failure, so any parameter far from $0.5$ makes one of those two observed outcomes much less plausible than the other. The balanced value $\rho=0.5$ is the point at which the model assigns equal probability to the two observed outcome types, which is exactly why the likelihood peaks there.
 
 An implication worth remembering is that likelihood naturally pushes toward boundary values when the sample itself sits at a boundary. If every observed flip is heads, the Bernoulli likelihood is largest at $\rho=1$. That is mathematically correct for pure maximum likelihood, but it also hints at why regularization or priors may be useful: with very small samples, boundary-hugging estimates can be too brittle.
 
@@ -2694,7 +2702,7 @@ If the observed values are $-0.5$, $0.4$, and $1.3$, then the Gaussian likelihoo
 
 $$\bar x = \frac{-0.5+0.4+1.3}{3}=0.4.$$
 
-The entire curve is simply another way of visualizing how much squared-error penalty is paid for choosing a mean away from that center. Values of $\mu$ far from $0.4$ make all three squared deviations larger, so the log-likelihood drops. This is the geometric reason the sample mean appears as the Gaussian MLE.
+The entire curve can be read as a squared-error landscape written in likelihood language. When $\mu$ moves away from $0.4$, every term of the form $(x^{(i)}-\mu)^2$ becomes larger in aggregate, so the sum of squared deviations increases. Because the Gaussian log-likelihood is a constant minus one-half that sum, the log-likelihood must decrease when the squared-error total increases. This is the geometric reason the sample mean appears as the Gaussian MLE.
 
 It helps to check one comparison numerically. At $\mu=0.4$ the squared-error total is
 
@@ -2704,7 +2712,7 @@ At $\mu=1.0$ the squared-error total is
 
 $$(-0.5-1.0)^2+(0.4-1.0)^2+(1.3-1.0)^2=2.25+0.36+0.09=2.70.$$
 
-Because the second total is larger, the log-likelihood at $\mu=1.0$ is smaller. So the Gaussian-likelihood picture is just another way of seeing the penalty for choosing a mean too far from the data cloud.
+Because the second total is larger, the log-likelihood at $\mu=1.0$ is smaller. In other words, the Gaussian-likelihood curve is a re-expression of the same optimization problem: parameter values that increase total squared deviation are penalized, and the unique minimizer of squared deviation becomes the unique maximizer of the Gaussian likelihood.
 
 This example exposes an important connection that reappears throughout statistics: for Gaussian models, maximizing likelihood is the same as minimizing squared error. That is why least squares appears so often. It is not a disconnected optimization trick. It is the Gaussian likelihood principle written in another form.
 
@@ -2782,7 +2790,7 @@ Then the counts are $m_a=3$, $m_b=1$, and $m_c=2$, so the MLE is
 
 $$\hat{\rho}_a=3/6,\qquad \hat{\rho}_b=1/6,\qquad \hat{\rho}_c=2/6$$
 
-The estimate simply copies empirical proportions into the model.
+The estimate is obtained by normalizing the observed counts so they sum to one. Nothing more complicated is happening in this discrete MLE: each row of the fitted probability table is the observed relative frequency of that state in the sample.
 
 ### Example 2-14: Bernoulli MLE
 
@@ -2934,7 +2942,7 @@ so the first-order optimality condition becomes
 
 $$\frac{1}{m}\sum_i \phi(x^{(i)}) = \mathbb{E}_\theta[\phi(X)].$$
 
-This is the explicit moment-matching statement: the fitted model reproduces the empirical averages of the sufficient statistics. That identity is one of the main reasons exponential families are so useful.
+This is the explicit moment-matching statement: the fitted model reproduces the empirical averages of the sufficient statistics. That fact matters because it reduces parameter fitting to a comparison between two summaries of the same features: what the data average says, and what the model average says. In many exponential-family models, that comparison leads to clean optimization problems and interpretable estimators.
 
 The phrase moment matching should be read literally. The left-hand side is the empirical average of the sufficient statistics computed from the observed sample. The right-hand side is the model's expected value of those same statistics under parameter $\theta$. At the optimum, those two objects agree.
 
@@ -2950,19 +2958,19 @@ which reproduces the familiar Bernoulli MLE immediately. So the Bernoulli succes
 
 ### Overfitting
 
-Likelihood alone can overfit. If a model is too flexible and the data set is too small, the MLE may explain the training data perfectly while generalizing poorly. Histogram models make this especially clear: as the number of bins grows, the likelihood on the training data can keep increasing even when the estimate becomes a bad predictor. In the extreme limit where each observation gets its own tiny bin, the model can memorize the sample rather than discover a stable distributional pattern.
+Likelihood alone can overfit. If a model is too flexible and the data set is too small, the MLE may explain the training data perfectly while generalizing poorly. Histogram models make this especially clear: as the number of bins grows, the likelihood on the training data can keep increasing even when the estimate assigns unrealistic probability mass to new observations. In the extreme limit where each observation gets its own tiny bin, the model can memorize the sample rather than discover a stable distributional pattern.
 
 The core reason is that pure likelihood asks only, "how well can this model explain the data already seen?" It does not ask whether the fitted pattern is robust enough to predict new data. A model with many parameters can exploit accidental quirks of a small sample and thereby earn a high training score for the wrong reason.
 
-A toy example is enough to show the mechanism. If eight data points occupy eight distinct locations and we fit a histogram with sixty-four bins, most bins are empty and a few bins receive all the mass. The training likelihood becomes large because each observed sample falls into a narrow high-density bin, but a new sample landing between those bins receives nearly zero support. The model has learned the sample, not the underlying distribution.
+A toy example is enough to show the mechanism. If eight data points occupy eight distinct locations and we fit a histogram with sixty-four bins, most bins are empty and a few bins receive all the mass. The training likelihood becomes large because each observed sample falls into a narrow high-density bin. But a new sample landing between those bins receives nearly zero support, even if it comes from the same underlying process that generated the training sample. So the fitted histogram is representing the accidental placement of the observed points more strongly than the stable shape of the underlying distribution.
 
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_17_histograms.png" alt="Histogram likelihood progression" width="860">
 </p>
 
-The three histograms make the overfitting mechanism visible. With one bin the model is too coarse to capture any structure. With a moderate number of bins it starts to reflect the sample without becoming too brittle. With too many bins it effectively memorizes the observations, assigning high density exactly where data occurred and poor predictions everywhere else.
+The three histograms make the overfitting mechanism visible in a concrete way. With one bin, the model forces the entire support to have one constant density value, so it cannot represent any local variation in the sample. With a moderate number of bins, the model can respond to broad changes in where observations are concentrated while still averaging over nearby points. With too many bins, each bin is supported by too little data. The fitted density then becomes extremely sensitive to the accidental placement of the observed sample, assigning very high density in bins that happened to contain points and very low density in neighboring bins that happened to be empty.
 
-The key lesson is that "higher likelihood" is not enough unless we specify on which data that likelihood is measured. Training likelihood can keep improving while predictive performance on new data gets worse. Overfitting is exactly that mismatch between memorizing the observed sample and learning a pattern that transfers.
+The key lesson is that "higher likelihood" is incomplete unless we also specify **on which data** that likelihood is being measured. Training likelihood can keep increasing because a flexible model can adapt itself more and more closely to the particular sample it already saw. But predictive performance depends on how well the fitted structure matches the underlying data-generating pattern rather than the idiosyncrasies of one finite sample. Overfitting is exactly this mismatch: the model becomes better at describing the observed sample and worse at predicting fresh data from the same source.
 
 ### Posterior Distributions
 
@@ -3435,14 +3443,14 @@ Read this formula carefully. For a fixed model $M$:
 
 That averaging is the key difference from maximum likelihood. Maximum likelihood asks only for the single best parameter value. Model evidence asks how well the model performs on average under its prior.
 
-This is why evidence automatically penalizes excessive flexibility. A very flexible model may achieve an excellent fit at a few special parameter values, but if most parameter settings fit the data poorly, the average can still be small. So evidence rewards models that place substantial prior mass on parameter values that fit the data reasonably well.
+This is why evidence automatically penalizes excessive flexibility. A very flexible model may contain a few isolated parameter settings that match the data extremely well, but if most of its parameter space gives poor fit, then the prior-weighted average can still be small. By contrast, a simpler model may never reach such a dramatic peak, yet many of its parameter values may give consistently decent fit. Evidence therefore rewards a model whose prior mass is concentrated on parameter regions that make the observed data plausible, rather than a model that succeeds only after careful parameter tuning.
 
-A simple verbal contrast is useful.
+It helps to compare two stylized likelihood landscapes.
 
-- Model A has one very sharp peak and poor fit almost everywhere else.
-- Model B has no spectacular peak, but a broad region of decent fit.
+- In Model A, the likelihood is extremely high inside a tiny region of parameter space and very low almost everywhere else.
+- In Model B, the likelihood never reaches such a dramatic maximum, but it stays moderately high across a broad region of parameter space.
 
-Maximum likelihood prefers whichever model has the higher peak. Evidence can prefer Model B because it averages over the whole landscape rather than looking only at the top point.
+Maximum likelihood looks only at the single highest point, so it would choose Model A if that sharp peak is taller. Evidence instead integrates over the full parameter space. If the high-likelihood region in Model A is too small, then its average can be lower than Model B's broader plateau. That is the mechanism behind the complexity penalty: the penalty is not added by hand; it appears because averaging over many weakly performing parameter settings dilutes the contribution of a few exceptional ones.
 
 The BIC score is a large-sample approximation to the log evidence:
 
@@ -3535,7 +3543,7 @@ $$\text{two-coin BIC average} = -0.637-(\log 6)/6 \approx -0.935.$$
 
 So BIC prefers the one-coin model, because the improvement in fit is not large enough to justify the extra parameter.
 
-That is the central model-selection lesson. The two-coin model fits the training data better, but not by enough. Once complexity is priced in, the simpler explanation wins. This is exactly the kind of situation where maximum likelihood alone can overstate the case for a more flexible model.
+That is the central model-selection lesson. The two-coin model achieves a higher raw training fit because it has an extra degree of freedom. But the numerical improvement in average log-likelihood is smaller than the BIC complexity penalty charged for that extra parameter. Once complexity is priced in explicitly, the simpler explanation wins. This is exactly the kind of situation where maximum likelihood alone can overstate the case for a more flexible model.
 
 After penalization, the one-coin model wins. The extra flexibility of the two-coin model is not justified by only six flips.
 
