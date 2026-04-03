@@ -2144,11 +2144,11 @@ $$p(x;\theta) = h(x)\exp\bigl(\theta^T \phi(x) - A(\theta)\bigr),$$
 
 the log-likelihood of i.i.d. data is
 
-$$L(\theta) = \sum_i \log h(x^{(i)}) + \theta^T \sum_i \phi(x^{(i)}) - m A(\theta).$$
+$$\ell(\theta) = \sum_i \log h(x^{(i)}) + \theta^T \sum_i \phi(x^{(i)}) - m A(\theta).$$
 
 Differentiating with respect to $\theta$ gives
 
-$$\nabla_\theta L(\theta) = \sum_i \phi(x^{(i)}) - m \nabla_\theta A(\theta).$$
+$$\nabla_\theta \ell(\theta) = \sum_i \phi(x^{(i)}) - m \nabla_\theta A(\theta).$$
 
 For exponential families,
 
@@ -2210,8 +2210,6 @@ Each term has a separate role.
 - The posterior $p(\theta \mid D)$ is the normalized result after combining the first two pieces.
 
 The posterior therefore trades a point estimate for a full uncertainty description over plausible parameter values. This is conceptually important and computationally consequential: exact inference is easy only when the evidence integral can be computed analytically or when the prior-likelihood pair has a conjugate form.
-
-Each term in Bayes' rule has a different job. The prior $p(\theta)$ says which parameter values looked plausible before seeing the data. The likelihood $p(D \mid \theta)$ rewards parameter values that explain the realized sample well. The evidence $p(D)$ is the normalization constant that makes the posterior integrate to one. The posterior therefore combines old beliefs and new data into one updated distribution.
 
 For a concrete update, start with
 
@@ -2952,9 +2950,7 @@ and its derivative is
 
 $$\frac{dz}{dx}=\frac{1}{x}.$$
 
-So the change-of-variables formula gives
-
-Writing the full expression gives
+So the change-of-variables formula gives the full lognormal density
 
 $$p_X(x)=\frac{1}{x \sqrt{2\pi\sigma^2}} \exp\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right), \qquad x>0.$$
 
