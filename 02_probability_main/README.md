@@ -1434,14 +1434,16 @@ $$F_X(x)=\mathbb{P}(X=0)+\mathbb{P}(X=1)=1.$$
 
 That gives the step-function description:
 
-$$
-F_X(x)=
-\begin{cases}
-0, & x<0, \\
-0.7, & 0 \le x < 1, \\
-1, & x \ge 1.
-\end{cases}
-$$
+<table align="center">
+  <thead>
+    <tr><th>F<sub>X</sub>(x)</th><th>condition on x</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>x &lt; 0</td></tr>
+    <tr><td>0.7</td><td>0 &le; x &lt; 1</td></tr>
+    <tr><td>1</td><td>x &ge; 1</td></tr>
+  </tbody>
+</table>
 
 The jump at $x=0$ has size $0.7$, which is exactly the point mass at $0$. The jump at $x=1$ adds the remaining $0.3$, which is exactly the point mass at $1$. This is the general rule in the discrete case: jumps in the CDF correspond to point probabilities.
 
@@ -1453,12 +1455,15 @@ which is exactly the probability that $X=1$.
 
 Continuous case. Now suppose $X$ is uniform on $[0,2]$, so the density is
 
-$$p(x)=
-\begin{cases}
-\frac{1}{2}, & 0 \le x \le 2, \\
-0, & \text{otherwise.}
-\end{cases}
-$$
+<table align="center">
+  <thead>
+    <tr><th>p(x)</th><th>condition on x</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1/2</td><td>0 &le; x &le; 2</td></tr>
+    <tr><td>0</td><td>otherwise</td></tr>
+  </tbody>
+</table>
 
 The CDF is found by integrating the density from the far left up to the threshold.
 
@@ -1476,14 +1481,16 @@ $$F_X(x)=1.$$
 
 So
 
-$$
-F_X(x)=
-\begin{cases}
-0, & x<0, \\
-\frac{x}{2}, & 0 \le x \le 2, \\
-1, & x>2.
-\end{cases}
-$$
+<table align="center">
+  <thead>
+    <tr><th>F<sub>X</sub>(x)</th><th>condition on x</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>x &lt; 0</td></tr>
+    <tr><td>x/2</td><td>0 &le; x &le; 2</td></tr>
+    <tr><td>1</td><td>x &gt; 2</td></tr>
+  </tbody>
+</table>
 
 Unlike the discrete Bernoulli example, this CDF has no jumps. It rises smoothly because probability is spread continuously across an interval rather than concentrated at isolated points.
 
@@ -1523,15 +1530,17 @@ $$F_X(x)=1.$$
 
 So the mixed-distribution CDF is
 
-$$
-F_X(x)=
-\begin{cases}
-0, & x<0, \\
-0.7, & x=0, \\
-0.7+0.3x, & 0<x<1, \\
-1, & x \ge 1.
-\end{cases}
-$$
+<table align="center">
+  <thead>
+    <tr><th>F<sub>X</sub>(x)</th><th>condition on x</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>x &lt; 0</td></tr>
+    <tr><td>0.7</td><td>x = 0</td></tr>
+    <tr><td>0.7 + 0.3x</td><td>0 &lt; x &lt; 1</td></tr>
+    <tr><td>1</td><td>x &ge; 1</td></tr>
+  </tbody>
+</table>
 
 This example is important because it shows exactly why the CDF is the most universal description. A PMF alone would miss the continuous part. A PDF alone would miss the atom at zero. The CDF captures both with one object: jumps record point masses, and smooth increases record continuous accumulation.
 
