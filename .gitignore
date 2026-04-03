@@ -27,6 +27,7 @@ scripts/*
 scripts/notes/*
 !scripts/notes/build_02_probability_reconstructed.py
 !scripts/notes/build_02_probability_bundle.py
+!scripts/notes/audit_github_math.py
 !scripts/setup_hw1_latex_workspace.py
 !scripts/autocommit.py
 !scripts/autocommit.launchagent.plist

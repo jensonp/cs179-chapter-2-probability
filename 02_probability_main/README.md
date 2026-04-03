@@ -2195,108 +2195,60 @@ Before the general formulas, it is best to build intuition from concrete example
 
 First example: uniform uncertainty.
 
-If
+If $a=b=1$, then $p(\rho)=1$ for $0 \le \rho \le 1$.
 
-$$a=b=1,$$
-
-then
-
-$$p(\rho)=1 \qquad \text{for } 0 \le \rho \le 1.$$
-
-So Beta$(1,1)$ is the uniform distribution on $[0,1]$. This means equal-length intervals of possible parameter values receive equal probability mass under this Beta distribution. It does **not** mean that a single exact value of $\rho$ has positive probability as a point event, because continuous distributions assign probability through interval area rather than point mass.
+So $\mathrm{Beta}(1,1)$ is the uniform distribution on $[0,1]$. This means equal-length intervals of possible parameter values receive equal probability mass under this Beta distribution. It does **not** mean that a single exact value of $\rho$ has positive probability as a point event, because continuous distributions assign probability through interval area rather than point mass.
 
 Second example: one interior peak.
 
-If
-
-$$\rho \sim \mathrm{Beta}(5,5),$$
-
-then the density is symmetric around $0.5$ and has a single peak near the center. This is what "unimodal" means in this context: there is one bell-like high region rather than two separated spikes. In geometric terms, the distribution places more of its mass near $0.5$ than near $0$ or $1$.
+If $\rho \sim \mathrm{Beta}(5,5)$, then the density is symmetric around $0.5$ and has a single peak near the center. This is what "unimodal" means in this context: there is one bell-like high region rather than two separated spikes. In geometric terms, the distribution places more of its mass near $0.5$ than near $0$ or $1$.
 
 Third example: favoring one side.
 
-If
-
-$$\rho \sim \mathrm{Beta}(2,5),$$
-
-then the mean is
-
-$$\mathbb{E}[\rho]=\frac{2}{7}\approx 0.286.$$
+If $\rho \sim \mathrm{Beta}(2,5)$, then the mean is $\mathbb{E}[\rho]=\frac{2}{7}\approx 0.286$.
 
 So this distribution leans toward smaller probabilities. In plain language, it places more mass on success probabilities below one-half than on success probabilities above one-half.
 
 Fourth example: favoring extremes.
 
-If
-
-$$\rho \sim \mathrm{Beta}(0.3,0.3),$$
-
-then the density is high near $0$ and near $1$, and relatively low in the middle. So this distribution favors strongly biased parameter values more than nearly fair ones.
+If $\rho \sim \mathrm{Beta}(0.3,0.3)$, then the density is high near $0$ and near $1$, and relatively low in the middle. So this distribution favors strongly biased parameter values more than nearly fair ones.
 
 This is also the place to explain why boundary spikes are not a paradox. When either shape parameter is below $1$, the density can become very large near $0$ or $1$. That does not violate probability rules, because a density value is not itself a probability. What matters is the area under the curve over an interval, and that total area remains finite and equal to one.
 
 Two summary formulas are useful after the intuition is in place.
 
-The mean is
-
-$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
+The mean is $\mathbb{E}[\rho]=\frac{a}{a+b}$.
 
 So the ratio $a:b$ controls which side of the interval is favored.
 
-When
-
-$$a>1 \qquad \text{and} \qquad b>1,$$
-
-the mode is
-
-$$\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}.$$
+When $a>1$ and $b>1$, the mode is $\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}$.
 
 This is the location of the peak when the density has a genuine interior maximum. The condition matters: if one of the parameters is at most $1$, the density may peak at a boundary instead, so the interior mode formula no longer applies.
 
-The second structural quantity is the total concentration
-
-$$a+b.$$
+The second structural quantity is the total concentration $a+b$.
 
 Here the two parameters play two different roles, and it is worth separating them carefully.
 
 - The **ratio** $a:b$ controls which values of $\rho$ are favored relative to each other. If $a=b$, the distribution is symmetric around $0.5$. If $a>b$, values closer to $1$ receive more weight than values closer to $0$. If $a<b$, the situation reverses.
 - The **sum** $a+b$ controls how strongly that preference is enforced. Increasing $a+b$ while keeping the ratio fixed makes the density more concentrated around its central region. Decreasing $a+b$ while keeping the ratio fixed makes the density more spread out.
 
-One way to see this is through the mean
-
-$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
+One way to see this is through the mean $\mathbb{E}[\rho]=\frac{a}{a+b}$.
 
 If we multiply both parameters by the same constant, this mean stays fixed, because the ratio $a/(a+b)$ does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
 
-For example,
+For example, $\mathrm{Beta}(2,2)$ and $\mathrm{Beta}(20,20)$ are both centered at $0.5$, because in both cases $\frac{a}{a+b}=0.5$.
 
-$$\mathrm{Beta}(2,2) \qquad \text{and} \qquad \mathrm{Beta}(20,20)$$
-
-are both centered at $0.5$, because in both cases
-
-$$\frac{a}{a+b}=0.5.$$
-
-But Beta$(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
+But $\mathrm{Beta}(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
 
 The Dirichlet distribution is the multi-state version of this same idea.
 
-Suppose a categorical variable has $d$ possible outcomes. Then its parameter is not one number but a probability vector
+Suppose a categorical variable has $d$ possible outcomes. Then its parameter is not one number but a probability vector $\theta=(\theta_1,\ldots,\theta_d)$, where each coordinate is nonnegative and all coordinates sum to one: $\theta_j \ge 0$ for all $j$, and $\sum_{j=1}^d \theta_j=1$.
 
-$$\theta=(\theta_1,\ldots,\theta_d),$$
-
-where each coordinate is nonnegative and all coordinates sum to one:
-
-$$\theta_j \ge 0 \quad \text{for all } j, \qquad \sum_{j=1}^d \theta_j=1.$$
-
-So for a three-outcome variable, a legal parameter might be
-
-$$\theta=(0.2,0.5,0.3).$$
+So for a three-outcome variable, a legal parameter might be $\theta=(0.2,0.5,0.3)$.
 
 The set of all such probability vectors is called the simplex. In the three-state case, the simplex is a filled triangle. Each point inside that triangle represents one legal categorical probability table.
 
-The reason the simplex has one fewer free dimension than the number of coordinates is normalization. Once two coordinates are chosen, the last one is forced. In the example above,
-
-$$\theta_3=1-0.2-0.5=0.3.$$
+The reason the simplex has one fewer free dimension than the number of coordinates is normalization. Once two coordinates are chosen, the last one is forced. In the example above, $\theta_3=1-0.2-0.5=0.3$.
 
 So even though the vector has three entries, only two of them are independent.
 
@@ -2314,43 +2266,17 @@ This looks more complicated than Beta only because there are more coordinates. C
 - the relative sizes of the $\alpha_j$ values say which categories are favored;
 - the total concentration $\alpha_0$ says how tightly the mass is pulled toward or away from the center.
 
-The coordinate-wise mean is
+The coordinate-wise mean is $\mathbb{E}[\theta_j]=\frac{\alpha_j}{\alpha_0}$.
 
-$$\mathbb{E}[\theta_j]=\frac{\alpha_j}{\alpha_0}.$$
-
-So if
-
-$$\alpha=(8,2,2),$$
-
-then
-
-$$\mathbb{E}[\theta]=\left(\frac{8}{12},\frac{2}{12},\frac{2}{12}\right)=\left(\frac{2}{3},\frac{1}{6},\frac{1}{6}\right).$$
+So if $\alpha=(8,2,2)$, then $\mathbb{E}[\theta]=\left(\frac{8}{12},\frac{2}{12},\frac{2}{12}\right)=\left(\frac{2}{3},\frac{1}{6},\frac{1}{6}\right)$.
 
 That Dirichlet distribution is centered much closer to the first category than to the other two.
 
-If instead
-
-$$\alpha=(2,2,2),$$
-
-then
-
-$$\mathbb{E}[\theta]=\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right).$$
+If instead $\alpha=(2,2,2)$, then $\mathbb{E}[\theta]=\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right)$.
 
 So the distribution is symmetric across categories.
 
-Now compare concentration while keeping the same proportions. If we increase to
-
-$$\alpha=(20,20,20),$$
-
-the mean stays
-
-$$\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right),$$
-
-but the distribution becomes much more concentrated near the center of the simplex. If we decrease to
-
-$$\alpha=(0.2,0.2,0.2),$$
-
-the mass is pushed toward corners and edges. A **sparse probability vector** means one in which most of the total mass is concentrated in only one or a few coordinates rather than being spread evenly across all categories. So in plain language, this distribution favors tables in which one category gets most of the mass.
+Now compare concentration while keeping the same proportions. If we increase to $\alpha=(20,20,20)$, the mean stays $\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right)$, but the distribution becomes much more concentrated near the center of the simplex. If we decrease to $\alpha=(0.2,0.2,0.2)$, the mass is pushed toward corners and edges. A **sparse probability vector** means one in which most of the total mass is concentrated in only one or a few coordinates rather than being spread evenly across all categories. So in plain language, this distribution favors tables in which one category gets most of the mass.
 
 For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution. So Beta is not a separate disconnected topic. It is the two-category version of the same family.
 
@@ -2665,7 +2591,7 @@ by the prior changes nothing except the eventual normalization, since multiplyin
 
 $$2 \quad \text{on } \rho \qquad \text{and} \qquad 1 \quad \text{on } (1-\rho),$$
 
-which is exactly the Beta$(3,2)$ pattern. The posterior therefore has the same basic shape as the likelihood function, but now it is normalized so that the total area over $\rho \in [0,1]$ equals $1$. That normalization step is what changes the object from a compatibility score into a true probability density over parameter values.
+which is exactly the $\mathrm{Beta}(3,2)$ pattern. The posterior therefore has the same basic shape as the likelihood function, but now it is normalized so that the total area over $\rho \in [0,1]$ equals $1$. That normalization step is what changes the object from a compatibility score into a true probability density over parameter values.
 
 The structural role of likelihood is now visible. It is the part of inference that comes directly from the observed data. Before we add priors, penalties, confidence sets, or posterior summaries, the likelihood tells us how the sample reweights the candidate parameter values. Everything else in statistical inference is built on top of that reweighting step.
 
@@ -3097,7 +3023,7 @@ Now spell out the pieces instead of jumping directly to the answer. The prior de
 
 $$p(\rho)=6\rho(1-\rho),$$
 
-because Beta$(2,2)$ has normalization constant
+because $\mathrm{Beta}(2,2)$ has normalization constant
 
 $$\frac{\Gamma(4)}{\Gamma(2)\Gamma(2)}=6.$$
 
@@ -3121,7 +3047,7 @@ on $\rho$ and exponent
 
 $$2$$
 
-on $(1-\rho)$. Since a Beta$(a,b)$ density has the form
+on $(1-\rho)$. Since a $\mathrm{Beta}(a,b)$ density has the form
 
 $$\rho^{a-1}(1-\rho)^{b-1},$$
 
@@ -3137,7 +3063,7 @@ Therefore the posterior is
 
 $$\rho \mid D \sim \mathrm{Beta}(4,3).$$
 
-Now the pseudo-count interpretation can be stated cleanly. The prior Beta$(2,2)$ contributes one exponent to $\rho$ and one exponent to $(1-\rho)$ before any real data are observed. The actual sample contributes two more powers of $\rho$ and one more power of $(1-\rho)$. After multiplication, the exponents add. That is why the posterior behaves as if prior information and observed counts have been combined.
+Now the pseudo-count interpretation can be stated cleanly. The prior $\mathrm{Beta}(2,2)$ contributes one exponent to $\rho$ and one exponent to $(1-\rho)$ before any real data are observed. The actual sample contributes two more powers of $\rho$ and one more power of $(1-\rho)$. After multiplication, the exponents add. That is why the posterior behaves as if prior information and observed counts have been combined.
 
 That pseudo-count language is an interpretation of the algebra, not a literal story that extra coin flips physically occurred. What is literally true is simpler: the prior contributes exponents, the data contribute exponents, and multiplication adds those exponents. The pseudo-count mnemonic is useful only because it mirrors that exponent bookkeeping.
 
@@ -3201,11 +3127,11 @@ The arithmetic should be read explicitly:
 
 $$a+m_1=2+3=5,\qquad b+m_0=2+1=3.$$
 
-The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros. This can be read numerically as well. The prior Beta$(2,2)$ has total concentration
+The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros. This can be read numerically as well. The prior $\mathrm{Beta}(2,2)$ has total concentration
 
 $$2+2=4,$$
 
-while the posterior Beta$(5,3)$ has total concentration
+while the posterior $\mathrm{Beta}(5,3)$ has total concentration
 
 $$5+3=8.$$
 
@@ -3480,7 +3406,7 @@ The simplest Beta prior is
 
 $$\rho \sim \mathrm{Beta}(1,1).$$
 
-Because Beta$(1,1)$ is uniform on $[0,1]$, this means
+Because $\mathrm{Beta}(1,1)$ is uniform on $[0,1]$, this means
 
 $$p_{\rho}(\rho)=1, \qquad 0 \le \rho \le 1.$$
 
