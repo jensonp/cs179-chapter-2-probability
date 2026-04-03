@@ -2464,7 +2464,7 @@ Multiply prior and likelihood:
 
 $$p(\rho \mid D)\propto p(D \mid \rho)p(\rho)\propto \rho^3(1-\rho)^2 \cdot \rho(1-\rho)=\rho^4(1-\rho)^3.$$
 
-That is exactly the kernel of a Beta density with updated parameters
+That is exactly the **unnormalized part** of a Beta density with updated parameters. Here "unnormalized part" means the factor that determines the shape of the density before we insert the constant that makes the total area equal to $1$:
 
 $$2+3=5 \qquad \text{and} \qquad 2+2=4.$$
 
@@ -2568,7 +2568,15 @@ If we integrate this function over $\rho \in [0,1]$, we get
 
 $$\int_0^1 \rho^2(1-\rho)\,d\rho=\int_0^1 (\rho^2-\rho^3)\,d\rho=\left[\frac{\rho^3}{3}-\frac{\rho^4}{4}\right]_0^1=\frac{1}{3}-\frac{1}{4}=\frac{1}{12},$$
 
-not $1$. So likelihood is not meant to be "the probability that $\rho$ equals a value." Likelihood ranks parameters by data fit.
+not $1$. That calculation tells us something precise: the function $\rho \mapsto p(D \mid \rho)$ is **not** a probability distribution over possible parameter values. A genuine probability density over $\rho$ would have to integrate to $1$ over the parameter space. The likelihood function does not do that, because it was never designed to answer the question
+
+$$\text{``What is the probability that the parameter lies near this value?''}$$
+
+Instead, likelihood answers a different question:
+
+$$\text{``If this were the parameter value, how compatible would the observed data be with it?''}$$
+
+So likelihood should be read as a **relative compatibility score** over parameter values for the fixed observed sample. Larger likelihood means the candidate parameter makes the actual sample less surprising under the model. Smaller likelihood means the candidate parameter makes the actual sample more surprising. This is why likelihood is used to rank or compare parameter values rather than to assign posterior probabilities to them.
 
 Another useful boundary on the concept is this: likelihood values should only be compared when the observed data are being held fixed. Comparing $p(D_1 \mid \theta)$ and $p(D_2 \mid \theta)$ across two different data sets is usually not the question likelihood is designed to answer. The likelihood framework is primarily for comparing parameter values for the same observed sample, or comparing models carefully on the same data with the right normalizations and penalties.
 
@@ -2576,23 +2584,23 @@ To get a probability distribution over $\rho$, you must multiply by a prior and 
 
 $$\rho \sim \mathrm{Beta}(1,1),$$
 
-the posterior is $\mathrm{Beta}(3,2)$, whose normalized density is proportional to the same kernel $\rho^2(1-\rho)$.
+the posterior is $\mathrm{Beta}(3,2)$, whose normalized density is proportional to the same unnormalized shape function $\rho^2(1-\rho)$.
 
-That last sentence is worth unpacking once. A $\mathrm{Beta}(1,1)$ prior has density
+That last sentence is worth unpacking once, because this is exactly the step that converts a likelihood function into a probability distribution over $\rho$. A $\mathrm{Beta}(1,1)$ prior has density
 
 $$p(\rho)=1 \qquad \text{for } 0 \le \rho \le 1.$$
 
-So multiplying the likelihood kernel
+So multiplying the likelihood function's unnormalized shape
 
 $$\rho^2(1-\rho)$$
 
-by the prior changes nothing except the eventual normalization. The exponents are still
+by the prior changes nothing except the eventual normalization, since multiplying by $1$ leaves that unnormalized shape unchanged. The exponents are still
 
 $$2 \quad \text{on } \rho \qquad \text{and} \qquad 1 \quad \text{on } (1-\rho),$$
 
-which is exactly the Beta$(3,2)$ pattern. So the posterior family label is not magic notation; it is just the normalized version of the same kernel.
+which is exactly the Beta$(3,2)$ pattern. The posterior therefore has the same basic shape as the likelihood function, but now it is normalized so that the total area over $\rho \in [0,1]$ equals $1$. That normalization step is what changes the object from a compatibility score into a true probability density over parameter values.
 
-The deep point is that likelihood is the bridge between observed data and parameter inference. It is the object that tells us how the data reweight parameter values before any extra notions of regularization, prior information, or uncertainty summaries are added.
+The structural role of likelihood is now visible. It is the part of inference that comes directly from the observed data. Before we add priors, penalties, confidence sets, or posterior summaries, the likelihood tells us how the sample reweights the candidate parameter values. Everything else in statistical inference is built on top of that reweighting step.
 
 ### Probability Versus Likelihood
 
@@ -3029,7 +3037,7 @@ Multiply prior and likelihood:
 
 $$p(\rho \mid D)\propto p(D \mid \rho)p(\rho)\propto \rho^2(1-\rho)\cdot \rho(1-\rho)=\rho^3(1-\rho)^2.$$
 
-That kernel has exponent
+This unnormalized posterior expression has exponent
 
 $$3$$
 
@@ -3057,7 +3065,7 @@ Now the pseudo-count interpretation can be stated cleanly. The prior Beta$(2,2)$
 
 That pseudo-count language is an interpretation of the algebra, not a literal story that extra coin flips physically occurred. What is literally true is simpler: the prior contributes exponents, the data contribute exponents, and multiplication adds those exponents. The pseudo-count mnemonic is useful only because it mirrors that exponent bookkeeping.
 
-It is also worth computing the evidence term once, because it is often treated as mysterious. Here the likelihood kernel is
+It is also worth computing the evidence term once, because it is often treated as mysterious. Here the likelihood contributes the unnormalized factor
 
 $$p(D \mid \rho)=\rho^2(1-\rho),$$
 
@@ -3105,7 +3113,7 @@ Multiplying them gives
 
 $$p(\rho \mid D) \propto \rho^{a+m_1-1}(1-\rho)^{b+m_0-1},$$
 
-which is exactly the kernel of another Beta density. This is the simplest example of conjugacy.
+which is exactly the unnormalized part of another Beta density. This is the simplest example of conjugacy.
 
 The structural reason conjugacy works is that the prior and the likelihood are built from the same two algebraic pieces, $\rho$ and $(1-\rho)$. Multiplying them merely adds exponents, so the posterior stays in the same family. That is the general pattern behind conjugate priors: family-preserving algebra.
 
