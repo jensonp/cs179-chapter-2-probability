@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "hw1-watch-answers-toml",
+      "type": "shell",
+      "command": "/Library/Developer/CommandLineTools/usr/bin/python3",
+      "args": [
+        "${workspaceFolder}/.vscode/watch_answers_toml.py",
+        "${workspaceFolder}"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^watcher: started$",
+          "endsPattern": "^watcher: ready$"
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+\documentclass[letterpaper]{article}
+        \usepackage[margin=0in]{geometry}
+        \usepackage{amsmath,amssymb}
+        \usepackage{graphicx}
+        \usepackage{tikz}
+        \usepackage{pdfpages}
+        \usetikzlibrary{calc}
+        \pagestyle{empty}
+        \setlength{\parindent}{0pt}
+
+        \long\def\SetAnswer#1#2{\expandafter\gdef\csname answer@#1\endcsname{#2}}
+        \def\Answer#1{\ifcsname answer@#1\endcsname\csname answer@#1\endcsname\fi}
+        \newcommand{\Checkmark}{%
+          \tikz[baseline=-0.65ex,x=1pt,y=1pt]{%
+            \draw[line width=0.9pt,line cap=round,line join=round]
+              (0,2.3) -- (2.4,0) -- (6.1,6.1);
+          }%
+        }
+        \newcommand{\PlaceTextAnswer}[5]{%
+          \begin{tikzpicture}[remember picture,overlay]
+            \node[anchor=north west,inner sep=0pt,outer sep=0pt] at
+              ([xshift=#1pt,yshift=-#2pt]current page.north west) {%
+                \begin{minipage}[t][#4pt][t]{#3pt}
+                \raggedright
+                \setlength{\parskip}{0.25em}
+                #5
+                \end{minipage}%
+              };
+          \end{tikzpicture}%
+        }
+        \newcommand{\PlaceTextBox}[5]{%
+          \begin{tikzpicture}[remember picture,overlay]
+            \draw[line width=#5pt]
+              ([xshift=#1pt,yshift=-#2pt]current page.north west) rectangle
+              ([xshift=#3pt,yshift=-#4pt]current page.north west);
+          \end{tikzpicture}%
+        }
+        \newcommand{\PlaceCheckboxAnswer}[3]{%
+          \begin{tikzpicture}[remember picture,overlay]
+            \node[anchor=center,inner sep=0pt,outer sep=0pt] at
+              ([xshift=#1pt,yshift=-#2pt]current page.north west) {#3};
+          \end{tikzpicture}%
+        }
+
+        \input{answers.tex}
+
+        \begin{document}
+        \includepdf[pages=1,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{397.53}{70.92}{137.99}{20.69}{\fontsize{11}{13}\selectfont \Answer{student_name}}
+\PlaceTextAnswer{397.53}{114.44}{137.99}{20.69}{\fontsize{11}{13}\selectfont \Answer{student_ucinetid}}}]{cs179-hw1.pdf}
+\includepdf[pages=2,pagecommand={\thispagestyle{empty}}]{cs179-hw1.pdf}
+\includepdf[pages=3,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{400.20}{266.70}{137.99}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem1_p_d_eq_1}}
+\PlaceTextAnswer{400.20}{381.10}{137.99}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem1_p_c_eq_1_d_eq_1}}
+\PlaceTextAnswer{400.20}{495.50}{137.99}{30.25}{\fontsize{11}{13}\selectfont \Answer{problem1_p_d_eq_1_given_c_eq_1}}
+\PlaceTextAnswer{400.20}{621.85}{137.99}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem1_p_c_eq_1_given_t_eq_1_d_eq_0}}
+\PlaceTextBox{72.00}{270.00}{392.00}{340.00}{0.75}
+\PlaceTextAnswer{78.00}{276.00}{308.00}{58.00}{\fontsize{10}{12}\selectfont \Answer{problem1_work}}
+\PlaceTextBox{72.00}{385.00}{392.00}{455.00}{0.75}
+\PlaceTextAnswer{78.00}{391.00}{308.00}{58.00}{\fontsize{10}{12}\selectfont \Answer{problem1_work2}}
+\PlaceTextBox{72.00}{506.00}{392.00}{570.00}{0.75}
+\PlaceTextAnswer{78.00}{512.00}{308.00}{52.00}{\fontsize{10}{12}\selectfont \Answer{problem1_work3}}
+\PlaceTextBox{72.00}{635.00}{392.00}{760.00}{0.75}
+\PlaceTextAnswer{78.00}{641.00}{308.00}{113.00}{\fontsize{10}{12}\selectfont \Answer{problem1_work4}}}]{cs179-hw1.pdf}
+\includepdf[pages=4,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{400.20}{276.94}{137.99}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem2_p_coolant_low_given_warning}}
+\PlaceTextAnswer{400.20}{426.38}{137.99}{30.25}{\fontsize{11}{13}\selectfont \Answer{problem2_p_coolant_low_given_warning_and_hot}}
+\PlaceTextAnswer{151.91}{589.55}{138.00}{30.25}{\fontsize{11}{13}\selectfont \Answer{problem2_state_count}}
+\PlaceTextAnswer{349.39}{591.88}{137.99}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem2_parameter_count}}
+\PlaceTextBox{72.00}{255.00}{392.00}{360.00}{0.75}
+\PlaceTextAnswer{78.00}{261.00}{308.00}{93.00}{\fontsize{10}{12}\selectfont \Answer{problem2_work}}
+\PlaceTextBox{72.00}{405.00}{392.00}{515.00}{0.75}
+\PlaceTextAnswer{78.00}{411.00}{308.00}{98.00}{\fontsize{10}{12}\selectfont \Answer{problem2_work2}}}]{cs179-hw1.pdf}
+\includepdf[pages=5,pagecommand={\thispagestyle{empty}
+\PlaceTextBox{125.00}{210.50}{540.00}{284.00}{0.75}
+\PlaceTextAnswer{129.00}{214.50}{407.00}{65.50}{\fontsize{10}{12}\selectfont \Answer{problem3_q1_reasoning}}
+\PlaceTextBox{125.00}{333.00}{540.00}{406.00}{0.75}
+\PlaceTextAnswer{129.00}{337.00}{407.00}{65.00}{\fontsize{10}{12}\selectfont \Answer{problem3_q2_reasoning}}
+\PlaceTextBox{125.00}{455.00}{540.00}{529.00}{0.75}
+\PlaceTextAnswer{129.00}{459.00}{407.00}{66.00}{\fontsize{10}{12}\selectfont \Answer{problem3_q3_reasoning}}
+\PlaceTextBox{125.00}{602.00}{540.00}{742.00}{0.75}
+\PlaceTextAnswer{129.00}{606.00}{407.00}{132.00}{\fontsize{10}{12}\selectfont \Answer{problem3_q4_reasoning}}
+\PlaceCheckboxAnswer{147.60}{189.30}{\Answer{problem3_q1_yes}}
+\PlaceCheckboxAnswer{197.50}{189.30}{\Answer{problem3_q1_no}}
+\PlaceCheckboxAnswer{147.60}{311.45}{\Answer{problem3_q2_yes}}
+\PlaceCheckboxAnswer{197.50}{311.45}{\Answer{problem3_q2_no}}
+\PlaceCheckboxAnswer{147.60}{433.60}{\Answer{problem3_q3_yes}}
+\PlaceCheckboxAnswer{197.50}{433.60}{\Answer{problem3_q3_no}}
+\PlaceCheckboxAnswer{103.30}{579.80}{\Answer{problem3_q4_set1_yes}}
+\PlaceCheckboxAnswer{153.20}{579.80}{\Answer{problem3_q4_set1_no}}
+\PlaceCheckboxAnswer{242.35}{579.80}{\Answer{problem3_q4_set2_yes}}
+\PlaceCheckboxAnswer{292.30}{579.80}{\Answer{problem3_q4_set2_no}}
+\PlaceCheckboxAnswer{381.45}{579.80}{\Answer{problem3_q4_set3_yes}}
+\PlaceCheckboxAnswer{431.35}{579.80}{\Answer{problem3_q4_set3_no}}}]{cs179-hw1.pdf}
+\includepdf[pages=6,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{329.20}{211.69}{207.99}{206.01}{\fontsize{10}{12}\selectfont \Answer{problem4_beta_histogram_notes}}
+\PlaceTextAnswer{329.20}{492.48}{207.99}{206.00}{\fontsize{10}{12}\selectfont \Answer{problem4_geometric_histogram_notes}}}]{cs179-hw1.pdf}
+\includepdf[pages=7,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{101.10}{228.25}{138.00}{30.25}{\fontsize{11}{13}\selectfont \Answer{problem5_short_one_coin_rho}}
+\PlaceTextAnswer{336.89}{228.44}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_short_two_coin_rhos}}
+\PlaceTextAnswer{101.10}{401.26}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_short_one_coin_loglik}}
+\PlaceTextAnswer{336.89}{401.26}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_short_two_coin_loglik}}
+\PlaceTextAnswer{101.10}{586.04}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_short_one_coin_bic}}
+\PlaceTextAnswer{336.89}{586.04}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_short_two_coin_bic}}
+\PlaceTextBox{72.00}{270.00}{540.00}{332.00}{0.75}
+\PlaceTextAnswer{78.00}{276.00}{456.00}{50.00}{\fontsize{10}{12}\selectfont \Answer{problem5_short_work_mle}}
+\PlaceTextBox{72.00}{440.00}{540.00}{505.00}{0.75}
+\PlaceTextAnswer{78.00}{446.00}{456.00}{53.00}{\fontsize{10}{12}\selectfont \Answer{problem5_short_work_loglik}}
+\PlaceTextBox{72.00}{625.00}{540.00}{758.00}{0.75}
+\PlaceTextAnswer{78.00}{631.00}{456.00}{121.00}{\fontsize{10}{12}\selectfont \Answer{problem5_short_work}}}]{cs179-hw1.pdf}
+\includepdf[pages=8,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{101.10}{145.53}{138.00}{30.25}{\fontsize{11}{13}\selectfont \Answer{problem5_long_one_coin_rho}}
+\PlaceTextAnswer{336.89}{145.72}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_long_two_coin_rhos}}
+\PlaceTextAnswer{101.10}{407.20}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_long_one_coin_bic}}
+\PlaceTextAnswer{336.89}{407.20}{138.00}{30.26}{\fontsize{11}{13}\selectfont \Answer{problem5_long_two_coin_bic}}
+\PlaceTextBox{72.00}{190.00}{540.00}{335.00}{0.75}
+\PlaceTextAnswer{78.00}{196.00}{456.00}{133.00}{\fontsize{10}{12}\selectfont \Answer{problem5_long_work_mle}}
+\PlaceTextBox{72.00}{450.00}{540.00}{758.00}{0.75}
+\PlaceTextAnswer{78.00}{456.00}{456.00}{296.00}{\fontsize{10}{12}\selectfont \Answer{problem5_long_work}}}]{cs179-hw1.pdf}
+\includepdf[pages=9,pagecommand={\thispagestyle{empty}
+\PlaceTextAnswer{79.98}{244.30}{458.00}{132.00}{\fontsize{11}{13}\selectfont \Answer{statement_of_collaboration}}}]{cs179-hw1.pdf}
+        \end{document}

@@ -106,7 +106,7 @@ def latex_workshop_settings(python_executable: str) -> dict[str, object]:
             "*.pdf": "latex-workshop-pdf-hook",
             "*.PDF": "latex-workshop-pdf-hook",
         },
-        "latex-workshop.latex.autoBuild.run": "onFileChange",
+        "latex-workshop.latex.autoBuild.run": "onSave",
         "latex-workshop.latex.recipe.default": "first",
         "latex-workshop.latex.outDir": "../build",
         "latex-workshop.latex.recipes": [
@@ -132,6 +132,7 @@ def latex_workshop_settings(python_executable: str) -> dict[str, object]:
         "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click",
         "[latex]": {
             "editor.wordWrap": "on",
+            "editor.wordSeparators": "`~!@#$%^&*()-=+[{]}\\\\|;:'\\\",.<>/?",
         },
     }
 
@@ -155,6 +156,10 @@ def workspace_payload(project_dir: Path, python_executable: str) -> dict[str, ob
 
 
 def build_helper_script() -> str:
+    canonical = DEFAULT_PROJECT_DIR / ".vscode" / "build_hw1.py"
+    if canonical.exists():
+        return canonical.read_text(encoding="utf-8")
+
     return textwrap.dedent(
         """
         #!/usr/bin/env python3

@@ -3,6 +3,7 @@
 
 !.gitignore
 !README.md
+!hw1-latex.code-workspace
 !02_probability_main/
 !02_probability_main/**
 !02_probability_formal_supplement/
@@ -29,6 +30,28 @@ scripts/notes/*
 !scripts/setup_hw1_latex_workspace.py
 !scripts/autocommit.py
 !scripts/autocommit.launchagent.plist
+!scripts/render_hw1_latex_answers.py
+!scripts/hw1_layout.py
+
+!output/
+output/*
+!output/overleaf/
+output/overleaf/*
+!output/overleaf/cs179-hw1-project/
+output/overleaf/cs179-hw1-project/*
+!output/overleaf/cs179-hw1-project/README.md
+!output/overleaf/cs179-hw1-project/.vscode/
+output/overleaf/cs179-hw1-project/.vscode/*
+!output/overleaf/cs179-hw1-project/.vscode/build_hw1.py
+!output/overleaf/cs179-hw1-project/.vscode/settings.json
+!output/overleaf/cs179-hw1-project/.vscode/tasks.json
+!output/overleaf/cs179-hw1-project/.vscode/extensions.json
+!output/overleaf/cs179-hw1-project/.vscode/watch_answers_toml.py
+!output/overleaf/cs179-hw1-project/source/
+output/overleaf/cs179-hw1-project/source/*
+!output/overleaf/cs179-hw1-project/source/main.tex
+!output/overleaf/cs179-hw1-project/source/answers.toml
+!output/overleaf/cs179-hw1-project/source/cs179-hw1.pdf
 
 .DS_Store
 **/.DS_Store
