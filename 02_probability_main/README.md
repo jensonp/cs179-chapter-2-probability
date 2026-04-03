@@ -148,17 +148,17 @@ The step-by-step computation is worth stating explicitly. Event $A$ contains thr
 
 ### Random Variables
 
-A random variable partitions the event space into disjoint and exhaustive cases and assigns each case a symbolic value. If
+A random variable should be introduced in the right direction. First, it is a rule that takes each world $\omega \in \Omega$ and assigns it a value $X(\omega)$. Once that assignment exists, the events of the form $\{X=x\}$ are induced automatically as the sets of worlds that map to the value $x$. If
 
 $$X \in \{1,\dots,d\},$$
 
-then the events $X = 1, \dots, X = d$ are mutually exclusive and cover all outcomes, so
+then the events $\{X=1\},\dots,\{X=d\}$ are mutually exclusive and exhaustive: no world can make $X$ equal to two different values at once, and every world must place $X$ in one of its allowed states. Therefore
 
 $$\sum_{i=1}^d \mathbb{P}(X=i) = 1.$$
 
 The possible values are called the states of the variable, and the set of all possible values is its domain. For discrete variables, the probability mass function is often written as $p(X=x)$ or simply $p(x)$ when the variable is clear from context.
 
-A full beginner-to-expert way to read this is the following. At the beginner level, a random variable is a label attached to each outcome. At the intermediate level, it is a partition of the event space into mutually exclusive cases. At the expert level, it is a measurable map from worlds in $\Omega$ to values in a codomain, and the induced distribution on those values is obtained by pushing probability mass through that map.
+A full beginner-to-expert way to read this is the following. At the beginner level, a random variable is a label attached to each outcome. At the intermediate level, that labeling induces a partition of the event space into mutually exclusive cases. At the expert level, it is a measurable map from worlds in $\Omega$ to values in a codomain, and the induced distribution on those values is obtained by pushing probability mass through that map.
 
 A concrete example helps. Let the world be a die roll and define
 
@@ -190,7 +190,7 @@ The second piece of notation is the indicator function
 
 $$\mathbf{1}[X=x],$$
 
-which equals $1$ when the statement inside the brackets is true and equals $0$ when it is false. Indicator notation is useful because it turns a logical statement such as "the realized state is rain" into a numerical exponent or coefficient. That is exactly what happens in the Bernoulli and categorical product forms below.
+which equals $1$ when the statement inside the brackets is true and equals $0$ when it is false. Indicator notation matters because it turns a logical statement such as "the realized state is rain" into a numerical exponent or coefficient. That is exactly what happens in the Bernoulli and categorical product forms below.
 
 For example, if the realized weather state is rain, then
 
@@ -337,7 +337,19 @@ For the Geometric distribution with $p(X=x)=(1-\rho)^x\rho$ on $\{0,1,2,\dots\}$
 
 $$\mathbb{E}[X]=\sum_{x=0}^\infty x\,r^x\,\rho=\rho\sum_{x=0}^\infty x r^x.$$
 
-For $|r|<1$, the geometric-series identity is
+At this point a nontrivial series identity appears, so it should be derived instead of treated as magic. Start from the ordinary geometric series
+
+$$\sum_{x=0}^\infty r^x=\frac{1}{1-r}, \qquad |r|<1.$$
+
+Differentiate both sides with respect to $r$:
+
+$$\sum_{x=1}^\infty x r^{x-1}=\frac{1}{(1-r)^2}.$$
+
+Now multiply both sides by $r$:
+
+$$\sum_{x=1}^\infty x r^x=\frac{r}{(1-r)^2}.$$
+
+Adding the $x=0$ term changes nothing because it contributes $0$, so
 
 $$\sum_{x=0}^\infty x r^x=\frac{r}{(1-r)^2}.$$
 
@@ -595,9 +607,9 @@ The same Bayes update can be done by manipulating tables directly. The goal is t
 
 The table view is easiest to understand if we write the target posterior in a way that matches the three operations we will perform:
 
-$$p(C \mid T=1)=\frac{\sum_d p(T=1,d,C)}{\sum_{c,d} p(T=1,d,c)}.$$
+$$p(C=c \mid T=1)=\frac{\sum_d p(T=1,d,c)}{\sum_{c',d} p(T=1,d,c')}.$$
 
-The numerator $\sum_d p(T=1,d,C)$ means: fix the evidence $T=1$, then sum out the hidden variable $D$ to obtain a joint table over $(T=1,C)$. The denominator $\sum_{c,d} p(T=1,d,c)$ is the total probability of the evidence $T=1$, also called the evidence or normalization constant. Dividing by that constant is what turns the remaining nonnegative numbers into a proper posterior distribution that sums to $1$ over the possible cavity states.
+This formula is meant pointwise. For each specific cavity value $c$, the numerator sums over every probe value $d$ that is compatible with that cavity value. The denominator then sums over every cavity value and every probe value, so it is the total probability of the evidence $T=1$. Dividing by that denominator turns the remaining nonnegative entries into a proper posterior distribution over the cavity states.
 
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_table_update_pipeline.png" alt="Restriction, marginalization, and normalization pipeline" width="860">
@@ -828,27 +840,27 @@ So zero covariance does not imply independence. It only rules out linear depende
 
 Two random variables $X$ and $Y$ are independent if
 
-$$p(X,Y) = p(X)p(Y).$$
+$$p(X=x,Y=y) = p(X=x)p(Y=y)\qquad \text{for every pair of values }x,y.$$
 
 Equivalently, observing one does not change the distribution of the other:
 
-$$p(X \mid Y) = p(X).$$
+$$p(X=x \mid Y=y) = p(X=x)\qquad \text{for every }y\text{ with }p(Y=y)>0.$$
 
 The equivalence between these two definitions is worth writing out because it gets used constantly. If
 
-$$p(X,Y)=p(X)p(Y),$$
+$$p(X=x,Y=y)=p(X=x)p(Y=y),$$
 
-then for any value of $Y$ with positive probability,
+then for any value $y$ of $Y$ with positive probability,
 
-$$p(X \mid Y)=\frac{p(X,Y)}{p(Y)}=\frac{p(X)p(Y)}{p(Y)}=p(X).$$
+$$p(X=x \mid Y=y)=\frac{p(X=x,Y=y)}{p(Y=y)}=\frac{p(X=x)p(Y=y)}{p(Y=y)}=p(X=x).$$
 
 Conversely, if
 
-$$p(X \mid Y)=p(X)$$
+$$p(X=x \mid Y=y)=p(X=x)$$
 
-for every value of $Y$ with $p(Y)>0$, then multiplying both sides by $p(Y)$ gives
+for every value $y$ with $p(Y=y)>0$, then multiplying both sides by $p(Y=y)$ gives
 
-$$p(X,Y)=p(X \mid Y)p(Y)=p(X)p(Y).$$
+$$p(X=x,Y=y)=p(X=x \mid Y=y)p(Y=y)=p(X=x)p(Y=y).$$
 
 So the factorization view and the "observing $Y$ changes nothing" view are two algebraically equivalent ways to state the same independence claim. The caveat about $p(Y)>0$ is important: conditional probability is only defined when the conditioning event has nonzero probability.
 
@@ -1083,7 +1095,9 @@ Two common wrong notions are worth stating explicitly. First, "pairwise independ
 
 It is rare for variables to be completely independent, but they are often conditionally independent given a mediating variable $Z$:
 
-$$p(X,Y \mid Z) = p(X \mid Z)p(Y \mid Z).$$
+$$p(X=x,Y=y \mid Z=z) = p(X=x \mid Z=z)p(Y=y \mid Z=z)$$
+
+for every triple of values $(x,y,z)$ with $p(Z=z)>0$.
 
 Once $Z$ is known, $X$ and $Y$ stop giving extra information about each other.
 
@@ -2291,7 +2305,7 @@ $$\alpha=(0.2,0.2,0.2),$$
 
 the mass is pushed toward corners and edges. In plain language, that means the prior prefers sparse probability vectors in which one category gets most of the mass.
 
-For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution. So Beta is not a separate disconnected topic. It is simply the two-category version of the same family.
+For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution. So Beta is not a separate disconnected topic. It is the two-category version of the same family.
 
 <table align="center" border="0" cellpadding="0" cellspacing="12">
   <tbody>
@@ -2534,7 +2548,7 @@ The most important conceptual rule is: after the sample has been observed, the d
 
 So likelihood should be read as a **score for parameter values given fixed data**. Large likelihood means "this parameter makes the observed sample look relatively compatible with the model." Small likelihood means "this parameter makes the observed sample look relatively incompatible with the model."
 
-That wording matters because likelihood is comparative, not absolute. A likelihood value by itself does not certify truth. It is only useful relative to other parameter values under the same model and the same observed data.
+That wording matters because likelihood is comparative, not absolute. A likelihood value by itself does not certify truth. Its role is to compare one parameter value against other parameter values under the same model and the same observed data.
 
 For the small Bernoulli sample
 
@@ -3748,7 +3762,7 @@ If the logarithm is base $2$, entropy is measured in bits. If the natural logari
 
 A deterministic variable has entropy zero, because there is no uncertainty to average over. At the other extreme, a uniform distribution on a fixed finite support has the largest entropy, because it spreads probability as evenly as possible and therefore makes each observation comparatively hard to predict. Entropy is therefore not just "randomness" in an informal sense; it is the expected code length of the optimal lossless code and the expected information revealed by one observation.
 
-A useful comparison is between a fair coin and a biased coin with probabilities $(0.9,0.1)$. The fair coin has entropy $1$ bit, while the biased coin has
+A concrete comparison is between a fair coin and a biased coin with probabilities $(0.9,0.1)$. The fair coin has entropy $1$ bit, while the biased coin has
 
 $$H[X] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47 \text{ bits}.$$
 
