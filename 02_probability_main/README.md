@@ -2254,11 +2254,11 @@ $$\mathrm{Beta}(2,2)$$
 
 and
 
-$$\mathrm{Beta}(20,20).$$
+$$\mathrm{Beta}(20,20)$$
 
 They are both centered at $0.5$, because in both cases
 
-$$\frac{a}{a+b}=0.5.$$
+$$\frac{a}{a+b}=0.5$$
 
 But $\mathrm{Beta}(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
 
