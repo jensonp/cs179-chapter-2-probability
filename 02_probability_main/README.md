@@ -305,6 +305,8 @@ It is helpful to keep one explicit table in mind while reading the formulas. For
   </tbody>
 </table>
 
+Here **absolutely continuous** means that probabilities come entirely from interval area under a density function. Such a variable has no isolated point masses: every single exact value has probability zero, and probabilities are recovered by integrating the density over sets.
+
 The PMF notation, the table notation, and the indicator-product notation are all describing this same distribution. The only difference is the representation. The table is easiest for direct reading, while the product form is easier for algebraic manipulation.
 
 ### Geometric Distribution
@@ -599,7 +601,7 @@ $$p(D=1 \mid T=+)=\frac{0.95 \cdot 0.01}{0.1085}\approx 0.0876.$$
 
 Here is what those numbers mean in both probability and percentage form. Probabilities are numbers between $0$ and $1$. To convert a probability to a percentage, multiply by $100$.
 
-In this example, the prior disease probability is $p(D=1)=0.01$, which is $1\%$. After observing a positive test, the posterior is $p(D=1 \mid T=+)\approx 0.0876$, which is about $8.76\%$ (rounded to $8.8\%$). So the test is informative because it raises the disease probability from $0.01$ to about $0.088$, but the disease still remains unlikely (well under $10\%$) because the base rate was extremely small to begin with. This is exactly the setting in which base-rate neglect causes intuitive mistakes.
+In this example, the prior disease probability is $p(D=1)=0.01$, which is $1\%$. After observing a positive test, the posterior is $p(D=1 \mid T=+)\approx 0.0876$, which is about $8.76\%$ (rounded to $8.8\%$). So the test is informative because it raises the disease probability from $0.01$ to about $0.088$, but the disease still remains unlikely (well under $10\%$) because the base rate was extremely small to begin with. This is exactly the setting in which **base-rate neglect** causes intuitive mistakes: one focuses on the dramatic positive test result and forgets that the event was already very rare before the test was observed.
 
 ### Example 2-6: Table-Based Computation
 
@@ -1963,7 +1965,7 @@ $$\mu=(0,0)^T, \qquad \Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sig
 
 then the mean vector says the cloud is centered at the origin, the first coordinate has variance $4$, and the second coordinate has variance $1$. So the spread in the first direction is larger than the spread in the second direction. That is why the contours are ellipses stretched more strongly along the first coordinate than along the second.
 
-Because the off-diagonal terms are zero in this example, there is no rotational tilt. The principal axes of the ellipse line up with the coordinate axes.
+Because the off-diagonal terms are zero in this example, there is no rotational tilt. The **principal axes** of the ellipse, meaning the main directions along which the cloud is stretched, line up with the coordinate axes.
 
 Now change only the off-diagonal entries. Let $\Sigma$ be the $2\times 2$ covariance matrix with
 
@@ -1989,7 +1991,7 @@ If instead $\Sigma_{12}$ were negative, then large values of one coordinate woul
 
 $$x_1 \approx -x_2.$$
 
-This is the geometric meaning of off-diagonal covariance: it couples the coordinates and rotates the principal axes of the density.
+This is the geometric meaning of off-diagonal covariance: it couples the coordinates and rotates the main stretching directions of the density away from the coordinate axes.
 
 The main mastery-level takeaway is that a Gaussian is not just "the bell curve formula." It is a model whose parameters have direct geometric meaning:
 
@@ -2071,7 +2073,7 @@ so the denominator collapses to just one copy of $(1+e^{\eta})$. Therefore
 
 $$p(X=x)=\frac{e^{\eta x}}{1+e^{\eta}}=\exp(\eta x)\exp\left(-\log(1+e^{\eta})\right).$$
 
-So the canonical exponential-family form is
+So the **canonical** exponential-family form, meaning the form written directly in the natural-parameter coordinate $\eta$, is
 
 $$p(X=x)=\exp\left(\eta x-A(\eta)\right),$$
 
@@ -2115,7 +2117,7 @@ If $x=0$, then
 
 $$p(X=0)=\frac{e^{\eta_0}}{e^{\eta_0}+e^{\eta_1}}.$$
 
-So $\eta_1$ is the score attached to state $1$, and $\eta_0$ is the score attached to state $0$. The denominator normalizes those scores into valid probabilities.
+So $\eta_1$ is the unnormalized log-weight attached to state $1$, and $\eta_0$ is the unnormalized log-weight attached to state $0$. Exponentiating those numbers produces positive weights, and the denominator normalizes those weights into valid probabilities.
 
 Now divide numerator and denominator by $e^{\eta_0}$:
 
@@ -2201,7 +2203,7 @@ then
 
 $$p(\rho)=1 \qquad \text{for } 0 \le \rho \le 1.$$
 
-So Beta$(1,1)$ is the uniform distribution on $[0,1]$. This means equal-length intervals of possible probabilities receive equal prior mass. It does **not** mean that a single exact value of $\rho$ has positive probability as a point event, because continuous distributions assign probability through interval area rather than point mass.
+So Beta$(1,1)$ is the uniform distribution on $[0,1]$. This means equal-length intervals of possible parameter values receive equal probability mass under this Beta distribution. It does **not** mean that a single exact value of $\rho$ has positive probability as a point event, because continuous distributions assign probability through interval area rather than point mass.
 
 Second example: one interior peak.
 
@@ -2209,7 +2211,7 @@ If
 
 $$\rho \sim \mathrm{Beta}(5,5),$$
 
-then the density is symmetric around $0.5$ and has a single peak near the center. This is what "unimodal" means in this context: there is one bell-like high region rather than two separated spikes. This prior expresses the belief that values near $0.5$ are more plausible than values near $0$ or $1$.
+then the density is symmetric around $0.5$ and has a single peak near the center. This is what "unimodal" means in this context: there is one bell-like high region rather than two separated spikes. In geometric terms, the distribution places more of its mass near $0.5$ than near $0$ or $1$.
 
 Third example: favoring one side.
 
@@ -2221,7 +2223,7 @@ then the mean is
 
 $$\mathbb{E}[\rho]=\frac{2}{7}\approx 0.286.$$
 
-So this prior leans toward smaller probabilities. In plain language, it says "before seeing data, I regard success probabilities below one-half as more plausible than success probabilities above one-half."
+So this distribution leans toward smaller probabilities. In plain language, it places more mass on success probabilities below one-half than on success probabilities above one-half.
 
 Fourth example: favoring extremes.
 
@@ -2229,7 +2231,7 @@ If
 
 $$\rho \sim \mathrm{Beta}(0.3,0.3),$$
 
-then the density is high near $0$ and near $1$, and relatively low in the middle. This says the coin is believed to be more likely strongly biased than close to fair.
+then the density is high near $0$ and near $1$, and relatively low in the middle. So this distribution favors strongly biased parameter values more than nearly fair ones.
 
 This is also the place to explain why boundary spikes are not a paradox. When either shape parameter is below $1$, the density can become very large near $0$ or $1$. That does not violate probability rules, because a density value is not itself a probability. What matters is the area under the curve over an interval, and that total area remains finite and equal to one.
 
@@ -2274,7 +2276,7 @@ are both centered at $0.5$, because in both cases
 
 $$\frac{a}{a+b}=0.5.$$
 
-But Beta$(20,20)$ is much more concentrated near $0.5$. So the first prior says "probably around fair, but with a lot of uncertainty," while the second says "strongly concentrated near fair."
+But Beta$(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
 
 The Dirichlet distribution is the multi-state version of this same idea.
 
@@ -2324,7 +2326,7 @@ then
 
 $$\mathbb{E}[\theta]=\left(\frac{8}{12},\frac{2}{12},\frac{2}{12}\right)=\left(\frac{2}{3},\frac{1}{6},\frac{1}{6}\right).$$
 
-That prior says the first category is expected to be much more common than the other two.
+That Dirichlet distribution is centered much closer to the first category than to the other two.
 
 If instead
 
@@ -2334,7 +2336,7 @@ then
 
 $$\mathbb{E}[\theta]=\left(\frac{1}{3},\frac{1}{3},\frac{1}{3}\right).$$
 
-So the prior is symmetric across categories.
+So the distribution is symmetric across categories.
 
 Now compare concentration while keeping the same proportions. If we increase to
 
@@ -2348,7 +2350,7 @@ but the distribution becomes much more concentrated near the center of the simpl
 
 $$\alpha=(0.2,0.2,0.2),$$
 
-the mass is pushed toward corners and edges. In plain language, that means the prior prefers sparse probability vectors in which one category gets most of the mass.
+the mass is pushed toward corners and edges. A **sparse probability vector** means one in which most of the total mass is concentrated in only one or a few coordinates rather than being spread evenly across all categories. So in plain language, this distribution favors tables in which one category gets most of the mass.
 
 For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution. So Beta is not a separate disconnected topic. It is the two-category version of the same family.
 
@@ -2367,19 +2369,25 @@ For $d=2$, the Dirichlet distribution reduces exactly to the Beta distribution. 
 
 The Beta grid makes the parameter effects explicit. Curves with parameters above one usually have a single interior peak. Curves with parameters below one can pile up near the boundaries. The Dirichlet simplex panels show the same phenomenon in the multi-category setting: mass near the center means balanced proportions, while mass near an edge or corner means one or more categories dominate.
 
-A final pair of coin examples fixes the interpretation. Suppose $\rho$ is the head probability of a coin. A prior
+A final pair of coin examples fixes the interpretation. Suppose $\rho$ is the head probability of a coin. A Beta distribution
 
 $$\rho \sim \mathrm{Beta}(20,20)$$
 
-encodes a strong belief that the coin is close to fair, because the mass is tightly concentrated around $0.5$. By contrast,
+places most of its mass near $0.5$, so parameter values close to a fair coin receive much more weight than extreme values. By contrast,
 
 $$\rho \sim \mathrm{Beta}(0.3,0.3)$$
 
-puts much more mass near $0$ and $1$, expressing the belief that the coin is likely to be strongly biased in one direction or the other. In the Dirichlet case, the same logic applies to a probability vector rather than a single number: large, balanced concentration parameters favor balanced interior probability tables, while small concentration parameters favor sparse near-corner tables.
+places much more mass near $0$ and $1$, so strongly biased parameter values are favored over nearly fair ones. In the Dirichlet case, the same logic applies to a probability vector rather than a single number: large, balanced concentration parameters favor balanced interior probability tables, while small concentration parameters favor sparse near-corner tables. In later Bayesian sections these same distributions will often be used as priors, but the shape story comes first.
 
 ### The Exponential Family
 
 The exponential family is a modeling template, not one specific distribution. Its purpose is to expose a shared algebraic structure that appears in Bernoulli, categorical, Gaussian, Poisson, Gamma, Beta, Dirichlet, and many other common models.
+
+This is one of the chapter's more abstract sections. The right reading strategy is not "memorize one large formula." The right strategy is to keep asking three questions:
+
+- what part of the model depends only on the observation,
+- what part depends on the parameter,
+- and what summary of the data the parameter actually interacts with.
 
 The phrase "family" matters here. It means a collection of distributions indexed by parameters. The phrase "exponential family" means this collection can be written in a common exponential-shaped algebraic form. The value of that form is not aesthetic. It lets many different models share the same optimization and inference machinery.
 
@@ -2398,8 +2406,8 @@ So the family is "all distributions obtained by varying $\theta$ while keeping t
 Every symbol in the expression has a specific role.
 
 - $x$ is the observed value.
-- $\phi(x)$ is a fixed feature vector computed from $x$. Its components are called sufficient statistics.
-- $\theta$ is the natural parameter.
+- $\phi(x)$ is a fixed feature vector computed from $x$. Its components are called **sufficient statistics**, meaning summary quantities that capture all the data information the parameter needs for likelihood-based inference in this family.
+- $\theta$ is the **natural parameter**, meaning the coordinate system in which the log-density becomes linear in the sufficient statistics.
 - $h(x)$ is the base measure, the part of the density or mass function that depends on $x$ but not on $\theta$.
 - $A(\theta)$ is the log-partition function, chosen so that the distribution normalizes correctly.
 
@@ -2419,7 +2427,7 @@ Comparing with the template gives
 
 $$h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\theta)=\log(1+e^{\theta}).$$
 
-A second example is a one-dimensional Gaussian with known variance $\sigma^2$ and unknown mean $\mu$. Its density can be rearranged into exponential-family form with sufficient statistics $x$ and $x^2$. The exact coordinates are less important than the pattern: once the density is written as "fixed function of $x$" times "exponential of parameter times sufficient statistics," the same optimization and moment arguments apply.
+A second example is a one-dimensional Gaussian with known variance $\sigma^2$ and unknown mean $\mu$. Its density can also be rearranged into exponential-family form. The beginner-level point is not to memorize every algebraic coordinate. The point is to notice the same structural split again: one part of the expression depends only on the observation, one part is linear in a summary of the observation, and one part normalizes the distribution.
 
 The term sufficient statistic becomes concrete when we look at independent and identically distributed data. Here independent means the observations do not probabilistically influence one another once the parameter is fixed, and identically distributed means each observation is governed by the same one-observation model. Suppose
 
@@ -2437,7 +2445,7 @@ This expression shows exactly how the data enter the likelihood. The only data-d
 
 $$S(D)=\sum_{i=1}^m \phi(x^{(i)}).$$
 
-That is the operational meaning of sufficiency in this setting: once $S(D)$ is known, the likelihood as a function of $\theta$ no longer needs the full raw data sequence.
+That is the operational meaning of sufficiency in this setting: once $S(D)$ is known, the likelihood as a function of $\theta$ no longer needs the full raw data sequence. The raw sample may be long, but from the parameter's point of view the relevant information has been compressed into that summary.
 
 For Bernoulli, $\phi(x)=x$, so
 
@@ -2485,9 +2493,9 @@ From the frequentist perspective, probability is interpreted through long-run fr
 
 From the Bayesian perspective, probability is used to represent uncertainty itself. The parameter is therefore treated as uncertain before the data are seen, so we place a prior distribution on it and update that prior after observing data.
 
-Both views often use the same likelihood function, but they ask different questions. A frequentist estimator asks: if nature chose one fixed parameter value, what rule should I use to estimate it from repeated samples? A Bayesian posterior asks: after seeing this actual realized data set, which parameter values remain plausible, and how plausible are they relative to one another?
+Both views often use the same data-fit quantity. The next subsection will define that quantity carefully and call it the **likelihood**. For now, the important point is only that both schools ask how well different parameter values account for the observed data, but they use that information in different ways. A frequentist estimator asks: if nature chose one fixed parameter value, what rule should I use to estimate it from repeated samples? A Bayesian posterior asks: after seeing this actual realized data set, which parameter values remain plausible, and how plausible are they relative to one another?
 
-Maximum likelihood is the canonical frequentist estimate because it keeps only the data-fit term and ignores prior beliefs. A Bayesian update keeps both pieces: how well the parameter explains the data and how plausible the parameter looked before the data arrived.
+One frequentist strategy is **maximum likelihood estimation**: choose the parameter value that makes the observed data most compatible with the model. A Bayesian update keeps one more ingredient as well: how plausible the parameter looked before the data arrived.
 
 The same coin-toss example makes the contrast concrete. Suppose we observe five flips with outcomes
 
