@@ -1552,7 +1552,37 @@ Second, $\mathbb{P}(X=x)=0$ for a continuous variable does not mean the value $x
 
 ### Example 2-9: Uniform Distribution
 
-For a continuous-valued random variable $X$ defined on $[0,T]$, the uniform distribution is
+The word uniform needs to be interpreted carefully in the continuous setting. It does **not** mean that each individual point has the same positive probability, because every single point has probability zero for a continuous variable. Instead, it means that the density is constant across the allowed interval, so intervals of the same length receive the same probability mass.
+
+Suppose $X$ is known to lie somewhere between $0$ and $T$, and suppose we want a model that treats all locations inside that interval symmetrically. The natural way to express that idea is to assign one constant density value on the whole interval and zero density outside it. So we write
+
+<table align="center">
+  <thead>
+    <tr><th>support condition for $x$</th><th>$p(x)$</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>$x \in [0,T]$</td><td>$c$</td></tr>
+    <tr><td>otherwise</td><td>$0$</td></tr>
+  </tbody>
+</table>
+
+The constant $c$ cannot be chosen arbitrarily. A density must integrate to $1$, so we impose the normalization condition
+
+$$\int_{-\infty}^{\infty} p(x)\,dx = 1.$$
+
+Because $p(x)=0$ outside $[0,T]$, this reduces to
+
+$$\int_0^T c\,dx = 1.$$
+
+Now compute the integral:
+
+$$c \int_0^T 1\,dx = cT = 1.$$
+
+Therefore
+
+$$c=\frac{1}{T}.$$
+
+So the uniform density on $[0,T]$ is
 
 <table align="center">
   <thead>
@@ -1564,11 +1594,43 @@ For a continuous-valued random variable $X$ defined on $[0,T]$, the uniform dist
   </tbody>
 </table>
 
-Then
+This formula says two things at once. First, the support of the distribution is the interval $[0,T]$: values outside that interval are impossible under the model because their density is zero. Second, inside the interval the density is flat, so no region is favored over any other region of the same length.
+
+The normalization check is now immediate:
 
 $$\int_0^T p(x)\,dx = T \cdot \frac{1}{T} = 1.$$
 
-Unlike discrete distributions, the density value may be larger than one, as long as its integral over the support is one. The important normalization object is area, not height.
+The most important operational consequence is that probability depends only on interval length. If $0 \le a \le b \le T$, then
+
+$$\mathbb{P}(a \le X \le b)=\int_a^b \frac{1}{T}\,dx=\frac{b-a}{T}.$$
+
+So under a uniform model:
+
+- an interval of length $0.1T$ has probability $0.1$,
+- an interval of length $0.25T$ has probability $0.25$,
+- and two intervals with the same length always have the same probability, no matter where they sit inside $[0,T]$.
+
+This is the precise mathematical meaning of "uniform."
+
+A concrete example makes the geometry clearer. Suppose $X \sim \mathrm{Unif}[0,10]$. Then
+
+$$p(x)=\frac{1}{10}\qquad \text{for } 0 \le x \le 10.$$
+
+Now compute a few interval probabilities:
+
+$$\mathbb{P}(2 \le X \le 5)=\int_2^5 \frac{1}{10}\,dx=\frac{5-2}{10}=0.3,$$
+
+$$\mathbb{P}(7 \le X \le 8)=\int_7^8 \frac{1}{10}\,dx=\frac{8-7}{10}=0.1.$$
+
+The first interval is three times as long as the second, so it has three times as much probability. Location does not matter; length does.
+
+This also clarifies why point probabilities vanish. Even though the density is positive at every point of $[0,T]$, we still have
+
+$$\mathbb{P}(X=4)=0,$$
+
+because a single point has zero width and therefore contributes zero area under the density.
+
+Unlike discrete distributions, the density value itself may be larger than one, as long as the total area under the curve is one. The object that must equal one is the integral, not the height of the graph.
 
 For example, if $X$ is uniform on the very short interval $[0,0.2]$, then
 
@@ -1578,7 +1640,9 @@ on that interval. The density value exceeds one, but the total probability is st
 
 $$\int_0^{0.2} 5\,dx = 1.$$
 
-So there is no contradiction between a large density and a valid probability model.
+So there is no contradiction between a large density and a valid probability model. The interval is very short, so the density must be tall in order for the total area to remain one.
+
+One structural limit should also be stated explicitly: a continuous uniform distribution must live on a **finite-length** interval if we want a constant density. There is no valid density that is "uniform over the entire real line," because no positive constant can integrate to one over an infinite interval. So the uniform model is appropriate when the possible values are bounded and all equal-length subintervals are meant to be treated symmetrically.
 
 ### Gaussian Distributions
 
