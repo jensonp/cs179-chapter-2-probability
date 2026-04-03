@@ -925,12 +925,17 @@ Let $X$ be a biased coin and $Y$ a weighted four-sided die. If they are independ
             <tr><th>$X$</th><th>$Y$</th><th>$p(X,Y)$</th></tr>
           </thead>
           <tbody>
-            <tr><td>$0$</td><td>$1$</td><td>$0.14$</td></tr>
-            <tr><td>$0$</td><td>$2$</td><td>$0.21$</td></tr>
-            <tr><td>$1$</td><td>$4$</td><td>$0.03$</td></tr>
+            <tr><td>$0$</td><td>$1$</td><td>$0.7 \cdot 0.2 = 0.14$</td></tr>
+            <tr><td>$0$</td><td>$2$</td><td>$0.7 \cdot 0.3 = 0.21$</td></tr>
+            <tr><td>$0$</td><td>$3$</td><td>$0.7 \cdot 0.4 = 0.28$</td></tr>
+            <tr><td>$0$</td><td>$4$</td><td>$0.7 \cdot 0.1 = 0.07$</td></tr>
+            <tr><td>$1$</td><td>$1$</td><td>$0.3 \cdot 0.2 = 0.06$</td></tr>
+            <tr><td>$1$</td><td>$2$</td><td>$0.3 \cdot 0.3 = 0.09$</td></tr>
+            <tr><td>$1$</td><td>$3$</td><td>$0.3 \cdot 0.4 = 0.12$</td></tr>
+            <tr><td>$1$</td><td>$4$</td><td>$0.3 \cdot 0.1 = 0.03$</td></tr>
           </tbody>
         </table>
-        <p><strong>Representative joint entries</strong></p>
+        <p><strong>Full joint table obtained by multiplying marginals entry by entry</strong></p>
       </td>
     </tr>
   </tbody>
@@ -1467,7 +1472,11 @@ Third, the far-left limit is $0$ and the far-right limit is $1$:
 
 $$\lim_{x\to -\infty} F_X(x)=0,\qquad \lim_{x\to \infty} F_X(x)=1.$$
 
-So a CDF always starts near $0$, climbs as probability accumulates, and eventually levels off at $1$.
+Fourth, a CDF is right-continuous, meaning
+
+$$\lim_{h \downarrow 0} F_X(x+h)=F_X(x).$$
+
+This matters because CDFs can have jumps. When a variable has positive point mass at a value $x$, the CDF jumps upward at that exact location, and the value $F_X(x)$ already includes the mass sitting at $x$. So a CDF always starts near $0$, climbs as probability accumulates, and eventually levels off at $1$.
 
 One more operational formula is worth stating early because it is how CDFs are actually used:
 
@@ -1898,6 +1907,30 @@ In ordinary Euclidean distance, moving one unit horizontally and moving one unit
 
 So the multivariate Gaussian is still doing exactly what the one-dimensional Gaussian did: it penalizes distance from the mean. The only difference is that in several dimensions, "distance" must now respect the spread and dependence encoded by $\Sigma$.
 
+One explicit diagonal example keeps the matrix notation grounded. If
+
+$$\Sigma=
+\begin{bmatrix}
+\sigma_1^2 & 0\\
+0 & \sigma_2^2
+\end{bmatrix},$$
+
+then
+
+$$\Sigma^{-1}=
+\begin{bmatrix}
+1/\sigma_1^2 & 0\\
+0 & 1/\sigma_2^2
+\end{bmatrix},$$
+
+so the quadratic term becomes
+
+$$
+(x-\mu)^T\Sigma^{-1}(x-\mu)=\frac{(x_1-\mu_1)^2}{\sigma_1^2}+\frac{(x_2-\mu_2)^2}{\sigma_2^2}.
+$$
+
+This is the direct multivariate analogue of the one-dimensional Gaussian penalty. Each coordinate contributes its own squared deviation, scaled by its own variance. Off-diagonal covariance terms are what introduce cross-terms and rotate the geometry away from this axis-aligned form.
+
 In two dimensions, the sets of points with equal density are ellipses. In higher dimensions, they are ellipsoids. So the multivariate Gaussian is still a bell-shaped distribution, but now the bell can be stretched, compressed, and rotated.
 
 The covariance matrix $\Sigma$ therefore contains two kinds of information:
@@ -2028,7 +2061,15 @@ $$p(X=x)=\left(\frac{e^{\eta}}{1+e^{\eta}}\right)^x\left(\frac{1}{1+e^{\eta}}\ri
 
 Collect powers of $e^{\eta}$ and $(1+e^{\eta})$:
 
-$$p(X=x)=\exp(\eta x)\exp\left(-\log(1+e^{\eta})\right).$$
+$$p(X=x)=\frac{e^{\eta x}}{(1+e^{\eta})^{x+(1-x)}}.$$
+
+The denominator exponent is
+
+$$x+(1-x)=1,$$
+
+so the denominator collapses to just one copy of $(1+e^{\eta})$. Therefore
+
+$$p(X=x)=\frac{e^{\eta x}}{1+e^{\eta}}=\exp(\eta x)\exp\left(-\log(1+e^{\eta})\right).$$
 
 So the canonical exponential-family form is
 
@@ -2125,7 +2166,11 @@ $$p(\rho)=\mathrm{Beta}(\rho;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\rho^{a-
 
 where $a>0$ and $b>0$ are shape parameters.
 
-The Gamma-function ratio is only a normalization constant. Its job is to make the total area equal to one:
+The symbol $\Gamma$ is the Gamma function. For positive integers it satisfies
+
+$$\Gamma(n)=(n-1)!,$$
+
+so it extends the factorial function to non-integer arguments. In the Beta density, the Gamma-function ratio is the constant that makes the total area equal to one:
 
 $$\int_0^1 p(\rho)\,d\rho=1.$$
 
@@ -2948,9 +2993,16 @@ For a canonical exponential-family model
 
 $$p_{\theta}(x) = h(x)\exp\left(\theta^{\top}\phi(x) - A(\theta)\right)$$
 
-the log-likelihood of i.i.d. data is
+the log-likelihood of independent and identically distributed data is
 
 $$\ell(\theta) = \sum_i \log h(x^{(i)}) + \theta^{\top} \sum_i \phi(x^{(i)}) - m A(\theta)$$
+
+The phrase **independent and identically distributed** should be read one word at a time.
+
+- **Independent** means that once the parameter $\theta$ is fixed, the observations do not probabilistically influence one another, so their joint probability factors into a product.
+- **Identically distributed** means each observation is governed by the same one-observation model form and the same parameter value $\theta$.
+
+Those two assumptions are exactly what allow one repeated one-observation formula to become a product over samples and then a sum in the log-likelihood.
 
 Differentiating with respect to $\theta$ gives
 
