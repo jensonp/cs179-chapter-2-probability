@@ -228,6 +228,16 @@ $$\mathbb{P}(X=i) = \rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.
 
 This table is the PMF of the variable. For each possible state $i$, the number $\rho_i$ is the probability that $X$ takes that state. Only $d-1$ of those values are free, because the last one is determined by normalization. If the first $d-1$ probabilities are already fixed, the final one must be whatever value makes the whole table sum to one.
 
+Two vocabulary items make that sentence precise. First, a discrete variable with exactly $d$ possible states is sometimes called $d$-ary. For example, a die-outcome variable with support $\{1,2,3,4,5,6\}$ is $6$-ary, while the weather variable with states $\{\text{sun},\text{cloud},\text{rain}\}$ is $3$-ary.
+
+Second, degrees of freedom means the number of independent numerical choices you can make after all required constraints are enforced. Here we have $d$ nonnegative numbers $\rho_1,\dots,\rho_d$, but they must satisfy the single normalization constraint $\sum_{i=1}^d \rho_i=1$. That one constraint removes one free choice, so the PMF has $d-1$ degrees of freedom.
+
+An explicit three-state check: if $d=3$ and you choose $\rho_1=0.5$ and $\rho_2=0.3$, then normalization forces
+
+$$\rho_3 = 1-\rho_1-\rho_2 = 1-0.5-0.3=0.2.$$
+
+So you only had two independent choices, which matches $d-1=2$. This same "number of table entries minus normalization constraints" logic is what drives the parameter-count statements later in the chapter.
+
 One compact representation is
 
 $$p(X) = \prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}.$$
@@ -768,9 +778,29 @@ $$p(X,Y)=p(X \mid Y)p(Y)=p(X)p(Y).$$
 
 So the factorization view and the "observing $Y$ changes nothing" view are two algebraically equivalent ways to state the same independence claim. The caveat about $p(Y)>0$ is important: conditional probability is only defined when the conditioning event has nonzero probability.
 
-Independence also simplifies the joint distribution. If $X$ and $Y$ are $d$-ary variables, the full joint has $d^2 - 1$ degrees of freedom, while independence reduces that to $2d - 2$.
+Independence also simplifies the joint distribution by reducing how many numbers must be specified. Suppose $X$ and $Y$ are both $d$-ary, meaning each takes one of $d$ states. A general joint distribution $p(X,Y)$ is a $d \times d$ probability table with $d^2$ entries. Those entries must be nonnegative and must satisfy exactly one normalization constraint:
 
-That parameter-count reduction is the structural reward for independence. Without independence, every pair $(x,y)$ needs its own joint probability, subject only to one normalization constraint. With independence, the entire table is reconstructed from two marginal vectors. This is a dramatic simplification, but it is also a strong modeling claim, so it should only be used when it is substantively justified.
+$$\sum_{x}\sum_{y} p(X=x,Y=y)=1.$$
+
+So, in the degrees-of-freedom sense, a full unconstrained joint table has $d^2-1$ free parameters: you can choose $d^2-1$ of the entries arbitrarily (subject to nonnegativity), and the final entry is forced by the requirement that the whole table sums to $1$.
+
+Under independence, the joint factorizes as
+
+$$p(X,Y)=p(X)p(Y).$$
+
+Now you do not need to choose $d^2$ unrelated entries. You only choose the two marginal tables. The marginal $p(X)$ has $d$ entries summing to $1$, so it has $d-1$ degrees of freedom. The marginal $p(Y)$ also has $d-1$ degrees of freedom. Therefore the independent model has $(d-1)+(d-1)=2d-2$ degrees of freedom. Once those marginal numbers are chosen, every joint entry is determined by multiplication.
+
+An explicit $d=3$ example shows the reduction mechanically. Let
+
+$$p(X)=(0.5,0.3,0.2),\qquad p(Y)=(0.1,0.6,0.3).$$
+
+Independence implies, for example,
+
+$$p(X=1,Y=2)=p(X=1)p(Y=2)=0.5\cdot 0.6=0.30,$$
+
+and similarly every other joint entry is a product of one $X$-marginal number and one $Y$-marginal number. In this $3 \times 3$ case, an unconstrained joint distribution would have $3^2-1=8$ degrees of freedom, while independence uses only $2\cdot 3-2=4$ degrees of freedom (two independent choices for $p(X)$ and two for $p(Y)$).
+
+This reduction is the main motive for using independence or conditional independence assumptions in AI models: fewer degrees of freedom means fewer parameters to estimate from data and a simpler structure for inference. The tradeoff is that independence is a strong modeling claim. It restricts which joint distributions are representable, so it should only be used when it is substantively justified (or when it is a deliberate approximation).
 
 ### Example 2-7: Independence
 
