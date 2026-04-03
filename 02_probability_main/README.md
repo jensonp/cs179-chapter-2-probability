@@ -30,7 +30,7 @@ If time is short, read `2.1`, the Geometric section, the core parts of `2.2`, an
 
 ## Notation Policy
 
-Throughout the note, `\mathbb{P}(A)` denotes the probability of an event $A$, while $p(x)$ denotes a PMF or PDF value when such an object exists. Random variables are written with uppercase letters, realized values with lowercase letters, $F_X(x)$ denotes a CDF, and $\Omega$ denotes the sample space. When a formula is valid only in a discrete setting, only for densities, only for invertible maps, or only away from a boundary case, that restriction is stated explicitly rather than left implicit.
+Throughout the note, $\mathbb{P}(A)$ denotes the probability of an event $A$, while $p(x)$ denotes a PMF or PDF value when such an object exists. Random variables are written with uppercase letters, realized values with lowercase letters, $F_X(x)$ denotes a CDF, and $\Omega$ denotes the sample space. When a formula is valid only in a discrete setting, only for densities, only for invertible maps, or only away from a boundary case, that restriction is stated explicitly rather than left implicit.
 
 ## 2.1 Probability, Events, Random Variables
 
@@ -72,7 +72,7 @@ $$\mathbb{P}(\Omega) = 1,$$
 
 and countable additivity:
 
-$$\mathbb{P}\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} \mathbb{P}(A_i)$$
+$$\mathbb{P}\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} \mathbb{P}(A_i)$$
 
 whenever the events $A_1,A_2,\dots$ are pairwise disjoint.
 
@@ -202,7 +202,7 @@ $$\mathbb{P}(X=0) = 1-\rho.$$
 
 We can write the distribution as
 
-$$p(X) = Ber(X;\rho) = \rho^X (1-\rho)^{1-X}.$$
+$$p(X) = \mathrm{Ber}(X;\rho) = \rho^X (1-\rho)^{1-X}.$$
 
 This evaluates to $\rho$ when $X = 1$ and to $1-\rho$ when $X = 0$.
 
@@ -274,7 +274,9 @@ $$\rho_{\text{sun}}^0 \rho_{\text{cloud}}^0 \rho_{\text{rain}}^1 = 0.2.$$
 
 That is why the exponents look like $0,0,1$: they are not probabilities, they are indicator values saying which state actually occurred. If the realized state had been cloud instead, the exponents would have been $0,1,0$ and the same product would have selected $\rho_{\text{cloud}}=0.3$ instead.
 
-![Indicator exponents select the realized state](../notes/02_probability_reconstructed/assets/figure_2_indicator_product_selector.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_indicator_product_selector.png" alt="Indicator exponents select the realized state" width="860">
+</p>
 
 The main structural idea is that a categorical PMF can be written either as an explicit table or as a product that automatically selects the row corresponding to the realized state. The table form is easier to read at first; the product form becomes useful later when we write more complicated models compactly.
 
@@ -300,7 +302,23 @@ The key numerical pattern is that each step to the right multiplies the previous
 
 So a histogram of this distribution has a tallest bar at $x=0$, then progressively smaller bars as $x$ increases. The right tail is long because there is always some chance that many failures occur before the first success, but the probability of those larger counts drops off by repeated multiplication.
 
-The mean under this zero-based convention is
+Expected value (mean). For a discrete variable, the expected value is defined as the probability-weighted average
+
+$$\mathbb{E}[X]=\sum_{x} x\,p(X=x).$$
+
+For the Geometric distribution with $p(X=x)=(1-\rho)^x\rho$ on $\{0,1,2,\dots\}$, this sum can be evaluated in closed form. Let $r=1-\rho$. Then
+
+$$\mathbb{E}[X]=\sum_{x=0}^\infty x\,r^x\,\rho=\rho\sum_{x=0}^\infty x r^x.$$
+
+For $|r|<1$, the geometric-series identity is
+
+$$\sum_{x=0}^\infty x r^x=\frac{r}{(1-r)^2}.$$
+
+Here $r=1-\rho \in (0,1)$, so the identity applies, and we obtain
+
+$$\mathbb{E}[X]=\rho\cdot \frac{r}{(1-r)^2}=\rho\cdot \frac{1-\rho}{\rho^2}=\frac{1-\rho}{\rho}.$$
+
+So the mean under this zero-based convention is
 
 $$\mathbb{E}[X]=\frac{1-\rho}{\rho}.$$
 
@@ -316,16 +334,21 @@ The chapter uses three binary variables:
 
 The joint distribution over $(T,D,C)$ is:
 
-| $TDC$ | $p(T,D,C)$ |
-|---|---:|
-| 000 | 0.576 |
-| 001 | 0.008 |
-| 010 | 0.144 |
-| 011 | 0.072 |
-| 100 | 0.064 |
-| 101 | 0.012 |
-| 110 | 0.016 |
-| 111 | 0.108 |
+<table align="center">
+  <thead>
+    <tr><th><i>TDC</i></th><th><i>p(T, D, C)</i></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>000</td><td>0.576</td></tr>
+    <tr><td>001</td><td>0.008</td></tr>
+    <tr><td>010</td><td>0.144</td></tr>
+    <tr><td>011</td><td>0.072</td></tr>
+    <tr><td>100</td><td>0.064</td></tr>
+    <tr><td>101</td><td>0.012</td></tr>
+    <tr><td>110</td><td>0.016</td></tr>
+    <tr><td>111</td><td>0.108</td></tr>
+  </tbody>
+</table>
 
 The eight rows are mutually exclusive and exhaustive, so their probabilities sum to one.
 
@@ -547,10 +570,12 @@ $$p(C \mid T=1)=\frac{\sum_d p(T=1,d,C)}{\sum_{c,d} p(T=1,d,c)}.$$
 
 The numerator $\sum_d p(T=1,d,C)$ means: fix the evidence $T=1$, then sum out the hidden variable $D$ to obtain a joint table over $(T=1,C)$. The denominator $\sum_{c,d} p(T=1,d,c)$ is the total probability of the evidence $T=1$, also called the evidence or normalization constant. Dividing by that constant is what turns the remaining nonnegative numbers into a proper posterior distribution that sums to $1$ over the possible cavity states.
 
-![Restriction, marginalization, and normalization pipeline](../notes/02_probability_reconstructed/assets/figure_2_table_update_pipeline.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_table_update_pipeline.png" alt="Restriction, marginalization, and normalization pipeline" width="860">
+</p>
 
 <!-- table-stack:start -->
-<table border="0" cellpadding="0" cellspacing="16">
+<table align="center" border="0" cellpadding="0" cellspacing="16">
   <tbody>
     <tr>
       <td valign="top">
@@ -806,25 +831,49 @@ This reduction is the main motive for using independence or conditional independ
 
 Let $X$ be a biased coin and $Y$ a weighted four-sided die. If they are independent, then the joint is just the product of the marginals.
 
-| $X$ | $p(X)$ |
-|---|---:|
-| 0 | 0.7 |
-| 1 | 0.3 |
-
-| $Y$ | $p(Y)$ |
-|---|---:|
-| 1 | 0.2 |
-| 2 | 0.3 |
-| 3 | 0.4 |
-| 4 | 0.1 |
-
-Representative joint entries:
-
-| $X$ | $Y$ | $p(X,Y)$ |
-|---|---|---:|
-| 0 | 1 | 0.14 |
-| 0 | 2 | 0.21 |
-| 1 | 4 | 0.03 |
+<table align="center" border="0" cellpadding="0" cellspacing="16">
+  <tbody>
+    <tr>
+      <td valign="top" align="center">
+        <table>
+          <thead>
+            <tr><th><i>X</i></th><th><i>p(X)</i></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>0.7</td></tr>
+            <tr><td>1</td><td>0.3</td></tr>
+          </tbody>
+        </table>
+      </td>
+      <td valign="top" align="center">
+        <table>
+          <thead>
+            <tr><th><i>Y</i></th><th><i>p(Y)</i></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>0.2</td></tr>
+            <tr><td>2</td><td>0.3</td></tr>
+            <tr><td>3</td><td>0.4</td></tr>
+            <tr><td>4</td><td>0.1</td></tr>
+          </tbody>
+        </table>
+      </td>
+      <td valign="top" align="center">
+        <table>
+          <thead>
+            <tr><th><i>X</i></th><th><i>Y</i></th><th><i>p(X,Y)</i></th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0</td><td>1</td><td>0.14</td></tr>
+            <tr><td>0</td><td>2</td><td>0.21</td></tr>
+            <tr><td>1</td><td>4</td><td>0.03</td></tr>
+          </tbody>
+        </table>
+        <p><strong>Representative joint entries</strong></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 To verify independence explicitly, check one conditional. Since
 
@@ -856,9 +905,39 @@ $$p(X_i,X_j)=p(X_i)p(X_j)\qquad \text{for every } i \ne j.$$
 
 In words: looking at any single pair, observing one variable does not change the distribution of the other. But pairwise independence does not say anything about three-way or higher-order structure.
 
-A clean motive for caring about the distinction is that mutual independence is strong enough to reconstruct the full joint distribution from the marginals, while pairwise independence is not.
+For three variables, it is worth spelling out the difference explicitly, because this is where many wrong intuitions arise. Mutual independence of $(X_1,X_2,X_3)$ includes the pairwise factorizations
+
+$$p(X_1,X_2)=p(X_1)p(X_2),\qquad p(X_1,X_3)=p(X_1)p(X_3),\qquad p(X_2,X_3)=p(X_2)p(X_3),$$
+
+but it also includes the genuinely stronger triple factorization
+
+$$p(X_1,X_2,X_3)=p(X_1)p(X_2)p(X_3).$$
+
+Pairwise independence only demands the first three equations. It does not constrain $p(X_1,X_2,X_3)$ beyond what is forced by those pairwise marginals.
+
+Mutual independence always implies pairwise independence. The reason is that if the joint factorizes, then any lower-dimensional joint is obtained by summing out the remaining variables and the product structure is preserved. For example, if
+
+$$p(X_1,X_2,X_3)=p(X_1)p(X_2)p(X_3),$$
+
+then marginalizing out $X_3$ gives
+
+$$p(X_1,X_2)=\sum_{x_3} p(X_1,X_2,X_3=x_3)=p(X_1)p(X_2)\sum_{x_3}p(X_3=x_3)=p(X_1)p(X_2),$$
+
+because $\sum_{x_3}p(X_3=x_3)=1$. So mutual independence is strictly stronger: it contains extra content beyond the pairwise statements.
+
+A clean motive for caring about the distinction is that mutual independence is strong enough to reconstruct the full joint distribution from the marginals, while pairwise independence is not. This matters any time you need the probability of a three-way conjunction such as $\mathbb{P}(X_1=a,X_2=b,X_3=c)$. Under mutual independence you multiply three one-variable probabilities. Under pairwise independence alone, that multiplication is not justified.
 
 If each $X_i$ is $d$-ary, then an unconstrained full joint table over $(X_1,\dots,X_n)$ has $d^n$ entries and one normalization constraint, so it has $d^n-1$ degrees of freedom. Under mutual independence, you only specify the $n$ marginal tables. Each marginal has $d-1$ degrees of freedom, so mutual independence reduces the parameter count to $n(d-1)$. Pairwise independence does not lead to an equally clean reduction, because it does not force a single global factorized form.
+
+An explicit parameter-count example makes the abstraction tangible. Suppose $n=3$ and $d=2$ (three binary variables). Then the full joint distribution has $2^3=8$ table entries. Normalization forces those eight probabilities to sum to $1$, so the joint has $8-1=7$ degrees of freedom. Under mutual independence, each variable is determined by a single number, such as $\rho_i=p(X_i=1)$, so the whole model uses only $3$ degrees of freedom. For example, if
+
+$$p(X_1=1)=0.6,\qquad p(X_2=1)=0.2,\qquad p(X_3=1)=0.5,$$
+
+then mutual independence forces
+
+$$p(X_1=1,X_2=0,X_3=1)=p(X_1=1)p(X_2=0)p(X_3=1)=0.6\cdot(1-0.2)\cdot 0.5=0.24.$$
+
+So a single triple probability is determined mechanically from the three one-variable probabilities.
 
 Two explicit examples anchor the definitions.
 
@@ -884,12 +963,17 @@ $$W = U \oplus V,$$
 
 where $\oplus$ is exclusive-or: $W=1$ when the bits differ and $W=0$ when the bits are equal. The truth table is:
 
-| $U$ | $V$ | $W=U \oplus V$ |
-|---|---|---|
-| 0 | 0 | 0 |
-| 0 | 1 | 1 |
-| 1 | 0 | 1 |
-| 1 | 1 | 0 |
+<table align="center">
+  <thead>
+    <tr><th><i>U</i></th><th><i>V</i></th><th><i>W = U xor V</i></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>0</td><td>1</td><td>1</td></tr>
+    <tr><td>1</td><td>0</td><td>1</td></tr>
+    <tr><td>1</td><td>1</td><td>0</td></tr>
+  </tbody>
+</table>
 
 Because $(U,V)$ is uniform over its four possibilities, each triple row above occurs with probability $1/4$. So the joint distribution of $(U,V,W)$ is supported on exactly these four states, each with probability $1/4$.
 
@@ -914,12 +998,17 @@ For the pair $(U,W)$, list the four joint outcomes of $(U,W)$ and their probabil
 
 So the $(U,W)$ joint table is
 
-| $U$ | $W$ | $p(U,W)$ |
-|---|---|---:|
-| 0 | 0 | 1/4 |
-| 0 | 1 | 1/4 |
-| 1 | 0 | 1/4 |
-| 1 | 1 | 1/4 |
+<table align="center">
+  <thead>
+    <tr><th><i>U</i></th><th><i>W</i></th><th><i>p(U, W)</i></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>0</td><td>1/4</td></tr>
+    <tr><td>0</td><td>1</td><td>1/4</td></tr>
+    <tr><td>1</td><td>0</td><td>1/4</td></tr>
+    <tr><td>1</td><td>1</td><td>1/4</td></tr>
+  </tbody>
+</table>
 
 Since $p(U=u)=1/2$ and $p(W=w)=1/2$, every entry factorizes as
 
@@ -936,6 +1025,8 @@ but the product of marginals would be
 $$p(U=0)p(V=0)p(W=0)=\frac{1}{2}\cdot\frac{1}{2}\cdot\frac{1}{2}=\frac{1}{8}.$$
 
 So the equality required by mutual independence fails. The structural reason is that $W$ is a deterministic function of $(U,V)$: once you know $U$ and $V$, the value of $W$ is forced. This creates a three-way constraint that is invisible to any single pairwise marginal.
+
+There is an even sharper way to state what went wrong. Example A (three independent fair bits) and Example B (the XOR construction) have the same pairwise distributions: every pair is uniform over its four outcomes and therefore looks completely independent. So if you only ever inspect two-variable tables, you cannot tell these two very different three-variable models apart. The difference lives entirely in the three-way structure.
 
 Two common wrong notions are worth stating explicitly. First, "pairwise independent" does not mean "no dependence remains." It only rules out dependence that can be detected by looking at any one pair in isolation. Second, pairwise independence is not strong enough to justify multiplying three marginals to get a triple probability. The XOR example is exactly the case in which that intuition fails.
 
@@ -971,22 +1062,29 @@ $$p(T=1,D=1 \mid C=0)=\frac{0.016}{0.80}=0.02,\qquad p(T=1 \mid C=0)p(D=1 \mid C
 
 This is the core meaning of conditional independence: once $C$ is fixed, the toothache information is already accounted for, so it does not further change the distribution of the probe outcome.
 
-![Common-cause and explaining-away structures](../notes/02_probability_reconstructed/assets/figure_2_conditional_independence_structures.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_conditional_independence_structures.png" alt="Common-cause and explaining-away structures" width="860">
+</p>
 
 ### Example 2-8: Conditional Independence, Dentist
 
 In the dentist model, the probe catches and toothache are not independent in general. But conditioned on cavity status, they become independent. The conditional table is:
 
-| $T$ | $D$ | $C$ | $p(D \mid C,T)$ |
-|---|---|---|---:|
-| 0 | 0 | 0 | 0.800 |
-| 0 | 0 | 1 | 0.100 |
-| 0 | 1 | 0 | 0.200 |
-| 0 | 1 | 1 | 0.900 |
-| 1 | 0 | 0 | 0.800 |
-| 1 | 0 | 1 | 0.100 |
-| 1 | 1 | 0 | 0.200 |
-| 1 | 1 | 1 | 0.900 |
+<table align="center">
+  <thead>
+    <tr><th><i>T</i></th><th><i>D</i></th><th><i>C</i></th><th><i>p(D | C, T)</i></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>0</td><td>0</td><td>0.800</td></tr>
+    <tr><td>0</td><td>0</td><td>1</td><td>0.100</td></tr>
+    <tr><td>0</td><td>1</td><td>0</td><td>0.200</td></tr>
+    <tr><td>0</td><td>1</td><td>1</td><td>0.900</td></tr>
+    <tr><td>1</td><td>0</td><td>0</td><td>0.800</td></tr>
+    <tr><td>1</td><td>0</td><td>1</td><td>0.100</td></tr>
+    <tr><td>1</td><td>1</td><td>0</td><td>0.200</td></tr>
+    <tr><td>1</td><td>1</td><td>1</td><td>0.900</td></tr>
+  </tbody>
+</table>
 
 The key point is that $p(D \mid C,T)$ does not actually depend on $T$.
 
@@ -1163,26 +1261,47 @@ $$p(X=1)=0.3,\qquad p(X=0)=0.7.$$
 
 Then the CDF $F_X(x)=\mathbb{P}(X \le x)$ is a step function:
 
-| range | $F_X(x)$ |
-|---|---:|
-| $x<0$ | $0$ |
-| $0 \le x < 1$ | $0.7$ |
-| $x \ge 1$ | $1$ |
+<table align="center" border="0" cellpadding="0" cellspacing="24">
+  <tbody>
+    <tr>
+      <td valign="top" align="center">
+        <p><strong>Discrete CDF (Bernoulli)</strong></p>
+        <table>
+          <thead>
+            <tr><th>range</th><th>F<sub>X</sub>(x)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>x &lt; 0</td><td>0</td></tr>
+            <tr><td>0 &#8804; x &lt; 1</td><td>0.7</td></tr>
+            <tr><td>x &#8805; 1</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </td>
+      <td valign="top" align="center">
+        <p><strong>Mixed CDF (Atom + Uniform)</strong></p>
+        <table>
+          <thead>
+            <tr><th>range</th><th>F<sub>X</sub>(x)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>x &lt; 0</td><td>0</td></tr>
+            <tr><td>x = 0</td><td>0.7</td></tr>
+            <tr><td>0 &lt; x &lt; 1</td><td>0.7 + 0.3x</td></tr>
+            <tr><td>x &#8805; 1</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-The jump at $x=0$ has size $0.7$ because $p(X=0)=0.7$. The jump at $x=1$ adds the remaining $0.3$ mass. This is why CDFs are the most universal representation: they handle point masses (jumps) and continuous density (smooth rise) in one object.
+In the Bernoulli case (left table), the jump at $x=0$ has size $0.7$ because $p(X=0)=0.7$. The jump at $x=1$ adds the remaining $0.3$ mass. This is why CDFs are the most universal representation: they handle point masses (jumps) and continuous density (smooth rise) in one object.
 
 This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution can contain both an atom and a continuous part. For example, suppose
 
 $$\mathbb{P}(X=0)=0.7,$$
 
-and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is
-
-| range | $F_X(x)$ |
-|---|---:|
-| $x<0$ | $0$ |
-| $x=0$ | $0.7$ |
-| $0<x<1$ | $0.7+0.3x$ |
-| $x \ge 1$ | $1$ |
+and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is shown in the right table above.
 
 This variable has a jump of size $0.7$ at zero and a continuous linear rise on $(0,1)$. It cannot be described by an ordinary density alone, because the point mass at zero would be lost. The CDF therefore gives the cleanest unified description.
 
@@ -1190,10 +1309,15 @@ This variable has a jump of size $0.7$ at zero and a continuous linear rise on $
 
 For a continuous-valued random variable $X$ defined on $[0,T]$, the uniform distribution is
 
-| support condition | $p(x)$ |
-|---|---:|
-| $x \in [0,T]$ | $\frac{1}{T}$ |
-| otherwise | $0$ |
+<table align="center">
+  <thead>
+    <tr><th>support condition</th><th>p(x)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>x &#8712; [0, T]</td><td>1/T</td></tr>
+    <tr><td>otherwise</td><td>0</td></tr>
+  </tbody>
+</table>
 
 Then
 
@@ -1215,15 +1339,17 @@ So there is no contradiction between a large density and a valid probability mod
 
 The Gaussian distribution is one of the most important continuous families. In one dimension,
 
-$$p(x) = \mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).$$
+$$p(x) = \mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).$$
 
 In multiple dimensions,
 
-$$p(x) = \mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2} |\Sigma|^{-1/2} \exp\!\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right).$$
+$$p(x) = \mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2} |\Sigma|^{-1/2} \exp\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right).$$
 
 The mean vector $\mu$ sets the center, and the covariance matrix $\Sigma$ sets the shape and spread. The quadratic term $(x-\mu)^T \Sigma^{-1}(x-\mu)$ is the squared Mahalanobis distance from $x$ to the mean, measured in the geometry induced by $\Sigma$. In two dimensions, the level sets of constant density are ellipses; in higher dimensions, they are ellipsoids. For this formula to define a proper density, $\Sigma$ must be symmetric and positive definite, so that the quadratic form is nonnegative, the inverse exists, and the determinant term $|\Sigma|^{-1/2}$ is well-defined.
 
-![Gaussian distribution plots](../notes/02_probability_reconstructed/assets/figure_2_1_gaussian.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_1_gaussian.png" alt="Gaussian distribution plots" width="860">
+</p>
 
 The three panels show the same family viewed three ways. The one-dimensional curve emphasizes how the mean shifts location and the standard deviation changes spread. The surface plot shows the bivariate density as height over the plane. The contour plot removes the height dimension and keeps only level sets, which is often the most useful representation when reasoning about covariance structure.
 
@@ -1251,7 +1377,7 @@ So large values of $X_1$ tend to appear with large values of $X_2$, and the Gaus
 
 The Bernoulli distribution can be written in exponential-family form:
 
-$$\rho^X (1-\rho)^{1-X} = \exp\!\Bigl(\log(\rho)X + \log(1-\rho)(1-X)\Bigr).$$
+$$\rho^X (1-\rho)^{1-X} = \exp\Bigl(\log(\rho)X + \log(1-\rho)(1-X)\Bigr).$$
 
 This highlights the feature $\phi(X)=X$ and the natural parameter $\eta = \log(\rho/(1-\rho))$. Writing Bernoulli in this way makes the log-odds parameter explicit and shows how a nonlinear parameter such as $\rho$ becomes a linear coefficient in the exponent.
 
@@ -1261,7 +1387,7 @@ $$\log(\rho)X + \log(1-\rho)(1-X) = X \log \frac{\rho}{1-\rho} + \log(1-\rho),$$
 
 we can write
 
-$$p(X) = \exp\!\bigl(\eta X - A(\eta)\bigr)$$
+$$p(X) = \exp\bigl(\eta X - A(\eta)\bigr)$$
 
 with
 
@@ -1293,9 +1419,18 @@ $$p(x) = \mathrm{Dir}(x;\alpha) = \frac{\Gamma(\sum_j \alpha_j)}{\prod_j \Gamma(
 
 with $x_j \ge 0$ and $\sum_j x_j = 1$. The simplex constraint means the domain has one fewer free dimension than the number of coordinates: once $x_1,\dots,x_{d-1}$ are chosen, the last coordinate is fixed by normalization. When all concentration parameters are large and equal, the mass sits near the center of the simplex; when some coordinates of $\alpha$ are less than one, the density shifts toward edges or corners. For $d=2$, Dirichlet reduces exactly to Beta, so Beta is the one-dimensional simplex case.
 
-![Beta distribution family](../notes/02_probability_reconstructed/assets/figure_2_2_beta_grid.png)
-
-![Dirichlet distribution family](../notes/02_probability_reconstructed/assets/figure_2_3_dirichlet_simplex.png)
+<table align="center" border="0" cellpadding="0" cellspacing="12">
+  <tbody>
+    <tr>
+      <td align="center" valign="top">
+        <img src="../notes/02_probability_reconstructed/assets/figure_2_2_beta_grid.png" alt="Beta distribution family" width="520">
+      </td>
+      <td align="center" valign="top">
+        <img src="../notes/02_probability_reconstructed/assets/figure_2_3_dirichlet_simplex.png" alt="Dirichlet distribution family" width="380">
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 The Beta grid makes the parameter effects explicit: symmetric parameters above one create a peak in the middle, while parameters below one push mass toward the boundaries. The Dirichlet simplex panels show the same phenomenon in two free dimensions. Mass near the center means balanced proportions; mass near an edge or corner means one or more coordinates are favored strongly.
 
@@ -1313,11 +1448,11 @@ puts much more mass near $0$ and $1$, expressing the belief that the coin is lik
 
 The distributions discussed so far are examples of the exponential family:
 
-$$p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr).$$
+$$p(x;\theta) = h(x)\exp\bigl(\theta^T \phi(x) - A(\theta)\bigr).$$
 
 The vector $\phi(x)$ contains the sufficient statistics, $h(x)$ is the base measure, $\theta$ is the natural parameter, and $A(\theta)$ is the log-partition function
 
-$$A(\theta) = \log \int h(x)\exp\!\bigl(\theta^T\phi(x)\bigr)\,dx.$$
+$$A(\theta) = \log \int h(x)\exp\bigl(\theta^T\phi(x)\bigr)\,dx.$$
 
 Writing the model this way makes the structure explicit: the log-density is affine in the fixed feature vector $\phi(x)$, while all normalization is absorbed into $A(\theta)$. That structure is what gives exponential families their clean moment-matching and convexity properties. It is also a genuine limitation: only distributions whose log-density can be expressed using a fixed finite-dimensional feature map belong to a finite-dimensional exponential family.
 
@@ -1329,11 +1464,11 @@ For a Gaussian with known variance $\sigma^2$, one can write the density in expo
 
 A concrete reason the term sufficient statistics appears is that, for i.i.d. data, the likelihood depends on the data only through sums of these feature functions. If
 
-$$p(x;\theta)=h(x)\exp\!\bigl(\theta^T\phi(x)-A(\theta)\bigr),$$
+$$p(x;\theta)=h(x)\exp\bigl(\theta^T\phi(x)-A(\theta)\bigr),$$
 
 and $D=\{x^{(1)},\dots,x^{(m)}\}$ are i.i.d., then
 
-$$p(D;\theta)=\prod_{i=1}^m h(x^{(i)})\exp\!\bigl(\theta^T\phi(x^{(i)})-A(\theta)\bigr).$$
+$$p(D;\theta)=\prod_{i=1}^m h(x^{(i)})\exp\bigl(\theta^T\phi(x^{(i)})-A(\theta)\bigr).$$
 
 Taking logs gives
 
@@ -1385,7 +1520,7 @@ which still centers near $0.56$ but also quantifies uncertainty around that valu
 
 ### Likelihood
 
-For i.i.d. data $D = {x^{(1)}, \dots, x^{(m)}}$, the likelihood is
+For i.i.d. data $D = \{x^{(1)}, \dots, x^{(m)}\}$, the likelihood is
 
 $$p(D;\theta) = \prod_i p(x^{(i)};\theta)$$
 
@@ -1437,7 +1572,9 @@ $$L(\rho) = m_1 \log \rho + m_0 \log(1-\rho).$$
 
 The likelihood is maximized at the empirical frequency of ones. If the observed sample is all zeros or all ones, the maximizer lies on the boundary $\rho=0$ or $\rho=1$. Otherwise the unique optimum lies in the interior of the interval.
 
-![Bernoulli likelihood curves](../notes/02_probability_reconstructed/assets/figure_2_12_bernoulli_likelihood.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_12_bernoulli_likelihood.png" alt="Bernoulli likelihood curves" width="860">
+</p>
 
 Each panel holds the observed data fixed and varies only the parameter $\rho$. The curve peaks where the model's predicted head probability best matches the observed proportion of heads. When the data rule out part of parameter space completely, the log-likelihood drops toward negative infinity at the incompatible boundary.
 
@@ -1451,7 +1588,9 @@ which is zero at $\rho=0$ and $\rho=1$ because either extreme makes one of the t
 
 For a one-dimensional Gaussian with variance fixed at one, the likelihood as a function of $\mu$ becomes more sharply peaked as the number of samples grows. That sharpening is the visual signature that more data reduce parameter uncertainty: many values of $\mu$ may explain three observations reasonably well, but far fewer values remain plausible once twenty observations cluster around the same region.
 
-![Gaussian likelihood curves](../notes/02_probability_reconstructed/assets/figure_2_13_gaussian_likelihood.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_13_gaussian_likelihood.png" alt="Gaussian likelihood curves" width="860">
+</p>
 
 The dots along the top of each panel are the observed samples. The curve below them is the log-likelihood as a function of the Gaussian mean. As $m$ increases, the curve narrows and the maximizing value moves toward the visual center of the observed data cloud.
 
@@ -1537,7 +1676,7 @@ where $m_x$ is the count of state $x$ in the data.
 
 For a canonical exponential-family model
 
-$$p(x;\theta) = h(x)\exp\!\bigl(\theta^T \phi(x) - A(\theta)\bigr),$$
+$$p(x;\theta) = h(x)\exp\bigl(\theta^T \phi(x) - A(\theta)\bigr),$$
 
 the log-likelihood of i.i.d. data is
 
@@ -1573,7 +1712,9 @@ Likelihood alone can overfit. If a model is too flexible and the data set is too
 
 A toy example is enough to show the mechanism. If eight data points occupy eight distinct locations and we fit a histogram with sixty-four bins, most bins are empty and a few bins receive all the mass. The training likelihood becomes large because each observed sample falls into a narrow high-density bin, but a new sample landing between those bins receives nearly zero support. The model has learned the sample, not the underlying distribution.
 
-![Histogram likelihood progression](../notes/02_probability_reconstructed/assets/figure_2_17_histograms.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_17_histograms.png" alt="Histogram likelihood progression" width="860">
+</p>
 
 The three histograms make the overfitting mechanism visible. With one bin the model is too coarse to capture any structure. With a moderate number of bins it starts to reflect the sample without becoming too brittle. With too many bins it effectively memorizes the observations, assigning high density exactly where data occurred and poor predictions everywhere else.
 
@@ -1635,9 +1776,9 @@ which is exactly the $\mathrm{Beta}(4,3)$ density. So the evidence is simply the
 
 ### Example 2-18: Beta-Bernoulli Conjugacy
 
-If the likelihood is Bernoulli and the prior is $Beta(a,b)$, then the posterior is still Beta:
+If the likelihood is Bernoulli and the prior is $\mathrm{Beta}(a,b)$, then the posterior is still Beta:
 
-$$\rho \mid D \sim Beta(a+m_1, b+m_0).$$
+$$\rho \mid D \sim \mathrm{Beta}(a+m_1, b+m_0).$$
 
 The derivation is short enough to write explicitly. The prior contributes
 
@@ -1719,7 +1860,9 @@ So the prior pulls the estimate back toward $0.5$, which is exactly what regular
 
 Bayesian updating naturally supports sequential learning: after observing one batch of data, the posterior becomes the prior for the next batch.
 
-![Sequential belief updating](../notes/02_probability_reconstructed/assets/figure_2_4_sequential_updates.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_4_sequential_updates.png" alt="Sequential belief updating" width="860">
+</p>
 
 The figure is deliberately procedural: first combine the prior with the first data batch, then treat the resulting posterior as the next prior before incorporating the second batch. Nothing conceptually new happens in the second step; Bayesian learning is the repeated application of the same update rule.
 
@@ -1733,7 +1876,9 @@ If we had processed all five observations at once, we would obtain exactly the s
 
 Sometimes we are uncertain even about the prior. A mixture of a fair-coin prior and a trick-coin prior can be written as a hyper-prior over the Beta parameters. This adds one more layer to the model hierarchy: first choose which prior family is active, then draw the Bernoulli parameter from that prior, and only then generate the data.
 
-![Mixture of Beta priors](../notes/02_probability_reconstructed/assets/figure_2_20_beta_hyperprior.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_20_beta_hyperprior.png" alt="Mixture of Beta priors" width="860">
+</p>
 
 The left and middle components encode two qualitatively different prior stories: one centered near a fair coin and one concentrated near the extremes. The mixture panel makes the uncertainty over priors visible by averaging those stories before any data are observed.
 
@@ -1745,7 +1890,7 @@ A prior is never literally uninformative, because any prior expresses some prefe
 
 ### Example 2-21: Priors for the Bernoulli Likelihood
 
-The uniform prior on $\rho$ is $Beta(\rho;1,1)$. Under a log-odds parameterization, the induced prior on $\eta$ is not uniform. This is one reason the notion of "uninformative prior" is parameterization-dependent.
+The uniform prior on $\rho$ is $\mathrm{Beta}(\rho;1,1)$. Under a log-odds parameterization, the induced prior on $\eta$ is not uniform. This is one reason the notion of "uninformative prior" is parameterization-dependent.
 
 ### Bayesian Model Selection
 
@@ -1767,7 +1912,9 @@ where $d$ is the number of parameters and $m$ is the number of observations.
 
 For a histogram model with Dirichlet prior, the marginal likelihood and BIC penalized score can be compared across numbers of bins. Both typically favor a moderate number of bins rather than the most complex possible histogram. The explicit structural tradeoff is between approximation error and variance: too few bins smear away genuine structure, while too many bins spend parameters modeling sampling noise.
 
-![Histogram model selection scores](../notes/02_probability_reconstructed/assets/figure_2_22_histogram_model_scores.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_22_histogram_model_scores.png" alt="Histogram model selection scores" width="860">
+</p>
 
 The plotted curves separate three notions of fit. Raw maximum likelihood keeps rewarding additional flexibility. BIC and the marginal score include an explicit complexity penalty, so they flatten or decline once the extra bins stop being justified by the amount of data.
 
@@ -1893,7 +2040,9 @@ $$\frac{\partial A(\theta)}{\partial \theta_j} = \mathbb{E}_\theta[\phi_j(X)], \
 
 The Hessian of the log-partition function is therefore a covariance matrix of the sufficient statistics, hence positive semidefinite. Once the terms that are constant or linear in $\theta$ are separated out, the remaining negative log-likelihood inherits that convexity.
 
-![Convexity sketch](../notes/02_probability_reconstructed/assets/figure_2_23_convexity_sketch.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_23_convexity_sketch.png" alt="Convexity sketch" width="860">
+</p>
 
 The blue secant line lies above the black graph, which is the geometric definition of convexity. The red tangent line lies below the graph, which is the first-order equivalent statement. These are not separate ideas; they are two views of the same structural property.
 
@@ -2033,14 +2182,19 @@ so conditioning reduces uncertainty on average.
 
 Suppose we model commuting behavior $C \in \{\text{walk}, \text{bike}, \text{drive}\}$ and weather $R \in \{\text{clear}, \text{rain}\}$. On rainy days we drive more often, so weather conveys information about commute choice.
 
-| $R$ | $C$ | $p(C \mid R)$ |
-|---|---|---:|
-| clear | walk | 0.9 |
-| clear | bike | 0.1 |
-| clear | drive | 0.0 |
-| rain | walk | 0.5 |
-| rain | bike | 0.0 |
-| rain | drive | 0.5 |
+<table align="center">
+  <thead>
+    <tr><th><i>R</i></th><th><i>C</i></th><th><i>p(C | R)</i></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>clear</td><td>walk</td><td>0.9</td></tr>
+    <tr><td>clear</td><td>bike</td><td>0.1</td></tr>
+    <tr><td>clear</td><td>drive</td><td>0.0</td></tr>
+    <tr><td>rain</td><td>walk</td><td>0.5</td></tr>
+    <tr><td>rain</td><td>bike</td><td>0.0</td></tr>
+    <tr><td>rain</td><td>drive</td><td>0.5</td></tr>
+  </tbody>
+</table>
 
 With $p(R=\text{rain}) = 0.1$, the marginals are
 
@@ -2124,7 +2278,7 @@ If $Z = \log X$ is Gaussian, then $X$ is lognormal. The density of $X$ is obtain
 
 Writing the full expression gives
 
-$$p_X(x)=\frac{1}{x \sqrt{2\pi\sigma^2}} \exp\!\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right), \qquad x>0.$$
+$$p_X(x)=\frac{1}{x \sqrt{2\pi\sigma^2}} \exp\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right), \qquad x>0.$$
 
 The extra factor $1/x$ is exactly the Jacobian term. Without it, the transformed density would no longer integrate to one.
 
@@ -2150,13 +2304,17 @@ $$\mathbb{P}(X_1 \le x_1, X_2 \le x_2) = C(P_1(x_1), P_2(x_2)),$$
 
 where $P_1$ and $P_2$ are the marginal CDFs. This is the content of Sklar's theorem in the two-variable case: once the marginals are pushed into the uniform scale, the remaining object $C$ captures only dependence.
 
-![Copula transforms](../notes/02_probability_reconstructed/assets/figure_2_5_copula_transforms.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_5_copula_transforms.png" alt="Copula transforms" width="860">
+</p>
 
 The Gaussian copula is a special case in which the transformed variables are Gaussian. The visual sequence shows the separation explicitly: start with the original marginals, map each one to a uniform scale, then map those uniform variables to a Gaussian scale where the dependence is easy to model.
 
 This gives a clean division of labor. The marginal CDFs control one-dimensional shape, skewness, and heavy tails. The copula controls only how coordinates move together after those marginal effects have been removed.
 
-![Copula and flow transformation pipeline](../notes/02_probability_reconstructed/assets/figure_2_copula_flow_pipeline.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_copula_flow_pipeline.png" alt="Copula and flow transformation pipeline" width="860">
+</p>
 
 ### Example 2-27: Copula Transforms
 
@@ -2182,7 +2340,7 @@ $$X = aZ + b$$
 
 with $a \neq 0$. Then the inverse is $(X-b)/a$ and
 
-$$\log p_X(X)=\log p_Z\!\left(\frac{X-b}{a}\right)-\log |a|.$$
+$$\log p_X(X)=\log p_Z\left(\frac{X-b}{a}\right)-\log |a|.$$
 
 Normalizing flows are just more elaborate versions of this same accounting rule, composed many times.
 
@@ -2202,7 +2360,9 @@ Because the Jacobian is triangular, the determinant is easy to compute: for the 
 
 $$Z_1'' = \alpha_2(Z_2')Z_1' + \beta_2(Z_2'), \qquad Z_2'' = Z_2'.$$
 
-![Normalizing flow deformation panels](../notes/02_probability_reconstructed/assets/figure_2_6_affine_flow_panels.png)
+<p align="center">
+  <img src="../notes/02_probability_reconstructed/assets/figure_2_6_affine_flow_panels.png" alt="Normalizing flow deformation panels" width="860">
+</p>
 
 The deformation panels show what the algebra means geometrically. A rectangular grid in latent space is progressively bent and stretched into a curved mesh in data space. The main idea is that a sequence of simple invertible layers can produce a complex density while keeping likelihood evaluation tractable. The structural limit is equally important: each layer must preserve invertibility, and in practice the scale functions are parameterized so they never cross zero.
 

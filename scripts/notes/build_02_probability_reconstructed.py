@@ -52,6 +52,8 @@ DIAGRAM_ACCENT_STROKE = (0.53, 0.66, 0.57)
 
 INLINE_MATH_RE = re.compile(r"\$(.+?)\$")
 IMAGE_RE = re.compile(r"^!\[(?P<alt>[^\]]*)\]\((?P<path>[^)]+)\)\s*$")
+IMG_TAG_RE = re.compile(r"<img\b[^>]*\bsrc=\"(?P<src>[^\"]+)\"[^>]*>", re.IGNORECASE)
+IMG_ALT_RE = re.compile(r"\balt=\"(?P<alt>[^\"]*)\"", re.IGNORECASE)
 TABLE_DIVIDER_RE = re.compile(r"^\|\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|$")
 TEXT_BRACE_RE = re.compile(r"\\text\{([^}]*)\}")
 FRAC_RE = re.compile(r"\\frac\{([^{}]+)\}\{([^{}]+)\}")
@@ -274,14 +276,76 @@ def parse_table_stack(html_lines: list[str]) -> Block:
     return Block(kind="table_group", tables=tables, titles=titles)
 
 
+def parse_html_table(html_lines: list[str]) -> Block | None:
+    try:
+        root = ET.fromstring("\n".join(html_lines))
+    except ET.ParseError:
+        return None
+    if root.tag != "table":
+        return None
+
+    rows: list[list[str]] = []
+    header = root.find("thead")
+    if header is not None:
+        for row in header.findall("tr"):
+            rows.append([normalize_html_text(item) for item in row if item.tag in {"th", "td"}])
+
+    body = root.find("tbody")
+    if body is not None:
+        for row in body.findall("tr"):
+            rows.append([normalize_html_text(item) for item in row if item.tag in {"th", "td"}])
+
+    if not rows:
+        return None
+    return Block(kind="table", rows=rows)
+
+
+def parse_html_table_block(html_lines: list[str], markdown_path: Path) -> list[Block]:
+    html = "\n".join(html_lines)
+
+    # Image-layout tables should render as images in the PDF, not as literal HTML.
+    img_tags = list(IMG_TAG_RE.finditer(html))
+    if img_tags:
+        blocks: list[Block] = []
+        for match in img_tags:
+            raw_src = match.group("src").strip()
+            alt_match = IMG_ALT_RE.search(match.group(0))
+            alt = alt_match.group("alt").strip() if alt_match else ""
+            resolved = (markdown_path.parent / raw_src).resolve()
+            if not resolved.exists():
+                resolved = (markdown_path.parent.parent / raw_src).resolve()
+            blocks.append(Block(kind="image", image_path=resolved, alt=alt))
+        return blocks
+
+    # Table-layout blocks:
+    # - if the outer <table> contains inner <table> tags, treat it as a side-by-side table group
+    # - otherwise treat it as a single table
+    try:
+        root = ET.fromstring(html)
+    except ET.ParseError:
+        return [Block(kind="p", text=replace_inline_math(latexish_to_text(html)))]
+
+    nested_tables = root.findall(".//table")
+    if len(nested_tables) > 1:
+        return [parse_table_stack(html_lines)]
+
+    table = parse_html_table(html_lines)
+    if table is None:
+        return []
+    return [table]
+
+
 def parse_markdown(markdown_path: Path) -> list[Block]:
     blocks: list[Block] = []
     paragraph: list[str] = []
     table_lines: list[str] = []
     math_lines: list[str] = []
     table_stack_lines: list[str] = []
+    html_table_lines: list[str] = []
     in_math = False
     in_table_stack = False
+    in_html_table = False
+    html_table_depth = 0
 
     def flush_paragraph() -> None:
         nonlocal paragraph
@@ -303,6 +367,16 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
 
     for raw in markdown_path.read_text(encoding="utf-8").splitlines():
         line = raw.rstrip()
+
+        if in_html_table:
+            html_table_lines.append(line)
+            html_table_depth += line.count("<table") - line.count("</table>")
+            if html_table_depth <= 0:
+                blocks.extend(parse_html_table_block(html_table_lines, markdown_path))
+                html_table_lines = []
+                in_html_table = False
+                html_table_depth = 0
+            continue
 
         if in_table_stack:
             if line.strip() == "<!-- table-stack:end -->":
@@ -329,6 +403,11 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
             flush_paragraph()
             continue
 
+        # Centering wrappers used for GitHub readability should not appear as literal text in the PDF.
+        if line.strip() in {"<p align=\"center\">", "</p>"}:
+            flush_paragraph()
+            continue
+
         if line.strip() == "$$":
             flush_paragraph()
             in_math = True
@@ -339,6 +418,19 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
             flush_table()
             in_table_stack = True
             table_stack_lines = []
+            continue
+
+        if line.strip().startswith("<table"):
+            flush_paragraph()
+            flush_table()
+            in_html_table = True
+            html_table_lines = [line]
+            html_table_depth = line.count("<table") - line.count("</table>")
+            if html_table_depth <= 0:
+                blocks.extend(parse_html_table_block(html_table_lines, markdown_path))
+                html_table_lines = []
+                in_html_table = False
+                html_table_depth = 0
             continue
 
         image_match = IMAGE_RE.match(line.strip())
@@ -355,6 +447,18 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
                     alt=image_match.group("alt").strip(),
                 )
             )
+            continue
+
+        img_tag_match = IMG_TAG_RE.search(line)
+        if img_tag_match:
+            flush_paragraph()
+            raw_src = img_tag_match.group("src").strip()
+            alt_match = IMG_ALT_RE.search(img_tag_match.group(0))
+            alt = alt_match.group("alt").strip() if alt_match else ""
+            resolved = (markdown_path.parent / raw_src).resolve()
+            if not resolved.exists():
+                resolved = (markdown_path.parent.parent / raw_src).resolve()
+            blocks.append(Block(kind="image", image_path=resolved, alt=alt))
             continue
 
         if line.startswith("# "):
@@ -392,6 +496,8 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
 def markdown_uses_images(markdown_path: Path) -> bool:
     for raw in markdown_path.read_text(encoding="utf-8").splitlines():
         if IMAGE_RE.match(raw.strip()):
+            return True
+        if IMG_TAG_RE.search(raw):
             return True
     return False
 
