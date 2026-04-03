@@ -665,6 +665,8 @@ Now the two posterior probabilities sum to $1$, as they must. Interpreting the r
 
 The expectation, or expected value, is the long-run average value of the variable if the same random experiment were repeated many times and the outcomes were averaged. In a discrete model, that long-run average is computed by weighting each possible value by the probability of seeing it. So the expectation is a probability-weighted average, not a guess about the single next outcome.
 
+The word expected can be misleading in ordinary English. In probability, it does not mean "what I predict will happen next" or "the most likely outcome." It means the center of mass of the distribution. That is why an expectation can be a number the variable never literally takes.
+
 For a discrete variable, the definition is:
 
 $$\mathbb{E}[X] = \sum_x x \, p(x).$$
@@ -694,6 +696,24 @@ Expectation is linear:
 $$\mathbb{E}[aX+bY+c]=a\mathbb{E}[X]+b\mathbb{E}[Y]+c.$$
 
 No independence assumption is required. That point is easy to miss because many later formulas do require independence, but linearity of expectation does not. The rule holds even when $X$ and $Y$ are strongly dependent.
+
+It is worth checking that claim with a dependent example. Let $X$ be Bernoulli with
+
+$$\mathbb{P}(X=1)=0.3,\qquad \mathbb{P}(X=0)=0.7,$$
+
+and define
+
+$$Y=1-X.$$
+
+Then $X$ and $Y$ are completely dependent: once $X$ is known, $Y$ is forced. But linearity still works:
+
+$$\mathbb{E}[X+Y]=\mathbb{E}[1]=1,$$
+
+while
+
+$$\mathbb{E}[X]+\mathbb{E}[Y]=0.3+0.7=1.$$
+
+So dependence does not break linearity. That is exactly why indicator decompositions are so powerful later in probability and machine learning.
 
 For a concrete example, suppose three coin flips have indicator variables $H_1,H_2,H_3$, where $H_i=1$ if flip $i$ is heads and $0$ otherwise. Let
 
@@ -2479,7 +2499,7 @@ Now the two-coin model wins even after the penalty. The lesson is structural: wi
 
 ## 2.4 Convexity
 
-This section is supporting background rather than core probability machinery. For the course, the main reason to read it is to understand why some likelihood objectives are well behaved and why exponential-family optimization often has a clean global structure.
+This section is supporting background rather than core probability machinery. It appears here because `2.3` introduced optimization problems such as MLE, MAP, and model comparison, and those problems depend heavily on the shape of the objective function. For the course, the main reason to read it is to understand why some likelihood objectives are well behaved and why exponential-family optimization often has a clean global structure.
 
 A convex function is defined on a **convex domain**, meaning a set of points with the property that whenever $x$ and $x'$ lie in the domain, the whole line segment between them also lies in the domain. That condition matters because the definition compares the function value at the weighted average
 
@@ -2606,6 +2626,7 @@ For exponential families, the most concrete beginner-to-expert takeaway is that 
 - Convexity is the structural reason some estimation problems avoid bad local minima.
 - First-order and second-order convexity tests are equivalent viewpoints on the same property.
 - In exponential families, covariance structure is what drives the positive-semidefinite Hessian.
+- This is the optimization-side explanation for why some of the estimation formulas from `2.3` behave so cleanly.
 
 ### Do Not Confuse in 2.4
 
@@ -2616,6 +2637,8 @@ For exponential families, the most concrete beginner-to-expert takeaway is that 
 ## 2.5 Information Theory
 
 This section is worth reading for conceptual maturity, but it is partly second-pass material if your immediate goal is to stay on top of the course core. The required ideas are what entropy, KL divergence, and mutual information mean and how they differ from one another.
+
+The bridge from the earlier sections is this: probability tables and densities tell us how mass is distributed, while information theory gives numerical language for how uncertain that distribution is and how informative one variable is about another. So the chapter now moves from "what is the probability?" to "how much uncertainty is present?" and "how much does observation reduce that uncertainty?"
 
 Entropy measures uncertainty, but the cleanest way to understand it is as an **average surprise**. For one specific outcome $x$, the surprise is
 
@@ -2841,6 +2864,7 @@ That number is not huge, which is also important to interpret correctly. Weather
 - Entropy measures uncertainty, KL divergence measures directed discrepancy, and mutual information measures departure from independence.
 - Mutual information can be read either as a KL divergence or as reduction in uncertainty after observation.
 - Conditional entropy is an average over the conditioning variable, not a single conditional calculation at one value.
+- These are expectation-style quantities, so the averaging intuition from `2.1` still applies even though the thing being averaged is now a logarithmic information term.
 
 ### Do Not Confuse in 2.5
 
@@ -2993,6 +3017,13 @@ $$C(u_1,u_2)=\mathbb{P}(U_1 \le u_1, U_2 \le u_2).$$
 
 This is the content of Sklar's theorem in the two-variable case: once the marginals are pushed onto a common uniform scale, the remaining object $C$ captures only dependence.
 
+The conceptual reason this is valuable is that multivariate modeling actually mixes two different tasks:
+
+- choosing the marginal shape of each coordinate;
+- choosing the dependence pattern that couples the coordinates.
+
+Copulas separate those tasks explicitly instead of forcing one model family to handle both at once.
+
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_5_copula_transforms.png" alt="Copula transforms" width="860">
 </p>
@@ -3031,6 +3062,8 @@ The resulting model can express complicated non-Gaussian marginals while keeping
 
 The step-by-step reason this works is that CDF transforms preserve order. If an observation is at the $80$th percentile of its own marginal distribution, its transformed value is $0.8$ regardless of the original physical units. After both coordinates are mapped into percentile space, the dependence structure can be modeled in a unit-free way.
 
+So the copula trick is fundamentally a change-of-coordinates trick: strip away marginal units and shapes first, then model only the remaining dependence.
+
 ### Normalizing Flows
 
 Normalizing flows define an invertible transform $X = f(Z)$ and use the change-of-variables formula to evaluate likelihoods. The transformation is often built as a composition of simple steps:
@@ -3055,6 +3088,8 @@ Second, Jacobian determinants multiply under composition. Therefore the log-dete
 
 A flow is therefore practical only when each layer is invertible and has a determinant that can be evaluated cheaply. If either condition fails, likelihood evaluation becomes intractable or ill-defined.
 
+The modeling motivation is parallel to the copula idea but more flexible. Instead of choosing one fixed transformation by hand, a flow learns a sequence of simple invertible maps whose composition can bend a simple base density into a complicated observed density.
+
 This is the long-term modeling idea behind flows. Start with a base density that is easy to sample from and evaluate, such as a Gaussian. Then learn an invertible map that bends that simple density into a complex one that matches the data. The density becomes complicated in data space, but it stays tractable because the transformation remains invertible and the Jacobian terms are computable.
 
 A one-layer sanity check is the scaling flow
@@ -3066,6 +3101,8 @@ with $a \neq 0$. Then the inverse is $(X-b)/a$ and
 $$\log p_X(X)=\log p_Z\left(\frac{X-b}{a}\right)-\log |a|.$$
 
 Normalizing flows are just more elaborate versions of this same accounting rule, composed many times.
+
+So a flow should be read as repeated change-of-variables bookkeeping, not as a fundamentally different probability law.
 
 ### Example 2-28: Copula-Like Normalizing Flow
 
@@ -3122,6 +3159,7 @@ but the determinant ignores it because the matrix is triangular. That is the key
 - Change of variables is probability conservation plus a local stretching factor.
 - Invertibility is the structural condition that makes the simple Jacobian formula valid.
 - Copulas separate marginals from dependence, while flows compose simple invertible maps into flexible densities.
+- This is the continuous-transform analogue of the normalization logic used much earlier in the table and density sections.
 
 ### Do Not Confuse in 2.6
 
