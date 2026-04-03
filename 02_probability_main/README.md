@@ -336,17 +336,17 @@ The joint distribution over $(T,D,C)$ is:
 
 <table align="center">
   <thead>
-    <tr><th><i>TDC</i></th><th><i>p(T, D, C)</i></th></tr>
+    <tr><th>$(T,D,C)$</th><th>$p(T,D,C)$</th></tr>
   </thead>
   <tbody>
-    <tr><td>000</td><td>0.576</td></tr>
-    <tr><td>001</td><td>0.008</td></tr>
-    <tr><td>010</td><td>0.144</td></tr>
-    <tr><td>011</td><td>0.072</td></tr>
-    <tr><td>100</td><td>0.064</td></tr>
-    <tr><td>101</td><td>0.012</td></tr>
-    <tr><td>110</td><td>0.016</td></tr>
-    <tr><td>111</td><td>0.108</td></tr>
+    <tr><td>$(0,0,0)$</td><td>$0.576$</td></tr>
+    <tr><td>$(0,0,1)$</td><td>$0.008$</td></tr>
+    <tr><td>$(0,1,0)$</td><td>$0.144$</td></tr>
+    <tr><td>$(0,1,1)$</td><td>$0.072$</td></tr>
+    <tr><td>$(1,0,0)$</td><td>$0.064$</td></tr>
+    <tr><td>$(1,0,1)$</td><td>$0.012$</td></tr>
+    <tr><td>$(1,1,0)$</td><td>$0.016$</td></tr>
+    <tr><td>$(1,1,1)$</td><td>$0.108$</td></tr>
   </tbody>
 </table>
 
@@ -579,35 +579,35 @@ The numerator $\sum_d p(T=1,d,C)$ means: fix the evidence $T=1$, then sum out th
   <tbody>
     <tr>
       <td valign="top">
-        <p><strong>Restrict to <i>T</i> = 1</strong></p>
+        <p><strong>Restrict to $T=1$</strong></p>
         <table>
           <thead>
             <tr>
-              <th><i>D</i></th>
-              <th><i>C</i></th>
-              <th><i>p(T = 1, D, C)</i></th>
+              <th>$D$</th>
+              <th>$C$</th>
+              <th>$p(T=1,D,C)$</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>0</td><td>0</td><td>0.064</td></tr>
-            <tr><td>0</td><td>1</td><td>0.012</td></tr>
-            <tr><td>1</td><td>0</td><td>0.016</td></tr>
-            <tr><td>1</td><td>1</td><td>0.108</td></tr>
+            <tr><td>$0$</td><td>$0$</td><td>$0.064$</td></tr>
+            <tr><td>$0$</td><td>$1$</td><td>$0.012$</td></tr>
+            <tr><td>$1$</td><td>$0$</td><td>$0.016$</td></tr>
+            <tr><td>$1$</td><td>$1$</td><td>$0.108$</td></tr>
           </tbody>
         </table>
       </td>
       <td valign="top">
-        <p><strong>Marginalize over <i>D</i></strong></p>
+        <p><strong>Marginalize over $D$</strong></p>
         <table>
           <thead>
             <tr>
-              <th><i>C</i></th>
-              <th><i>p(T = 1, C)</i></th>
+              <th>$C$</th>
+              <th>$p(T=1,C)$</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>0</td><td>0.064 + 0.016 = 0.080</td></tr>
-            <tr><td>1</td><td>0.012 + 0.108 = 0.120</td></tr>
+            <tr><td>$0$</td><td>$0.064 + 0.016 = 0.080$</td></tr>
+            <tr><td>$1$</td><td>$0.012 + 0.108 = 0.120$</td></tr>
           </tbody>
         </table>
       </td>
@@ -616,13 +616,13 @@ The numerator $\sum_d p(T=1,d,C)$ means: fix the evidence $T=1$, then sum out th
         <table>
           <thead>
             <tr>
-              <th><i>C</i></th>
-              <th><i>p(C | T = 1)</i></th>
+              <th>$C$</th>
+              <th>$p(C \mid T=1)$</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>0</td><td>0.08 / 0.20 = 0.40</td></tr>
-            <tr><td>1</td><td>0.12 / 0.20 = 0.60</td></tr>
+            <tr><td>$0$</td><td>$0.08 / 0.20 = 0.40$</td></tr>
+            <tr><td>$1$</td><td>$0.12 / 0.20 = 0.60$</td></tr>
           </tbody>
         </table>
       </td>
@@ -837,36 +837,36 @@ Let $X$ be a biased coin and $Y$ a weighted four-sided die. If they are independ
       <td valign="top" align="center">
         <table>
           <thead>
-            <tr><th><i>X</i></th><th><i>p(X)</i></th></tr>
+            <tr><th>$X$</th><th>$p(X)$</th></tr>
           </thead>
           <tbody>
-            <tr><td>0</td><td>0.7</td></tr>
-            <tr><td>1</td><td>0.3</td></tr>
+            <tr><td>$0$</td><td>$0.7$</td></tr>
+            <tr><td>$1$</td><td>$0.3$</td></tr>
           </tbody>
         </table>
       </td>
       <td valign="top" align="center">
         <table>
           <thead>
-            <tr><th><i>Y</i></th><th><i>p(Y)</i></th></tr>
+            <tr><th>$Y$</th><th>$p(Y)$</th></tr>
           </thead>
           <tbody>
-            <tr><td>1</td><td>0.2</td></tr>
-            <tr><td>2</td><td>0.3</td></tr>
-            <tr><td>3</td><td>0.4</td></tr>
-            <tr><td>4</td><td>0.1</td></tr>
+            <tr><td>$1$</td><td>$0.2$</td></tr>
+            <tr><td>$2$</td><td>$0.3$</td></tr>
+            <tr><td>$3$</td><td>$0.4$</td></tr>
+            <tr><td>$4$</td><td>$0.1$</td></tr>
           </tbody>
         </table>
       </td>
       <td valign="top" align="center">
         <table>
           <thead>
-            <tr><th><i>X</i></th><th><i>Y</i></th><th><i>p(X,Y)</i></th></tr>
+            <tr><th>$X$</th><th>$Y$</th><th>$p(X,Y)$</th></tr>
           </thead>
           <tbody>
-            <tr><td>0</td><td>1</td><td>0.14</td></tr>
-            <tr><td>0</td><td>2</td><td>0.21</td></tr>
-            <tr><td>1</td><td>4</td><td>0.03</td></tr>
+            <tr><td>$0$</td><td>$1$</td><td>$0.14$</td></tr>
+            <tr><td>$0$</td><td>$2$</td><td>$0.21$</td></tr>
+            <tr><td>$1$</td><td>$4$</td><td>$0.03$</td></tr>
           </tbody>
         </table>
         <p><strong>Representative joint entries</strong></p>
@@ -965,13 +965,13 @@ where $\oplus$ is exclusive-or: $W=1$ when the bits differ and $W=0$ when the bi
 
 <table align="center">
   <thead>
-    <tr><th><i>U</i></th><th><i>V</i></th><th><i>W = U xor V</i></th></tr>
+    <tr><th>$U$</th><th>$V$</th><th>$W = U \oplus V$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>0</td><td>0</td></tr>
-    <tr><td>0</td><td>1</td><td>1</td></tr>
-    <tr><td>1</td><td>0</td><td>1</td></tr>
-    <tr><td>1</td><td>1</td><td>0</td></tr>
+    <tr><td>$0$</td><td>$0$</td><td>$0$</td></tr>
+    <tr><td>$0$</td><td>$1$</td><td>$1$</td></tr>
+    <tr><td>$1$</td><td>$0$</td><td>$1$</td></tr>
+    <tr><td>$1$</td><td>$1$</td><td>$0$</td></tr>
   </tbody>
 </table>
 
@@ -1000,13 +1000,13 @@ So the $(U,W)$ joint table is
 
 <table align="center">
   <thead>
-    <tr><th><i>U</i></th><th><i>W</i></th><th><i>p(U, W)</i></th></tr>
+    <tr><th>$U$</th><th>$W$</th><th>$p(U,W)$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>0</td><td>1/4</td></tr>
-    <tr><td>0</td><td>1</td><td>1/4</td></tr>
-    <tr><td>1</td><td>0</td><td>1/4</td></tr>
-    <tr><td>1</td><td>1</td><td>1/4</td></tr>
+    <tr><td>$0$</td><td>$0$</td><td>$1/4$</td></tr>
+    <tr><td>$0$</td><td>$1$</td><td>$1/4$</td></tr>
+    <tr><td>$1$</td><td>$0$</td><td>$1/4$</td></tr>
+    <tr><td>$1$</td><td>$1$</td><td>$1/4$</td></tr>
   </tbody>
 </table>
 
@@ -1103,17 +1103,17 @@ Now check the conditional-independence claim. The most direct mechanical check i
 
 <table align="center">
   <thead>
-    <tr><th><i>T</i></th><th><i>D</i></th><th><i>C</i></th><th><i>p(D | C, T)</i></th></tr>
+    <tr><th>$T$</th><th>$D$</th><th>$C$</th><th>$p(D \mid C,T)$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>0</td><td>0</td><td>0.800</td></tr>
-    <tr><td>0</td><td>0</td><td>1</td><td>0.100</td></tr>
-    <tr><td>0</td><td>1</td><td>0</td><td>0.200</td></tr>
-    <tr><td>0</td><td>1</td><td>1</td><td>0.900</td></tr>
-    <tr><td>1</td><td>0</td><td>0</td><td>0.800</td></tr>
-    <tr><td>1</td><td>0</td><td>1</td><td>0.100</td></tr>
-    <tr><td>1</td><td>1</td><td>0</td><td>0.200</td></tr>
-    <tr><td>1</td><td>1</td><td>1</td><td>0.900</td></tr>
+    <tr><td>$0$</td><td>$0$</td><td>$0$</td><td>$0.800$</td></tr>
+    <tr><td>$0$</td><td>$0$</td><td>$1$</td><td>$0.100$</td></tr>
+    <tr><td>$0$</td><td>$1$</td><td>$0$</td><td>$0.200$</td></tr>
+    <tr><td>$0$</td><td>$1$</td><td>$1$</td><td>$0.900$</td></tr>
+    <tr><td>$1$</td><td>$0$</td><td>$0$</td><td>$0.800$</td></tr>
+    <tr><td>$1$</td><td>$0$</td><td>$1$</td><td>$0.100$</td></tr>
+    <tr><td>$1$</td><td>$1$</td><td>$0$</td><td>$0.200$</td></tr>
+    <tr><td>$1$</td><td>$1$</td><td>$1$</td><td>$0.900$</td></tr>
   </tbody>
 </table>
 
@@ -1219,13 +1219,13 @@ These are summarized here:
 
 <table align="center">
   <thead>
-    <tr><th><i>H</i></th><th><i>L</i></th><th><i>p(H, L)</i></th><th><i>p(W=1 | H, L)</i></th><th><i>p(H, L, W=1)</i></th></tr>
+    <tr><th>$H$</th><th>$L$</th><th>$p(H,L)$</th><th>$p(W=1 \mid H,L)$</th><th>$p(H,L,W=1)$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>0</td><td>0.81</td><td>0.1</td><td>0.081</td></tr>
-    <tr><td>0</td><td>1</td><td>0.09</td><td>0.8</td><td>0.072</td></tr>
-    <tr><td>1</td><td>0</td><td>0.09</td><td>0.8</td><td>0.072</td></tr>
-    <tr><td>1</td><td>1</td><td>0.01</td><td>0.9</td><td>0.009</td></tr>
+    <tr><td>$0$</td><td>$0$</td><td>$0.81$</td><td>$0.1$</td><td>$0.081$</td></tr>
+    <tr><td>$0$</td><td>$1$</td><td>$0.09$</td><td>$0.8$</td><td>$0.072$</td></tr>
+    <tr><td>$1$</td><td>$0$</td><td>$0.09$</td><td>$0.8$</td><td>$0.072$</td></tr>
+    <tr><td>$1$</td><td>$1$</td><td>$0.01$</td><td>$0.9$</td><td>$0.009$</td></tr>
   </tbody>
 </table>
 
@@ -1380,9 +1380,9 @@ That running-total viewpoint explains why the CDF is so general. Every real-valu
     <tr><th>object</th><th>definition</th><th>when it exists</th><th>how to read it</th></tr>
   </thead>
   <tbody>
-    <tr><td>PMF</td><td>p(X=x)=P(X=x)</td><td>discrete variables</td><td>probability assigned to one exact state</td></tr>
-    <tr><td>PDF</td><td>P(X in A)=&int;<sub>A</sub> p(x) dx</td><td>absolutely continuous variables</td><td>density height; probability comes from area, not point value</td></tr>
-    <tr><td>CDF</td><td>F<sub>X</sub>(x)=P(X &le; x)</td><td>every real-valued variable</td><td>total probability accumulated up to threshold x</td></tr>
+    <tr><td>$\mathrm{PMF}$</td><td>$p(X=x)=\mathbb{P}(X=x)$</td><td>discrete variables</td><td>probability assigned to one exact state</td></tr>
+    <tr><td>$\mathrm{PDF}$</td><td>$\mathbb{P}(X \in A)=\int_A p(x)\,dx$</td><td>absolutely continuous variables</td><td>density height; probability comes from area, not point value</td></tr>
+    <tr><td>$\mathrm{CDF}$</td><td>$F_X(x)=\mathbb{P}(X \le x)$</td><td>every real-valued variable</td><td>total probability accumulated up to threshold $x$</td></tr>
   </tbody>
 </table>
 
@@ -1436,12 +1436,12 @@ That gives the step-function description:
 
 <table align="center">
   <thead>
-    <tr><th>F<sub>X</sub>(x)</th><th>condition on x</th></tr>
+    <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>x &lt; 0</td></tr>
-    <tr><td>0.7</td><td>0 &le; x &lt; 1</td></tr>
-    <tr><td>1</td><td>x &ge; 1</td></tr>
+    <tr><td>$0$</td><td>$x<0$</td></tr>
+    <tr><td>$0.7$</td><td>$0 \le x < 1$</td></tr>
+    <tr><td>$1$</td><td>$x \ge 1$</td></tr>
   </tbody>
 </table>
 
@@ -1457,11 +1457,11 @@ Continuous case. Now suppose $X$ is uniform on $[0,2]$, so the density is
 
 <table align="center">
   <thead>
-    <tr><th>p(x)</th><th>condition on x</th></tr>
+    <tr><th>$p(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>1/2</td><td>0 &le; x &le; 2</td></tr>
-    <tr><td>0</td><td>otherwise</td></tr>
+    <tr><td>$1/2$</td><td>$0 \le x \le 2$</td></tr>
+    <tr><td>$0$</td><td>otherwise</td></tr>
   </tbody>
 </table>
 
@@ -1483,12 +1483,12 @@ So
 
 <table align="center">
   <thead>
-    <tr><th>F<sub>X</sub>(x)</th><th>condition on x</th></tr>
+    <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>x &lt; 0</td></tr>
-    <tr><td>x/2</td><td>0 &le; x &le; 2</td></tr>
-    <tr><td>1</td><td>x &gt; 2</td></tr>
+    <tr><td>$0$</td><td>$x<0$</td></tr>
+    <tr><td>$x/2$</td><td>$0 \le x \le 2$</td></tr>
+    <tr><td>$1$</td><td>$x>2$</td></tr>
   </tbody>
 </table>
 
@@ -1532,13 +1532,13 @@ So the mixed-distribution CDF is
 
 <table align="center">
   <thead>
-    <tr><th>F<sub>X</sub>(x)</th><th>condition on x</th></tr>
+    <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>0</td><td>x &lt; 0</td></tr>
-    <tr><td>0.7</td><td>x = 0</td></tr>
-    <tr><td>0.7 + 0.3x</td><td>0 &lt; x &lt; 1</td></tr>
-    <tr><td>1</td><td>x &ge; 1</td></tr>
+    <tr><td>$0$</td><td>$x<0$</td></tr>
+    <tr><td>$0.7$</td><td>$x=0$</td></tr>
+    <tr><td>$0.7 + 0.3x$</td><td>$0<x<1$</td></tr>
+    <tr><td>$1$</td><td>$x \ge 1$</td></tr>
   </tbody>
 </table>
 
@@ -1556,11 +1556,11 @@ For a continuous-valued random variable $X$ defined on $[0,T]$, the uniform dist
 
 <table align="center">
   <thead>
-    <tr><th>support condition</th><th>p(x)</th></tr>
+    <tr><th>support condition for $x$</th><th>$p(x)$</th></tr>
   </thead>
   <tbody>
-    <tr><td>x &#8712; [0, T]</td><td>1/T</td></tr>
-    <tr><td>otherwise</td><td>0</td></tr>
+    <tr><td>$x \in [0,T]$</td><td>$1/T$</td></tr>
+    <tr><td>otherwise</td><td>$0$</td></tr>
   </tbody>
 </table>
 
@@ -2429,15 +2429,15 @@ Suppose we model commuting behavior $C \in \{\text{walk}, \text{bike}, \text{dri
 
 <table align="center">
   <thead>
-    <tr><th><i>R</i></th><th><i>C</i></th><th><i>p(C | R)</i></th></tr>
+    <tr><th>$R$</th><th>$C$</th><th>$p(C \mid R)$</th></tr>
   </thead>
   <tbody>
-    <tr><td>clear</td><td>walk</td><td>0.9</td></tr>
-    <tr><td>clear</td><td>bike</td><td>0.1</td></tr>
-    <tr><td>clear</td><td>drive</td><td>0.0</td></tr>
-    <tr><td>rain</td><td>walk</td><td>0.5</td></tr>
-    <tr><td>rain</td><td>bike</td><td>0.0</td></tr>
-    <tr><td>rain</td><td>drive</td><td>0.5</td></tr>
+    <tr><td>clear</td><td>walk</td><td>$0.9$</td></tr>
+    <tr><td>clear</td><td>bike</td><td>$0.1$</td></tr>
+    <tr><td>clear</td><td>drive</td><td>$0.0$</td></tr>
+    <tr><td>rain</td><td>walk</td><td>$0.5$</td></tr>
+    <tr><td>rain</td><td>bike</td><td>$0.0$</td></tr>
+    <tr><td>rain</td><td>drive</td><td>$0.5$</td></tr>
   </tbody>
 </table>
 

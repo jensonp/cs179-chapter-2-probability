@@ -241,7 +241,7 @@ def split_table_row(line: str) -> list[str]:
 def normalize_html_text(element: ET.Element | None) -> str:
     if element is None:
         return ""
-    return normalize_text(" ".join(element.itertext()))
+    return replace_inline_math(" ".join(element.itertext()))
 
 
 def parse_table_stack(html_lines: list[str]) -> Block:
