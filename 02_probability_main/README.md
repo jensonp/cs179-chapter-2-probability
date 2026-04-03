@@ -1367,61 +1367,179 @@ The point $x=0.4$ itself still has probability zero. What matters is the width o
 
 ### CDFs and Types of Distributions
 
-The cumulative distribution function is the most universal object for a real-valued random variable:
+The cumulative distribution function, or CDF, is the most universal way to describe a real-valued random variable:
 
 $$F_X(x)=\mathbb{P}(X \le x).$$
 
-Every real-valued random variable has a CDF, whether it is discrete, continuous, or mixed. A PMF exists when probability is concentrated on isolated states. A PDF exists only when the distribution is absolutely continuous with respect to ordinary length or volume. So PMFs and PDFs are special representations, while the CDF always exists.
+This definition should be read operationally. You pick a threshold $x$, ask for the event "the realized value of $X$ is at most that threshold," and then assign the probability of that event. So a CDF is not a density curve and not a table of point masses. It is the running total of probability mass accumulated from the far left up to the cutoff value $x$.
 
-An explicit discrete CDF example helps fix intuition. Suppose $X$ is Bernoulli with
+That running-total viewpoint explains why the CDF is so general. Every real-valued random variable has events of the form $X \le x$, so every real-valued random variable has a CDF. By contrast, PMFs and PDFs exist only in special settings:
 
-$$p(X=1)=0.3,\qquad p(X=0)=0.7.$$
-
-Then the CDF $F_X(x)=\mathbb{P}(X \le x)$ is a step function:
-
-<table align="center" border="0" cellpadding="0" cellspacing="24">
+<table align="center">
+  <thead>
+    <tr><th>object</th><th>definition</th><th>when it exists</th><th>how to read it</th></tr>
+  </thead>
   <tbody>
-    <tr>
-      <td valign="top" align="center">
-        <p><strong>Discrete CDF (Bernoulli)</strong></p>
-        <table>
-          <thead>
-            <tr><th>range</th><th>F<sub>X</sub>(x)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>x &lt; 0</td><td>0</td></tr>
-            <tr><td>0 &#8804; x &lt; 1</td><td>0.7</td></tr>
-            <tr><td>x &#8805; 1</td><td>1</td></tr>
-          </tbody>
-        </table>
-      </td>
-      <td valign="top" align="center">
-        <p><strong>Mixed CDF (Atom + Uniform)</strong></p>
-        <table>
-          <thead>
-            <tr><th>range</th><th>F<sub>X</sub>(x)</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>x &lt; 0</td><td>0</td></tr>
-            <tr><td>x = 0</td><td>0.7</td></tr>
-            <tr><td>0 &lt; x &lt; 1</td><td>0.7 + 0.3x</td></tr>
-            <tr><td>x &#8805; 1</td><td>1</td></tr>
-          </tbody>
-        </table>
-      </td>
-    </tr>
+    <tr><td>PMF</td><td>p(X=x)=P(X=x)</td><td>discrete variables</td><td>probability assigned to one exact state</td></tr>
+    <tr><td>PDF</td><td>P(X in A)=&int;<sub>A</sub> p(x) dx</td><td>absolutely continuous variables</td><td>density height; probability comes from area, not point value</td></tr>
+    <tr><td>CDF</td><td>F<sub>X</sub>(x)=P(X &le; x)</td><td>every real-valued variable</td><td>total probability accumulated up to threshold x</td></tr>
   </tbody>
 </table>
 
-In the Bernoulli case (left table), the jump at $x=0$ has size $0.7$ because $p(X=0)=0.7$. The jump at $x=1$ adds the remaining $0.3$ mass. This is why CDFs are the most universal representation: they handle point masses (jumps) and continuous density (smooth rise) in one object.
+The safest mental model is:
 
-This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution can contain both an atom and a continuous part. For example, suppose
+- a PMF answers "what is the probability of this exact isolated state?"
+- a PDF answers "how densely is probability packed near this location?"
+- a CDF answers "how much total probability lies to the left of this threshold?"
+
+Several structural facts follow directly from the definition of a CDF.
+
+First, $F_X(x)$ must always lie between $0$ and $1$ because it is a probability.
+
+Second, $F_X(x)$ is nondecreasing: if $x_1 \le x_2$, then the event $\{X \le x_1\}$ is contained inside the event $\{X \le x_2\}$, so
+
+$$F_X(x_1)\le F_X(x_2).$$
+
+Third, the far-left limit is $0$ and the far-right limit is $1$:
+
+$$\lim_{x\to -\infty} F_X(x)=0,\qquad \lim_{x\to \infty} F_X(x)=1.$$
+
+So a CDF always starts near $0$, climbs as probability accumulates, and eventually levels off at $1$.
+
+One more operational formula is worth stating early because it is how CDFs are actually used:
+
+$$\mathbb{P}(a < X \le b)=F_X(b)-F_X(a).$$
+
+This works because the event $\{X \le b\}$ contains all mass up to $b$, while $\{X \le a\}$ contains all mass up to $a$. Subtracting removes the left part and leaves only the probability in the interval $(a,b]$. This formula is valid whether the variable is discrete, continuous, or mixed.
+
+Now examine the three main types of distributions one by one.
+
+Discrete case. Suppose $X$ is Bernoulli with
+
+$$p(X=1)=0.3,\qquad p(X=0)=0.7.$$
+
+Then the CDF is obtained by asking what probability has accumulated by each threshold.
+
+If $x<0$, then neither state $0$ nor state $1$ is less than or equal to $x$, so
+
+$$F_X(x)=0.$$
+
+If $0 \le x < 1$, then the state $0$ is included but the state $1$ is not, so
+
+$$F_X(x)=\mathbb{P}(X=0)=0.7.$$
+
+If $x \ge 1$, then both states are included, so
+
+$$F_X(x)=\mathbb{P}(X=0)+\mathbb{P}(X=1)=1.$$
+
+That gives the step-function description:
+
+$$
+F_X(x)=
+\begin{cases}
+0, & x<0, \\
+0.7, & 0 \le x < 1, \\
+1, & x \ge 1.
+\end{cases}
+$$
+
+The jump at $x=0$ has size $0.7$, which is exactly the point mass at $0$. The jump at $x=1$ adds the remaining $0.3$, which is exactly the point mass at $1$. This is the general rule in the discrete case: jumps in the CDF correspond to point probabilities.
+
+An interval example makes the subtraction rule concrete. For the Bernoulli variable above,
+
+$$\mathbb{P}(0 < X \le 1)=F_X(1)-F_X(0)=1-0.7=0.3,$$
+
+which is exactly the probability that $X=1$.
+
+Continuous case. Now suppose $X$ is uniform on $[0,2]$, so the density is
+
+$$p(x)=
+\begin{cases}
+\frac{1}{2}, & 0 \le x \le 2, \\
+0, & \text{otherwise.}
+\end{cases}
+$$
+
+The CDF is found by integrating the density from the far left up to the threshold.
+
+If $x<0$, then no support has been reached yet, so
+
+$$F_X(x)=0.$$
+
+If $0 \le x \le 2$, then we integrate only over the part of the support from $0$ to $x$:
+
+$$F_X(x)=\int_0^x \frac{1}{2}\,dt=\frac{x}{2}.$$
+
+If $x>2$, then the full support has already been accumulated, so
+
+$$F_X(x)=1.$$
+
+So
+
+$$
+F_X(x)=
+\begin{cases}
+0, & x<0, \\
+\frac{x}{2}, & 0 \le x \le 2, \\
+1, & x>2.
+\end{cases}
+$$
+
+Unlike the discrete Bernoulli example, this CDF has no jumps. It rises smoothly because probability is spread continuously across an interval rather than concentrated at isolated points.
+
+The interval-probability formula still works the same way:
+
+$$\mathbb{P}(0.3 \le X \le 0.9)=F_X(0.9)-F_X(0.3)=0.45-0.15=0.30.$$
+
+So the CDF is not a separate theory from the PDF. It is another way of packaging the same distribution. When a density exists and is sufficiently regular, the derivative of the CDF recovers the density:
+
+$$\frac{d}{dx}F_X(x)=p(x)$$
+
+at points where that derivative exists.
+
+Mixed case. This distinction matters because not every distribution is purely discrete or purely continuous. A mixed distribution contains both an atom and a continuous part. For example, suppose
 
 $$\mathbb{P}(X=0)=0.7,$$
 
-and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$. Then the CDF is shown in the right table above.
+and with the remaining probability $0.3$ we draw $X$ uniformly from $[0,1]$.
 
-This variable has a jump of size $0.7$ at zero and a continuous linear rise on $(0,1)$. It cannot be described by an ordinary density alone, because the point mass at zero would be lost. The CDF therefore gives the cleanest unified description.
+Now compute the CDF carefully.
+
+If $x<0$, then no mass has been accumulated:
+
+$$F_X(x)=0.$$
+
+At the exact point $x=0$, the atom at zero is included, so
+
+$$F_X(0)=0.7.$$
+
+If $0<x<1$, then we have already collected the point mass $0.7$, and we also collect the fraction of the continuous part that lies in $[0,x]$. Since that continuous part is uniform on $[0,1]$ and has total weight $0.3$, the additional contribution is $0.3x$. Therefore
+
+$$F_X(x)=0.7+0.3x \qquad \text{for } 0<x<1.$$
+
+Finally, if $x \ge 1$, all probability has been accumulated, so
+
+$$F_X(x)=1.$$
+
+So the mixed-distribution CDF is
+
+$$
+F_X(x)=
+\begin{cases}
+0, & x<0, \\
+0.7, & x=0, \\
+0.7+0.3x, & 0<x<1, \\
+1, & x \ge 1.
+\end{cases}
+$$
+
+This example is important because it shows exactly why the CDF is the most universal description. A PMF alone would miss the continuous part. A PDF alone would miss the atom at zero. The CDF captures both with one object: jumps record point masses, and smooth increases record continuous accumulation.
+
+Two common confusions are worth ruling out explicitly.
+
+First, $F_X(x)$ is not the same thing as $p(x)$. The CDF is a probability between $0$ and $1$, while the PDF is a density value that may exceed $1$ locally.
+
+Second, $\mathbb{P}(X=x)=0$ for a continuous variable does not mean the value $x$ is impossible. It means only that a single point has zero width, so it contributes zero area under the density. Intervals, not isolated points, carry positive probability in the continuous case.
 
 ### Example 2-9: Uniform Distribution
 
