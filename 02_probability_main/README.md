@@ -2684,6 +2684,12 @@ is large and positive when $q$ underestimates an outcome that $p$ says is common
 
 It is always nonnegative and zero only when $p=q$, but it is not symmetric. There is also an important support condition: if $q(x)=0$ for some $x$ with $p(x)>0$, then the divergence is infinite, because $q$ assigns impossible status to an outcome that actually occurs under $p$.
 
+One subtle point is worth stating explicitly. Individual summands
+
+$$p(x)\log \frac{p(x)}{q(x)}$$
+
+can be negative for some outcomes, namely when $q(x)>p(x)$. So KL divergence is not nonnegative because every term is nonnegative one by one. It is nonnegative only after the weighted average over all outcomes is taken.
+
 In learning, maximum likelihood can be viewed as minimizing the KL divergence from the empirical distribution to the model family.
 
 A concrete Bernoulli example makes the asymmetry visible. Let
@@ -2752,6 +2758,8 @@ $$I[X,Y]=H[X].$$
 
 So mutual information ranges from zero for complete independence up to the full entropy of one variable when the other variable determines it exactly.
 
+This makes the motive for mutual information precise. It is not merely "some generic dependence score." It measures how much uncertainty is removed when one variable is revealed. That is why it is zero under independence and maximal when one variable fully determines the other.
+
 ### Conditional Entropy
 
 Conditional entropy is
@@ -2767,6 +2775,8 @@ so it is the average remaining uncertainty in $X$ after the value of $Y$ is reve
 $$I[X,Y] = H[X] - H[X \mid Y] \ge 0,$$
 
 so conditioning reduces uncertainty on average. For one particular rare conditioning event, uncertainty can increase, but after averaging over the actual distribution of $Y$, it cannot.
+
+That last sentence is easy to gloss over but conceptually important. Seeing one unusual value of $Y$ can sometimes make $X$ harder to predict than before. The theorem is only about the weighted average over all possible revealed values of $Y$.
 
 ### Example 2-26: Information and Conditional Entropy
 
@@ -2842,6 +2852,8 @@ That number is not huge, which is also important to interpret correctly. Weather
 
 The classical probability distributions above are useful, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
 
+The modeling motive is the following. Simple base distributions, such as Gaussians, are mathematically convenient but often too rigid to fit real data directly. Change-of-variables methods let us start from a simple distribution we understand well and then warp it into a more realistic one. The price of that warping is the Jacobian correction.
+
 For the course core, the main required idea is the Jacobian correction in scalar and multivariate change of variables. The copula and normalizing-flow subsections are explicit reach material: they show how the same principle scales into more modern modeling constructions.
 
 ### Scalar Change of Variables
@@ -2869,6 +2881,8 @@ $$p_X(x)=p_Z(g(x))|g'(x)|.$$
 Second derivation: the local-interval intuition. A tiny interval around $x$ corresponds to a tiny interval around $z=g(x)$. If the transformation stretches widths by a factor of $2$, then the density height must drop by a factor of $2$ so that probability mass is preserved. That is why the derivative appears.
 
 This formula requires invertibility on the region of interest. If the map has multiple inverse branches, the correct density is a sum over branches rather than a single Jacobian term. The absolute value is not optional either. If the inverse map decreases rather than increases, the raw derivative is negative, but a density must remain nonnegative, so the local scaling factor must be taken in magnitude.
+
+So the mental model should be: move probability mass with the transformation, then compensate for local stretching or compression. That is the whole purpose of the derivative term.
 
 A minimal worked example is $X=2Z$ with $Z$ uniform on $[0,1]$. Then $g(x)=x/2$ and $g'(x)=1/2$, so
 
@@ -2987,6 +3001,8 @@ The Gaussian copula is a special case in which the transformed variables are the
 
 This gives a clean division of labor. The marginal CDFs control one-dimensional shape, skewness, and heavy tails. The copula controls only how coordinates move together after those marginal effects have been removed.
 
+That separation is the main reason copulas are useful. They let us answer two modeling questions separately instead of mixing them together: "what does each variable look like on its own?" and "how do the variables depend on one another?"
+
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_copula_flow_pipeline.png" alt="Copula and flow transformation pipeline" width="860">
 </p>
@@ -3038,6 +3054,8 @@ $$f^{-1}=f_1^{-1}\circ \cdots \circ f_T^{-1}.$$
 Second, Jacobian determinants multiply under composition. Therefore the log-determinants add. That is the whole computational reason flows are practical: a complicated global transformation can be assembled from simple local pieces whose determinants are easy to evaluate.
 
 A flow is therefore practical only when each layer is invertible and has a determinant that can be evaluated cheaply. If either condition fails, likelihood evaluation becomes intractable or ill-defined.
+
+This is the long-term modeling idea behind flows. Start with a base density that is easy to sample from and evaluate, such as a Gaussian. Then learn an invertible map that bends that simple density into a complex one that matches the data. The density becomes complicated in data space, but it stays tractable because the transformation remains invertible and the Jacobian terms are computable.
 
 A one-layer sanity check is the scaling flow
 
