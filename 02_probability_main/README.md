@@ -1807,23 +1807,17 @@ So the Gaussian formula should be read as "bell-shaped decay" multiplied by "wha
 
 Before moving to the multivariate case, it helps to say what actually changes.
 
-In one dimension, the random outcome is a single number such as a height, temperature, or measurement error. In multiple dimensions, the random outcome is a list of numbers observed together. For example, one observation might be
-
-$$x=\begin{bmatrix}x_1\\x_2\end{bmatrix}=\begin{bmatrix}\text{height}\\\text{weight}\end{bmatrix},$$
-
-or
-
-$$x=\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}=\begin{bmatrix}\text{exam 1}\\\text{exam 2}\\\text{exam 3}\end{bmatrix}.$$
+In one dimension, the random outcome is a single number such as a height, temperature, or measurement error. In multiple dimensions, the random outcome is a list of numbers observed together. For example, one observation might be the two-dimensional vector $x=(x_1,x_2)^T$, where $x_1$ is height and $x_2$ is weight. Or it might be the three-dimensional vector $x=(x_1,x_2,x_3)^T$, where the coordinates are exam 1, exam 2, and exam 3.
 
 So a multivariate random variable is really a random vector: one draw produces several coordinates at once.
 
 The mean therefore becomes a mean vector
 
-$$\mu=\mathbb{E}[X]=\begin{bmatrix}\mathbb{E}[X_1]\\ \vdots \\ \mathbb{E}[X_n]\end{bmatrix}.$$
+$$\mu=\mathbb{E}[X]=(\mathbb{E}[X_1],\ldots,\mathbb{E}[X_n])^T.$$
 
 This means each coordinate has its own average value. In two dimensions, for example,
 
-$$\mu=\begin{bmatrix}\mu_1\\\mu_2\end{bmatrix}$$
+$$\mu=(\mu_1,\mu_2)^T$$
 
 simply says the cloud of points is centered at horizontal coordinate $\mu_1$ and vertical coordinate $\mu_2$.
 
