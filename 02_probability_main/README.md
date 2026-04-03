@@ -21,12 +21,12 @@ Use this table as a reading filter. "Required" means material a student should b
 | `2.1` events, Bayes, table operations, expectation, independence | all of it | the measure-theoretic framing is useful rigor, but not first-pass exam material |
 | Geometric distribution | yes | none; this is directly homework-relevant |
 | `2.2` continuous variables, CDF/PDF distinction, Gaussian, Beta/Dirichlet basics | yes | exponential-family parameterization details and two-parameter Bernoulli redundancy |
-| `2.3` likelihood, MLE, Beta-Bernoulli updates, basic model selection | yes | hyper-priors, weakly informative priors, and some of the broader Bayesian-model-selection discussion |
+| `2.3` likelihood, maximum likelihood estimation (MLE), Beta-Bernoulli updates, basic model selection | yes | hyper-priors, weakly informative priors, and some of the broader Bayesian-model-selection discussion |
 | `2.4` convexity | supporting background only | full optimization interpretation and Hessian viewpoint |
 | `2.5` entropy, KL, mutual information | conceptually useful and worth reading | derivation-heavy identities beyond the main examples |
 | `2.6` scalar and multivariate Jacobians | useful background | copulas and normalizing flows are the clearest "beyond the course core" topics in this chapter |
 
-If time is short, read `2.1`, the Geometric section, the core parts of `2.2`, and the likelihood / MLE / conjugacy / BIC parts of `2.3` first. Then return to `2.4`-`2.6` as second-pass material.
+If time is short, read `2.1`, the Geometric section, the core parts of `2.2`, and the likelihood / maximum likelihood estimation (MLE) / conjugate-prior / Bayesian information criterion (BIC) parts of `2.3` first. Then return to `2.4`-`2.6` as second-pass material.
 
 ## Notation Policy
 
@@ -1892,7 +1892,7 @@ Every object now has a specific role:
 - $x$ is now an $n$-dimensional vector,
 - $\mu$ is the mean vector, which sets the center of the cloud,
 - $\Sigma$ is the covariance matrix, which sets spread and dependence,
-- $|\Sigma|$ is the determinant of the covariance matrix,
+- $|\Sigma|$ is the determinant of the covariance matrix, meaning the single number that records how covariance rescales local volume,
 - and the quadratic term
 
 $$
@@ -2421,11 +2421,11 @@ $$h(x)=1, \qquad \phi(x)=x, \qquad \theta=\eta, \qquad A(\theta)=\log(1+e^{\thet
 
 A second example is a one-dimensional Gaussian with known variance $\sigma^2$ and unknown mean $\mu$. Its density can be rearranged into exponential-family form with sufficient statistics $x$ and $x^2$. The exact coordinates are less important than the pattern: once the density is written as "fixed function of $x$" times "exponential of parameter times sufficient statistics," the same optimization and moment arguments apply.
 
-The term sufficient statistic becomes concrete when we look at i.i.d. data. Suppose
+The term sufficient statistic becomes concrete when we look at independent and identically distributed data. Here independent means the observations do not probabilistically influence one another once the parameter is fixed, and identically distributed means each observation is governed by the same one-observation model. Suppose
 
 $$D=\{x^{(1)},\ldots,x^{(m)}\}$$
 
-are i.i.d. observations from an exponential-family model. Then
+are independent and identically distributed observations from an exponential-family model. Then
 
 $$p_{\theta}(D)=\prod_{i=1}^m h(x^{(i)})\exp\left(\theta^{\top}\phi(x^{(i)})-A(\theta)\right).$$
 
@@ -4151,9 +4151,9 @@ That number is not huge, and that interpretation matters. Weather is informative
 
 The classical probability distributions above are important, but many real data sets do not fit those forms directly. A common technique is to define a new variable as an invertible transformation of a simpler base variable.
 
-The modeling motive is the following. Simple base distributions, such as Gaussians, are mathematically convenient but often too rigid to fit real data directly. Change-of-variables methods let us start from a simple distribution we understand well and then warp it into a more realistic one. The price of that warping is the Jacobian correction.
+The modeling motive is the following. Simple base distributions, such as Gaussians, are mathematically convenient but often too rigid to fit real data directly. Change-of-variables methods let us start from a simple distribution we understand well and then warp it into a more realistic one. The price of that warping is the Jacobian correction, meaning the derivative-based factor that compensates for how the transformation stretches or compresses space.
 
-For the course core, the main required idea is the Jacobian correction in scalar and multivariate change of variables. The copula and normalizing-flow subsections are explicit reach material: they show how the same principle scales into more modern modeling constructions.
+For the course core, the main required idea is the Jacobian correction in scalar and multivariate change of variables. The copula subsections and normalizing-flow subsections are explicit reach material: copulas separate marginal shape from dependence structure, while normalizing flows learn invertible transformations of a simple base density. Both are modern extensions of the same change-of-variables principle.
 
 ### Scalar Change of Variables
 
