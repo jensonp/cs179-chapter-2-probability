@@ -2432,11 +2432,45 @@ $$\hat{\rho}=3/5=0.6.$$
 
 This answers the question "which one number best summarizes the data under the chosen estimation rule?"
 
-A Bayesian summary with prior $\mathrm{Beta}(2,2)$ produces the full posterior
+A Bayesian analysis asks a different question, so it keeps a different object. Start from the prior
+
+$$\rho \sim \mathrm{Beta}(2,2).$$
+
+This means that before observing the five flips, the density over possible values of $\rho$ is proportional to
+
+$$\rho^{2-1}(1-\rho)^{2-1}=\rho(1-\rho).$$
+
+Now read the data explicitly. The sample
+
+$$D=\{1,1,0,1,0\}$$
+
+contains
+
+$$m_1=3 \quad \text{successes}, \qquad m_0=2 \quad \text{failures}.$$
+
+So the Bernoulli likelihood is proportional to
+
+$$p(D \mid \rho)\propto \rho^3(1-\rho)^2.$$
+
+Multiply prior and likelihood:
+
+$$p(\rho \mid D)\propto p(D \mid \rho)p(\rho)\propto \rho^3(1-\rho)^2 \cdot \rho(1-\rho)=\rho^4(1-\rho)^3.$$
+
+That is exactly the kernel of a Beta density with updated parameters
+
+$$2+3=5 \qquad \text{and} \qquad 2+2=4.$$
+
+So the posterior is
 
 $$\rho \mid D \sim \mathrm{Beta}(5,4),$$
 
 which answers a different question: "after seeing the five flips, how is probability mass distributed over the possible values of $\rho$?"
+
+This is worth interpreting explicitly. The notation
+
+$$\rho \mid D \sim \mathrm{Beta}(5,4)$$
+
+does **not** mean the coin suddenly became a Beta random variable in the same sense that a flip outcome is Bernoulli. It means our uncertainty about the unknown Bernoulli parameter is now described by a Beta density with updated shape parameters $5$ and $4$.
 
 The posterior still centers near the empirical proportion, but it does not collapse everything to a single number. It quantifies uncertainty around that value. That distinction becomes important whenever the sample is small, the parameter lies near a boundary, or prior information matters.
 
@@ -2483,6 +2517,20 @@ If we integrate this function over $\rho \in [0,1]$, we get
 $$\int_0^1 \rho^2(1-\rho)\,d\rho=\int_0^1 (\rho^2-\rho^3)\,d\rho=\left[\frac{\rho^3}{3}-\frac{\rho^4}{4}\right]_0^1=\frac{1}{3}-\frac{1}{4}=\frac{1}{12},$$
 
 not $1$. So likelihood is not meant to be "the probability that $\rho$ equals a value." Likelihood ranks parameters by data fit. To get a probability distribution over $\rho$, you must multiply by a prior and renormalize. For example, with a uniform prior $\rho \sim \mathrm{Beta}(1,1)$, the posterior is $\mathrm{Beta}(3,2)$, whose (normalized) density is proportional to the same kernel $\rho^2(1-\rho)$.
+
+That last sentence is worth unpacking once. A $\mathrm{Beta}(1,1)$ prior has density
+
+$$p(\rho)=1 \qquad \text{for } 0 \le \rho \le 1.$$
+
+So multiplying the likelihood kernel
+
+$$\rho^2(1-\rho)$$
+
+by the prior changes nothing except the eventual normalization. The exponents are still
+
+$$2 \quad \text{on } \rho \qquad \text{and} \qquad 1 \quad \text{on } (1-\rho),$$
+
+which is exactly the Beta$(3,2)$ pattern. So the posterior family label is not magic notation; it is just the normalized version of the same kernel.
 
 ### Probability Versus Likelihood
 
@@ -2864,21 +2912,63 @@ Each term has a separate role.
 - The evidence $p(D)$ is the total probability of the data after averaging over all parameter values allowed by the prior.
 - The posterior $p(\theta \mid D)$ is the normalized result after combining the first two pieces.
 
-The posterior therefore trades a point estimate for a full uncertainty description over plausible parameter values. This is conceptually important and computationally consequential: exact inference is easy only when the evidence integral can be computed analytically or when the prior-likelihood pair has a conjugate form.
+The posterior therefore does something different from point estimation. A point estimator returns one preferred number, such as $\hat{\rho}=0.6$. A posterior returns a whole distribution over $\rho$, which tells us not only where the plausible values are centered but also how spread out that uncertainty still is after observing the data. This matters conceptually because it keeps uncertainty visible rather than hiding it inside one summary number, and it matters computationally because such full updates are easy to compute exactly only in special cases, such as conjugate prior-likelihood pairs.
 
 For a concrete update, start with
 
 $$\rho \sim \mathrm{Beta}(2,2)$$
 
-and observe $D=\{1,0,1\}$. The posterior becomes
+and observe
+
+$$D=\{1,0,1\}.$$
+
+Now spell out the pieces instead of jumping directly to the answer. The prior density is
+
+$$p(\rho)=6\rho(1-\rho),$$
+
+because Beta$(2,2)$ has normalization constant
+
+$$\frac{\Gamma(4)}{\Gamma(2)\Gamma(2)}=6.$$
+
+The data contain
+
+$$m_1=2 \quad \text{ones}, \qquad m_0=1 \quad \text{zero},$$
+
+so the Bernoulli likelihood is
+
+$$p(D \mid \rho)=\rho^2(1-\rho).$$
+
+Multiply prior and likelihood:
+
+$$p(\rho \mid D)\propto p(D \mid \rho)p(\rho)\propto \rho^2(1-\rho)\cdot \rho(1-\rho)=\rho^3(1-\rho)^2.$$
+
+That kernel has exponent
+
+$$3$$
+
+on $\rho$ and exponent
+
+$$2$$
+
+on $(1-\rho)$. Since a Beta$(a,b)$ density has the form
+
+$$\rho^{a-1}(1-\rho)^{b-1},$$
+
+we identify
+
+$$a-1=3,\qquad b-1=2,$$
+
+so
+
+$$a=4,\qquad b=3.$$
+
+Therefore the posterior is
 
 $$\rho \mid D \sim \mathrm{Beta}(4,3).$$
 
-The prior contributes two pseudo-observations toward heads and two toward tails, while the real data contribute two heads and one tail. The posterior therefore behaves like a total of seven weighted observations.
+Now the pseudo-count interpretation can be stated cleanly. The prior Beta$(2,2)$ contributes one exponent to $\rho$ and one exponent to $(1-\rho)$ before any real data are observed. The actual sample contributes two more powers of $\rho$ and one more power of $(1-\rho)$. After multiplication, the exponents add. That is why the posterior behaves as if prior information and observed counts have been combined.
 
-That pseudo-count language is an interpretation of the algebra, not a literal story that extra coin flips physically occurred. It means that the exponents contributed by the prior combine additively with the exponents contributed by the Bernoulli data.
-
-That pseudo-count reading is not just a slogan. It is a concrete way to remember how conjugate updates work: prior counts and observed counts add.
+That pseudo-count language is an interpretation of the algebra, not a literal story that extra coin flips physically occurred. What is literally true is simpler: the prior contributes exponents, the data contribute exponents, and multiplication adds those exponents. The pseudo-count mnemonic is useful only because it mirrors that exponent bookkeeping.
 
 It is also worth computing the evidence term once, because it is often treated as mysterious. Here the likelihood kernel is
 
@@ -2936,7 +3026,19 @@ If we plug in $a=b=2$ and observe $m_1=3$, $m_0=1$, then
 
 $$\rho \mid D \sim \mathrm{Beta}(5,3).$$
 
-The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros. In other words, the update changes both location and confidence: the center moves toward the evidence, and the distribution narrows because the effective sample size has increased.
+The arithmetic should be read explicitly:
+
+$$a+m_1=2+3=5,\qquad b+m_0=2+1=3.$$
+
+The posterior is more concentrated than the prior because more information has been accumulated, and it is shifted toward heads because the data contain more ones than zeros. This can be read numerically as well. The prior Beta$(2,2)$ has total concentration
+
+$$2+2=4,$$
+
+while the posterior Beta$(5,3)$ has total concentration
+
+$$5+3=8.$$
+
+So the posterior carries more total mass and is therefore narrower. At the same time, its center moves toward heads because the first shape parameter increased by more than the second. In other words, the update changes both location and confidence: the center moves toward the evidence, and the distribution narrows because the effective sample size has increased.
 
 ### Worked Example: Dirichlet-Categorical Pseudo-Counts
 
@@ -2948,7 +3050,21 @@ Now observe four class labels with counts
 
 $$m=(3,1,0).$$
 
-The posterior is obtained by adding counts coordinatewise:
+Spell out what the count vector means before doing the update:
+
+- class $1$ was observed $3$ times,
+- class $2$ was observed $1$ time,
+- class $3$ was observed $0$ times.
+
+The prior Dirichlet parameters are
+
+$$ (2,2,2), $$
+
+so the coordinatewise update is
+
+$$2+3=5,\qquad 2+1=3,\qquad 2+0=2.$$
+
+Therefore
 
 $$\theta \mid D \sim \mathrm{Dir}(5,3,2).$$
 
@@ -2958,9 +3074,29 @@ The posterior mean is
 
 $$\mathbb{E}[\theta \mid D] = ( \frac{5}{10}, \frac{3}{10}, \frac{2}{10} ) =(0.5,0.3,0.2).$$
 
-The posterior therefore still leaves positive mass on the unobserved third class, because the prior did not allow its probability to collapse to zero after only four observations. That is exactly the smoothing effect one usually wants from a Bayesian categorical model.
+The denominator
 
-This is one of the main reasons Dirichlet priors matter in practice. Pure MLE would assign the unseen third class probability zero. The Bayesian posterior avoids that brittle conclusion by remembering that "not yet seen" is not the same thing as "impossible."
+$$10$$
+
+comes from the total posterior concentration:
+
+$$5+3+2=10.$$
+
+So the posterior mean is not arbitrary componentwise division. Each coordinate is being divided by the sum of all updated Dirichlet parameters.
+
+The posterior mean for class $3$ is still positive even though class $3$ was never observed. The reason is explicit in the numbers: the posterior parameter for that class is
+
+$$2+0=2,$$
+
+so the posterior mean becomes
+
+$$\frac{2}{5+3+2}=\frac{2}{10}=0.2.$$
+
+Compare that with pure MLE. Using only the observed counts would give
+
+$$\left(\frac{3}{4},\frac{1}{4},0\right),$$
+
+so the unseen class would receive probability zero. The Dirichlet prior prevents that collapse by keeping some prior mass on every class. That is the smoothing effect: "not yet seen" is treated as weaker information than "known to be impossible."
 
 ### Posterior Estimators
 
@@ -3148,7 +3284,12 @@ the model might draw
 
 $$\rho=0.94,$$
 
-which would make long runs of heads much more plausible. The point is that the model is expressing uncertainty about the kind of coin before it expresses uncertainty about the exact bias of that coin.
+which would make long runs of heads much more plausible. So there are really two uncertainty layers in the model. First, we are uncertain about which regime is active:
+
+- is this an ordinary nearly fair coin regime?
+- or is this an extreme-bias regime?
+
+Only after that regime is chosen do we ask for the exact value of $\rho$. That is why the hyper-prior lives one level above the Beta prior: it governs uncertainty about the kind of prior story, not just the parameter value inside one fixed story.
 
 That is the motivation for hierarchical modeling in one sentence: sometimes the difficult uncertainty is not only "what is the parameter value?" but also "which parameter regime am I in?" A hyper-prior gives the model a place to represent that second layer explicitly.
 
