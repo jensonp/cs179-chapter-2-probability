@@ -1068,7 +1068,38 @@ This is the core meaning of conditional independence: once $C$ is fixed, the too
 
 ### Example 2-8: Conditional Independence, Dentist
 
-In the dentist model, the probe catches and toothache are not independent in general. But conditioned on cavity status, they become independent. The conditional table is:
+The dentist model is the cleanest place to see the difference between:
+
+- marginal dependence (two variables are associated when we do *not* condition), and
+- conditional independence (the association disappears once we condition on a third variable).
+
+In this model, $T$ (toothache) and $D$ (probe catch) are not independent in general, because both are influenced by the hidden cause $C$ (cavity). But they *are* conditionally independent given $C$. Formally, the claim is
+
+$$D \perp T \mid C.$$
+
+There are two equivalent ways to read this statement, and it helps to see both.
+
+Definition via factorization. Conditional independence means that for every cavity value $c$ with $p(C=c)>0$,
+
+$$p(D,T \mid C=c)=p(D \mid C=c)\,p(T \mid C=c).$$
+
+Definition via “conditioning adds no extra information.” The same claim can be written as: for every $c,t$ with $p(C=c,T=t)>0$,
+
+$$p(D \mid C=c,T=t)=p(D \mid C=c).$$
+
+So once we fix $C$, learning $T$ does not further change the distribution of $D$.
+
+Before showing the conditional-independence check, it is worth confirming that $T$ and $D$ are in fact dependent marginally. Using the joint table from Example 2-4:
+
+$$p(D=1 \mid T=1)=\frac{p(D=1,T=1)}{p(T=1)}=\frac{0.016+0.108}{0.20}=\frac{0.124}{0.20}=0.62,$$
+
+while
+
+$$p(D=1 \mid T=0)=\frac{p(D=1,T=0)}{p(T=0)}=\frac{0.144+0.072}{0.80}=\frac{0.216}{0.80}=0.27.$$
+
+These are different, so $D$ and $T$ are *not* independent.
+
+Now check the conditional-independence claim. The most direct mechanical check is to compute $p(D \mid C,T)$ from the joint table and see whether it depends on $T$. The conditional table is:
 
 <table align="center">
   <thead>
@@ -1086,82 +1117,169 @@ In the dentist model, the probe catches and toothache are not independent in gen
   </tbody>
 </table>
 
-The key point is that $p(D \mid C,T)$ does not actually depend on $T$.
+The key structural point is that the rightmost column does not actually depend on $T$. But to avoid treating the table as a magic lookup, compute two rows explicitly.
 
-We can check that explicitly from the table. For cavity-free teeth,
+Case 1: cavity present ($C=1$). First compute the denominator probabilities (the mass of the two relevant rows):
 
-$$p(D=1 \mid C=0,T=0)=0.2, \qquad p(D=1 \mid C=0,T=1)=0.2.$$
+$$p(C=1,T=0)=p(0,0,1)+p(0,1,1)=0.008+0.072=0.080,$$
 
-For cavity teeth,
+$$p(C=1,T=1)=p(1,0,1)+p(1,1,1)=0.012+0.108=0.120.$$
 
-$$p(D=1 \mid C=1,T=0)=0.9, \qquad p(D=1 \mid C=1,T=1)=0.9.$$
+Now compute the conditional probe-catch probabilities:
+
+$$p(D=1 \mid C=1,T=0)=\frac{p(D=1,C=1,T=0)}{p(C=1,T=0)}=\frac{0.072}{0.080}=0.9,$$
+
+$$p(D=1 \mid C=1,T=1)=\frac{p(D=1,C=1,T=1)}{p(C=1,T=1)}=\frac{0.108}{0.120}=0.9.$$
+
+So once we fix $C=1$, the probability of $D=1$ is $0.9$ regardless of the toothache value.
+
+Case 2: no cavity ($C=0$). Repeat the same computation:
+
+$$p(C=0,T=0)=p(0,0,0)+p(0,1,0)=0.576+0.144=0.720,$$
+
+$$p(C=0,T=1)=p(1,0,0)+p(1,1,0)=0.064+0.016=0.080.$$
+
+Then
+
+$$p(D=1 \mid C=0,T=0)=\frac{0.144}{0.720}=0.2,\qquad p(D=1 \mid C=0,T=1)=\frac{0.016}{0.080}=0.2.$$
+
+Again, after fixing $C$, the distribution of $D$ does not depend on $T$.
 
 So once the cavity variable is fixed, knowing the toothache value adds no further information about the probe outcome. That is precisely what conditional independence means in this example.
 
+Two easy wrong notions are worth ruling out explicitly.
+
+First, conditional independence is not the same as independence. Here $D$ and $T$ are dependent marginally (we computed $0.62$ versus $0.27$), but conditionally independent once we fix $C$. The dependence exists because mixing over the unknown $C$ value creates association.
+
+Second, conditional independence does not mean that $D$ and $T$ are unrelated in the real world. It means that in the model, any relationship between them is fully explained by the mediating variable $C$. If the model is missing a cause that affects both $D$ and $T$, then the conditional-independence claim may be false in reality even if it holds in a simplified model.
+
 ### Worked Example: Auto Warning Light
 
-The conditional independence machinery above is exactly what one uses in simple diagnostic models. Suppose
+The conditional-independence ideas above show up immediately in diagnostic models. This worked example also introduces a second important phenomenon: *conditioning on a shared effect can create dependence between causes*, which is the pattern called explaining away.
 
-- $H=1$ means the engine is too hot
-- $C=1$ means the coolant level is too low
-- $W=1$ means the warning light is on
+To avoid confusing the coolant variable with the cavity variable $C$ used earlier, we use $L$ for "low coolant." Define three binary variables:
 
-Assume
+- $H=1$ means the engine is too hot (a possible cause)
+- $L=1$ means the coolant level is too low (another possible cause)
+- $W=1$ means the warning light is on (an observed effect)
 
-$$p(H=1)=0.1,\qquad p(C=1)=0.1,$$
+Step 1: specify the priors. Assume
 
-and assume $H$ and $C$ are independent. Then
+$$p(H=1)=0.1,\qquad p(L=1)=0.1,$$
 
-$$p(H,C)=p(H)p(C).$$
+so
 
-The warning light is a noisy sensor whose probability of turning on depends on the hidden causes:
+$$p(H=0)=0.9,\qquad p(L=0)=0.9.$$
 
-| $H$ | $C$ | $p(H,C)$ | $p(W=1 \mid H,C)$ | $p(H,C,W=1)$ |
-|---|---|---:|---:|---:|
-| 0 | 0 | $0.9 \cdot 0.9 = 0.81$ | 0.1 | $0.81 \cdot 0.1 = 0.081$ |
-| 0 | 1 | $0.9 \cdot 0.1 = 0.09$ | 0.8 | $0.09 \cdot 0.8 = 0.072$ |
-| 1 | 0 | $0.1 \cdot 0.9 = 0.09$ | 0.8 | $0.09 \cdot 0.8 = 0.072$ |
-| 1 | 1 | $0.1 \cdot 0.1 = 0.01$ | 0.9 | $0.01 \cdot 0.9 = 0.009$ |
+Assume the two causes are independent *before* we observe anything:
 
-The first posterior query is the probability that coolant is low after seeing the warning light:
+$$H \perp L \qquad \Longleftrightarrow \qquad p(H,L)=p(H)p(L).$$
 
-$$p(C=1 \mid W=1)=\frac{p(C=1,W=1)}{p(W=1)}.$$
+Step 2: specify the sensor model. The warning light is a noisy sensor whose behavior depends on which hidden causes are present. Suppose
 
-Compute the denominator by summing the last column:
+$$p(W=1 \mid H=0,L=0)=0.1,$$
 
-$$p(W=1)=0.081+0.072+0.072+0.009=0.234.$$
+$$p(W=1 \mid H=1,L=0)=0.8,\qquad p(W=1 \mid H=0,L=1)=0.8,$$
 
-Compute the numerator by summing only the rows with $C=1$:
+$$p(W=1 \mid H=1,L=1)=0.9.$$
 
-$$p(C=1,W=1)=0.072+0.009=0.081.$$
+These numbers encode the idea "either problem tends to trigger the light; both problems together trigger it even more reliably; but the light can also turn on by accident."
+
+Step 3: compute the prior joint over the causes. Because we assumed $H \perp L$,
+
+$$p(H=h,L=l)=p(H=h)p(L=l).$$
+
+So the four prior joint probabilities are:
+
+$$p(H=0,L=0)=0.9\cdot 0.9=0.81,$$
+
+$$p(H=0,L=1)=0.9\cdot 0.1=0.09,$$
+
+$$p(H=1,L=0)=0.1\cdot 0.9=0.09,$$
+
+$$p(H=1,L=1)=0.1\cdot 0.1=0.01.$$
+
+Step 4: compute the joint probabilities with $W=1$. The key identity is the product rule:
+
+$$p(H,L,W=1)=p(W=1 \mid H,L)\,p(H,L)=p(W=1 \mid H,L)\,p(H)\,p(L),$$
+
+where the last equality uses the independence assumption $p(H,L)=p(H)p(L)$.
+
+Compute each of the four cases explicitly:
+
+$$p(H=0,L=0,W=1)=0.1\cdot 0.9\cdot 0.9=0.081,$$
+
+$$p(H=0,L=1,W=1)=0.8\cdot 0.9\cdot 0.1=0.072,$$
+
+$$p(H=1,L=0,W=1)=0.8\cdot 0.1\cdot 0.9=0.072,$$
+
+$$p(H=1,L=1,W=1)=0.9\cdot 0.1\cdot 0.1=0.009.$$
+
+These are summarized here:
+
+<table align="center">
+  <thead>
+    <tr><th><i>H</i></th><th><i>L</i></th><th><i>p(H, L)</i></th><th><i>p(W=1 | H, L)</i></th><th><i>p(H, L, W=1)</i></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>0</td><td>0</td><td>0.81</td><td>0.1</td><td>0.081</td></tr>
+    <tr><td>0</td><td>1</td><td>0.09</td><td>0.8</td><td>0.072</td></tr>
+    <tr><td>1</td><td>0</td><td>0.09</td><td>0.8</td><td>0.072</td></tr>
+    <tr><td>1</td><td>1</td><td>0.01</td><td>0.9</td><td>0.009</td></tr>
+  </tbody>
+</table>
+
+Step 5: compute the evidence probability $p(W=1)$. Since the four $(H,L)$ cases form a partition,
+
+$$p(W=1)=\sum_{h,l} p(H=h,L=l,W=1)=0.081+0.072+0.072+0.009=0.234.$$
+
+Step 6: posterior query 1, probability of low coolant after seeing the warning light. By the definition of conditional probability,
+
+$$p(L=1 \mid W=1)=\frac{p(L=1,W=1)}{p(W=1)}.$$
+
+Compute the numerator by summing the two rows with $L=1$:
+
+$$p(L=1,W=1)=p(H=0,L=1,W=1)+p(H=1,L=1,W=1)=0.072+0.009=0.081.$$
 
 Therefore
 
-$$p(C=1 \mid W=1)=\frac{0.081}{0.234}=\frac{9}{26}\approx 0.346.$$
+$$p(L=1 \mid W=1)=\frac{0.081}{0.234}=\frac{9}{26}\approx 0.346.$$
 
-The second posterior query uses extra evidence. Once we also learn that the engine is hot,
+Interpretation: the warning light increases the coolant-low probability from the prior $0.1$ to about $0.35$.
 
-$$p(C=1 \mid W=1,H=1)=\frac{p(C=1,W=1,H=1)}{p(W=1,H=1)}.$$
+Step 7: posterior query 2, probability of low coolant after seeing the warning light *and* learning the engine is hot. Again use conditional probability:
 
-The numerator is just the row $(H,C)=(1,1)$:
+$$p(L=1 \mid W=1,H=1)=\frac{p(L=1,W=1,H=1)}{p(W=1,H=1)}.$$
 
-$$p(C=1,W=1,H=1)=0.009.$$
+The numerator is the single row $(H,L)=(1,1)$:
+
+$$p(L=1,W=1,H=1)=0.009.$$
 
 The denominator sums the two rows with $H=1$:
 
-$$p(W=1,H=1)=0.072+0.009=0.081.$$
+$$p(W=1,H=1)=p(H=1,L=0,W=1)+p(H=1,L=1,W=1)=0.072+0.009=0.081.$$
 
-So the updated posterior is
+So
 
-$$p(C=1 \mid W=1,H=1)=\frac{0.009}{0.081}=\frac{1}{9}\approx 0.111.$$
+$$p(L=1 \mid W=1,H=1)=\frac{0.009}{0.081}=\frac{1}{9}\approx 0.111.$$
 
-This drop is not a paradox. Before checking the engine, the warning light could have been explained by either low coolant or overheating. After verifying that overheating is already present, much of the evidence carried by the light has already been explained away, so the extra need to blame low coolant becomes smaller.
+This value is much smaller than $p(L=1 \mid W=1)\approx 0.346$ because $W=1$ could be explained by either hidden cause. Once we learn $H=1$, the event $W=1$ is no longer strong evidence for $L=1$.
 
-This example is also useful for structural counting. The full joint model over $(H,C,W)$ has
+A final computation makes the explaining-away effect even more explicit. If instead we learn that the engine is *not* hot, then
 
-$$2^3=8$$
+$$p(L=1 \mid W=1,H=0)=\frac{p(H=0,L=1,W=1)}{p(H=0,W=1)}=\frac{0.072}{0.081+0.072}=\frac{0.072}{0.153}\approx 0.471.$$
 
-possible states. But the number of distinct real values we actually specified is much smaller. We used one shared prior number $0.1$ for both $H$ and $C$, and three distinct sensor probabilities $0.9$, $0.8$, and $0.1$ for the three qualitative parent cases "both true," "exactly one true," and "neither true." So the model was specified using only four distinct numbers. The gap between eight states and four numbers is exactly the payoff from independence plus parameter sharing.
+So after observing $W=1$, learning $H=0$ pushes $L$ upward to about $0.47$, while learning $H=1$ pushes $L$ downward to about $0.11$. This is the key structural lesson: $H$ and $L$ are independent in the prior, but after conditioning on their common effect $W=1$, they become dependent.
+
+You can see the dependence-creation cleanly by comparing two conditional probabilities. Before observing $W$, independence means
+
+$$p(L=1 \mid H=1)=p(L=1)=0.1.$$
+
+After observing $W=1$, we found
+
+$$p(L=1 \mid W=1,H=1)\approx 0.111 \qquad \text{and} \qquad p(L=1 \mid W=1,H=0)\approx 0.471.$$
+
+These are different, so $L$ and $H$ are no longer independent once we condition on the shared effect $W=1$. That is the precise algebraic meaning of explaining away in this example.
 
 ### Worked Example: Information Sufficiency for Posterior Queries
 
