@@ -1906,11 +1906,11 @@ puts much more mass near $0$ and $1$, expressing the belief that the coin is lik
 
 The distributions discussed so far are examples of the exponential family:
 
-$$p(x;\theta) = h(x)\exp\bigl(\theta^T \phi(x) - A(\theta)\bigr).$$
+$$p_{\theta}(x) = h(x)\exp\left(\theta^{\top}\phi(x) - A(\theta)\right).$$
 
 The vector $\phi(x)$ contains the sufficient statistics, $h(x)$ is the base measure, $\theta$ is the natural parameter, and $A(\theta)$ is the log-partition function
 
-$$A(\theta) = \log \int h(x)\exp\bigl(\theta^T\phi(x)\bigr)\,dx.$$
+$$A(\theta) = \log \int h(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx.$$
 
 Writing the model this way makes the structure explicit: the log-density is affine in the fixed feature vector $\phi(x)$, while all normalization is absorbed into $A(\theta)$. That structure is what gives exponential families their clean moment-matching and convexity properties. It is also a genuine limitation: only distributions whose log-density can be expressed using a fixed finite-dimensional feature map belong to a finite-dimensional exponential family.
 
@@ -1922,15 +1922,15 @@ For a Gaussian with known variance $\sigma^2$, one can write the density in expo
 
 A concrete reason the term sufficient statistics appears is that, for i.i.d. data, the likelihood depends on the data only through sums of these feature functions. If
 
-$$p(x;\theta)=h(x)\exp\bigl(\theta^T\phi(x)-A(\theta)\bigr),$$
+$$p_{\theta}(x)=h(x)\exp\left(\theta^{\top}\phi(x)-A(\theta)\right)$$
 
 and $D=\{x^{(1)},\dots,x^{(m)}\}$ are i.i.d., then
 
-$$p(D;\theta)=\prod_{i=1}^m h(x^{(i)})\exp\bigl(\theta^T\phi(x^{(i)})-A(\theta)\bigr).$$
+$$p_{\theta}(D)=\prod_{i=1}^m h(x^{(i)})\exp\left(\theta^{\top}\phi(x^{(i)})-A(\theta)\right).$$
 
 Taking logs gives
 
-$$\log p(D;\theta)=\sum_{i=1}^m \log h(x^{(i)}) + \theta^T\left(\sum_{i=1}^m \phi(x^{(i)})\right) - mA(\theta).$$
+$$\log p_{\theta}(D)=\sum_{i=1}^m \log h(x^{(i)}) + \theta^{\top}\left(\sum_{i=1}^m \phi(x^{(i)})\right) - mA(\theta).$$
 
 So the data influence the likelihood through the single vector
 
@@ -1998,7 +1998,7 @@ For i.i.d. data $D = \{x^{(1)}, \dots, x^{(m)}\}$, the likelihood is
 
 $$p(D \mid \theta) = \prod_i p(x^{(i)} \mid \theta)$$
 
-Here i.i.d. means independent and identically distributed. Independent means that once the parameter $\theta$ is fixed, the probability of observing one sample does not depend on the realized values of the others. Identically distributed means each sample is generated from the same model $p(x;\theta)$ rather than from a different parameter at each time step.
+Here i.i.d. means independent and identically distributed. Independent means that once the parameter $\theta$ is fixed, the probability of observing one sample does not depend on the realized values of the others. Identically distributed means each sample is generated from the same model $p_{\theta}(x)$ rather than from a different parameter at each time step.
 
 The product form comes directly from the independence assumption. If the $m$ observations are conditionally independent given $\theta$, then the probability of observing the entire data set is the product of the per-observation probabilities.
 
@@ -2143,11 +2143,11 @@ Because the second total is larger, the log-likelihood at $\mu=1.0$ is smaller. 
 
 Maximum likelihood estimation, or MLE, means choosing the parameter value that maximizes the likelihood of the observed data:
 
-$$\hat\theta_{\text{MLE}}=\arg\max_\theta p(D \mid \theta).$$
+$$\hat{\theta}_{\text{MLE}}=\arg\max_\theta p(D \mid \theta).$$
 
 Because the logarithm is strictly increasing, this is equivalent to
 
-$$\hat\theta_{\text{MLE}}=\arg\max_\theta \ell(\theta),$$
+$$\hat{\theta}_{\text{MLE}}=\arg\max_\theta \ell(\theta),$$
 
 where $\ell(\theta)$ denotes the log-likelihood. In practice one almost always works with the log-likelihood because products become sums and derivatives become manageable.
 
@@ -2161,13 +2161,13 @@ $$\frac{\partial \ell}{\partial \rho} = \frac{m_1}{\rho} - \frac{m_0}{1-\rho}.$$
 
 Setting this to zero yields
 
-$$\hat\rho_{\text{MLE}} = \frac{m_1}{m}.$$
+$$\hat{\rho}_{\text{MLE}} = \frac{m_1}{m}.$$
 
 The algebra is worth writing out explicitly:
 
 $$\frac{m_1}{\rho} - \frac{m_0}{1-\rho} = 0 \quad \Longrightarrow \quad m_1(1-\rho) = m_0\rho \quad \Longrightarrow \quad m_1 = (m_0+m_1)\rho.$$
 
-Since $m_0+m_1 = m$, we obtain $\hat\rho_{\text{MLE}} = m_1/m$. The second derivative is
+Since $m_0+m_1 = m$, we obtain $\hat{\rho}_{\text{MLE}} = m_1/m$. The second derivative is
 
 $$\frac{\partial^2 \ell}{\partial \rho^2} = -\frac{m_1}{\rho^2} - \frac{m_0}{(1-\rho)^2} < 0,$$
 
@@ -2177,9 +2177,9 @@ This result has a clear interpretation. The model parameter $\rho$ is the probab
 
 For a Gaussian with mean $\mu$ and variance $\nu = \sigma^2$,
 
-$$\hat\mu_{\text{MLE}} = \frac{1}{m}\sum_i x^{(i)}$$
+$$\hat{\mu}_{\text{MLE}} = \frac{1}{m}\sum_i x^{(i)}$$
 
-$$\hat\nu_{\text{MLE}} = \frac{1}{m}\sum_i (x^{(i)} - \hat\mu)^2.$$
+$$\hat{\nu}_{\text{MLE}} = \frac{1}{m}\sum_i (x^{(i)} - \hat{\mu})^2.$$
 
 For the mean parameter, the derivation comes from expanding the log-likelihood into a constant minus a squared-error term:
 
@@ -2193,7 +2193,7 @@ so setting the derivative to zero forces $\mu$ to equal the arithmetic average o
 
 The variance formula often causes confusion because many statistics courses also teach
 
-$$\frac{1}{m-1}\sum_i (x^{(i)}-\hat\mu)^2.$$
+$$\frac{1}{m-1}\sum_i (x^{(i)}-\hat{\mu})^2.$$
 
 That is the unbiased sample-variance estimator. It is not the Gaussian maximum-likelihood estimator. The MLE uses $1/m$ because it is chosen to maximize the likelihood, not to make the estimator unbiased across repeated samples. These are different optimization goals, so they produce different formulas.
 
@@ -2211,7 +2211,7 @@ $$D=\{a,c,a,b,a,c\}.$$
 
 Then the counts are $m_a=3$, $m_b=1$, and $m_c=2$, so the MLE is
 
-$$\hat\rho_a=3/6,\qquad \hat\rho_b=1/6,\qquad \hat\rho_c=2/6.$$
+$$\hat{\rho}_a=3/6,\qquad \hat{\rho}_b=1/6,\qquad \hat{\rho}_c=2/6$$
 
 The estimate simply copies empirical proportions into the model.
 
@@ -2219,11 +2219,11 @@ The estimate simply copies empirical proportions into the model.
 
 If $m_1$ of the $m$ observations are ones, then
 
-$$\hat\rho = \frac{m_1}{m}.$$
+$$\hat{\rho} = \frac{m_1}{m}$$
 
 For a concrete sample such as $D=\{1,1,0,1,0\}$, we have $m_1=3$ and $m=5$, so
 
-$$\hat\rho=\frac{3}{5}=0.6.$$
+$$\hat{\rho}=\frac{3}{5}=0.6$$
 
 This means the fitted Bernoulli model predicts success with probability $0.6$ on future draws, because that is the sample proportion that best matches the observed data under the Bernoulli family.
 
@@ -2231,17 +2231,17 @@ This means the fitted Bernoulli model predicts success with probability $0.6$ on
 
 The Gaussian MLE is the sample mean and sample variance:
 
-$$\hat\mu = \frac{1}{m}\sum_i x^{(i)},$$
+$$\hat{\mu} = \frac{1}{m}\sum_i x^{(i)}$$
 
-$$\hat\nu = \frac{1}{m}\sum_i (x^{(i)}-\hat\mu)^2.$$
+$$\hat{\nu} = \frac{1}{m}\sum_i (x^{(i)}-\hat{\mu})^2$$
 
 For example, if the observations are $2$, $4$, and $7$, then
 
-$$\hat\mu=\frac{2+4+7}{3}=\frac{13}{3}.$$
+$$\hat{\mu}=\frac{2+4+7}{3}=\frac{13}{3}$$
 
 The fitted variance is then the average squared deviation from that fitted mean:
 
-$$\hat\nu=\frac{1}{3}\left[\left(2-\frac{13}{3}\right)^2+\left(4-\frac{13}{3}\right)^2+\left(7-\frac{13}{3}\right)^2\right].$$
+$$\hat{\nu}=\frac{1}{3}\left[\left(2-\frac{13}{3}\right)^2+\left(4-\frac{13}{3}\right)^2+\left(7-\frac{13}{3}\right)^2\right]$$
 
 So the Gaussian fit is built in two stages: first choose the center that minimizes squared deviations, then measure the average residual spread around that center.
 
@@ -2249,17 +2249,17 @@ So the Gaussian fit is built in two stages: first choose the center that minimiz
 
 For a discrete distribution over states $x$, the MLE is
 
-$$\hat\rho_x = \frac{m_x}{m},$$
+$$\hat{\rho}_x = \frac{m_x}{m}$$
 
 where $m_x$ is the count of state $x$ in the data.
 
 If the sample is $D=\{a,c,a,b,a,c\}$, then the counts are
 
-$$m_a=3,\qquad m_b=1,\qquad m_c=2,$$
+$$m_a=3,\qquad m_b=1,\qquad m_c=2$$
 
 so the fitted PMF is
 
-$$\hat\rho_a=\frac{3}{6},\qquad \hat\rho_b=\frac{1}{6},\qquad \hat\rho_c=\frac{2}{6}.$$
+$$\hat{\rho}_a=\frac{3}{6},\qquad \hat{\rho}_b=\frac{1}{6},\qquad \hat{\rho}_c=\frac{2}{6}$$
 
 This example is the direct multi-state analogue of the Bernoulli MLE: the estimate just copies observed proportions into the model.
 
@@ -2269,11 +2269,11 @@ This subsection answers a natural structural question: why do exponential famili
 
 For a canonical exponential-family model
 
-$$p(x;\theta) = h(x)\exp\bigl(\theta^T \phi(x) - A(\theta)\bigr),$$
+$$p_{\theta}(x) = h(x)\exp\left(\theta^{\top}\phi(x) - A(\theta)\right)$$
 
 the log-likelihood of i.i.d. data is
 
-$$\ell(\theta) = \sum_i \log h(x^{(i)}) + \theta^T \sum_i \phi(x^{(i)}) - m A(\theta).$$
+$$\ell(\theta) = \sum_i \log h(x^{(i)}) + \theta^{\top} \sum_i \phi(x^{(i)}) - m A(\theta)$$
 
 Differentiating with respect to $\theta$ gives
 
@@ -2440,23 +2440,23 @@ This is one of the main reasons Dirichlet priors matter in practice. Pure MLE wo
 
 Two common point estimates derived from the posterior are the posterior mean and the MAP estimate:
 
-$$\hat\theta_{\text{PM}} = \mathbb{E}_{p(\theta \mid D)}[\theta],$$
+$$\hat{\theta}_{\text{PM}} = \mathbb{E}_{p(\theta \mid D)}[\theta]$$
 
-$$\hat\theta_{\text{MAP}} = \arg\max_\theta \log p(\theta \mid D).$$
+$$\hat{\theta}_{\text{MAP}} = \arg\max_\theta \log p(\theta \mid D)$$
 
 For Bernoulli/Beta,
 
-$$\hat\rho_{\text{PM}} = \frac{a+m_1}{a+b+m_1+m_0}$$
+$$\hat{\rho}_{\text{PM}} = \frac{a+m_1}{a+b+m_1+m_0}$$
 
 and
 
-$$\hat\rho_{\text{MAP}} = \frac{a-1+m_1}{a+b-2+m_1+m_0}.$$
+$$\hat{\rho}_{\text{MAP}} = \frac{a-1+m_1}{a+b-2+m_1+m_0}$$
 
 The posterior mean averages with respect to the full posterior and therefore always exists for $a,b>0$. The MAP estimator is different: it looks for the mode of the posterior density, and if either updated shape parameter is at most one, the mode moves to the boundary rather than the interior. That boundary behavior is another structural feature that is easy to miss if one only memorizes the closed form.
 
 With the posterior $\mathrm{Beta}(5,3)$, the two estimators are
 
-$$\hat\rho_{\text{PM}}=\frac{5}{8}=0.625, \qquad \hat\rho_{\text{MAP}}=\frac{4}{6}\approx 0.667.$$
+$$\hat{\rho}_{\text{PM}}=\frac{5}{8}=0.625, \qquad \hat{\rho}_{\text{MAP}}=\frac{4}{6}\approx 0.667$$
 
 The MAP estimate is slightly more aggressive because it chooses the mode, while the posterior mean averages over the whole posterior mass.
 
@@ -2704,15 +2704,15 @@ The negative log-likelihood of a canonical exponential-family model is convex in
 
 For the canonical form
 
-$$p(x;\theta)=h(x)\exp\bigl(\theta^T\phi(x)-A(\theta)\bigr),$$
+$$p_{\theta}(x)=h(x)\exp\left(\theta^{\top}\phi(x)-A(\theta)\right)$$
 
 the log-likelihood of i.i.d. data $x^{(1)},\dots,x^{(m)}$ is
 
-$$\ell(\theta)=\sum_{i=1}^m \log h(x^{(i)}) + \theta^T \sum_{i=1}^m \phi(x^{(i)}) - mA(\theta).$$
+$$\ell(\theta)=\sum_{i=1}^m \log h(x^{(i)}) + \theta^{\top} \sum_{i=1}^m \phi(x^{(i)}) - mA(\theta)$$
 
 Therefore the negative log-likelihood is
 
-$$-\ell(\theta)=mA(\theta)-\theta^T\sum_{i=1}^m \phi(x^{(i)})-\sum_{i=1}^m \log h(x^{(i)}).$$
+$$-\ell(\theta)=mA(\theta)-\theta^{\top}\sum_{i=1}^m \phi(x^{(i)})-\sum_{i=1}^m \log h(x^{(i)})$$
 
 The last term is constant in $\theta$, and the middle term is linear in $\theta$. So all curvature comes from the log-partition function $A(\theta)$.
 
@@ -2722,13 +2722,13 @@ $$\frac{\partial A(\theta)}{\partial \theta_j} = \mathbb{E}_\theta[\phi_j(X)], \
 
 The first identity comes from differentiating
 
-$$A(\theta)=\log \int h(x)\exp\bigl(\theta^T\phi(x)\bigr)\,dx,$$
+$$A(\theta)=\log \int h(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx$$
 
 which yields a ratio of two integrals:
 
 $$\frac{\partial A(\theta)}{\partial \theta_j}
 =
-\frac{\int h(x)\phi_j(x)\exp(\theta^T\phi(x))\,dx}{\int h(x)\exp(\theta^T\phi(x))\,dx}.$$
+\frac{\int h(x)\phi_j(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx}{\int h(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx}.$$
 
 That ratio is exactly the expectation of $\phi_j(X)$ under the model indexed by $\theta$. Differentiating once more gives the covariance formula, so in matrix form
 
