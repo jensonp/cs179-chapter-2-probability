@@ -439,15 +439,14 @@ One structural limit should also be stated explicitly: a continuous uniform dist
 
 ### Gaussian Distributions
 
-The Gaussian distribution is one of the most important continuous families because it appears whenever many small effects combine, whenever measurement noise is modeled, and whenever we want a smooth bell-shaped distribution controlled by a center and a spread.
+A one-dimensional Gaussian (also called a normal distribution) is a continuous distribution on the whole real line.
 
-Before writing the formula, it helps to say what kind of object we are describing. A one-dimensional Gaussian is a continuous distribution on the whole real line. So:
+**Definition-level fact (what kind of object this is).** It is specified by a density function $p(x)\ge 0$ such that the total area is one and probabilities are computed by integration. In particular:
 
-- the variable can in principle take any real value $x \in \mathbb{R}$,
-- single points still have probability zero,
-- and probabilities come from integrating the density over intervals.
+- for any interval $[a,b]$, $\mathbb{P}(a \le X \le b)=\int_a^b p(x)\,dx$;
+- for any single point $x$, $\mathbb{P}(X=x)=0$ because a point has zero width.
 
-What makes the Gaussian special is its shape: it is symmetric around a central value, highest at the center, and decreases smoothly as we move away from that center.
+What makes the Gaussian family special is that its density has a smooth symmetric bell shape controlled by a center parameter and a spread parameter.
 
 In one dimension, the density is
 
@@ -490,7 +489,7 @@ p(\mu)=\frac{1}{\sqrt{2\pi\sigma^2}}.
 $$
 
 
-Third, two values that are the same number of standard deviations away from the mean have the same density. This is easiest to see by standardizing:
+Third, two values that are the same number of standard deviations away from the mean have the same density. This is easiest to see by standardizing the distance:
 
 $$
 z=\frac{x-\mu}{\sigma}.
@@ -498,6 +497,43 @@ $$
 
 
 Then the exponent becomes $-z^2/2$, so the Gaussian really depends on distance from the mean measured in standard-deviation units.
+
+This standardization is not just an interpretation trick. It is also how Gaussian probabilities are computed in practice. Define the standardized random variable
+
+$$
+Z=\frac{X-\mu}{\sigma}.
+$$
+
+
+If $X\sim\mathcal{N}(\mu,\sigma^2)$ then the standardized variable is standard normal:
+
+$$
+Z \sim \mathcal{N}(0,1).
+$$
+
+
+One way to see this explicitly is to substitute $x=\mu+\sigma z$ into the density and include the Jacobian factor $dx/dz=\sigma$. That produces the standard normal density
+
+$$
+\phi(z)=\frac{1}{\sqrt{2\pi}}e^{-z^2/2}.
+$$
+
+
+The standard normal CDF is traditionally named $\Phi$:
+
+$$
+\Phi(z)=\mathbb{P}(Z\le z)=\int_{-\infty}^{z}\phi(t)\,dt.
+$$
+
+
+Now every Gaussian interval probability can be reduced to $\Phi$ by standardizing the endpoints:
+
+$$
+\mathbb{P}(a \le X \le b)=\mathbb{P}\!\left(\frac{a-\mu}{\sigma} \le Z \le \frac{b-\mu}{\sigma}\right)=\Phi\!\left(\frac{b-\mu}{\sigma}\right)-\Phi\!\left(\frac{a-\mu}{\sigma}\right).
+$$
+
+
+The integral defining $\Phi$ does not simplify to an elementary closed form, so in practice $\Phi$ is evaluated using a standard normal table or software.
 
 It is also important not to misread the density value. Even though $p(\mu)$ is the highest point on the curve, it is **not** the probability that $X=\mu$. For a continuous Gaussian,
 
@@ -508,57 +544,123 @@ $$
 
 The height of the curve tells us relative density, not point probability.
 
-A full one-dimensional example makes the parameters concrete. Suppose
+A full one-dimensional example makes the probability-computation pipeline concrete. Suppose
 
 $$
 X \sim \mathcal{N}(2,9).
 $$
 
 
-Then
+Then $\mu=2$, $\sigma^2=9$, and $\sigma=3$.
 
-- the mean is $\mu=2$,
-- the variance is $\sigma^2=9$,
-- and the standard deviation is $\sigma=3$.
-
-So the curve is centered at $2$, and one standard deviation corresponds to moving $3$ units left or right. The interval within one standard deviation of the mean is therefore
+Step 1: choose the interval of interest. "Within one standard deviation of the mean" means the event
 
 $$
-[\mu-\sigma,\mu+\sigma]=[2-3,2+3]=[-1,5].
+\mu-\sigma \le X \le \mu+\sigma.
 $$
 
 
-For a Gaussian, about $68\%$ of the total probability lies in that interval. About $95\%$ lies within two standard deviations, namely in
+In this example that is
 
 $$
-[2-6,2+6]=[-4,8],
-$$
-
-
-and about $99.7\%$ lies within three standard deviations, namely in
-
-$$
-[2-9,2+9]=[-7,11].
+2-3 \le X \le 2+3,
 $$
 
 
-These are approximation rules rather than exact identities, but they are fundamental for intuition. They say that the standard deviation is not just an abstract parameter; it gives a direct spatial scale for where most of the probability mass sits.
-
-The normalization constant also deserves a brief explanation. The exponential term by itself gives the bell shape, but it does not automatically integrate to one. The factor
+or equivalently
 
 $$
-\frac{1}{\sqrt{2\pi\sigma^2}}
+-1 \le X \le 5.
 $$
 
 
-rescales the curve so that the total area under it over the whole real line is exactly one:
+Step 2: standardize the endpoints:
 
 $$
-\int_{-\infty}^{\infty} p(x)\,dx=1.
+z_1=\frac{-1-\mu}{\sigma}=\frac{-1-2}{3}=-1,\qquad z_2=\frac{5-\mu}{\sigma}=\frac{5-2}{3}=1.
 $$
 
 
-So the Gaussian formula should be read as "bell-shaped decay" multiplied by "whatever constant is needed to make this a valid density."
+Step 3: rewrite the probability in terms of $\Phi$:
+
+$$
+\mathbb{P}(-1 \le X \le 5)=\Phi(1)-\Phi(-1).
+$$
+
+
+Step 4: use the symmetry identity $\Phi(-z)=1-\Phi(z)$:
+
+$$
+\Phi(1)-\Phi(-1)=\Phi(1)-(1-\Phi(1))=2\Phi(1)-1.
+$$
+
+
+Step 5: evaluate numerically using a standard normal table or software. A common reference value is $\Phi(1)\approx 0.8413$, so
+
+$$
+\mathbb{P}(-1 \le X \le 5)\approx 2(0.8413)-1\approx 0.6826.
+$$
+
+
+This is exactly where the familiar "about 68%" statement comes from.
+
+The same computation pattern gives the other widely used rule-of-thumb numbers:
+
+$$
+\mathbb{P}(\mu-2\sigma \le X \le \mu+2\sigma)=\Phi(2)-\Phi(-2)\approx 0.9545,
+$$
+
+
+and
+
+$$
+\mathbb{P}(\mu-3\sigma \le X \le \mu+3\sigma)=\Phi(3)-\Phi(-3)\approx 0.9973.
+$$
+
+
+So the 68-95-99.7 guideline is not a separate axiom. It is a numerical summary of three $\Phi$ computations.
+
+The normalization constant deserves an explicit derivation, because it answers the question "why is this actually a valid probability density?"
+
+Write the Gaussian shape with an unknown front constant:
+
+$$
+p(x)=C\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+$$
+
+
+To be a valid density we must have total area one:
+
+$$
+1=\int_{-\infty}^{\infty} p(x)\,dx
+=C\int_{-\infty}^{\infty}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)dx.
+$$
+
+
+Now substitute $u=(x-\mu)/\sigma$, so $dx=\sigma\,du$:
+
+$$
+1=C\sigma\int_{-\infty}^{\infty} e^{-u^2/2}\,du.
+$$
+
+
+The remaining integral is the standard Gaussian integral, equal to $\sqrt{2\pi}$. So
+
+$$
+1=C\sigma\sqrt{2\pi},
+$$
+
+
+which forces
+
+$$
+C=\frac{1}{\sigma\sqrt{2\pi}}=\frac{1}{\sqrt{2\pi\sigma^2}}.
+$$
+
+
+So the Gaussian formula should be read as "bell-shaped decay" multiplied by "the unique constant that makes the total area equal to one."
+
+It is also worth separating the definition from the modeling motivation. Gaussians are used constantly because they are interpretable (mean and variance have direct meaning) and tractable (many operations such as conditioning and linear transformations preserve Gaussian form). A common modeling phenomenon is that when many small, roughly independent effects contribute to a measurement, the resulting error often looks approximately Gaussian after centering and scaling. This is an approximation story, not an unconditional law, but it helps explain why Gaussian noise models appear so often.
 
 Before moving to the multivariate case, it helps to say what actually changes.
 
@@ -590,7 +692,7 @@ The next new object is the covariance matrix. Before giving its formula, it help
 The covariance matrix collects both kinds of information into one table. Its entry in row $i$ and column $j$ is
 
 $$
-\Sigma_{ij}=\mathrm{Cov}(X_i,X_j).
+\Sigma_{ij}=\mathrm{Cov}(X_i,X_j)=\mathbb{E}[(X_i-\mu_i)(X_j-\mu_j)].
 $$
 
 
@@ -618,6 +720,11 @@ It helps to make that concrete before introducing the multivariate Gaussian form
 - If $\Sigma_{12}<0$, the two coordinates tend to move in opposite directions. Large values of one coordinate tend to appear with small values of the other.
 - If $\Sigma_{12}=0$, there is no linear covariance between the coordinates.
 
+At this point, a scope distinction matters.
+
+- For an arbitrary joint distribution, $\Sigma_{12}=0$ does **not** imply independence. It only says there is no *linear* covariance.
+- For a **jointly Gaussian** pair, $\Sigma_{12}=0$ **does** imply independence. More generally, for a multivariate Gaussian, if $\Sigma$ is block diagonal, then the corresponding blocks of coordinates are independent.
+
 An explicit $2 \times 2$ example makes the matrix readable. Suppose
 
 $$
@@ -630,6 +737,8 @@ Then
 - the first coordinate has variance $4$, so its standard deviation is $2$;
 - the second coordinate has variance $1$, so its standard deviation is $1$;
 - and the zero off-diagonal terms say there is no linear covariance between the two coordinates.
+
+Because we are in the Gaussian family, that last statement can be strengthened: zero covariance here implies $X_1$ and $X_2$ are actually independent.
 
 So a cloud with this covariance matrix is spread out more in the first direction than in the second. Even before seeing the multivariate Gaussian formula, that tells us the equal-density contours should be stretched horizontally more than vertically.
 
@@ -649,6 +758,14 @@ If $X$ is an $n$-dimensional Gaussian random vector, then its density is
 $$
 p(x) = \mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2} |\Sigma|^{-1/2} \exp\left(-\frac{1}{2}(x-\mu)^T \Sigma^{-1}(x-\mu)\right).
 $$
+
+This formula is the nonsingular multivariate Gaussian density written explicitly in terms of $\Sigma^{-1}$ and $|\Sigma|$. For it to define a proper density as written, we assume $\Sigma$ is symmetric and positive definite. Positive definite means
+
+$$
+v^T\Sigma v>0 \quad \text{for every nonzero vector } v,
+$$
+
+which guarantees $|\Sigma|>0$, guarantees the inverse $\Sigma^{-1}$ exists, and guarantees the quadratic form in the exponent is always nonnegative so the exponential term decays rather than explodes.
 
 
 Every object now has a specific role:
@@ -693,19 +810,7 @@ $$
 
 This is the direct multivariate analogue of the one-dimensional Gaussian penalty. Each coordinate contributes its own squared deviation, scaled by its own variance. Off-diagonal covariance terms are what introduce cross-terms and rotate the geometry away from this axis-aligned form.
 
-In two dimensions, the sets of points with equal density are ellipses. In higher dimensions, they are ellipsoids. So the multivariate Gaussian is still a bell-shaped distribution, but now the bell can be stretched, compressed, and rotated.
-
-The covariance matrix $\Sigma$ therefore contains two kinds of information:
-
-- diagonal entries such as $\Sigma_{11}$ and $\Sigma_{22}$ are variances of individual coordinates,
-- off-diagonal entries such as $\Sigma_{12}$ are covariances that describe how coordinates move together.
-
-For this formula to define a proper density, $\Sigma$ must be symmetric and positive definite. Each condition matters:
-
-- symmetric means $\Sigma_{ij}=\Sigma_{ji}$, which is required of covariance matrices,
-- positive definite means $v^T\Sigma v > 0$ for every nonzero vector $v$,
-- that guarantees the inverse $\Sigma^{-1}$ exists,
-- and it guarantees the quadratic form is positive, so the exponential decays rather than exploding.
+In two dimensions, the sets of points with equal density are ellipses. In higher dimensions, they are ellipsoids. So the multivariate Gaussian is still a bell-shaped distribution, but now the bell can be stretched, compressed, and rotated. A useful sign-level mnemonic is that positive covariance tends to tilt the main elongation roughly along $x_1\approx x_2$, while negative covariance tends to tilt it roughly along $x_1\approx -x_2$.
 
 <p align="center">
   <img src="../notes/02_probability_reconstructed/assets/figure_2_1_gaussian.png" alt="Gaussian distribution plots" width="860">
@@ -713,71 +818,11 @@ For this formula to define a proper density, $\Sigma$ must be symmetric and posi
 
 The three panels show the same family viewed three ways. The one-dimensional curve emphasizes how the mean shifts location and the standard deviation changes spread. The surface plot shows the bivariate density as height over the plane. The contour plot removes the height dimension and keeps only level sets, which is often the most useful representation when reasoning about covariance structure.
 
-A concrete one-dimensional example is
+The main mastery-level takeaway is that a Gaussian is not just "the bell curve formula." It is a model whose parameters have direct geometric meaning.
 
-$$
-X \sim \mathcal{N}(2, 9),
-$$
+In one dimension, $\mu$ sets the center and $\sigma^2$ sets how quickly density decays with squared distance $(x-\mu)^2$. In multiple dimensions, the mean vector $\mu$ still sets the center, and the covariance matrix $\Sigma$ sets both scale (diagonal variances) and coupling/rotation (off-diagonal covariances). Because we are in the Gaussian family, $\Sigma$ also has an interpretation that would be false in general: a zero covariance entry implies independence between the corresponding coordinates.
 
-
-so the mean is $2$ and the standard deviation is $3$. About two-thirds of the mass lies within one standard deviation of the mean, namely in the interval $[-1,5]$, and almost all of the mass lies within a few standard deviations.
-
-Now move to two dimensions very concretely. If
-
-$$
-\mu=(0,0)^T, \qquad \Sigma_{11}=4,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0,
-$$
-
-
-then the mean vector says the cloud is centered at the origin, the first coordinate has variance $4$, and the second coordinate has variance $1$. So the spread in the first direction is larger than the spread in the second direction. That is why the contours are ellipses stretched more strongly along the first coordinate than along the second.
-
-Because the off-diagonal terms are zero in this example, there is no rotational tilt. The **principal axes** of the ellipse, meaning the main directions along which the cloud is stretched, line up with the coordinate axes.
-
-Now change only the off-diagonal entries. Let $\Sigma$ be the $2\times 2$ covariance matrix with
-
-$$
-\Sigma_{11}=1,\qquad \Sigma_{22}=1,\qquad \Sigma_{12}=\Sigma_{21}=0.8.
-$$
-
-
-The correlation coefficient between coordinates is
-
-$$
-\mathrm{Corr}(X_1,X_2)=\frac{\Sigma_{12}}{\sqrt{\Sigma_{11}\Sigma_{22}}}=\frac{0.8}{\sqrt{1\cdot 1}}=0.8.
-$$
-
-
-This means the two coordinates tend to move together. So large values of $X_1$ tend to appear with large values of $X_2$, and small values of $X_1$ tend to appear with small values of $X_2$. Geometrically, the Gaussian contours are elongated along the diagonal direction
-
-$$
-x_1 \approx x_2.
-$$
-
-
-So the correct mental build-up is:
-
-1. one-dimensional Gaussian: center plus spread;
-2. random vector: several coordinates observed together;
-3. mean vector: center of the cloud in multiple coordinates;
-4. covariance matrix: individual spreads plus how coordinates move together;
-5. multivariate Gaussian density: the same bell-shaped idea, but now in the geometry determined by that covariance matrix.
-
-If instead $\Sigma_{12}$ were negative, then large values of one coordinate would tend to appear with small values of the other, and the elongation would run along
-
-$$
-x_1 \approx -x_2.
-$$
-
-
-This is the geometric meaning of off-diagonal covariance: it couples the coordinates and rotates the main stretching directions of the density away from the coordinate axes.
-
-The main mastery-level takeaway is that a Gaussian is not just "the bell curve formula." It is a model whose parameters have direct geometric meaning:
-
-- the mean says where the mass is centered,
-- the variance says how widely the mass is spread,
-- and the covariance matrix says how the cloud is stretched and rotated in multiple dimensions.
-
-That is why Gaussians appear everywhere in probability, statistics, and AI. They are mathematically tractable, but they are also unusually interpretable.
+What survives from 1D to $n$D is one sentence: the Gaussian assigns higher density to points that are closer to $\mu$, but "close" is measured in units of variance in 1D and in the covariance-shaped Mahalanobis distance $(x-\mu)^T\Sigma^{-1}(x-\mu)$ in $n$D.
 
 ### Example 2-10: Bernoulli Exponential Family Form
 
