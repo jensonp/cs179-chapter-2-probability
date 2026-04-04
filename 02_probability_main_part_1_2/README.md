@@ -31,6 +31,33 @@ $$
 
 The point $x=0.4$ itself still has probability zero. What matters is the width of the interval, not the existence of an individual point.
 
+### Quick Bridge: PMF vs PDF vs CDF
+
+If you are still carrying the discrete intuition $p(x)=\mathbb{P}(X=x)$ into the continuous setting, everything in this section will feel slippery. The key correction is:
+
+- For discrete $X$, $p(x)$ is a probability and can be summed over states.
+- For continuous $X$, $p(x)$ is a density and must be integrated over an interval to get a probability.
+
+The CDF $F_X(x)=\mathbb{P}(X \le x)$ is the unifying object that works for discrete, continuous, and mixed variables.
+
+<p align="center">
+  <img src="../02_probability_main_part_1_1/assets/pmf_pdf_cdf_mental_model.png" alt="PMF vs PDF vs CDF mental model" width="860">
+</p>
+
+One more bridge fact is often the missing intuition in the continuous case. When a density $p(x)$ exists, probabilities of *small* intervals are approximately density times width:
+
+$$
+\mathbb{P}(x \le X \le x+\Delta)\approx p(x)\,\Delta\qquad\text{for small }\Delta.
+$$
+
+This approximation is the precise sense in which a PDF is a "probability per unit $x$." For example, for $X\sim\mathrm{Unif}([0,2])$ we have $p(x)=1/2$ on $[0,2]$, so the probability of the short interval $[0.4,0.5]$ is
+
+$$
+\mathbb{P}(0.4 \le X \le 0.5)=\int_{0.4}^{0.5}\frac{1}{2}\,dt=\frac{1}{2}(0.1)=0.05,
+$$
+
+which matches the approximation $p(0.4)\cdot 0.1=(1/2)\cdot 0.1=0.05$.
+
 ### CDFs and Types of Distributions
 
 The cumulative distribution function, or CDF, is the most universal way to describe a real-valued random variable:

@@ -260,6 +260,77 @@ $$
 
 So a PMF is not a second probability law layered on top of ordinary probability. It is the same event probability $\mathbb{P}(X=x)$, written in a way that emphasizes how the value changes as the state $x$ changes.
 
+#### One Diagram That Connects PMFs, PDFs, and CDFs
+
+If you feel confused by PMFs, PDFs, and CDFs, the most common reason is that the same letter $p$ is used for two different kinds of objects:
+
+- For a **discrete** variable, $p(x)$ literally *is* a probability: $p(x)=\mathbb{P}(X=x)$ and $\sum_x p(x)=1$.
+- For a **continuous** variable, $p(x)$ is a **density**, not a point probability. You only get probabilities after integrating: $\mathbb{P}(a \le X \le b)=\int_a^b p(t)\,dt$ and $\int p(t)\,dt=1$. In particular, $\mathbb{P}(X=x)=0$ for every single point $x$.
+
+The CDF is the object that exists in both worlds. It is always a probability:
+
+$$
+F_X(x)=\mathbb{P}(X \le x).
+$$
+
+Once you have $F_X$, you can recover interval probabilities by subtraction:
+
+$$
+\mathbb{P}(a < X \le b)=F_X(b)-F_X(a).
+$$
+
+The diagram below summarizes how PMFs, PDFs, and CDFs relate.
+
+<p align="center">
+  <img src="assets/pmf_pdf_cdf_mental_model.png" alt="PMF vs PDF vs CDF mental model" width="860">
+</p>
+
+Two final translation rules help when you move between representations.
+
+- In the discrete case, the PMF value at $x$ is the size of the CDF jump at $x$.
+- In the smooth continuous case, the PDF is the derivative of the CDF: $p(x)=\frac{d}{dx}F_X(x)$ at points where that derivative exists.
+
+To make those rules concrete, it helps to work through one tiny discrete example. Suppose $X$ takes values in $\{0,1,2\}$ with PMF
+
+<table align="center">
+  <thead>
+    <tr><th>$x$</th><th>$p(X=x)$</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>$0$</td><td>$0.2$</td></tr>
+    <tr><td>$1$</td><td>$0.5$</td></tr>
+    <tr><td>$2$</td><td>$0.3$</td></tr>
+  </tbody>
+</table>
+
+The CDF is a running total of probability up to a threshold $x$:
+
+$$
+F_X(x)=\mathbb{P}(X \le x).
+$$
+
+So in this example
+
+<table align="center">
+  <thead>
+    <tr><th>condition on $x$</th><th>$F_X(x)$</th><th>reason</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>$x<0$</td><td>$0$</td><td>no states are $\le x$</td></tr>
+    <tr><td>$0 \le x < 1$</td><td>$0.2$</td><td>only the state $0$ is counted</td></tr>
+    <tr><td>$1 \le x < 2$</td><td>$0.2+0.5=0.7$</td><td>states $0$ and $1$ are counted</td></tr>
+    <tr><td>$x \ge 2$</td><td>$1$</td><td>all probability has accumulated</td></tr>
+  </tbody>
+</table>
+
+Now interval probabilities come from subtraction. For example,
+
+$$
+\mathbb{P}(1 < X \le 2)=F_X(2)-F_X(1)=1-0.7=0.3,
+$$
+
+which matches the PMF value $p(X=2)=0.3$. This is exactly the "jump size equals point probability" rule in action.
+
 In beginner language, a PMF can be viewed as a probability table written in function form. For example, if a three-state weather variable has
 
 $$

@@ -1,0 +1,60 @@
+digraph PMF_PDF_CDF {
+  rankdir=TB;
+  splines=true;
+  nodesep=0.55;
+  ranksep=0.55;
+
+  node [
+    shape=box,
+    style="rounded",
+    fontsize=12
+  ];
+  edge [
+    fontsize=10
+  ];
+
+  dist [
+    label="Distribution of a real-valued X\n(a probability rule: for any set A,\nP(X in A) is defined)"
+  ];
+
+  disc [label="Discrete X\n(countable support)"];
+  cont [label="Continuous X\n(density exists)"];
+  mixed [label="Mixed X\n(atom + continuous part)"];
+
+  pmf [
+    label="PMF p(x)\n= P(X = x)\n(sum_x p(x) = 1)\n(point probabilities can be > 0)"
+  ];
+  pdf [
+    label="PDF p(x)\nP(a <= X <= b) = integral_a^b p(t) dt\n(integral p(t) dt = 1)\n(point probabilities are 0)"
+  ];
+  cdf [
+    label="CDF F(x)\n= P(X <= x)\n(always exists; values in [0,1])"
+  ];
+
+  interval [
+    label="Interval probability\nP(a < X <= b) = F(b) - F(a)"
+  ];
+
+  dist -> disc;
+  dist -> cont;
+  dist -> mixed;
+
+  disc -> pmf;
+  cont -> pdf;
+
+  disc -> cdf [label="F(x) = sum_{t <= x} p(t)"];
+  cont -> cdf [label="F(x) = integral_{-inf}^x p(t) dt"];
+  mixed -> cdf [label="jumps + smooth rise"];
+
+  cdf -> interval [label="subtract"];
+
+  cdf -> pmf [
+    style=dashed,
+    label="jump size at x gives\nP(X=x)"
+  ];
+  cdf -> pdf [
+    style=dashed,
+    label="derivative gives p(x)\n(where differentiable)"
+  ];
+}
+
