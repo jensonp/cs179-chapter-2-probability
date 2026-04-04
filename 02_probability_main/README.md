@@ -2213,27 +2213,11 @@ Here the two parameters play two different roles, and it is worth separating the
 - The **ratio** of the two parameters controls which success probabilities are favored relative to each other. If the parameters are equal, the distribution is symmetric around $0.5$. If the first parameter is larger, values closer to $1$ receive more weight than values closer to $0$. If the second parameter is larger, the situation reverses.
 - The **sum** of the two parameters controls how strongly that preference is enforced. Increasing the sum while keeping the ratio fixed makes the density more concentrated around its central region. Decreasing the sum while keeping the ratio fixed makes the density more spread out.
 
-One way to see this is through the mean formula
+One way to see this is through the mean formula $\mathbb{E}[\rho]=\frac{a}{a+b}$.
 
-$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
+If we multiply both parameters by the same constant, this mean stays fixed, because the ratio $\frac{a}{a+b}$ does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
 
-If we multiply both parameters by the same constant, this mean stays fixed, because the ratio
-
-$$\frac{a}{a+b}$$
-
-does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
-
-For example, compare the two distributions
-
-$$\mathrm{Beta}(2,2)$$
-
-and
-
-$$\mathrm{Beta}(20,20)$$
-
-They are both centered at $0.5$, because in both cases
-
-$$\frac{a}{a+b}=0.5$$
+For example, compare $\mathrm{Beta}(2,2)$ and $\mathrm{Beta}(20,20)$. They are both centered at $0.5$, because in both cases $\frac{a}{a+b}=0.5$.
 
 But $\mathrm{Beta}(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
 
