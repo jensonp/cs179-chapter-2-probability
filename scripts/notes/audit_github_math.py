@@ -34,6 +34,11 @@ ERROR_PATTERNS = [
         re.compile(r"\b[A-Za-z]+[$][(]"),
         "Write the whole expression in math mode, for example $\\mathrm{Beta}(2,2)$.",
     ),
+    (
+        "unsupported latex math delimiters",
+        re.compile(r"\\\(|\\\)|\\\[|\\\]"),
+        "Use only $...$ for inline math and $$...$$ for display math in GitHub markdown.",
+    ),
 ]
 
 ADVISORY_PATTERNS = [
@@ -101,6 +106,95 @@ def check_inline_math_spacing(lines):
     return findings
 
 
+def check_display_math_layout(lines):
+    findings = []
+    guidance_single = (
+        "Put display math on its own lines using a multiline block: blank line, $$, "
+        "math content, $$, blank line."
+    )
+    guidance_blank = (
+        "Display-math delimiter lines should be surrounded by blank lines in prose: "
+        "blank line before the opening $$ and blank line after the closing $$."
+    )
+
+    in_display = False
+    opening_lineno = None
+
+    for lineno, line in enumerate(lines, 1):
+        stripped = line.strip()
+        if stripped.startswith("$$") and stripped.endswith("$$") and len(stripped) > 4:
+            findings.append(
+                (
+                    "single-line display math",
+                    lineno,
+                    guidance_single,
+                    stripped,
+                )
+            )
+            continue
+
+        if stripped != "$$":
+            continue
+
+        prev_line = lines[lineno - 2].strip() if lineno >= 2 else ""
+        next_line = lines[lineno].strip() if lineno < len(lines) else ""
+
+        if not in_display:
+            if prev_line != "":
+                findings.append(
+                    (
+                        "display math opening delimiter lacks preceding blank line",
+                        lineno,
+                        guidance_blank,
+                        stripped,
+                    )
+                )
+            if next_line == "":
+                findings.append(
+                    (
+                        "display math opening delimiter lacks content line after it",
+                        lineno,
+                        guidance_single,
+                        stripped,
+                    )
+                )
+            in_display = True
+            opening_lineno = lineno
+        else:
+            if next_line != "":
+                findings.append(
+                    (
+                        "display math closing delimiter lacks following blank line",
+                        lineno,
+                        guidance_blank,
+                        stripped,
+                    )
+                )
+            if prev_line == "":
+                findings.append(
+                    (
+                        "display math closing delimiter lacks content line before it",
+                        lineno,
+                        guidance_single,
+                        stripped,
+                    )
+                )
+            in_display = False
+            opening_lineno = None
+
+    if in_display and opening_lineno is not None:
+        findings.append(
+            (
+                "unclosed display math block",
+                opening_lineno,
+                "A display-math block was opened with $$ and never closed.",
+                "$$",
+            )
+        )
+
+    return findings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Audit markdown for GitHub math/rendering problems before push."
@@ -133,9 +227,10 @@ def main() -> int:
         errors = check_dollar_balance(path, text)
         pattern_errors = find_matches(lines, ERROR_PATTERNS)
         spacing_errors = check_inline_math_spacing(lines)
+        display_layout_errors = check_display_math_layout(lines)
         advisories = find_matches(lines, ADVISORY_PATTERNS)
 
-        if errors or pattern_errors or spacing_errors or advisories:
+        if errors or pattern_errors or spacing_errors or display_layout_errors or advisories:
             print(f"\n== {path} ==")
 
         for label, lineno, guidance in errors:
@@ -151,6 +246,12 @@ def main() -> int:
             total_errors += 1
 
         for label, lineno, guidance, line in spacing_errors:
+            print(f"[ERROR] {path}:{lineno} {label}")
+            print(f"        {guidance}")
+            print(f"        source: {line}")
+            total_errors += 1
+
+        for label, lineno, guidance, line in display_layout_errors:
             print(f"[ERROR] {path}:{lineno} {label}")
             print(f"        {guidance}")
             print(f"        source: {line}")
