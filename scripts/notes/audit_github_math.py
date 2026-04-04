@@ -77,6 +77,30 @@ def find_matches(lines, patterns):
     return findings
 
 
+INLINE_MATH_PATTERN = re.compile(r"(?<!\$)\$([^$\n]+)\$(?!\$)")
+
+
+def check_inline_math_spacing(lines):
+    findings = []
+    guidance = (
+        "GitHub inline math should not have a space immediately inside the dollar delimiters. "
+        "Use $0.5$ or $\\frac{a}{a+b}$, not $ 0.5 $."
+    )
+    for lineno, line in enumerate(lines, 1):
+        for match in INLINE_MATH_PATTERN.finditer(line):
+            content = match.group(1)
+            if content.startswith(" ") or content.endswith(" "):
+                findings.append(
+                    (
+                        "inline math has spaces immediately inside dollar delimiters",
+                        lineno,
+                        guidance,
+                        match.group(0),
+                    )
+                )
+    return findings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Audit markdown for GitHub math/rendering problems before push."
@@ -108,9 +132,10 @@ def main() -> int:
         text, lines = iter_lines(path)
         errors = check_dollar_balance(path, text)
         pattern_errors = find_matches(lines, ERROR_PATTERNS)
+        spacing_errors = check_inline_math_spacing(lines)
         advisories = find_matches(lines, ADVISORY_PATTERNS)
 
-        if errors or pattern_errors or advisories:
+        if errors or pattern_errors or spacing_errors or advisories:
             print(f"\n== {path} ==")
 
         for label, lineno, guidance in errors:
@@ -120,6 +145,12 @@ def main() -> int:
             total_errors += 1
 
         for label, lineno, guidance, line in pattern_errors:
+            print(f"[ERROR] {path}:{lineno} {label}")
+            print(f"        {guidance}")
+            print(f"        source: {line}")
+            total_errors += 1
+
+        for label, lineno, guidance, line in spacing_errors:
             print(f"[ERROR] {path}:{lineno} {label}")
             print(f"        {guidance}")
             print(f"        source: {line}")
