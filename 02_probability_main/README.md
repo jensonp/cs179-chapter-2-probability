@@ -1826,14 +1826,11 @@ The next new object is the covariance matrix. Before giving its formula, it help
 - how much each coordinate varies on its own;
 - and how pairs of coordinates move together.
 
-The covariance matrix collects both kinds of information into one table:
+The covariance matrix collects both kinds of information into one table. Its entry in row $i$ and column $j$ is
 
-$$\Sigma=\mathrm{Cov}(X)=
-\begin{bmatrix}
-\mathrm{Var}(X_1) & \mathrm{Cov}(X_1,X_2) & \cdots \\
-\mathrm{Cov}(X_2,X_1) & \mathrm{Var}(X_2) & \cdots \\
-\vdots & \vdots & \ddots
-\end{bmatrix}.$$
+$$\Sigma_{ij}=\mathrm{Cov}(X_i,X_j).$$
+
+So the diagonal entries are variances, and the off-diagonal entries are covariances between different coordinates.
 
 So the diagonal entries are ordinary variances:
 
@@ -1853,11 +1850,7 @@ It helps to make that concrete before introducing the multivariate Gaussian form
 
 An explicit $2 \times 2$ example makes the matrix readable. Suppose
 
-$$\Sigma=
-\begin{bmatrix}
-4 & 0\\
-0 & 1
-\end{bmatrix}.$$
+$$\Sigma_{11}=4, \qquad \Sigma_{22}=1, \qquad \Sigma_{12}=\Sigma_{21}=0.$$
 
 Then
 
@@ -1869,11 +1862,7 @@ So a cloud with this covariance matrix is spread out more in the first direction
 
 Now consider
 
-$$\Sigma=
-\begin{bmatrix}
-1 & 0.8\\
-0.8 & 1
-\end{bmatrix}.$$
+$$\Sigma_{11}=1, \qquad \Sigma_{22}=1, \qquad \Sigma_{12}=\Sigma_{21}=0.8.$$
 
 The diagonal entries still say each coordinate has variance $1$, but now the positive off-diagonal entries say the coordinates tend to move together. So the cloud is no longer aligned with the coordinate axes. It is elongated along a diagonal direction. That is the geometric meaning of covariance in the Gaussian setting.
 
@@ -1905,19 +1894,11 @@ So the multivariate Gaussian is still doing exactly what the one-dimensional Gau
 
 One explicit diagonal example keeps the matrix notation grounded. If
 
-$$\Sigma=
-\begin{bmatrix}
-\sigma_1^2 & 0\\
-0 & \sigma_2^2
-\end{bmatrix},$$
+$$\Sigma_{11}=\sigma_1^2, \qquad \Sigma_{22}=\sigma_2^2, \qquad \Sigma_{12}=\Sigma_{21}=0,$$
 
 then
 
-$$\Sigma^{-1}=
-\begin{bmatrix}
-1/\sigma_1^2 & 0\\
-0 & 1/\sigma_2^2
-\end{bmatrix},$$
+$$\Sigma^{-1}_{11}=1/\sigma_1^2, \qquad \Sigma^{-1}_{22}=1/\sigma_2^2, \qquad \Sigma^{-1}_{12}=\Sigma^{-1}_{21}=0,$$
 
 so the quadratic term becomes
 
@@ -4232,15 +4213,9 @@ In multiple dimensions,
 
 $$p_X(x) = p_Z(g(x)) \lvert \det J_g(x) \rvert,$$
 
-where $J_g$ is the Jacobian matrix of the inverse transformation:
+where $J_g$ is the Jacobian matrix of the inverse transformation. Its $(i,j)$ entry is
 
-$$J_g(x)=
-\begin{bmatrix}
-\frac{\partial g_1}{\partial x_1} & \cdots & \frac{\partial g_1}{\partial x_d}\\
-\vdots & \ddots & \vdots\\
-\frac{\partial g_d}{\partial x_1} & \cdots & \frac{\partial g_d}{\partial x_d}
-\end{bmatrix}.
-$$
+$$\bigl(J_g(x)\bigr)_{ij}=\frac{\partial g_i}{\partial x_j}.$$
 
 The determinant plays the same role as $|g'(x)|$ in one dimension: it is the local volume scaling factor. If the transformation doubles area near one point, the density there must be cut in half to preserve total probability. If the determinant is zero somewhere, the map locally collapses volume and is not invertible there, so the simple formula breaks down.
 
@@ -4252,14 +4227,9 @@ The inverse map is
 
 $$Z_1=\frac{X_1}{2},\qquad Z_2=\frac{X_2}{3},$$
 
-so the inverse Jacobian matrix is
+so the inverse Jacobian matrix has entries
 
-$$J_g(x)=
-\begin{bmatrix}
-1/2 & 0\\
-0 & 1/3
-\end{bmatrix}.
-$$
+$$\bigl(J_g(x)\bigr)_{11}=1/2, \qquad \bigl(J_g(x)\bigr)_{12}=0, \qquad \bigl(J_g(x)\bigr)_{21}=0, \qquad \bigl(J_g(x)\bigr)_{22}=1/3.$$
 
 Its determinant is
 
