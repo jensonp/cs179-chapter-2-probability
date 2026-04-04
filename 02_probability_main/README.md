@@ -2194,19 +2194,37 @@ Two summary formulas are useful after the intuition is in place.
 
 The mean is
 
-$$\mathbb{E}[\rho]=\frac{a}{a+b}.$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$\mathbb{E}[\rho]=\frac{a}{a+b}$</td>
+    </tr>
+  </tbody>
+</table>
 
 So the ratio $a:b$ controls which side of the interval is favored.
 
 When both shape parameters are greater than $1$, the mode is
 
-$$\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}.$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$\rho_{\mathrm{mode}}=\frac{a-1}{a+b-2}$</td>
+    </tr>
+  </tbody>
+</table>
 
 This is the location of the peak when the density has a genuine interior maximum. The condition matters: if one of the parameters is at most $1$, the density may peak at a boundary instead, so the interior mode formula no longer applies.
 
 The second structural quantity is the total concentration
 
-$$a+b.$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$a+b$</td>
+    </tr>
+  </tbody>
+</table>
 
 Here the two parameters play two different roles, and it is worth separating them carefully.
 
@@ -2217,7 +2235,7 @@ One way to see this is through the mean formula $\mathbb{E}[\rho]=\frac{a}{a+b}$
 
 If we multiply both parameters by the same constant, this mean stays fixed, because the ratio $\frac{a}{a+b}$ does not change. But the exponents in the density become larger, so the density rises more sharply around the preferred region and falls off more quickly away from it.
 
-For example, compare $\mathrm{Beta}(2,2)$ and $\mathrm{Beta}(20,20)$. They are both centered at $0.5$, because in both cases $$\frac{a}{a+b}=0.5$$.
+For example, compare $\mathrm{Beta}(2,2)$ and $\mathrm{Beta}(20,20)$. They are both centered at $0.5$, because in both cases $\frac{a}{a+b}=0.5$.
 
 But $\mathrm{Beta}(20,20)$ is much more concentrated near $0.5$. So the first distribution is broad around the center, while the second is sharply concentrated there. In later Bayesian sections this same difference will be interpreted as weak versus strong prior information, but the mathematical point here is simply how concentration changes the shape.
 
@@ -2235,11 +2253,23 @@ So even though the vector has three entries, only two of them are independent.
 
 The Dirichlet density is
 
-$$p(\theta)=\mathrm{Dir}(\theta;\alpha)=\frac{\Gamma(\alpha_0)}{\prod_{j=1}^d \Gamma(\alpha_j)}\prod_{j=1}^d \theta_j^{\alpha_j-1},$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$p(\theta)=\mathrm{Dir}(\theta;\alpha)=\frac{\Gamma(\alpha_0)}{\prod_{j=1}^d \Gamma(\alpha_j)}\prod_{j=1}^d \theta_j^{\alpha_j-1}$</td>
+    </tr>
+  </tbody>
+</table>
 
 where
 
-$$\alpha_0=\sum_{j=1}^d \alpha_j.$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$\alpha_0=\sum_{j=1}^d \alpha_j$</td>
+    </tr>
+  </tbody>
+</table>
 
 This looks more complicated than Beta only because there are more coordinates. Conceptually it plays the same role:
 
@@ -2278,11 +2308,23 @@ The Beta grid makes the parameter effects explicit. Curves with parameters above
 
 A final pair of coin examples fixes the interpretation. Suppose $\rho$ is the head probability of a coin. A Beta distribution
 
-$$\rho \sim \mathrm{Beta}(20,20)$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$\rho \sim \mathrm{Beta}(20,20)$</td>
+    </tr>
+  </tbody>
+</table>
 
 places most of its mass near $0.5$, so parameter values close to a fair coin receive much more weight than extreme values. By contrast,
 
-$$\rho \sim \mathrm{Beta}(0.3,0.3)$$
+<table align="center" border="0" cellpadding="8" cellspacing="0">
+  <tbody>
+    <tr>
+      <td align="center">$\rho \sim \mathrm{Beta}(0.3,0.3)$</td>
+    </tr>
+  </tbody>
+</table>
 
 places much more mass near $0$ and $1$, so strongly biased parameter values are favored over nearly fair ones. In the Dirichlet case, the same logic applies to a probability vector rather than a single number: large, balanced concentration parameters favor balanced interior probability tables, while small concentration parameters favor sparse near-corner tables. In later Bayesian sections these same distributions will often be used as priors, but the shape story comes first.
 
