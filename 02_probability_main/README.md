@@ -5296,9 +5296,7 @@ $$
 
 which yields a ratio of two integrals:
 
-$$\frac{\partial A(\theta)}{\partial \theta_j}
-=
-\frac{\int h(x)\phi_j(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx}{\int h(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx}.$$
+$$ \frac{\partial A(\theta)}{\partial \theta_j} = \frac{\int h(x)\phi_j(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx}{\int h(x)\exp\left(\theta^{\top}\phi(x)\right)\,dx}. $$
 
 That ratio is exactly the expectation of $\phi_j(X)$ under the model indexed by $\theta$. Differentiating once more gives the covariance formula, so in matrix form
 
@@ -5411,10 +5409,7 @@ $$
 
 The die formula is worth unpacking. A fair die has six equally likely outcomes, each with probability $1/6$. So the entropy sum contains six identical terms:
 
-$$H[X]=-\sum_{x=1}^6 \frac{1}{6}\log_2\frac{1}{6}
-=-6\cdot \frac{1}{6}\log_2\frac{1}{6}
-=-\log_2\frac{1}{6}
-=\log_2 6.$$
+$$ H[X]=-\sum_{x=1}^6 \frac{1}{6}\log_2\frac{1}{6} = -6\cdot \frac{1}{6}\log_2\frac{1}{6} = -\log_2\frac{1}{6} = \log_2 6. $$
 
 That is why the answer is about $2.58$ bits. The die has larger entropy than the coin because it has more equally plausible outcomes and therefore more uncertainty before observation.
 
