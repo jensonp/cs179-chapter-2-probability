@@ -1,6 +1,6 @@
-# 2.3 Learning and Parameter Estimation
+# 2.6 Learning and Parameter Estimation
 
-Sections 2.1 and 2.2 asked **forward** probability questions: once a model is given, what probabilities or densities does it assign to events and outcomes? This section asks the inverse question: after data have been observed, what parameter values or model classes are supported by those data?
+Sections 2.1–2.5 asked **forward** probability questions: once a model is given, what probabilities or densities does it assign to events and outcomes? This section asks the inverse question: after data have been observed, what parameter values or model classes are supported by those data?
 
 The names of the mathematical objects often stay the same, but their roles change. To keep the section clear, it helps to keep one checklist visible:
 
@@ -463,7 +463,7 @@ The important structure is simple:
 
 Suppose $M_1$ uses one Bernoulli parameter for all flips, while $M_2$ uses two Bernoulli parameters for two subgroups. The more flexible model can fit the observed data better, but that alone does not settle the comparison. The real question is whether the additional fit justifies the extra parameters, or whether it is merely memorizing sample noise.
 
-## Retain from 2.3
+## Retain from 2.6
 
 - Likelihood compares parameter values for a fixed observed sample.
 - MLE is a point estimate obtained by maximizing likelihood.
