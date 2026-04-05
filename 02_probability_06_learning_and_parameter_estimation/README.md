@@ -16,7 +16,9 @@ That checklist is what prevents probability, likelihood, posterior, and evidence
 Let the observed sample be
 
 $$
+
 D=\bigl(x^{(1)},x^{(2)},\dots,x^{(m)}\bigr).
+
 $$
 
 Sequence notation matters here. We are working with a realized sample that may contain repeated values, not an unordered set.
@@ -24,7 +26,9 @@ Sequence notation matters here. We are working with a realized sample that may c
 Suppose the model is indexed by a parameter $\theta$. Under the i.i.d. assumption, the observations are independent once $\theta$ is fixed and are all drawn from the same conditional law $p(x\mid \theta)$. Then
 
 $$
+
 p(D\mid \theta)=\prod_{i=1}^{m} p\bigl(x^{(i)}\mid \theta\bigr).
+
 $$
 
 This factorization is what makes likelihood calculations manageable. It is also the reason log-likelihoods become sums rather than products.
@@ -34,7 +38,9 @@ This factorization is what makes likelihood calculations manageable. It is also 
 The likelihood is the sampling law viewed as a function of the parameter for a fixed observed sample:
 
 $$
+
 L(\theta;D)=p(D\mid \theta).
+
 $$
 
 This is one of the most important role reversals in the chapter.
@@ -47,7 +53,9 @@ The algebraic expression is the same, but the question is different. Likelihood 
 Taking logs usually simplifies the optimization:
 
 $$
+
 \ell(\theta)=\log L(\theta;D)=\sum_{i=1}^{m}\log p\bigl(x^{(i)}\mid \theta\bigr).
+
 $$
 
 ## Maximum likelihood estimation
@@ -55,9 +63,11 @@ $$
 The maximum likelihood estimator is
 
 $$
+
 \hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta} L(\theta;D)
 =
 \arg\max_{\theta}\ell(\theta).
+
 $$
 
 The pattern is always the same:
@@ -72,25 +82,33 @@ The pattern is always the same:
 Suppose $X\in\{0,1\}$ with parameter
 
 $$
+
 \rho=\mathbb{P}(X=1).
+
 $$
 
 Let the sample contain $m_1$ ones and $m_0$ zeros, so $m_1+m_0=m$. The likelihood is
 
 $$
+
 L(\rho;D)=\rho^{m_1}(1-\rho)^{m_0}.
+
 $$
 
 The log-likelihood is
 
 $$
+
 \ell(\rho)=m_1\log \rho + m_0\log(1-\rho).
+
 $$
 
 Maximizing this yields
 
 $$
+
 \hat{\rho}_{\mathrm{MLE}}=\frac{m_1}{m}.
+
 $$
 
 So the Bernoulli MLE is just the empirical success frequency.
@@ -100,13 +118,17 @@ So the Bernoulli MLE is just the empirical success frequency.
 Suppose
 
 $$
+
 X^{(i)}\sim \mathcal{N}(\mu,\sigma^2)
+
 $$
 
 with $\sigma^2$ known. Maximizing the Gaussian likelihood over $\mu$ yields
 
 $$
+
 \hat{\mu}_{\mathrm{MLE}}=\frac1m\sum_{i=1}^{m} x^{(i)}.
+
 $$
 
 So the sample mean is not just a familiar summary statistic. It is the maximum-likelihood estimate of the Gaussian mean.
@@ -116,16 +138,20 @@ So the sample mean is not just a familiar summary statistic. It is the maximum-l
 When both parameters are unknown,
 
 $$
+
 \hat{\mu}_{\mathrm{MLE}}=\frac1m\sum_{i=1}^{m}x^{(i)},
+
 $$
 
 and
 
 $$
+
 \hat{\sigma}^2_{\mathrm{MLE}}
 =
 \frac1m\sum_{i=1}^{m}
 \bigl(x^{(i)}-\hat{\mu}_{\mathrm{MLE}}\bigr)^2.
+
 $$
 
 The denominator here is $m$, not $m-1$. That distinction matters because the MLE is optimizing likelihood, while the classical unbiased sample variance is optimizing a different criterion.
@@ -135,19 +161,25 @@ The denominator here is $m$, not $m-1$. That distinction matters because the MLE
 Suppose a variable takes values in $\{1,\dots,K\}$ with probabilities $\pi_1,\dots,\pi_K$, and let $n_k$ be the count of category $k$. Then
 
 $$
+
 L(\pi;D)\propto \prod_{k=1}^{K}\pi_k^{n_k},
+
 $$
 
 so
 
 $$
+
 \ell(\pi)=\sum_{k=1}^{K} n_k\log \pi_k.
+
 $$
 
 Maximizing under the simplex constraint gives
 
 $$
+
 \hat{\pi}_k=\frac{n_k}{m}.
+
 $$
 
 Again, the MLE sets the model’s category probabilities equal to empirical frequencies.
@@ -211,7 +243,9 @@ The crucial difference is what object is retained at the end:
 Let $\theta$ be the parameter and $D$ the observed data. Bayes’ rule gives
 
 $$
+
 p(\theta\mid D)=\frac{p(D\mid \theta)\,p(\theta)}{p(D)}.
+
 $$
 
 Each factor has its own job:
@@ -224,7 +258,9 @@ Each factor has its own job:
 Inside one fixed model,
 
 $$
+
 p(D)=\int p(D\mid \theta)p(\theta)\,d\theta,
+
 $$
 
 or the analogous sum in a discrete parameter space. This averages the likelihood across parameter values under the prior.
@@ -234,43 +270,57 @@ or the analogous sum in a discrete parameter space. This averages the likelihood
 Suppose we observe
 
 $$
+
 D=(1,1,0,1,0),
+
 $$
 
 so $m_1=3$ and $m_0=2$. Let the Bernoulli parameter have prior
 
 $$
+
 \rho\sim \mathrm{Beta}(2,2).
+
 $$
 
 Its density kernel is
 
 $$
+
 \rho^{2-1}(1-\rho)^{2-1}=\rho(1-\rho).
+
 $$
 
 The Bernoulli likelihood is proportional to
 
 $$
+
 p(D\mid \rho)\propto \rho^3(1-\rho)^2.
+
 $$
 
 Multiplying prior and likelihood gives
 
 $$
+
 p(\rho\mid D)\propto \rho^4(1-\rho)^3,
+
 $$
 
 which is the kernel of
 
 $$
+
 \mathrm{Beta}(5,4).
+
 $$
 
 So
 
 $$
+
 \rho\mid D\sim \mathrm{Beta}(5,4).
+
 $$
 
 This is the cleanest first example of Bayesian updating because the prior and posterior stay in the same family.
@@ -280,7 +330,9 @@ This is the cleanest first example of Bayesian updating because the prior and po
 The statement
 
 $$
+
 \rho\mid D\sim \mathrm{Beta}(5,4)
+
 $$
 
 does **not** mean the coin flips became Beta-distributed. It means our uncertainty about the unknown Bernoulli parameter is now represented by a Beta distribution with updated shape parameters.
@@ -292,32 +344,42 @@ The posterior therefore keeps more information than the MLE. It records not only
 The categorical analogue of the Beta prior is the Dirichlet prior. If
 
 $$
+
 \pi=(\pi_1,\dots,\pi_K),
 \qquad \sum_{k=1}^{K}\pi_k=1,
+
 $$
 
 and
 
 $$
+
 \pi\sim \mathrm{Dir}(\alpha_1,\dots,\alpha_K),
+
 $$
 
 then the prior kernel is
 
 $$
+
 \prod_{k=1}^{K}\pi_k^{\alpha_k-1}.
+
 $$
 
 If the observed category counts are $n_1,\dots,n_K$, then the likelihood kernel is
 
 $$
+
 \prod_{k=1}^{K}\pi_k^{n_k}.
+
 $$
 
 The posterior becomes
 
 $$
+
 \pi\mid D\sim \mathrm{Dir}(\alpha_1+n_1,\dots,\alpha_K+n_K).
+
 $$
 
 This is why the Dirichlet parameters are often interpreted as pseudo-counts.
@@ -343,13 +405,17 @@ The posterior mean minimizes squared-error loss. It is the center of mass of the
 The MAP estimate is
 
 $$
+
 \hat{\theta}_{\mathrm{MAP}}=\arg\max_{\theta} p(\theta\mid D).
+
 $$
 
 Since
 
 $$
+
 p(\theta\mid D)\propto p(D\mid \theta)p(\theta),
+
 $$
 
 the MAP estimate maximizes likelihood times prior.
@@ -363,27 +429,35 @@ The MLE depends only on the likelihood. The MAP uses both likelihood and prior. 
 For a Beta posterior
 
 $$
+
 \rho\mid D\sim \mathrm{Beta}(\alpha,\beta),
+
 $$
 
 the posterior mean is
 
 $$
+
 \mathbb{E}[\rho\mid D]=\frac{\alpha}{\alpha+\beta},
+
 $$
 
 and when $\alpha>1$ and $\beta>1$, the MAP estimate is
 
 $$
+
 \hat{\rho}_{\mathrm{MAP}}=\frac{\alpha-1}{\alpha+\beta-2}.
+
 $$
 
 For the earlier posterior $\mathrm{Beta}(5,4)$,
 
 $$
+
 \mathbb{E}[\rho\mid D]=\frac59,\qquad
 \hat{\rho}_{\mathrm{MAP}}=\frac47,\qquad
 \hat{\rho}_{\mathrm{MLE}}=\frac35.
+
 $$
 
 These differ because they summarize different objects.
@@ -393,7 +467,9 @@ These differ because they summarize different objects.
 Bayesian updating can be performed in batches. If $D_1$ arrives first and $D_2$ arrives later, then
 
 $$
+
 p(\theta\mid D_1,D_2)\propto p(D_2\mid \theta)\,p(\theta\mid D_1).
+
 $$
 
 So the posterior after the first batch becomes the prior for the second batch. This is not a new rule. It is Bayes’ rule applied repeatedly.
@@ -411,19 +487,25 @@ When strong prior information is unavailable, a common compromise is a **weakly 
 Parameter estimation asks:
 
 $$
+
 \text{“Within this model family, which parameter values fit the data?”}
+
 $$
 
 Model comparison asks:
 
 $$
+
 \text{“Which model family is best supported by the data?”}
+
 $$
 
 Suppose $M$ indexes a model class. Then the model evidence is
 
 $$
+
 p(D\mid M)=\int p(D\mid \theta,M)\,p(\theta\mid M)\,d\theta.
+
 $$
 
 This quantity averages fit across the parameter space of the model.
@@ -444,11 +526,13 @@ A very flexible histogram can fit sample quirks extremely well. Its maximum like
 The Bayesian information criterion is a large-sample approximation to the log evidence:
 
 $$
+
 \mathrm{BIC}
 =
 \log p(D\mid \hat{\theta}_{\mathrm{MLE}},M)
 -
 \frac{k}{2}\log m,
+
 $$
 
 up to sign and convention differences across texts.

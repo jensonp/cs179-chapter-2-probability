@@ -31,19 +31,25 @@ So change-of-variable modeling is not just a calculus trick. It is a modeling st
 Let
 
 $$
+
 X=f(Z),
+
 $$
 
 and suppose the map is invertible on the region of interest with inverse
 
 $$
+
 g=f^{-1}.
+
 $$
 
 Then the density of $X$ is
 
 $$
+
 p_X(x)=p_Z(g(x))\,|g'(x)|.
+
 $$
 
 This formula says exactly two things:
@@ -71,6 +77,7 @@ When $f$ is monotone and invertible on the support, the one-branch formula is va
 If $f$ is increasing, then
 
 $$
+
 F_X(x)
 =
 \mathbb{P}(X\le x)
@@ -80,12 +87,15 @@ F_X(x)
 \mathbb{P}(Z\le g(x))
 =
 F_Z(g(x)).
+
 $$
 
 Differentiating gives
 
 $$
+
 p_X(x)=p_Z(g(x))\,g'(x).
+
 $$
 
 If $f$ is decreasing, then the derivative is negative, so the absolute value is needed to keep the density nonnegative.
@@ -113,38 +123,48 @@ That boundary condition should never be left implicit. This is one of the most c
 Let
 
 $$
+
 Z\sim \mathrm{Unif}[0,1],
 \qquad
 X=2Z.
+
 $$
 
 Then the inverse map is
 
 $$
+
 g(x)=x/2,
 \qquad
 g'(x)=1/2.
+
 $$
 
 Therefore
 
 $$
+
 p_X(x)=p_Z(x/2)\cdot \frac12.
+
 $$
 
 Now apply the support condition carefully:
 
 $$
+
 0\le x/2 \le 1
 \quad\Longleftrightarrow\quad
 0\le x\le 2.
+
 $$
 
 Since $p_Z(z)=1$ on $[0,1]$, we get
 
 $$
+
 p_X(x)=\frac12
 \qquad\text{for }0\le x\le 2,
+
 $$
 
 and $p_X(x)=0$ elsewhere.
@@ -160,23 +180,29 @@ This is the simplest exact picture of probability conservation:
 Let
 
 $$
+
 Z\sim \mathrm{Unif}[0,1],
 \qquad
 X=1-Z.
+
 $$
 
 Then
 
 $$
+
 g(x)=1-x,
 \qquad
 g'(x)=-1.
+
 $$
 
 So
 
 $$
+
 p_X(x)=p_Z(1-x)\,|-1|=p_Z(1-x).
+
 $$
 
 Because $1-x\in[0,1]$ exactly when $x\in[0,1]$, the transformed density is still uniform on $[0,1]$.
@@ -194,28 +220,35 @@ A lognormal distribution is the canonical first nontrivial transformed family.
 Let
 
 $$
+
 Z\sim \mathcal{N}(\mu,\sigma^2),
 \qquad
 X=e^Z.
+
 $$
 
 Then the transformed support is
 
 $$
+
 x>0.
+
 $$
 
 The inverse map is
 
 $$
+
 z=\log x,
 \qquad
 \frac{dz}{dx}=\frac1x.
+
 $$
 
 Therefore
 
 $$
+
 p_X(x)
 =
 \frac{1}{x\sqrt{2\pi\sigma^2}}
@@ -223,6 +256,7 @@ p_X(x)
 -\frac{(\log x-\mu)^2}{2\sigma^2}
 \right),
 \qquad x>0.
+
 $$
 
 The factor $1/x$ is the Jacobian correction. Without it, the transformed density would not integrate to one.
@@ -243,13 +277,17 @@ So the right side of the $X$-axis is stretched more aggressively than the left, 
 If
 
 $$
+
 Z\sim \mathcal{N}(0,1),
+
 $$
 
 then
 
 $$
+
 \mathbb{P}(1\le X\le e)=\mathbb{P}(0\le Z\le 1).
+
 $$
 
 This is the clean operational lesson: transformed-variable probabilities are often easiest to compute by mapping the event back to the base variable.
@@ -261,19 +299,25 @@ In several dimensions, the derivative is replaced by a Jacobian determinant.
 Let
 
 $$
+
 X=f(Z),
+
 $$
 
 with inverse
 
 $$
+
 g=f^{-1}.
+
 $$
 
 Then
 
 $$
+
 p_X(x)=p_Z(g(x))\,\bigl|\det J_g(x)\bigr|,
+
 $$
 
 where $J_g(x)$ is the Jacobian matrix of the inverse map.
@@ -281,7 +325,9 @@ where $J_g(x)$ is the Jacobian matrix of the inverse map.
 Its $(i,j)$ entry is
 
 $$
+
 \bigl(J_g(x)\bigr)_{ij}=\frac{\partial g_i}{\partial x_j}.
+
 $$
 
 The determinant is the local volume-scaling factor.
@@ -307,29 +353,37 @@ So the determinant is not an arbitrary algebraic decoration. It is the local vol
 Let
 
 $$
+
 X_1=2Z_1,\qquad X_2=3Z_2.
+
 $$
 
 Then the inverse map is
 
 $$
+
 Z_1=X_1/2,\qquad Z_2=X_2/3.
+
 $$
 
 So the inverse Jacobian is
 
 $$
+
 J_g(x)=
 \begin{pmatrix}
 1/2 & 0\\
 0 & 1/3
 \end{pmatrix},
+
 $$
 
 and
 
 $$
+
 \det J_g(x)=\frac16.
+
 $$
 
 So a unit area in latent space becomes an area-$6$ rectangle in data space, and the density must be reduced by a factor of $6$.
@@ -346,9 +400,11 @@ Copulas separate two modeling tasks that are often mixed together:
 For two variables,
 
 $$
+
 \mathbb{P}(X_1\le x_1, X_2\le x_2)
 =
 C\bigl(F_1(x_1),F_2(x_2)\bigr),
+
 $$
 
 where $F_1$ and $F_2$ are marginal CDFs.
@@ -356,7 +412,9 @@ where $F_1$ and $F_2$ are marginal CDFs.
 Define
 
 $$
+
 U_1=F_1(X_1),\qquad U_2=F_2(X_2).
+
 $$
 
 When the marginals are continuous, each $U_i$ is uniform on $[0,1]$. This is the probability integral transform.
@@ -364,7 +422,9 @@ When the marginals are continuous, each $U_i$ is uniform on $[0,1]$. This is the
 The copula
 
 $$
+
 C(u_1,u_2)=\mathbb{P}(U_1\le u_1,U_2\le u_2)
+
 $$
 
 is then the joint CDF of those transformed uniform variables.
@@ -393,23 +453,29 @@ Normalizing flows extend the same change-of-variable principle to learned invert
 Start with a simple base density $p_Z$, often Gaussian, and define
 
 $$
+
 X=f(Z),
+
 $$
 
 where $f$ is invertible. Then
 
 $$
+
 \log p_X(x)
 =
 \log p_Z(f^{-1}(x))
 +
 \log\bigl|\det J_{f^{-1}}(x)\bigr|.
+
 $$
 
 Flows are often built as compositions of simple invertible layers:
 
 $$
+
 f=f_T\circ\cdots\circ f_1.
+
 $$
 
 Because Jacobian determinants multiply under composition, the log-determinants add. That is the computational reason flows are practical.

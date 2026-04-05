@@ -35,7 +35,9 @@ Expectation answers that question by taking a weighted average of possible value
 For a discrete random variable,
 
 $$
+
 \mathbb{E}[X] = \sum_x x\,p(x).
+
 $$
 
 This formula is easy to memorize and easy to misuse. The expectation is **not** the most likely next value. It is **not** required to be a value the variable can actually take. It is the long-run average, or the center of mass, of the distribution.
@@ -45,17 +47,21 @@ This formula is easy to memorize and easy to misuse. The expectation is **not** 
 Suppose
 
 $$
+
 p(X=0)=0.7,\qquad p(X=1)=0.3.
+
 $$
 
 Then
 
 $$
+
 \mathbb{E}[X]
 =
 0\cdot 0.7 + 1\cdot 0.3
 =
 0.3.
+
 $$
 
 This is one of the cleanest examples because the expectation has a direct interpretation. A Bernoulli variable records success as $1$ and failure as $0$, so the average value is just the success probability.
@@ -65,6 +71,7 @@ This is one of the cleanest examples because the expectation has a direct interp
 For a fair die,
 
 $$
+
 \mathbb{E}[X]
 =
 \sum_{x=1}^{6} x\cdot \frac{1}{6}
@@ -72,6 +79,7 @@ $$
 \frac{1+2+3+4+5+6}{6}
 =
 3.5.
+
 $$
 
 This example is important because it prevents a bad intuition from taking root. A die never lands on $3.5$, but $3.5$ is still its expectation. So expectation is not “the predicted next observation.” It is the balance point of the distribution.
@@ -95,9 +103,11 @@ Two variables can share the same expectation and still behave very differently. 
 One of the most useful facts in all of probability is
 
 $$
+
 \mathbb{E}[aX+bY+c]
 =
 a\,\mathbb{E}[X] + b\,\mathbb{E}[Y] + c.
+
 $$
 
 This is called linearity of expectation.
@@ -115,7 +125,9 @@ A common mistake is to think linearity needs independence. It does not.
 The identity
 
 $$
+
 \mathbb{E}[X+Y] = \mathbb{E}[X] + \mathbb{E}[Y]
+
 $$
 
 holds whether or not $X$ and $Y$ are independent. This is one of the most important distinctions in the section because later formulas, especially for variance, do depend on independence assumptions. Expectation does not.
@@ -125,13 +137,17 @@ holds whether or not $X$ and $Y$ are independent. This is one of the most import
 Let $X$ be Bernoulli with
 
 $$
+
 p(X=1)=0.3,\qquad p(X=0)=0.7,
+
 $$
 
 and define
 
 $$
+
 Y = 1-X.
+
 $$
 
 Then $X$ and $Y$ are completely dependent. If you know one, you know the other exactly.
@@ -139,21 +155,25 @@ Then $X$ and $Y$ are completely dependent. If you know one, you know the other e
 But linearity still gives
 
 $$
+
 \mathbb{E}[X+Y]
 =
 \mathbb{E}[1]
 =
 1.
+
 $$
 
 Separately,
 
 $$
+
 \mathbb{E}[X] + \mathbb{E}[Y]
 =
 0.3 + 0.7
 =
 1.
+
 $$
 
 So dependence does not break linearity.
@@ -165,7 +185,9 @@ The most useful application of linearity in elementary probability comes through
 Suppose $H_1, H_2, H_3$ are indicators for whether the first, second, and third coin flips are heads. Let
 
 $$
+
 N = H_1 + H_2 + H_3.
+
 $$
 
 Then $N$ is the total number of heads.
@@ -173,15 +195,19 @@ Then $N$ is the total number of heads.
 Even if we do not derive the full distribution of $N$, linearity immediately gives
 
 $$
+
 \mathbb{E}[N]
 =
 \mathbb{E}[H_1] + \mathbb{E}[H_2] + \mathbb{E}[H_3].
+
 $$
 
 If each flip has head probability $\rho$, then each indicator has expectation $\rho$, so
 
 $$
+
 \mathbb{E}[N]=3\rho.
+
 $$
 
 This is the deeper pattern: complicated counts are often easy to **expect** even when they are not easy to **distribute**.
@@ -201,9 +227,11 @@ A variable that is almost always near its mean and a variable that swings wildly
 Variance is
 
 $$
+
 \mathrm{Var}(X)
 =
 \mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right].
+
 $$
 
 The quantity inside the expectation is the squared deviation from the mean.
@@ -222,9 +250,11 @@ So variance is not just “another average.” It is a summary of spread around 
 Expanding the square gives
 
 $$
+
 \mathrm{Var}(X)
 =
 \mathbb{E}[X^2] - \mathbb{E}[X]^2.
+
 $$
 
 This is usually the easier formula to compute from a probability table.
@@ -234,25 +264,31 @@ This is usually the easier formula to compute from a probability table.
 If $X\in\{0,1\}$ with
 
 $$
+
 p(X=1)=\rho,
+
 $$
 
 then $X^2=X$, so
 
 $$
+
 \mathbb{E}[X]=\rho,
 \qquad
 \mathbb{E}[X^2]=\rho.
+
 $$
 
 Therefore
 
 $$
+
 \mathrm{Var}(X)
 =
 \rho-\rho^2
 =
 \rho(1-\rho).
+
 $$
 
 This formula is worth interpreting. The spread is largest near $\rho=\tfrac12$, where the outcomes are most uncertain, and shrinks toward $0$ as $\rho$ approaches $0$ or $1$, where the variable becomes nearly deterministic.
@@ -264,18 +300,23 @@ Let $X$ be constant at $3$, and let $Y$ equal $0$ or $6$ with probabilities $\tf
 Then
 
 $$
+
 \mathbb{E}[X]=3,\qquad \mathbb{E}[Y]=3.
+
 $$
 
 But
 
 $$
+
 \mathrm{Var}(X)=0
+
 $$
 
 because $X$ never deviates from its mean, while
 
 $$
+
 \mathrm{Var}(Y)
 =
 \left(0^2\cdot \tfrac12 + 6^2\cdot \tfrac12\right)-3^2
@@ -283,6 +324,7 @@ $$
 18-9
 =
 9.
+
 $$
 
 This example shows exactly why mean and variance are different summaries. The center is the same. The spread is not.
@@ -308,9 +350,11 @@ It is not enough to know each variable’s center and spread separately. We want
 Covariance is
 
 $$
+
 \mathrm{Cov}(X,Y)
 =
 \mathbb{E}\!\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right].
+
 $$
 
 This should be read as a centered co-movement statistic.
@@ -330,7 +374,9 @@ That detail matters. Covariance is asking whether the variables move together re
 Covariance interacts with shifts and scalings in predictable ways:
 
 $$
+
 \mathrm{Cov}(aX+b,cY+d)=ac\,\mathrm{Cov}(X,Y).
+
 $$
 
 This means:
@@ -350,10 +396,12 @@ Covariance depends on scale. If one variable is measured in dollars and another 
 It is defined by
 
 $$
+
 \mathrm{Corr}(X,Y)
 =
 \frac{\mathrm{Cov}(X,Y)}
 {\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}.
+
 $$
 
 This normalization divides out the variables’ standard deviations, producing a scale-free summary of linear association.
@@ -375,7 +423,9 @@ This is one of the most important conceptual warnings in elementary probability.
 Let $X$ take values $-1,0,1$ with equal probability, and define
 
 $$
+
 Y=X^2.
+
 $$
 
 Then $Y$ is completely determined by $X$, so the variables are obviously dependent.
@@ -383,15 +433,19 @@ Then $Y$ is completely determined by $X$, so the variables are obviously depende
 But
 
 $$
+
 \mathbb{E}[X]=0,
 \qquad
 \mathbb{E}[XY]=\mathbb{E}[X^3]=0.
+
 $$
 
 So
 
 $$
+
 \mathrm{Cov}(X,Y)=0.
+
 $$
 
 ### What this teaches
@@ -417,7 +471,9 @@ Independence is a much stronger statement than zero covariance or small correlat
 It says the full joint distribution factorizes into separate marginal pieces:
 
 $$
+
 p(X=x,Y=y)=p(X=x)p(Y=y)
+
 $$
 
 for every pair of values $(x,y)$.
@@ -425,7 +481,9 @@ for every pair of values $(x,y)$.
 Equivalently,
 
 $$
+
 p(X=x\mid Y=y)=p(X=x)
+
 $$
 
 whenever $p(Y=y)>0$.
@@ -442,13 +500,17 @@ That is why independence is a structural property of the whole joint distributio
 Suppose
 
 $$
+
 p(X=0)=0.7,\qquad p(X=1)=0.3,
+
 $$
 
 and
 
 $$
+
 p(Y=1)=0.2,\quad p(Y=2)=0.3,\quad p(Y=3)=0.4,\quad p(Y=4)=0.1.
+
 $$
 
 If $X$ and $Y$ are independent, then every joint entry is the product of one marginal from $X$ and one from $Y$.
@@ -456,7 +518,9 @@ If $X$ and $Y$ are independent, then every joint entry is the product of one mar
 For example,
 
 $$
+
 p(X=1,Y=2)=p(X=1)p(Y=2)=0.3\cdot 0.3=0.09.
+
 $$
 
 The entire joint table is built this way. That is what makes independent models so much simpler than arbitrary joint models.
@@ -472,7 +536,9 @@ Suppose $X$ and $Y$ are both $d$-ary.
 A completely general joint table has $d^2$ entries. Because they must sum to one, the unrestricted model has
 
 $$
+
 d^2-1
+
 $$
 
 degrees of freedom.
@@ -480,13 +546,17 @@ degrees of freedom.
 If $X$ and $Y$ are independent, then
 
 $$
+
 p(X,Y)=p(X)p(Y).
+
 $$
 
 Now we only need to specify the two marginals. Each marginal has $d-1$ free parameters, so the independent model has
 
 $$
+
 (d-1)+(d-1)=2d-2
+
 $$
 
 degrees of freedom.
@@ -506,13 +576,17 @@ In practice, full independence is often too strong. But a weaker and more useful
 We write
 
 $$
+
 X \perp Y \mid Z
+
 $$
 
 to mean
 
 $$
+
 p(X,Y\mid Z)=p(X\mid Z)p(Y\mid Z).
+
 $$
 
 This says that once $Z$ is known, the remaining uncertainty in $X$ and $Y$ factorizes.

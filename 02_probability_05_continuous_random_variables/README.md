@@ -24,7 +24,9 @@ The section has four main goals:
 In the discrete setting, a PMF directly answers
 
 $$
+
 P(X=x).
+
 $$
 
 That works because isolated states can have positive probability mass.
@@ -44,13 +46,17 @@ So the first mastery-level distinction is:
 A probability density function is a nonnegative function $p(x)$ satisfying
 
 $$
+
 \int_{-\infty}^{\infty} p(x)\,dx = 1.
+
 $$
 
 For a set $A$,
 
 $$
+
 P(X\in A)=\int_A p(x)\,dx.
+
 $$
 
 ### What a density is
@@ -64,7 +70,9 @@ That is the key interpretation.
 For a continuous variable,
 
 $$
+
 P(X=x)=0
+
 $$
 
 for every individual point $x$.
@@ -76,7 +84,9 @@ This is one of the first statements students often resist because the density at
 When a density exists,
 
 $$
+
 P(x\le X\le x+\Delta)\approx p(x)\,\Delta
+
 $$
 
 for small $\Delta$.
@@ -108,13 +118,17 @@ A uniform density on $[0,T]$ has the form
 Normalization forces
 
 $$
+
 \int_0^T c\,dx = cT = 1,
+
 $$
 
 so
 
 $$
+
 c=\frac1T.
+
 $$
 
 Therefore
@@ -134,8 +148,10 @@ Therefore
 Uniformity on an interval means equal lengths receive equal probability. It is not merely “flat looking.” The exact content is:
 
 $$
+
 P(a\le X\le b)=\frac{b-a}{T}
 \qquad\text{for }0\le a\le b\le T.
+
 $$
 
 ### Worked example
@@ -143,18 +159,22 @@ $$
 If $X\sim \mathrm{Unif}([0,2])$, then
 
 $$
+
 p(x)=\frac12
 \qquad\text{for }0\le x\le 2.
+
 $$
 
 So
 
 $$
+
 P(0.3\le X\le 0.9)
 =
 \int_{0.3}^{0.9}\frac12\,dx
 =
 \frac12(0.6)=0.3.
+
 $$
 
 The probability comes from interval length times density height.
@@ -172,7 +192,9 @@ A high-quality note must separate these three objects by the question each answe
 The cumulative distribution function is
 
 $$
+
 F_X(x)=P(X\le x).
+
 $$
 
 ### Why the CDF is the universal object
@@ -200,7 +222,9 @@ For every CDF:
 Also,
 
 $$
+
 P(a<X\le b)=F_X(b)-F_X(a).
+
 $$
 
 This subtraction rule works in all settings.
@@ -214,7 +238,9 @@ This subtraction rule works in all settings.
 If
 
 $$
+
 P(X=1)=0.3,\qquad P(X=0)=0.7,
+
 $$
 
 then
@@ -264,12 +290,14 @@ A one-dimensional Gaussian is the continuous family that matters most in introdu
 Its density is
 
 $$
+
 p(x)=\mathcal{N}(x;\mu,\sigma^2)
 =
 \frac{1}{\sqrt{2\pi\sigma^2}}
 \exp\!\left(
 -\frac{(x-\mu)^2}{2\sigma^2}
 \right).
+
 $$
 
 ### What the parameters mean
@@ -299,19 +327,25 @@ Gaussians are mathematically tractable and also arise naturally in many approxim
 If
 
 $$
+
 X\sim \mathcal{N}(\mu,\sigma^2),
+
 $$
 
 then the standardized variable
 
 $$
+
 Z=\frac{X-\mu}{\sigma}
+
 $$
 
 satisfies
 
 $$
+
 Z\sim \mathcal{N}(0,1).
+
 $$
 
 This is not just a symbolic trick. It is the main computational bridge for Gaussian probabilities.
@@ -319,11 +353,13 @@ This is not just a symbolic trick. It is the main computational bridge for Gauss
 Let $\Phi$ denote the standard-normal CDF. Then
 
 $$
+
 P(a\le X\le b)
 =
 \Phi\!\left(\frac{b-\mu}{\sigma}\right)
 -
 \Phi\!\left(\frac{a-\mu}{\sigma}\right).
+
 $$
 
 ### Why this matters
@@ -335,23 +371,29 @@ Standardization turns a whole family of Gaussian interval questions into one sta
 Suppose
 
 $$
+
 X\sim \mathcal{N}(2,9),
+
 $$
 
 so $\mu=2$ and $\sigma=3$. Then
 
 $$
+
 P(-1\le X\le 5)
 =
 P\!\left(\frac{-1-2}{3}\le Z\le \frac{5-2}{3}\right)
 =
 P(-1\le Z\le 1).
+
 $$
 
 Therefore
 
 $$
+
 P(-1\le X\le 5)=\Phi(1)-\Phi(-1).
+
 $$
 
 The interval probability was reduced to a standard-normal CDF difference.
@@ -363,9 +405,11 @@ The interval probability was reduced to a standard-normal CDF difference.
 Because the standard normal satisfies
 
 $$
+
 P(|Z|\le 1)\approx 0.68,\qquad
 P(|Z|\le 2)\approx 0.95,\qquad
 P(|Z|\le 3)\approx 0.997,
+
 $$
 
 a Gaussian with mean $\mu$ and standard deviation $\sigma$ places about
@@ -381,7 +425,9 @@ These are not disconnected folklore facts. They are direct consequences of stand
 The factor
 
 $$
+
 \frac{1}{\sqrt{2\pi\sigma^2}}
+
 $$
 
 ensures the total area under the Gaussian curve is 1. The exponential term shapes the curve. The prefactor rescales it into a valid density.
@@ -395,19 +441,25 @@ A multivariate Gaussian extends the same basic idea from one coordinate to many.
 Let
 
 $$
+
 X=(X_1,\dots,X_n)^T.
+
 $$
 
 Now the center is a mean vector
 
 $$
+
 \mu=\mathbb{E}[X],
+
 $$
 
 and spread/dependence are encoded by the covariance matrix
 
 $$
+
 \Sigma_{ij}=\mathrm{Cov}(X_i,X_j).
+
 $$
 
 ### Why covariance must be introduced first
@@ -422,11 +474,13 @@ A good mastery note does not start with the matrix formula alone. The reader mus
 If
 
 $$
+
 \Sigma=
 \begin{pmatrix}
 4 & 0\\
 0 & 1
 \end{pmatrix},
+
 $$
 
 then the distribution is more spread in the first direction than the second, and the contours are axis-aligned.
@@ -434,11 +488,13 @@ then the distribution is more spread in the first direction than the second, and
 If instead
 
 $$
+
 \Sigma=
 \begin{pmatrix}
 1 & 0.8\\
 0.8 & 1
 \end{pmatrix},
+
 $$
 
 then the variables tend to move together and the contours are tilted.
@@ -448,12 +504,14 @@ then the variables tend to move together and the contours are tilted.
 The nonsingular multivariate Gaussian density is
 
 $$
+
 p(x)=\mathcal{N}(x;\mu,\Sigma)
 =
 (2\pi)^{-n/2}|\Sigma|^{-1/2}
 \exp\!\left(
 -\frac12 (x-\mu)^T\Sigma^{-1}(x-\mu)
 \right).
+
 $$
 
 For this formula as written, we assume $\Sigma$ is symmetric and positive definite. That guarantees the inverse exists and the quadratic form behaves like a genuine squared distance.
@@ -463,7 +521,9 @@ For this formula as written, we assume $\Sigma$ is symmetric and positive defini
 The quantity
 
 $$
+
 (x-\mu)^T\Sigma^{-1}(x-\mu)
+
 $$
 
 is the squared Mahalanobis distance. It is the covariance-aware notion of distance from the mean.
@@ -489,23 +549,29 @@ Up to this point, most random variables represented observed outcomes. Beta chan
 For a Bernoulli model, the outcome variable is
 
 $$
+
 X\in\{0,1\},
+
 $$
 
 with success probability
 
 $$
+
 \rho=P(X=1).
+
 $$
 
 A Beta distribution is a distribution over possible values of that parameter:
 
 $$
+
 p(\rho)=\mathrm{Beta}(\rho;a,b)
 =
 \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}
 \rho^{a-1}(1-\rho)^{b-1},
 \qquad 0\le \rho\le 1.
+
 $$
 
 ### Why this matters conceptually
@@ -530,17 +596,21 @@ Dirichlet is the categorical analogue of Beta.
 If
 
 $$
+
 \pi=(\pi_1,\dots,\pi_K),
 \qquad \pi_k\ge 0,
 \qquad \sum_{k=1}^{K}\pi_k=1,
+
 $$
 
 then the Dirichlet density is
 
 $$
+
 p(\pi)=\mathrm{Dir}(\pi;\alpha_1,\dots,\alpha_K)
 \propto
 \prod_{k=1}^{K}\pi_k^{\alpha_k-1}.
+
 $$
 
 ### What object this is

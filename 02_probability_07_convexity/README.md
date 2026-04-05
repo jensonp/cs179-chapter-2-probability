@@ -1,258 +1,360 @@
 # 2.4 Convexity
 
-This section is supporting background rather than core probability machinery, but it earns its place for a very practical reason. In Section 2.3, likelihoods, posteriors, and model-selection criteria were introduced as objects we might want to optimize. The natural next question is:
+This section is supporting background rather than core probability machinery, but that phrase can be misleading if it is read carelessly. “Supporting background” does **not** mean optional fluff. It means this section exists to explain why some of the optimization problems introduced in learning and parameter estimation are mathematically well behaved. The moment a chapter starts talking about maximizing likelihoods, minimizing negative log-likelihoods, or fitting models by solving optimization problems, the reader needs a way to reason about whether those objectives are globally safe or structurally dangerous. Convexity is one of the main tools for making that distinction.
+
+So the real question of this section is not “what is a convex set?” in isolation. The real question is:
 
 $$
-\text{When does that optimization problem have clean global structure rather than a maze of bad local minima?}
+
+\text{Why do some estimation objectives behave like clean bowls, while others behave like landscapes full of traps?}
+
 $$
 
-Convexity is one of the main answers.
-
-The point of this section is not to turn convex analysis into a separate course. The point is to explain why some estimation objectives are globally well behaved, why some have unique solutions, and why exponential-family models so often lead to optimization problems that are easier to reason about than they initially look.
+To answer that properly, the section must connect geometry, inequalities, and optimization.
 
 There are four ideas to keep separate and then connect:
 
-- a **convex set** is a domain with no holes along line segments;
-- a **convex function** bends upward in the right global sense;
-- **Jensen’s inequality** is the probability version of that geometry;
-- in canonical exponential-family models, the curvature of the negative log-likelihood is controlled by a covariance matrix, which is why convexity appears so naturally.
+1. A **convex set** is a domain with no gaps along line segments.
+2. A **convex function** bends upward in the global sense relevant for optimization.
+3. **Jensen’s inequality** is the probabilistic form of that same geometric idea.
+4. In canonical exponential-family models, the curvature of the negative log-likelihood is controlled by a covariance matrix, which is why convexity appears so naturally in statistical estimation.
 
-## Why convexity appears in an inference chapter
+The most important thing to remember from the start is this:
 
-Optimization enters probability and statistics because many inferential tasks are phrased as “choose the parameter value that makes some criterion smallest or largest.”
+**Convexity matters because it lets local information control global conclusions.**
 
-Examples include:
+That is the link to learning.
 
-- maximize likelihood;
-- minimize negative log-likelihood;
-- maximize posterior density;
-- minimize regularized empirical risk.
+---
 
-The danger in optimization is not only computational cost. It is also structural ambiguity. If an objective has many local minima, then a solver may stop at a solution that is not globally best, and the mathematical interpretation of the estimate becomes harder to trust.
+## 1. Why convexity belongs in an inference chapter
 
-Convexity helps because it connects local and global structure. For convex functions, a point that looks locally optimal is already globally optimal. That is the real reason the topic belongs here.
+Section 2.3 introduced objects such as likelihoods, posteriors, and model-comparison criteria. Many of those objects are used through optimization:
 
-## Convex sets
+- maximize a likelihood,
+- minimize a negative log-likelihood,
+- maximize a posterior density,
+- minimize a regularized objective,
+- compare model classes through optimized criteria.
 
-A set $S$ is **convex** if for any two points $x,x'\in S$ and any mixing weight $\alpha\in[0,1]$, the convex combination
+The danger is not merely computational cost. The deeper danger is structural ambiguity.
+
+If an objective is nonconvex, then:
+- local minima may not be globally optimal,
+- different initializations may lead to different fitted parameters,
+- and the inferential meaning of “the solution” becomes harder to interpret.
+
+Convexity removes much of that ambiguity. For convex objectives, local optimality is enough to guarantee global optimality. For strictly convex objectives, the solution is often unique as well. That is why convexity is not just a side theorem. It is a structural guarantee about the geometry of the learning problem.
+
+---
+
+## 2. Convex sets
+
+A set $S$ is **convex** if for any two points $x,x' \in S$ and any $\alpha \in [0,1]$, the convex combination
 
 $$
+
 \alpha x + (1-\alpha)x'
+
 $$
 
 also belongs to $S$.
 
-This is a geometric closure property. A convex set contains the entire line segment between any two of its points.
+This is the right place to slow down and interpret the definition.
 
-That condition matters because convexity of a function is only defined relative to a domain where these line segments stay inside the domain. If the domain itself has gaps, then statements comparing a function value at a midpoint to values at the endpoints stop making sense globally.
+- The points $x$ and $x'$ are two legal points in the domain.
+- The number $\alpha$ chooses a weighted average between them.
+- The condition says that every point on the line segment joining them must remain inside the set.
 
-### Intuition
+So a convex set contains the entire line segment between any two of its points.
 
-The simplest examples are worth holding onto:
+### Why this matters
 
-- an interval on the real line is convex;
-- a filled disk is convex;
-- a triangle together with its interior is convex;
-- a crescent shape or a ring is not convex, because some line segment between two interior points exits the set.
+Convexity of functions is always defined relative to a domain. If the domain itself is not closed under line segments, then midpoint comparisons and tangent-line arguments break down globally. So convex sets are not a separate decorative notion. They are the natural stage on which convex functions live.
 
-When optimization is restricted to a convex feasible set, “moving partway toward another feasible point” keeps you feasible. That is already a major structural convenience.
+### Examples
 
-## Convex functions
+- An interval on the real line is convex.
+- A filled disk in the plane is convex.
+- A triangle together with its interior is convex.
+- A crescent, ring, or hollow shape is not convex, because some line segment between two allowed points leaves the set.
+
+### What to notice
+
+A convex set is a geometric feasibility condition. It says that averaging two allowed points does not push you outside the legal region.
+
+That is exactly the kind of domain one wants in optimization, because moving partway from one feasible point toward another should not make the candidate invalid.
+
+---
+
+## 3. Convex functions
 
 A function $f$ defined on a convex domain is **convex** if
 
 $$
+
 f\bigl(\alpha x + (1-\alpha)x'\bigr)
 \le
 \alpha f(x) + (1-\alpha)f(x')
+
 $$
 
-for all $x,x'$ in the domain and all $\alpha\in[0,1]$.
+for all $x,x'$ in the domain and all $\alpha \in [0,1]$.
 
-This inequality should be read in the right order:
+This inequality must be read in the right order.
 
-1. average the inputs;
-2. evaluate the function at that averaged input;
-3. compare with averaging the two function values.
+1. First average the inputs.
+2. Then evaluate the function at that averaged input.
+3. Compare that with averaging the two function values.
 
 Convexity says the function evaluated after averaging is never larger.
 
-That sounds technical, but the picture is simple: the graph of a convex function lies below every secant line connecting two points on the graph.
+### What this means geometrically
 
-### Why this definition matters
+The graph of a convex function lies below every secant line joining two points on the graph.
 
-Convexity is not a statement about monotonicity. A convex function may increase, decrease, or do both. The defining property is about **curvature**, not direction.
+This is why people often describe convex functions as “bowl-shaped.” That picture is useful, but it is only a mnemonic. The real content is the global inequality above.
 
-It is also not the same thing as “looks bowl-shaped” in a casual sketch. The actual condition is global: the secant-line inequality must hold everywhere on the domain, not just near one point.
+### What convexity does **not** mean
+
+Convexity is not the same thing as monotonicity.
+
+A convex function may increase everywhere, decrease everywhere, or decrease and then increase. The defining property is about curvature and global secant comparisons, not about whether the function slopes up or down.
 
 ### Strict convexity
 
 A function is **strictly convex** if
 
 $$
+
 f\bigl(\alpha x + (1-\alpha)x'\bigr)
 <
 \alpha f(x) + (1-\alpha)f(x')
+
 $$
 
-whenever $x\ne x'$ and $0<\alpha<1$.
+whenever $x\neq x'$ and $0<\alpha<1$.
 
-Strict convexity rules out flat line segments on the graph. This is the condition that often upgrades “there may be many minimizers” to “the minimizer is unique.”
+Strict convexity rules out flat line segments on the graph.
 
-That distinction matters in estimation:
+That distinction matters because:
+- convexity is enough to make every local minimum global,
+- strict convexity is what typically rules out multiple minimizers.
 
-- convexity is enough to guarantee that every local minimum is global;
-- strict convexity is what often guarantees that the estimator is unique.
+So strict convexity is the condition that upgrades clean geometry to uniqueness.
 
-## Three equivalent viewpoints
+---
 
-The defining inequality is important, but it becomes much easier to use once it is connected to equivalent first-order and second-order characterizations.
+## 4. Three equivalent viewpoints
 
-### 1. Secant-line view
+The secant-line definition is not the only way to recognize convexity. In smooth settings there are equivalent first-order and second-order tests, and these are often more useful in statistics and machine learning.
 
-A convex graph lies below every secant line connecting two of its points.
+### 4.1 Secant-line view
 
-This is the direct geometric meaning of the definition.
+A convex graph lies below every secant line joining two of its points.
 
-### 2. First-order view
+This is the original definition in geometric language.
+
+### 4.2 First-order view
 
 If $f$ is differentiable, convexity is equivalent to
 
 $$
-f(x') \ge f(x) + \nabla f(x)\cdot(x'-x).
+
+f(x')
+\ge
+f(x) + \nabla f(x)\cdot(x'-x).
+
 $$
 
-This means the tangent line or tangent plane at $x$ is a global lower bound on the function.
+This says the tangent line or tangent plane at $x$ is a global lower bound on the graph.
 
-That is a remarkable statement. For a generic nonlinear function, a tangent approximation is only local. For a convex function, the tangent plane never overshoots the graph anywhere in the domain.
+That is a remarkable fact. For a generic nonlinear function, a tangent approximation is only local. For a convex function, the tangent plane never overshoots the graph anywhere in the domain.
 
-This is why first-order optimization methods have such a clean interpretation for convex objectives: the local slope points in a globally meaningful direction.
+### Why this matters computationally
 
-### 3. Second-order view
+Optimization algorithms often use local information such as gradients. For general functions, local slope information can be misleading. For convex functions, that local information has genuine global meaning. The gradient is not just a local diagnostic. It is part of a global geometric structure.
+
+### 4.3 Second-order view
 
 If second derivatives exist, convexity is equivalent to
 
 $$
+
 \nabla^2 f(x)\succeq 0.
+
 $$
 
 That means the Hessian is positive semidefinite. Equivalently, for every vector $v$,
 
 $$
-v^T\nabla^2 f(x)\,v\ge 0.
+
+v^T\nabla^2 f(x)\,v \ge 0.
+
 $$
 
 So every directional second derivative is nonnegative. There are no directions of negative curvature.
 
-This is the most useful viewpoint when analyzing statistical objectives, because many such objectives come with Hessians that can be written in a recognizable algebraic form.
+### Why this version matters most in statistics
 
-## Why convexity matters for optimization
+Many statistical objectives come with natural Hessians. If that Hessian can be identified as positive semidefinite, convexity follows immediately. This is the version that later connects to covariance matrices in exponential-family models.
 
-Now the payoff can be stated clearly.
+---
+
+## 5. Positive semidefinite versus positive definite
+
+This distinction should be explicit because it directly affects uniqueness.
+
+If the Hessian is **positive semidefinite**, the function is convex, but flat directions may still exist.
+
+If the Hessian is **positive definite**, then every nonzero direction curves upward strictly, and the function is locally bowl-shaped in every direction.
+
+That difference translates into optimization as follows:
+
+- positive semidefinite curvature gives convexity and therefore global optimality of local minima,
+- positive definite curvature often gives a unique minimizer.
+
+### Why flat directions matter
+
+Flat directions are not just geometric curiosities. They often correspond to non-identifiability or redundant parametrizations. If moving in some direction changes the parameter without changing the objective, then the minimizer need not be unique even though the objective is convex.
+
+So the PSD/PD distinction is really a distinction between “globally safe” and “globally safe plus unique.”
+
+---
+
+## 6. Why convexity matters for optimization
+
+Now the main payoff can be stated cleanly.
 
 If $f$ is convex, then every local minimum is a global minimum.
 
 If $f$ is strictly convex, then there is at most one minimizer.
 
-These are not cosmetic facts. They are exactly the structural guarantees that make an optimization problem well behaved from an inferential perspective.
+This is the true inferential value of convexity. It does **not** mean the problem is trivial, and it does **not** guarantee a closed-form solution. But it does mean the objective does not hide multiple qualitatively different local solutions in disconnected valleys.
 
-### Positive semidefinite versus positive definite
+That is why convexity is so prized. It aligns local search with global meaning.
 
-This distinction should not be blurred.
+---
 
-- If the Hessian is **positive semidefinite**, flat directions may still exist.
-- If the Hessian is **positive definite**, all nonzero directions curve upward strictly.
-
-So positive semidefinite curvature is enough for convexity, but not enough for uniqueness. Positive definite curvature is the stronger condition that removes flat valleys.
-
-## Fully explicit example: $f(x)=x^2$
+## 7. Fully explicit example: $f(x)=x^2$
 
 The function
 
 $$
+
 f(x)=x^2
-$$
-
-is the canonical one-dimensional convex example. It is worth checking algebraically rather than only by picture.
-
-Take any $x,x'$ and $\alpha\in[0,1]$. Then
 
 $$
+
+is the simplest exact example of convexity and is worth checking algebraically.
+
+Take any $x,x'$ and $\alpha \in [0,1]$. Then
+
+$$
+
 f\bigl(\alpha x + (1-\alpha)x'\bigr)
 =
 (\alpha x + (1-\alpha)x')^2.
+
 $$
 
 Expanding gives
 
 $$
+
 \alpha x^2 + (1-\alpha)x'^2 - \alpha(1-\alpha)(x-x')^2.
+
 $$
 
 Since
 
 $$
+
 -\alpha(1-\alpha)(x-x')^2 \le 0,
+
 $$
 
 we obtain
 
 $$
+
 (\alpha x + (1-\alpha)x')^2
 \le
 \alpha x^2 + (1-\alpha)x'^2.
+
 $$
 
-This is convexity in exact algebraic form.
+That is exactly the convexity inequality.
+
+### What the extra term means
 
 The correction term
 
 $$
+
 -\alpha(1-\alpha)(x-x')^2
-$$
-
-is the whole story. It measures how far the parabola dips below the secant line.
-
-This is a useful template: when a function is convex, “average first, then apply the function” produces something no larger than “apply the function first, then average.”
-
-## Jensen’s inequality
-
-Jensen’s inequality is the probability version of convexity:
 
 $$
+
+is the amount by which the parabola dips below the secant line. Because this term is nonpositive, the graph always lies below the secant line.
+
+This example is worth keeping not because parabolas are deep, but because it makes the inequality concrete: convexity is secant-line geometry made algebraic.
+
+---
+
+## 8. Jensen’s inequality
+
+Jensen’s inequality is the probabilistic form of convexity:
+
+$$
+
 f(\mathbb{E}[X]) \le \mathbb{E}[f(X)]
+
 $$
 
 for convex $f$.
 
-This is the same secant-line idea, except the averaging weights are now probabilities rather than deterministic mixing coefficients.
+This is not a random inequality appended to the section. It is the expectation version of the same secant-line idea.
 
-### What Jensen is really saying
+### How to read Jensen properly
 
 Jensen compares two different procedures:
 
 - compress the random variable to its average and then apply the function;
-- apply the function to every outcome and then average.
+- apply the function first to every outcome and then average.
 
-For convex functions, the second procedure is never smaller.
+For convex functions, the second quantity is never smaller.
 
-This is why Jensen is not just a random inequality. It is the probabilistic form of “convex functions penalize spread.”
+### What Jensen is really saying
 
-### Tiny explicit example
+Convex functions penalize spread.
 
-Let $f(x)=x^2$, and let $X$ take values $0$ and $2$ with probability $1/2$ each.
+If the variable fluctuates, then applying a convex function before averaging exaggerates that spread relative to averaging first. This is why squared deviations, exponential penalties, and log-partition functions often appear in probabilistic inequalities and optimization arguments.
+
+### Equality condition
+
+If the function is strictly convex, equality holds only when the random variable is almost surely constant.
+
+This is worth saying explicitly because it tells the reader what Jensen is detecting: real randomness plus real curvature creates a strict gap.
+
+### Tiny example
+
+Let $f(x)=x^2$ and let $X$ equal $0$ or $2$ with probability $1/2$ each.
 
 Then
 
 $$
+
 \mathbb{E}[X]=1,
 \qquad
-f(\mathbb{E}[X])=1.
-$$
-
-But
+f(\mathbb{E}[X])=1,
 
 $$
+
+while
+
+$$
+
 \mathbb{E}[f(X)]
 =
 \frac12 f(0)+\frac12 f(2)
@@ -260,31 +362,39 @@ $$
 \frac12\cdot 0+\frac12\cdot 4
 =
 2.
-$$
-
-So indeed
 
 $$
+
+So
+
+$$
+
 f(\mathbb{E}[X]) \le \mathbb{E}[f(X]).
+
 $$
 
-The inequality is strict because $x^2$ is strictly convex and $X$ is genuinely random rather than constant.
+The inequality is strict because $x^2$ is strictly convex and $X$ is genuinely random.
 
-## Convexity and exponential families
+---
 
-Now return to the actual reason this section exists.
+## 9. Convexity and exponential families
+
+Now return to the statistical reason this section exists.
 
 For a canonical exponential-family model,
 
 $$
+
 p_\theta(x)
 =
-h(x)\exp\!\bigl(\theta^\top\phi(x)-A(\theta)\bigr),
+h(x)\exp\!\bigl(\theta^\top \phi(x) - A(\theta)\bigr),
+
 $$
 
 the log-likelihood of i.i.d. data $x^{(1)},\dots,x^{(m)}$ is
 
 $$
+
 \ell(\theta)
 =
 \sum_{i=1}^{m}\log h(x^{(i)})
@@ -292,11 +402,13 @@ $$
 \theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
 -
 mA(\theta).
+
 $$
 
 Therefore the negative log-likelihood is
 
 $$
+
 -\ell(\theta)
 =
 mA(\theta)
@@ -304,84 +416,232 @@ mA(\theta)
 \theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
 -
 \sum_{i=1}^{m}\log h(x^{(i)}).
+
 $$
 
-Now read the structure carefully:
+Read the structure carefully:
 
-- the last term is constant in $\theta$;
-- the middle term is linear in $\theta$;
+- the last term is constant in $\theta$,
+- the middle term is linear in $\theta$,
 - all curvature comes from the log-partition function $A(\theta)$.
 
 So if we understand the curvature of $A(\theta)$, we understand the curvature of the whole negative log-likelihood.
 
-## Gradient and Hessian of the log-partition function
+---
 
-The log-partition function is special because its derivatives have probabilistic meaning.
+## 10. Gradient and Hessian of the log-partition function
+
+The log-partition function is special because its derivatives have direct probabilistic meaning.
 
 For each component,
 
 $$
+
 \frac{\partial A(\theta)}{\partial \theta_j}
 =
 \mathbb{E}_\theta[\phi_j(X)].
+
 $$
 
 So the gradient of $A(\theta)$ gives model expectations of the sufficient statistics.
 
-Differentiating again yields
+Differentiating again gives
 
 $$
+
 \frac{\partial^2 A(\theta)}{\partial \theta_j\partial \theta_k}
 =
 \mathrm{Cov}_\theta\!\bigl(\phi_j(X),\phi_k(X)\bigr).
+
 $$
 
 In matrix form,
 
 $$
+
 \nabla^2 A(\theta)=\mathrm{Cov}_\theta(\phi(X)).
-$$
-
-This is the key identity.
-
-A covariance matrix is always positive semidefinite. Indeed, for any vector $v$,
 
 $$
-v^T\nabla^2 A(\theta)v
+
+This is the critical identity.
+
+### Why this proves convexity
+
+A covariance matrix is always positive semidefinite. For any vector $v$,
+
+$$
+
+v^\top \nabla^2 A(\theta) v
 =
-v^T\mathrm{Cov}_\theta(\phi(X))v
+v^\top \mathrm{Cov}_\theta(\phi(X)) v
 =
 \mathrm{Var}_\theta\!\bigl(v^\top \phi(X)\bigr)
 \ge 0.
+
 $$
 
 Variance can never be negative. Therefore the Hessian is positive semidefinite, so $A(\theta)$ is convex.
 
 Since the negative log-likelihood differs from $mA(\theta)$ only by a linear term and a constant, it inherits that convexity.
 
-## What this means for estimation
+This is not merely a formal trick. It says the curvature of the estimation objective is controlled by a covariance structure.
 
-This is the real payoff.
+---
 
-In canonical exponential-family models, the negative log-likelihood often has clean global geometry because its curvature is controlled by a covariance matrix. Covariance matrices are positive semidefinite, so the objective cannot create arbitrary directions of negative curvature.
+## 11. Worked estimation example: Bernoulli in canonical form
 
-That does **not** mean every estimation problem is easy.
+A full example makes the abstract argument easier to trust.
 
-It means the landscape is structurally well behaved in a way that rules out many of the pathologies that make nonconvex optimization hard to interpret.
+Let $X\in\{0,1\}$ and write the Bernoulli model in canonical exponential-family form using natural parameter
 
-That is why convexity belongs here: it explains why some inference problems are not just computationally manageable, but also conceptually cleaner.
+$$
 
-## Retain from 2.4
+\theta = \log\!\frac{\rho}{1-\rho}.
 
+$$
+
+Then the model can be written as
+
+$$
+
+p_\theta(x)=\exp\!\bigl(x\theta - A(\theta)\bigr),
+
+$$
+
+where
+
+$$
+
+A(\theta)=\log(1+e^\theta).
+
+$$
+
+The sufficient statistic is simply $\phi(x)=x$.
+
+For i.i.d. data $x^{(1)},\dots,x^{(m)}$, the negative log-likelihood is
+
+$$
+
+-\ell(\theta)
+=
+mA(\theta)-\theta\sum_{i=1}^{m}x^{(i)}.
+
+$$
+
+The derivative is
+
+$$
+
+\frac{d}{d\theta}[-\ell(\theta)]
+=
+mA'(\theta)-\sum_{i=1}^{m}x^{(i)}.
+
+$$
+
+Since
+
+$$
+
+A'(\theta)=\frac{e^\theta}{1+e^\theta}=\rho,
+
+$$
+
+the first derivative becomes
+
+$$
+
+m\rho-\sum_{i=1}^{m}x^{(i)}.
+
+$$
+
+The second derivative is
+
+$$
+
+\frac{d^2}{d\theta^2}[-\ell(\theta)]
+=
+mA''(\theta).
+
+$$
+
+And
+
+$$
+
+A''(\theta)
+=
+\frac{e^\theta}{(1+e^\theta)^2}
+=
+\rho(1-\rho)\ge 0.
+
+$$
+
+Therefore
+
+$$
+
+\frac{d^2}{d\theta^2}[-\ell(\theta)]\ge 0.
+
+$$
+
+So the objective is convex.
+
+### What this example teaches
+
+This example shows the whole logic in one place:
+
+- express the model in canonical exponential-family form,
+- identify the log-partition function,
+- differentiate,
+- observe that the second derivative is a variance term,
+- conclude convexity.
+
+This is the pattern, not just the Bernoulli case.
+
+---
+
+## 12. What convexity does **not** give you
+
+A mastery note should say what a theorem does **not** promise.
+
+Convexity does **not** imply:
+- closed-form solvability,
+- easy algebra,
+- fast computation in every dimension,
+- or that every statistical objective is convex.
+
+Convexity gives structural safety, not magic. A convex problem may still be large, constrained, numerically delicate, or require iterative algorithms. What convexity removes is the ambiguity of bad local minima and many disconnected solution basins.
+
+That is already a huge gain.
+
+---
+
+## 13. How this connects to later material
+
+Convexity matters later for several reasons.
+
+- In learning, many standard objectives are written as negative log-likelihoods or regularized variants.
+- In information theory, log-partition functions and KL-related objectives inherit curvature properties that matter for optimization.
+- In machine learning, cross-entropy losses, generalized linear models, and some variational objectives depend heavily on convex or nearly convex structure.
+- In statistics, uniqueness and stability of estimators often rest on curvature conditions.
+
+So even though this section is “background” in one sense, it is part of the structural backbone of the chapter.
+
+---
+
+## 14. Retain from 2.4
+
+- Convexity is what lets local optimality imply global optimality.
 - A convex set contains the full line segment between any two of its points.
 - A convex function lies below every secant line.
-- The secant-line, tangent-plane, and Hessian characterizations are different views of the same property.
-- Jensen’s inequality is the expectation version of convexity.
+- The secant-line, tangent-plane, and Hessian viewpoints are equivalent characterizations of the same structure.
+- Jensen’s inequality is the expectation form of convexity.
 - In canonical exponential families, the Hessian of the log-partition function is a covariance matrix, which is why negative log-likelihoods often come out convex.
 
-## Do not confuse in 2.4
+## 15. Do not confuse in 2.4
 
 - Do not confuse a convex **set** with a convex **function**.
 - Do not confuse convexity with monotonicity.
-- Do not confuse positive semidefinite with positive definite; flat directions can remain in the former case.
-- Do not assume every optimization problem in statistics is convex just because many exponential-family examples are.
+- Do not confuse positive semidefinite with positive definite.
+- Do not assume every objective used in statistics or machine learning is convex.
+- Do not think convexity guarantees a closed-form solution; it guarantees a globally coherent geometry.
