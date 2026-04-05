@@ -4,7 +4,7 @@ This section rewrites the discrete-distribution portion of Part 1.1 so that each
 
 ## PMFs are tables written as functions
 
-Suppose a variable `X` takes values in a finite set.
+Suppose a variable $X$ takes values in a finite set.
 A PMF assigns a probability to each state:
 
 $$
@@ -21,7 +21,7 @@ You can read that either as a table or as a function. It is the same object in t
 
 ## A tiny PMF-to-CDF example
 
-Let `X` take values in `\{0,1,2\}` with
+Let $X$ take values in $\{0,1,2\}$ with
 
 $$
 p(X=0)=0.2, \qquad p(X=1)=0.5, \qquad p(X=2)=0.3.
@@ -35,10 +35,10 @@ $$
 
 So
 
-- if `x < 0`, then `F_X(x)=0`;
-- if `0 \le x < 1`, then `F_X(x)=0.2`;
-- if `1 \le x < 2`, then `F_X(x)=0.7`;
-- if `x \ge 2`, then `F_X(x)=1`.
+- if $x < 0$, then $F_X(x)=0$;
+- if $0 \le x < 1$, then $F_X(x)=0.2$;
+- if $1 \le x < 2$, then $F_X(x)=0.7$;
+- if $x \ge 2$, then $F_X(x)=1$.
 
 Now subtraction gives interval probabilities. For example,
 
@@ -46,7 +46,7 @@ $$
 \mathbb{P}(1 < X \le 2)=F_X(2)-F_X(1)=1-0.7=0.3.
 $$
 
-That matches the point mass at `2` because in the discrete case the CDF jumps by exactly the PMF value at each state.
+That matches the point mass at $2$ because in the discrete case the CDF jumps by exactly the PMF value at each state.
 
 ## Indicator notation
 
@@ -56,7 +56,7 @@ $$
 \mathbf{1}[X=x]
 $$
 
-equals `1` when the statement inside the brackets is true and `0` otherwise.
+equals $1$ when the statement inside the brackets is true and $0$ otherwise.
 
 Indicator notation is not a new probability concept. It is a bookkeeping device that turns a logical statement into a numerical selector.
 
@@ -88,8 +88,8 @@ $$
 
 Why does this work?
 
-- If `X=1`, the expression becomes `\rho^1(1-\rho)^0=\rho`.
-- If `X=0`, the expression becomes `\rho^0(1-\rho)^1=1-\rho`.
+- If $X=1$, the expression becomes $\rho^1(1-\rho)^0=\rho$.
+- If $X=0$, the expression becomes $\rho^0(1-\rho)^1=1-\rho$.
 
 The exponents are acting as selectors.
 
@@ -101,13 +101,13 @@ $$
 
 ## Categorical distribution
 
-If `X` takes one of `d` states, a categorical PMF is
+If $X$ takes one of $d$ states, a categorical PMF is
 
 $$
 \mathbb{P}(X=i)=\rho_i, \qquad \rho_i \ge 0, \qquad \sum_{i=1}^d \rho_i = 1.
 $$
 
-The normalization constraint means only `d-1` of the `\rho_i` values are free. Once the first `d-1` are chosen, the last one is forced.
+The normalization constraint means only $d-1$ of the $\rho_i$ values are free. Once the first $d-1$ are chosen, the last one is forced.
 
 A compact product form is
 
@@ -115,7 +115,7 @@ $$
 p(X)=\prod_{i=1}^d \rho_i^{\mathbf{1}[X=i]}.
 $$
 
-If the realized state is `i`, then exactly one indicator exponent equals `1` and all the others equal `0`. So the product keeps the probability of the realized state and turns all non-realized factors into `1`.
+If the realized state is $i$, then exactly one indicator exponent equals $1$ and all the others equal $0$. So the product keeps the probability of the realized state and turns all non-realized factors into $1$.
 
 For the weather example,
 
@@ -141,7 +141,7 @@ So the table form and the indicator-product form describe the same PMF.
 
 The geometric distribution requires a convention choice.
 
-In this rewrite, `X` counts the **number of failures before the first success** in repeated independent Bernoulli trials with success probability `\rho`.
+In this rewrite, $X$ counts the **number of failures before the first success** in repeated independent Bernoulli trials with success probability $\rho$.
 
 So the support is
 
@@ -155,20 +155,20 @@ $$
 p(X=x)=(1-\rho)^x\rho.
 $$
 
-The event `X=x` means:
+The event $X=x$ means:
 
-- the first `x` trials fail,
+- the first $x$ trials fail,
 - the next trial succeeds.
 
 Because the trials are independent, the probability is the product of those pieces.
 
-For example, if `\rho=0.2`, then
+For example, if $\rho=0.2$, then
 
 $$
 p(X=0)=0.2, \qquad p(X=1)=0.8\cdot 0.2=0.16, \qquad p(X=2)=0.8^2\cdot 0.2=0.128.
 $$
 
-Each step to the right multiplies the previous probability by `1-\rho`, so the probabilities decay geometrically.
+Each step to the right multiplies the previous probability by $1-\rho$, so the probabilities decay geometrically.
 
 ## Mean of the geometric distribution
 
@@ -184,7 +184,7 @@ $$
 \mathbb{E}[X]=\sum_{x=0}^{\infty} x(1-\rho)^x\rho.
 $$
 
-Let `r=1-\rho`. Then
+Let $r=1-\rho$. Then
 
 $$
 \mathbb{E}[X]=\rho\sum_{x=0}^{\infty} xr^x.
@@ -196,13 +196,13 @@ $$
 \sum_{x=0}^{\infty} r^x = \frac{1}{1-r}, \qquad |r|<1.
 $$
 
-Differentiate with respect to `r`:
+Differentiate with respect to $r$:
 
 $$
 \sum_{x=1}^{\infty} xr^{x-1} = \frac{1}{(1-r)^2}.
 $$
 
-Multiply by `r`:
+Multiply by $r$:
 
 $$
 \sum_{x=0}^{\infty} xr^x = \frac{r}{(1-r)^2}.
@@ -220,11 +220,11 @@ $$
 \mathbb{E}[X]=\frac{1-\rho}{\rho}.
 $$
 
-If `\rho=0.2`, the expected number of failures before the first success is `4`.
+If $\rho=0.2$, the expected number of failures before the first success is $4$.
 
 ## The other common convention
 
-Some texts define a geometric variable `Y` as the **number of trials until the first success**.
+Some texts define a geometric variable $Y$ as the **number of trials until the first success**.
 
 Then
 

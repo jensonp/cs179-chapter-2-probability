@@ -40,11 +40,11 @@ Continuous variables, Gaussian models, Beta and Dirichlet distributions, likelih
 
 Throughout the rewrite:
 
-- `P(A)` or `\mathbb{P}(A)` means the probability of an event `A`.
-- `X, Y, Z` denote random variables.
-- `x, y, z` denote realized values.
-- `p(X=x)` or `p(x)` denotes a PMF value when a discrete PMF exists.
-- `F_X(x)` denotes a cumulative distribution function.
-- `\Omega` denotes the sample space.
+- $P(A)$ or $\mathbb{P}(A)$ means the probability of an event $A$.
+- $X, Y, Z$ denote random variables.
+- $x, y, z$ denote realized values.
+- $p(X=x)$ or $p(x)$ denotes a PMF value when a discrete PMF exists.
+- $F_X(x)$ denotes a cumulative distribution function.
+- $\Omega$ denotes the sample space.
 
 A formula is always interpreted together with its domain restrictions. If a formula only applies in the discrete setting, or only when a conditioning event has positive probability, or only under independence, that condition is stated explicitly.

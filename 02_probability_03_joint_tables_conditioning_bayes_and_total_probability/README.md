@@ -6,11 +6,11 @@ This rewrite treats the joint table as the central object and builds every later
 
 Let the binary variables be:
 
-- `C=1`: cavity,
-- `T=1`: toothache,
-- `D=1`: probe catches.
+- $C=1$: cavity,
+- $T=1$: toothache,
+- $D=1$: probe catches.
 
-The joint distribution over `(T,D,C)` is:
+The joint distribution over $(T,D,C)$ is:
 
 | T | D | C | p(T,D,C) |
 |---|---|---|---|
@@ -51,14 +51,14 @@ $$
 p(D=d \mid T=t)=\frac{p(D=d,T=t)}{p(T=t)},
 $$
 
-provided `p(T=t) > 0`.
+provided $p(T=t) > 0$.
 
 The most useful beginner rule is:
 
 1. **Restrict** to worlds consistent with the evidence.
 2. **Renormalize** so the remaining mass sums to one.
 
-For `T=1`, keep only the rows with toothache:
+For $T=1$, keep only the rows with toothache:
 
 | D | C | p(T=1,D,C) |
 |---|---|---|
@@ -83,15 +83,15 @@ So conditioning is not "changing the world." It is keeping only the already-cons
 
 ## Table pipeline for a posterior: restrict -> marginalize -> normalize
 
-To compute `p(C \mid T=1)` from the joint table, do the operations in this order.
+To compute $p(C \mid T=1)$ from the joint table, do the operations in this order.
 
 ### Step 1: restrict to the evidence
 
-Keep only `T=1` rows.
+Keep only $T=1$ rows.
 
 ### Step 2: marginalize over the unused variable
 
-Add over `D` for each fixed value of `C`:
+Add over $D$ for each fixed value of $C$:
 
 $$
 p(T=1,C=0)=0.064+0.016=0.080,
@@ -108,7 +108,7 @@ This gives the intermediate table:
 | 0 | 0.080 |
 | 1 | 0.120 |
 
-Notice that this still sums to `p(T=1)=0.20`, not to `1`.
+Notice that this still sums to $p(T=1)=0.20$, not to $1$.
 
 ### Step 3: normalize
 
@@ -136,10 +136,10 @@ $$
 
 The roles are:
 
-- **prior**: `p(C=c)`,
-- **likelihood**: `p(D=d \mid C=c)`,
-- **evidence**: `p(D=d)`,
-- **posterior**: `p(C=c \mid D=d)`.
+- **prior**: $p(C=c)$,
+- **likelihood**: $p(D=d \mid C=c)$,
+- **evidence**: $p(D=d)$,
+- **posterior**: $p(C=c \mid D=d)$.
 
 Bayes' rule is not a new axiom. It is the definition of conditional probability plus the product rule written in a useful direction.
 
@@ -157,7 +157,7 @@ $$
 p(C=0)=0.8, \qquad p(C=1)=0.2.
 $$
 
-We want `p(C=1 \mid T=1)`.
+We want $p(C=1 \mid T=1)$.
 
 First compute the numerator:
 
@@ -181,11 +181,11 @@ $$
 p(C=1 \mid T=1)=\frac{0.12}{0.20}=0.60.
 $$
 
-So the toothache raises the cavity probability from the prior `0.20` to the posterior `0.60`.
+So the toothache raises the cavity probability from the prior $0.20$ to the posterior $0.60$.
 
 ## Odds form
 
-For two mutually exclusive hypotheses `H_1` and `H_0` and evidence `E`, Bayes' rule implies
+For two mutually exclusive hypotheses $H_1$ and $H_0$ and evidence $E$, Bayes' rule implies
 
 $$
 \frac{p(H_1 \mid E)}{p(H_0 \mid E)} = \frac{p(E \mid H_1)}{p(E \mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}.
@@ -199,7 +199,7 @@ The evidence term cancels because it appears in both posterior probabilities.
 
 ## Law of total probability
 
-If `B_1, \dots, B_k` form a partition of the sample space, then
+If $B_1, \dots, B_k$ form a partition of the sample space, then
 
 $$
 p(A)=\sum_{i=1}^k p(A \mid B_i)p(B_i).
@@ -207,7 +207,7 @@ $$
 
 This is a weighted average of conditional probabilities over disjoint, exhaustive cases.
 
-The law follows from writing `A` as the disjoint union
+The law follows from writing $A$ as the disjoint union
 
 $$
 A=(A \cap B_1) \cup \cdots \cup (A \cap B_k)
@@ -247,6 +247,6 @@ $$
 p(D=1 \mid T=+)=\frac{0.95\cdot 0.01}{0.1085}\approx 0.0876.
 $$
 
-The positive test is informative because it raises the disease probability from `1%` to about `8.8%`, but the disease still remains unlikely because the base rate was very small to begin with.
+The positive test is informative because it raises the disease probability from $1\%$ to about $8.8\%$, but the disease still remains unlikely because the base rate was very small to begin with.
 
 That is the core lesson behind base-rate neglect: a strong-looking test result does not erase the effect of a very rare prior condition.

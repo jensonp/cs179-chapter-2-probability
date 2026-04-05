@@ -36,11 +36,11 @@ $$
 \mathbb{E}[X]=\sum_{x=1}^6 x\cdot \frac{1}{6}=\frac{1+2+3+4+5+6}{6}=3.5.
 $$
 
-A die never lands on `3.5`, but `3.5` is still the mean.
+A die never lands on $3.5$, but $3.5$ is still the mean.
 
 ## Linearity of expectation
 
-For constants `a, b, c`,
+For constants $a, b, c$,
 
 $$
 \mathbb{E}[aX+bY+c]=a\mathbb{E}[X]+b\mathbb{E}[Y]+c.
@@ -52,7 +52,7 @@ That point matters. Many later formulas do need independence, but linearity of e
 
 ### Dependent example
 
-Let `X` be Bernoulli with
+Let $X$ be Bernoulli with
 
 $$
 p(X=1)=0.3, \qquad p(X=0)=0.7,
@@ -64,7 +64,7 @@ $$
 Y=1-X.
 $$
 
-Then `X` and `Y` are completely dependent. Once `X` is known, `Y` is forced.
+Then $X$ and $Y$ are completely dependent. Once $X$ is known, $Y$ is forced.
 
 Yet
 
@@ -80,7 +80,7 @@ $$
 
 ### Indicator counting trick
 
-If `H_1, H_2, H_3` are indicator variables for whether three coin flips are heads, and
+If $H_1, H_2, H_3$ are indicator variables for whether three coin flips are heads, and
 
 $$
 N=H_1+H_2+H_3,
@@ -92,7 +92,7 @@ $$
 \mathbb{E}[N]=\mathbb{E}[H_1]+\mathbb{E}[H_2]+\mathbb{E}[H_3].
 $$
 
-If each flip has head probability `\rho`, then each indicator has mean `\rho`, so
+If each flip has head probability $\rho$, then each indicator has mean $\rho$, so
 
 $$
 \mathbb{E}[N]=3\rho.
@@ -116,7 +116,7 @@ $$
 
 ### Bernoulli variance
 
-If `X \in \{0,1\}` with `p(X=1)=\rho`, then `X^2=X`, so
+If $X \in \{0,1\}$ with $p(X=1)=\rho$, then $X^2=X$, so
 
 $$
 \mathbb{E}[X]=\rho, \qquad \mathbb{E}[X^2]=\rho.
@@ -128,7 +128,7 @@ $$
 \mathrm{Var}(X)=\rho-\rho^2=\rho(1-\rho).
 $$
 
-The spread is largest near `\rho=1/2` and shrinks to zero near `0` or `1`.
+The spread is largest near $\rho=1/2$ and shrinks to zero near $0$ or $1$.
 
 ## Covariance and correlation
 
@@ -159,12 +159,12 @@ $$
 So:
 
 - adding a constant shifts location but not spread;
-- multiplying by `a` rescales spread by `a^2`;
+- multiplying by $a$ rescales spread by $a^2$;
 - covariance tracks whether centered values tend to move together or in opposite directions.
 
 ## Mean and variance are different summaries
 
-Let `X` be constant at `3`, and let `Y` equal `0` or `6` with probabilities `1/2` and `1/2`.
+Let $X$ be constant at $3$, and let $Y$ equal $0$ or $6$ with probabilities $1/2$ and $1/2$.
 
 Then
 
@@ -188,13 +188,13 @@ So two distributions can share the same mean and still differ sharply in spread.
 
 ## Zero covariance does not imply independence
 
-Let `X` take values `-1, 0, 1` with equal probability and define
+Let $X$ take values $-1, 0, 1$ with equal probability and define
 
 $$
 Y=X^2.
 $$
 
-Then `Y` is completely determined by `X`, so the variables are dependent.
+Then $Y$ is completely determined by $X$, so the variables are dependent.
 
 But
 
@@ -218,7 +218,7 @@ $$
 p(X=x,Y=y)=p(X=x)p(Y=y)
 $$
 
-for every pair of values `x,y`.
+for every pair of values $x,y$.
 
 Equivalently,
 
@@ -226,18 +226,18 @@ $$
 p(X=x \mid Y=y)=p(X=x)
 $$
 
-for every `y` with `p(Y=y)>0`.
+for every $y$ with $p(Y=y)>0$.
 
 These are the same statement written in two forms.
 
 - The factorization form says the joint table splits into a product of marginals.
-- The conditional form says observing `Y` does not change the distribution of `X`.
+- The conditional form says observing $Y$ does not change the distribution of $X$.
 
 ## Degrees of freedom under independence
 
-Suppose `X` and `Y` are both `d`-ary.
+Suppose $X$ and $Y$ are both $d$-ary.
 
-A general joint table `p(X,Y)` has `d^2` entries subject to one normalization constraint, so it has
+A general joint table $p(X,Y)$ has $d^2$ entries subject to one normalization constraint, so it has
 
 $$
 d^2-1
@@ -251,7 +251,7 @@ $$
 p(X,Y)=p(X)p(Y).
 $$
 
-Now only the two marginal tables need to be chosen. Each marginal has `d-1` degrees of freedom, so the independent model has
+Now only the two marginal tables need to be chosen. Each marginal has $d-1$ degrees of freedom, so the independent model has
 
 $$
 (d-1)+(d-1)=2d-2
@@ -275,7 +275,7 @@ $$
 p(Y=1)=0.2, \quad p(Y=2)=0.3, \quad p(Y=3)=0.4, \quad p(Y=4)=0.1.
 $$
 
-If `X` and `Y` are independent, then every joint entry is the product of one marginal from `X` and one marginal from `Y`.
+If $X$ and $Y$ are independent, then every joint entry is the product of one marginal from $X$ and one marginal from $Y$.
 
 For example,
 

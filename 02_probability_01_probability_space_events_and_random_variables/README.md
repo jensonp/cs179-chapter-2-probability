@@ -10,9 +10,9 @@ $$
 
 Here:
 
-- `\Omega` is the sample space, the set of possible worlds or outcomes.
-- `\mathcal{F}` is the collection of events to which probabilities are assigned.
-- `P` is the probability measure.
+- $\Omega$ is the sample space, the set of possible worlds or outcomes.
+- $\mathcal{F}$ is the collection of events to which probabilities are assigned.
+- $P$ is the probability measure.
 
 The measure satisfies three axioms:
 
@@ -30,7 +30,7 @@ $$
 \mathbb{P}\!\left(\bigcup_{i=1}^{\infty} A_i\right)=\sum_{i=1}^{\infty} \mathbb{P}(A_i)
 $$
 
-whenever the events `A_1, A_2, ...` are pairwise disjoint.
+whenever the events $A_1, A_2, \ldots$ are pairwise disjoint.
 
 ## What pairwise disjoint means
 
@@ -112,13 +112,13 @@ $$
 X: \Omega \to \mathbb{R}.
 $$
 
-This means `X` takes each world `\omega` and assigns it a numerical value `X(\omega)`.
+This means $X$ takes each world $\omega$ and assigns it a numerical value $X(\omega)$.
 
 That is the direction of construction:
 
-1. Start with worlds in `\Omega`.
-2. Define a variable `X` on those worlds.
-3. Then events such as `\{X=x\}` and `\{X \le t\}` are induced automatically.
+1. Start with worlds in $\Omega$.
+2. Define a variable $X$ on those worlds.
+3. Then events such as $\{X=x\}$ and $\{X \le t\}$ are induced automatically.
 
 So the statement
 
@@ -156,8 +156,8 @@ $$
 
 Then the six raw outcomes are compressed into two states:
 
-- `\{2,4,6\}` map to `0`,
-- `\{1,3,5\}` map to `1`.
+- $\{2,4,6\}$ map to $0$,
+- $\{1,3,5\}$ map to $1$.
 
 So
 
@@ -175,7 +175,7 @@ $$
 p(X=x)=\mathbb{P}(X=x).
 $$
 
-That is not a second probability law. It is the same event probability, written as a function of the state `x`.
+That is not a second probability law. It is the same event probability, written as a function of the state $x$.
 
 The cumulative distribution function exists in every setting and is always defined by
 
@@ -188,5 +188,5 @@ In the discrete case, interval probabilities can be recovered by subtraction of 
 So the conceptual order is:
 
 - event probability is primary;
-- random variables induce events such as `\{X=x\}` and `\{X \le x\}`;
+- random variables induce events such as $\{X=x\}$ and $\{X \le x\}$;
 - PMFs and CDFs summarize those induced probabilities.
