@@ -1,10 +1,8 @@
-# Probability and Inference (Part 1.2)
+# 2.2 Continuous Random Variables
 
 Source: ../notes/02_probability_reconstructed/source/02_probability.pdf
 
-This is Part 1.2 of the Chapter 2 main note split. It continues from [Part 1.1](../02_probability_main_part_1_1/) and covers Section 2.2. Continue with [Part 2](../02_probability_main_part_2/) afterward.
-
-## 2.2 Continuous Random Variables
+This section develops continuous variables, CDF/PDF distinctions, Gaussian models, and the Beta and Dirichlet families.
 
 Sometimes we model systems with real-valued random variables $X \in \mathbb{R}$. In that setting we define a probability density function $p(x)$ with $p(x) \ge 0$ for all $x$ and
 
@@ -41,7 +39,7 @@ If you are still carrying the discrete intuition $p(x)=\mathbb{P}(X=x)$ into the
 The CDF $F_X(x)=\mathbb{P}(X \le x)$ is the unifying object that works for discrete, continuous, and mixed variables.
 
 <p align="center">
-  <img src="../02_probability_main_part_1_1/assets/pmf_pdf_cdf_mental_model.png" alt="PMF vs PDF vs CDF mental model" width="860">
+  <img src="./assets/pmf_pdf_cdf_mental_model.png" alt="PMF vs PDF vs CDF mental model" width="860">
 </p>
 
 One more bridge fact is often the missing intuition in the continuous case. When a density $p(x)$ exists, probabilities of *small* intervals are approximately density times width:

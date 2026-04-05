@@ -186,13 +186,7 @@ $$
 Integrating over $\rho \in [0,1]$ gives
 
 $$
-\int_0^1 \rho^2(1-\rho)\,d\rho
-=
-\int_0^1 (\rho^2-\rho^3)\,d\rho
-=
-\left[\frac{\rho^3}{3}-\frac{\rho^4}{4}\right]_0^1
-=
-\frac{1}{12},
+\int_0^1 \rho^2(1-\rho)\,d\rho = \int_0^1 (\rho^2-\rho^3)\,d\rho = \left[\frac{\rho^3}{3}-\frac{\rho^4}{4}\right]_0^1 = \frac{1}{12},
 $$
 
 not $1$.
@@ -215,11 +209,7 @@ $$
 Maximum likelihood estimation chooses the parameter value that maximizes the likelihood, or equivalently the log-likelihood:
 
 $$
-\hat{\theta}_{\mathrm{MLE}}
-=
-\arg\max_{\theta} L(\theta; D)
-=
-\arg\max_{\theta} \ell(\theta).
+\hat{\theta}_{\mathrm{MLE}} = \arg\max_{\theta} L(\theta; D) = \arg\max_{\theta} \ell(\theta).
 $$
 
 This is a **point estimate**.  
@@ -256,19 +246,13 @@ $$
 Differentiate:
 
 $$
-\frac{d\ell}{d\rho}
-=
-\frac{m_1}{\rho}
--
-\frac{m_0}{1-\rho}.
+\frac{d\ell}{d\rho} = \frac{m_1}{\rho} - \frac{m_0}{1-\rho}.
 $$
 
 Set the derivative to zero:
 
 $$
-\frac{m_1}{\rho}
-=
-\frac{m_0}{1-\rho}.
+\frac{m_1}{\rho} = \frac{m_0}{1-\rho}.
 $$
 
 Rearranging gives
@@ -296,11 +280,7 @@ Let $x^{(1)},\dots,x^{(m)}$ be i.i.d. Gaussian with mean $\mu$ and variance $\si
 If $\sigma^2$ is known, the log-likelihood as a function of $\mu$ is
 
 $$
-\ell(\mu)
-=
--\frac{m}{2}\log(2\pi\sigma^2)
--
-\frac{1}{2\sigma^2}\sum_{i=1}^{m}(x^{(i)}-\mu)^2.
+\ell(\mu) = -\frac{m}{2}\log(2\pi\sigma^2) - \frac{1}{2\sigma^2}\sum_{i=1}^{m}(x^{(i)}-\mu)^2.
 $$
 
 Only the quadratic term depends on $\mu$, so maximizing the log-likelihood is equivalent to minimizing
@@ -312,9 +292,7 @@ $$
 Differentiating and setting the derivative to zero gives
 
 $$
-\hat{\mu}_{\mathrm{MLE}}
-=
-\frac{1}{m}\sum_{i=1}^{m}x^{(i)}.
+\hat{\mu}_{\mathrm{MLE}} = \frac{1}{m}\sum_{i=1}^{m}x^{(i)}.
 $$
 
 So the sample mean is the MLE for the Gaussian mean.
@@ -324,15 +302,11 @@ So the sample mean is the MLE for the Gaussian mean.
 When both $\mu$ and $\sigma^2$ are unknown, the MLEs are
 
 $$
-\hat{\mu}_{\mathrm{MLE}}
-=
-\frac{1}{m}\sum_{i=1}^{m}x^{(i)},
+\hat{\mu}_{\mathrm{MLE}} = \frac{1}{m}\sum_{i=1}^{m}x^{(i)},
 $$
 
 $$
-\hat{\sigma}^2_{\mathrm{MLE}}
-=
-\frac{1}{m}\sum_{i=1}^{m}\bigl(x^{(i)}-\hat{\mu}_{\mathrm{MLE}}\bigr)^2.
+\hat{\sigma}^2_{\mathrm{MLE}} = \frac{1}{m}\sum_{i=1}^{m}\bigl(x^{(i)}-\hat{\mu}_{\mathrm{MLE}}\bigr)^2.
 $$
 
 The denominator here is $m$, not $m-1$.  
@@ -442,9 +416,7 @@ Let $\theta$ be the parameter and $D$ the observed sample.
 Bayes’ rule gives
 
 $$
-p(\theta \mid D)
-=
-\frac{p(D \mid \theta)\,p(\theta)}{p(D)}.
+p(\theta \mid D) = \frac{p(D \mid \theta)\,p(\theta)}{p(D)}.
 $$
 
 Each factor has a separate role:
@@ -489,9 +461,7 @@ $$
 Its density is proportional to
 
 $$
-\rho^{2-1}(1-\rho)^{2-1}
-=
-\rho(1-\rho).
+\rho^{2-1}(1-\rho)^{2-1} = \rho(1-\rho).
 $$
 
 The Bernoulli likelihood is proportional to
@@ -503,11 +473,7 @@ $$
 Multiplying prior and likelihood gives
 
 $$
-p(\rho \mid D)
-\propto
-\rho^3(1-\rho)^2 \cdot \rho(1-\rho)
-=
-\rho^4(1-\rho)^3.
+p(\rho \mid D) \propto \rho^3(1-\rho)^2 \cdot \rho(1-\rho) = \rho^4(1-\rho)^3.
 $$
 
 That is the kernel of a Beta density with parameters
@@ -579,9 +545,7 @@ $$
 so
 
 $$
-\pi \mid D
-\sim
-\mathrm{Dir}(\alpha_1+n_1,\dots,\alpha_K+n_K).
+\pi \mid D \sim \mathrm{Dir}(\alpha_1+n_1,\dots,\alpha_K+n_K).
 $$
 
 This is why $\alpha_k$ are often interpreted as **pseudo-counts**.  
@@ -609,9 +573,7 @@ The posterior mean minimizes squared-error loss and represents the center of mas
 The MAP estimate maximizes the posterior density:
 
 $$
-\hat{\theta}_{\mathrm{MAP}}
-=
-\arg\max_{\theta} p(\theta \mid D).
+\hat{\theta}_{\mathrm{MAP}} = \arg\max_{\theta} p(\theta \mid D).
 $$
 
 Since
@@ -640,17 +602,13 @@ $$
 the posterior mean is
 
 $$
-\mathbb{E}[\rho \mid D]
-=
-\frac{\alpha}{\alpha+\beta},
+\mathbb{E}[\rho \mid D] = \frac{\alpha}{\alpha+\beta},
 $$
 
 and when $\alpha>1$ and $\beta>1$, the MAP estimate is
 
 $$
-\hat{\rho}_{\mathrm{MAP}}
-=
-\frac{\alpha-1}{\alpha+\beta-2}.
+\hat{\rho}_{\mathrm{MAP}} = \frac{\alpha-1}{\alpha+\beta-2}.
 $$
 
 For the earlier posterior $\mathrm{Beta}(5,4)$,
@@ -676,9 +634,7 @@ Bayesian updating can be done sequentially.
 If $D_1$ arrives first and $D_2$ arrives later, then
 
 $$
-p(\theta \mid D_1, D_2)
-\propto
-p(D_2 \mid \theta)\,p(\theta \mid D_1).
+p(\theta \mid D_1, D_2) \propto p(D_2 \mid \theta)\,p(\theta \mid D_1).
 $$
 
 So the posterior after the first batch becomes the prior for the second batch.
@@ -718,9 +674,7 @@ Suppose $M$ indexes a model class.
 Then the **model evidence** is
 
 $$
-p(D \mid M)
-=
-\int p(D \mid \theta, M)\,p(\theta \mid M)\,d\theta.
+p(D \mid M) = \int p(D \mid \theta, M)\,p(\theta \mid M)\,d\theta.
 $$
 
 This quantity averages fit across the parameter space of model $M$.

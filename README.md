@@ -4,18 +4,33 @@ This repository publishes a layered reconstruction of Chapter 2, "Probability an
 
 The tracked content is intentionally limited to the Chapter 2 reconstruction bundle. The rest of the original `cs179` workspace remains local and is excluded from version control by default.
 
-## Read These On GitHub
+## Main Note Table of Contents
 
-If you want GitHub to render each note automatically, open:
+The chapter is now available both as one long note and as root-level rendered subsection folders.
 
-- `02_probability_main/`: rendered main note
-- `02_probability_formal_supplement/`: rendered formal supplement
-- `02_probability_exercises/`: rendered exercises
-- `02_probability_computational_appendix/`: rendered computational appendix
-- `hw1_reading_guide/`: explicit reading instructions for Homework 1
+One-file version:
 
-If you only want one file, start with `02_probability_main/`.
-If you want the homework-specific reading flow, start with `hw1_reading_guide/`.
+- [`02_probability_main/`](./02_probability_main/): full monolithic chapter
+
+Section-by-section version:
+
+1. [`02_probability_00_front_matter_and_scope/`](./02_probability_00_front_matter_and_scope/): front matter, scope, notation, and how to use the chapter
+2. [`02_probability_01_probability_space_events_and_random_variables/`](./02_probability_01_probability_space_events_and_random_variables/): probability spaces, events, axioms, and random variables
+3. [`02_probability_02_discrete_pmf_indicator_and_geometric/`](./02_probability_02_discrete_pmf_indicator_and_geometric/): PMFs, indicator notation, Bernoulli, categorical, and geometric distributions
+4. [`02_probability_03_joint_tables_conditioning_bayes_and_total_probability/`](./02_probability_03_joint_tables_conditioning_bayes_and_total_probability/): joint tables, marginalization, conditioning, Bayes, and total probability
+5. [`02_probability_04_expectation_variance_covariance_and_independence/`](./02_probability_04_expectation_variance_covariance_and_independence/): expectation, variance, covariance, independence, and conditional independence
+6. [`02_probability_05_continuous_random_variables/`](./02_probability_05_continuous_random_variables/): CDF/PDF distinctions, Gaussian models, Beta, and Dirichlet
+7. [`02_probability_06_learning_and_parameter_estimation/`](./02_probability_06_learning_and_parameter_estimation/): likelihood, MLE, Bayesian posteriors, and model selection
+8. [`02_probability_07_convexity/`](./02_probability_07_convexity/): convexity background for estimation objectives
+9. [`02_probability_08_information_theory/`](./02_probability_08_information_theory/): entropy, conditional entropy, mutual information, and KL divergence
+10. [`02_probability_09_change_of_variable_models/`](./02_probability_09_change_of_variable_models/): scalar and multivariate Jacobians, copulas, and normalizing flows
+
+Companion materials:
+
+- [`02_probability_formal_supplement/`](./02_probability_formal_supplement/): formal supplement
+- [`02_probability_exercises/`](./02_probability_exercises/): exercises
+- [`02_probability_computational_appendix/`](./02_probability_computational_appendix/): computational appendix
+- [`hw1_reading_guide/`](./hw1_reading_guide/): explicit reading instructions for Homework 1
 
 ## HW1 LaTeX Preview
 
@@ -30,6 +45,7 @@ The HW1 project is organized into `source/` for editable files and `build/` for 
 ## Source Layout
 
 - `02_probability_main/README.md`: main reconstructed chapter source
+- `02_probability_00_front_matter_and_scope/README.md` through `02_probability_09_change_of_variable_models/README.md`: section-by-section GitHub-rendered chapter reads
 - `02_probability_formal_supplement/README.md`: formal definitions and proof spine
 - `02_probability_exercises/README.md`: layered exercise bank
 - `02_probability_computational_appendix/README.md`: numerical workflows and implementation checks
