@@ -32,17 +32,13 @@ When several variables are present, the most complete discrete description is th
 If $X$ and $Y$ are discrete random variables, then the joint PMF is
 
 $$
-
 p(x,y)=\mathbb{P}(X=x,Y=y).
-
 $$
 
 If there are three variables, say $X,Y,Z$, then the joint PMF is
 
 $$
-
 p(x,y,z)=\mathbb{P}(X=x,Y=y,Z=z).
-
 $$
 
 This object is central because every other distribution about these variables can be obtained from it.
@@ -101,9 +97,7 @@ These eight rows are:
 So their probabilities must sum to 1. Indeed,
 
 $$
-
 0.576+0.008+0.144+0.072+0.064+0.012+0.016+0.108 = 1.
-
 $$
 
 ### What this table is actually doing
@@ -127,17 +121,13 @@ If you want the distribution of one variable alone, you do not start over. You s
 If the joint distribution is $p(x,y)$, then the marginal of $X$ is
 
 $$
-
 p_X(x)=\sum_y p(x,y).
-
 $$
 
 If the joint distribution is $p(x,y,z)$, then
 
 $$
-
 p_X(x)=\sum_{y,z} p(x,y,z).
-
 $$
 
 ### What marginalization means conceptually
@@ -154,33 +144,25 @@ This should not be memorized as a symbol rule only. It is a bookkeeping rule on 
 To compute
 
 $$
-
 p(T=0),
-
 $$
 
 hold $T=0$ fixed and sum over all values of $D$ and $C$:
 
 $$
-
 p(T=0)=\sum_{d,c} p(T=0,D=d,C=c).
-
 $$
 
 Reading from the table,
 
 $$
-
 p(T=0)=0.576+0.008+0.144+0.072=0.80.
-
 $$
 
 Likewise,
 
 $$
-
 p(T=1)=0.064+0.012+0.016+0.108=0.20.
-
 $$
 
 Notice two things:
@@ -188,9 +170,7 @@ Notice two things:
 1. The marginal distribution for $T$ is
 
 $$
-
    p(T=0)=0.80,\qquad p(T=1)=0.20.
-
 $$
 
 2. These values sum to 1, as a valid marginal must.
@@ -200,25 +180,19 @@ $$
 To compute
 
 $$
-
 p(C=1),
-
 $$
 
 hold $C=1$ fixed and sum over all values of $T$ and $D$:
 
 $$
-
 p(C=1)=0.008+0.072+0.012+0.108=0.20.
-
 $$
 
 Similarly,
 
 $$
-
 p(C=0)=0.576+0.144+0.064+0.016=0.80.
-
 $$
 
 ### What the reader should learn from these examples
@@ -240,18 +214,14 @@ Conditioning is the next major operation.
 If the event $B$ has positive probability, then
 
 $$
-
 \mathbb{P}(A\mid B)=\frac{\mathbb{P}(A\cap B)}{\mathbb{P}(B)}.
-
 $$
 
 When variables are involved, the same logic becomes
 
 $$
-
 p(D=d\mid T=t)=\frac{p(D=d,T=t)}{p(T=t)},
 \qquad \text{provided } p(T=t)>0.
-
 $$
 
 ### What conditioning is really doing
@@ -280,9 +250,7 @@ Restrict to rows where $T=1$:
 The total restricted mass is
 
 $$
-
 p(T=1)=0.064+0.012+0.016+0.108=0.20.
-
 $$
 
 Now within those rows, the rows with $D=1$ are:
@@ -293,11 +261,9 @@ Now within those rows, the rows with $D=1$ are:
 So
 
 $$
-
 p(D=1\mid T=1)=\frac{0.016+0.108}{0.20}
 =\frac{0.124}{0.20}
 =0.62.
-
 $$
 
 ### What this means
@@ -346,17 +312,13 @@ We do not want the probe variable in the final posterior, so sum over $D$ for ea
 For $C=0$,
 
 $$
-
 p(T=1,C=0)=0.064+0.016=0.080.
-
 $$
 
 For $C=1$,
 
 $$
-
 p(T=1,C=1)=0.012+0.108=0.120.
-
 $$
 
 So the intermediate two-row table is
@@ -369,9 +331,7 @@ So the intermediate two-row table is
 Notice that this still sums to
 
 $$
-
 0.080+0.120=0.20=p(T=1),
-
 $$
 
 not to 1.
@@ -381,15 +341,11 @@ not to 1.
 Divide by the evidence total:
 
 $$
-
 p(C=0\mid T=1)=\frac{0.080}{0.20}=0.40,
-
 $$
 
 $$
-
 p(C=1\mid T=1)=\frac{0.120}{0.20}=0.60.
-
 $$
 
 So the posterior is
@@ -413,17 +369,13 @@ This is the exact mechanics of posterior inference in a finite model. Later chap
 The prior cavity probability from the marginal table was
 
 $$
-
 p(C=1)=0.20.
-
 $$
 
 After seeing a toothache, the posterior becomes
 
 $$
-
 p(C=1\mid T=1)=0.60.
-
 $$
 
 So the evidence raises the probability of a cavity substantially.
@@ -439,17 +391,13 @@ Conditioning is often manipulated through the **product rule**.
 From the definition of conditional probability,
 
 $$
-
 p(A\mid B)=\frac{p(A\cap B)}{p(B)},
-
 $$
 
 so equivalently
 
 $$
-
 p(A\cap B)=p(A\mid B)p(B).
-
 $$
 
 This is the product rule.
@@ -457,9 +405,7 @@ This is the product rule.
 For variables, this becomes
 
 $$
-
 p(x,y)=p(x\mid y)p(y)=p(y\mid x)p(x).
-
 $$
 
 ### Why this matters
@@ -477,33 +423,25 @@ It is the algebraic hinge connecting all three.
 From the dentist table,
 
 $$
-
 p(T=1,C=1)=0.120.
-
 $$
 
 Also,
 
 $$
-
 p(C=1)=0.20.
-
 $$
 
 So
 
 $$
-
 p(T=1\mid C=1)=\frac{0.120}{0.20}=0.60.
-
 $$
 
 This is exactly consistent with the product rule:
 
 $$
-
 p(T=1,C=1)=p(T=1\mid C=1)p(C=1)=0.60\cdot 0.20=0.12.
-
 $$
 
 So the product rule is not extra machinery. It is the same relationship seen from a different angle.
@@ -517,25 +455,19 @@ Bayes’ rule is the product rule solved in the opposite direction.
 Starting from
 
 $$
-
 p(A\cap B)=p(A\mid B)p(B)=p(B\mid A)p(A),
-
 $$
 
 we obtain
 
 $$
-
 p(A\mid B)=\frac{p(B\mid A)p(A)}{p(B)}.
-
 $$
 
 For variables, this often appears as
 
 $$
-
 p(C=c\mid D=d)=\frac{p(D=d\mid C=c)p(C=c)}{p(D=d)}.
-
 $$
 
 ### What Bayes’ rule is really doing
@@ -547,33 +479,25 @@ It is a bookkeeping identity that becomes powerful because it rewrites a posteri
 - **prior**:
 
 $$
-
   p(C=c)
-
 $$
 
 - **likelihood**:
 
 $$
-
   p(D=d\mid C=c)
-
 $$
 
 - **evidence**:
 
 $$
-
   p(D=d)
-
 $$
 
 - **posterior**:
 
 $$
-
   p(C=c\mid D=d)
-
 $$
 
 ### Why this direction is useful
@@ -594,25 +518,19 @@ Bayes’ rule turns those easier pieces into the posterior we want.
 Suppose
 
 $$
-
 p(T=1\mid C=0)=0.1,\qquad p(T=1\mid C=1)=0.6,
-
 $$
 
 and
 
 $$
-
 p(C=0)=0.8,\qquad p(C=1)=0.2.
-
 $$
 
 We want
 
 $$
-
 p(C=1\mid T=1).
-
 $$
 
 ### Step 1: compute the numerator
@@ -620,9 +538,7 @@ $$
 The numerator is
 
 $$
-
 p(T=1\mid C=1)p(C=1)=0.6\cdot 0.2=0.12.
-
 $$
 
 This is the joint probability of “cavity and toothache.”
@@ -632,25 +548,19 @@ This is the joint probability of “cavity and toothache.”
 The evidence is
 
 $$
-
 p(T=1).
-
 $$
 
 To get it, average over the two possible cavity states:
 
 $$
-
 p(T=1)=p(T=1\mid C=1)p(C=1)+p(T=1\mid C=0)p(C=0).
-
 $$
 
 Substitute the values:
 
 $$
-
 p(T=1)=0.6\cdot 0.2 + 0.1\cdot 0.8 = 0.12+0.08=0.20.
-
 $$
 
 ### Step 3: divide
@@ -658,9 +568,7 @@ $$
 Now
 
 $$
-
 p(C=1\mid T=1)=\frac{0.12}{0.20}=0.60.
-
 $$
 
 ### Interpretation
@@ -668,17 +576,13 @@ $$
 The prior cavity probability was
 
 $$
-
 p(C=1)=0.20.
-
 $$
 
 After observing a toothache, it becomes
 
 $$
-
 p(C=1\mid T=1)=0.60.
-
 $$
 
 So the toothache is strong positive evidence for a cavity.
@@ -703,9 +607,7 @@ The evidence term in Bayes’ rule is often computed using the **law of total pr
 If $B_1,\dots,B_k$ form a partition of the sample space — meaning they are disjoint and exhaustive — then
 
 $$
-
 p(A)=\sum_{i=1}^{k} p(A\mid B_i)p(B_i).
-
 $$
 
 ### What this means
@@ -728,33 +630,25 @@ Otherwise the decomposition either double-counts or fails to account for all pos
 Write $A$ as
 
 $$
-
 A=(A\cap B_1)\cup \cdots \cup (A\cap B_k).
-
 $$
 
 These pieces are disjoint, so additivity gives
 
 $$
-
 p(A)=\sum_{i=1}^{k} p(A\cap B_i).
-
 $$
 
 Then apply the product rule to each term:
 
 $$
-
 p(A\cap B_i)=p(A\mid B_i)p(B_i).
-
 $$
 
 Substitute back to obtain
 
 $$
-
 p(A)=\sum_{i=1}^{k} p(A\mid B_i)p(B_i).
-
 $$
 
 ### Why this matters for inference
@@ -784,13 +678,11 @@ This is the standard finite inference pattern.
 For two competing hypotheses $H_1$ and $H_0$ and evidence $E$, Bayes’ rule can be written in odds form:
 
 $$
-
 \frac{p(H_1\mid E)}{p(H_0\mid E)}
 =
 \frac{p(E\mid H_1)}{p(E\mid H_0)}
 \cdot
 \frac{p(H_1)}{p(H_0)}.
-
 $$
 
 ### What each term means
@@ -798,25 +690,19 @@ $$
 - **prior odds**:
 
 $$
-
   \frac{p(H_1)}{p(H_0)}
-
 $$
 
 - **likelihood ratio**:
 
 $$
-
   \frac{p(E\mid H_1)}{p(E\mid H_0)}
-
 $$
 
 - **posterior odds**:
 
 $$
-
   \frac{p(H_1\mid E)}{p(H_0\mid E)}
-
 $$
 
 So the rule says:
@@ -842,33 +728,25 @@ Suppose:
 - disease prevalence:
 
 $$
-
   p(D=1)=0.01,
-
 $$
 
 - test sensitivity:
 
 $$
-
   p(T=+\mid D=1)=0.95,
-
 $$
 
 - false-positive rate:
 
 $$
-
   p(T=+\mid D=0)=0.10.
-
 $$
 
 We want the posterior disease probability after a positive test:
 
 $$
-
 p(D=1\mid T=+).
-
 $$
 
 ### Step 1: compute the evidence
@@ -876,17 +754,13 @@ $$
 Using the law of total probability over the partition $\{D=1,D=0\}$:
 
 $$
-
 p(T=+)=p(T=+\mid D=1)p(D=1)+p(T=+\mid D=0)p(D=0).
-
 $$
 
 Substitute the values:
 
 $$
-
 p(T=+)=0.95\cdot 0.01 + 0.10\cdot 0.99 = 0.0095+0.099 = 0.1085.
-
 $$
 
 ### Step 2: apply Bayes’ rule
@@ -894,17 +768,13 @@ $$
 The numerator is
 
 $$
-
 p(T=+\mid D=1)p(D=1)=0.95\cdot 0.01=0.0095.
-
 $$
 
 So
 
 $$
-
 p(D=1\mid T=+)=\frac{0.0095}{0.1085}\approx 0.0876.
-
 $$
 
 ### Interpretation
@@ -914,17 +784,13 @@ The test result is strongly informative:
 - prior disease probability:
 
 $$
-
   1\%
-
 $$
 
 - posterior disease probability after a positive test:
 
 $$
-
   8.76\%
-
 $$
 
 So the positive test increases the disease probability a lot.

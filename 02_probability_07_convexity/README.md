@@ -5,9 +5,7 @@ This section is supporting background rather than core probability machinery, bu
 So the real question of this section is not “what is a convex set?” in isolation. The real question is:
 
 $$
-
 \text{Why do some estimation objectives behave like clean bowls, while others behave like landscapes full of traps?}
-
 $$
 
 To answer that properly, the section must connect geometry, inequalities, and optimization.
@@ -53,9 +51,7 @@ Convexity removes much of that ambiguity. For convex objectives, local optimalit
 A set $S$ is **convex** if for any two points $x,x' \in S$ and any $\alpha \in [0,1]$, the convex combination
 
 $$
-
 \alpha x + (1-\alpha)x'
-
 $$
 
 also belongs to $S$.
@@ -92,11 +88,9 @@ That is exactly the kind of domain one wants in optimization, because moving par
 A function $f$ defined on a convex domain is **convex** if
 
 $$
-
 f\bigl(\alpha x + (1-\alpha)x'\bigr)
 \le
 \alpha f(x) + (1-\alpha)f(x')
-
 $$
 
 for all $x,x'$ in the domain and all $\alpha \in [0,1]$.
@@ -126,11 +120,9 @@ A convex function may increase everywhere, decrease everywhere, or decrease and 
 A function is **strictly convex** if
 
 $$
-
 f\bigl(\alpha x + (1-\alpha)x'\bigr)
 <
 \alpha f(x) + (1-\alpha)f(x')
-
 $$
 
 whenever $x\neq x'$ and $0<\alpha<1$.
@@ -160,11 +152,9 @@ This is the original definition in geometric language.
 If $f$ is differentiable, convexity is equivalent to
 
 $$
-
 f(x')
 \ge
 f(x) + \nabla f(x)\cdot(x'-x).
-
 $$
 
 This says the tangent line or tangent plane at $x$ is a global lower bound on the graph.
@@ -180,17 +170,13 @@ Optimization algorithms often use local information such as gradients. For gener
 If second derivatives exist, convexity is equivalent to
 
 $$
-
 \nabla^2 f(x)\succeq 0.
-
 $$
 
 That means the Hessian is positive semidefinite. Equivalently, for every vector $v$,
 
 $$
-
 v^T\nabla^2 f(x)\,v \ge 0.
-
 $$
 
 So every directional second derivative is nonnegative. There are no directions of negative curvature.
@@ -241,9 +227,7 @@ That is why convexity is so prized. It aligns local search with global meaning.
 The function
 
 $$
-
 f(x)=x^2
-
 $$
 
 is the simplest exact example of convexity and is worth checking algebraically.
@@ -251,37 +235,29 @@ is the simplest exact example of convexity and is worth checking algebraically.
 Take any $x,x'$ and $\alpha \in [0,1]$. Then
 
 $$
-
 f\bigl(\alpha x + (1-\alpha)x'\bigr)
 =
 (\alpha x + (1-\alpha)x')^2.
-
 $$
 
 Expanding gives
 
 $$
-
 \alpha x^2 + (1-\alpha)x'^2 - \alpha(1-\alpha)(x-x')^2.
-
 $$
 
 Since
 
 $$
-
 -\alpha(1-\alpha)(x-x')^2 \le 0,
-
 $$
 
 we obtain
 
 $$
-
 (\alpha x + (1-\alpha)x')^2
 \le
 \alpha x^2 + (1-\alpha)x'^2.
-
 $$
 
 That is exactly the convexity inequality.
@@ -291,9 +267,7 @@ That is exactly the convexity inequality.
 The correction term
 
 $$
-
 -\alpha(1-\alpha)(x-x')^2
-
 $$
 
 is the amount by which the parabola dips below the secant line. Because this term is nonpositive, the graph always lies below the secant line.
@@ -307,9 +281,7 @@ This example is worth keeping not because parabolas are deep, but because it mak
 Jensen’s inequality is the probabilistic form of convexity:
 
 $$
-
 f(\mathbb{E}[X]) \le \mathbb{E}[f(X)]
-
 $$
 
 for convex $f$.
@@ -344,17 +316,14 @@ Let $f(x)=x^2$ and let $X$ equal $0$ or $2$ with probability $1/2$ each.
 Then
 
 $$
-
 \mathbb{E}[X]=1,
 \qquad
 f(\mathbb{E}[X])=1,
-
 $$
 
 while
 
 $$
-
 \mathbb{E}[f(X)]
 =
 \frac12 f(0)+\frac12 f(2)
@@ -362,15 +331,12 @@ $$
 \frac12\cdot 0+\frac12\cdot 4
 =
 2.
-
 $$
 
 So
 
 $$
-
 f(\mathbb{E}[X]) \le \mathbb{E}[f(X]).
-
 $$
 
 The inequality is strict because $x^2$ is strictly convex and $X$ is genuinely random.
@@ -384,17 +350,14 @@ Now return to the statistical reason this section exists.
 For a canonical exponential-family model,
 
 $$
-
 p_\theta(x)
 =
 h(x)\exp\!\bigl(\theta^\top \phi(x) - A(\theta)\bigr),
-
 $$
 
 the log-likelihood of i.i.d. data $x^{(1)},\dots,x^{(m)}$ is
 
 $$
-
 \ell(\theta)
 =
 \sum_{i=1}^{m}\log h(x^{(i)})
@@ -402,13 +365,11 @@ $$
 \theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
 -
 mA(\theta).
-
 $$
 
 Therefore the negative log-likelihood is
 
 $$
-
 -\ell(\theta)
 =
 mA(\theta)
@@ -416,7 +377,6 @@ mA(\theta)
 \theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
 -
 \sum_{i=1}^{m}\log h(x^{(i)}).
-
 $$
 
 Read the structure carefully:
@@ -436,11 +396,9 @@ The log-partition function is special because its derivatives have direct probab
 For each component,
 
 $$
-
 \frac{\partial A(\theta)}{\partial \theta_j}
 =
 \mathbb{E}_\theta[\phi_j(X)].
-
 $$
 
 So the gradient of $A(\theta)$ gives model expectations of the sufficient statistics.
@@ -448,19 +406,15 @@ So the gradient of $A(\theta)$ gives model expectations of the sufficient statis
 Differentiating again gives
 
 $$
-
 \frac{\partial^2 A(\theta)}{\partial \theta_j\partial \theta_k}
 =
 \mathrm{Cov}_\theta\!\bigl(\phi_j(X),\phi_k(X)\bigr).
-
 $$
 
 In matrix form,
 
 $$
-
 \nabla^2 A(\theta)=\mathrm{Cov}_\theta(\phi(X)).
-
 $$
 
 This is the critical identity.
@@ -470,14 +424,12 @@ This is the critical identity.
 A covariance matrix is always positive semidefinite. For any vector $v$,
 
 $$
-
 v^\top \nabla^2 A(\theta) v
 =
 v^\top \mathrm{Cov}_\theta(\phi(X)) v
 =
 \mathrm{Var}_\theta\!\bigl(v^\top \phi(X)\bigr)
 \ge 0.
-
 $$
 
 Variance can never be negative. Therefore the Hessian is positive semidefinite, so $A(\theta)$ is convex.
@@ -495,25 +447,19 @@ A full example makes the abstract argument easier to trust.
 Let $X\in\{0,1\}$ and write the Bernoulli model in canonical exponential-family form using natural parameter
 
 $$
-
 \theta = \log\!\frac{\rho}{1-\rho}.
-
 $$
 
 Then the model can be written as
 
 $$
-
 p_\theta(x)=\exp\!\bigl(x\theta - A(\theta)\bigr),
-
 $$
 
 where
 
 $$
-
 A(\theta)=\log(1+e^\theta).
-
 $$
 
 The sufficient statistic is simply $\phi(x)=x$.
@@ -521,67 +467,53 @@ The sufficient statistic is simply $\phi(x)=x$.
 For i.i.d. data $x^{(1)},\dots,x^{(m)}$, the negative log-likelihood is
 
 $$
-
 -\ell(\theta)
 =
 mA(\theta)-\theta\sum_{i=1}^{m}x^{(i)}.
-
 $$
 
 The derivative is
 
 $$
-
 \frac{d}{d\theta}[-\ell(\theta)]
 =
 mA'(\theta)-\sum_{i=1}^{m}x^{(i)}.
-
 $$
 
 Since
 
 $$
-
 A'(\theta)=\frac{e^\theta}{1+e^\theta}=\rho,
-
 $$
 
 the first derivative becomes
 
 $$
-
 m\rho-\sum_{i=1}^{m}x^{(i)}.
-
 $$
 
 The second derivative is
 
 $$
-
 \frac{d^2}{d\theta^2}[-\ell(\theta)]
 =
 mA''(\theta).
-
 $$
 
 And
 
 $$
-
 A''(\theta)
 =
 \frac{e^\theta}{(1+e^\theta)^2}
 =
 \rho(1-\rho)\ge 0.
-
 $$
 
 Therefore
 
 $$
-
 \frac{d^2}{d\theta^2}[-\ell(\theta)]\ge 0.
-
 $$
 
 So the objective is convex.

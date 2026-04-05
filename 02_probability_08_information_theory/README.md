@@ -25,9 +25,7 @@ That order is the cleanest first-principles order, because each object answers t
 For one realized outcome $x$, the surprise is
 
 $$
-
 -\log p(x).
-
 $$
 
 This is the information revealed by that one event.
@@ -44,9 +42,7 @@ This is not just a mnemonic. The logarithm turns products of probabilities into 
 If $p(x)=1/2$, then the surprise is
 
 $$
-
 -\log_2(1/2)=1
-
 $$
 
 bit.
@@ -54,9 +50,7 @@ bit.
 If $p(x)=1/8$, then the surprise is
 
 $$
-
 -\log_2(1/8)=3
-
 $$
 
 bits.
@@ -68,9 +62,7 @@ So rarer events carry larger information content when they occur.
 Entropy is the average surprise:
 
 $$
-
 H[X] = -\sum_x p(x)\log p(x).
-
 $$
 
 This is the expected information revealed by one observation of $X$.
@@ -97,24 +89,20 @@ These are not separate facts to memorize. They are exactly what the “average s
 A fair coin has
 
 $$
-
 H[X]
 =
 -0.5\log_2 0.5 - 0.5\log_2 0.5
 =
 1 \text{ bit}.
-
 $$
 
 A biased coin with probabilities $(0.9,0.1)$ has
 
 $$
-
 H[X]
 =
 -0.9\log_2 0.9 - 0.1\log_2 0.1
 \approx 0.47 \text{ bits}.
-
 $$
 
 The biased coin is more predictable, so it carries less uncertainty per flip.
@@ -124,20 +112,16 @@ The biased coin is more predictable, so it carries less uncertainty per flip.
 Suppose a binary variable equals $1$ only on a winning day and $0$ otherwise:
 
 $$
-
 p(X=1)=0.001,\qquad p(X=0)=0.999.
-
 $$
 
 Then
 
 $$
-
 H[X]
 =
 -0.999\log_2 0.999 - 0.001\log_2 0.001
 \approx 0.011 \text{ bits}.
-
 $$
 
 This is tiny because almost every symbol is the same. This is also the compression interpretation of entropy: highly predictable sources can be encoded with very few bits per symbol on average.
@@ -151,19 +135,15 @@ That is exactly what conditional entropy measures.
 It can be written as
 
 $$
-
 H[X\mid Y]
 =
 \sum_y p(y)\,H[X\mid Y=y],
-
 $$
 
 or equivalently,
 
 $$
-
 H[X\mid Y]=H[X,Y]-H[Y].
-
 $$
 
 The average-over-$y$ form should be read first.
@@ -180,9 +160,7 @@ So conditional entropy is not the uncertainty left after one particular observed
 A central fact is
 
 $$
-
 H[X\mid Y]\le H[X].
-
 $$
 
 Observation cannot increase uncertainty on average. Specific outcomes may behave in surprising ways, but once averaged over the distribution of $Y$, conditioning only helps or leaves uncertainty unchanged.
@@ -198,9 +176,7 @@ If observing $Y$ reduces uncertainty about $X$, how much reduction occurred?
 That quantity is the mutual information:
 
 $$
-
 I[X;Y]=H[X]-H[X\mid Y].
-
 $$
 
 This is the cleanest operational definition. Mutual information is the uncertainty about $X$ removed by learning $Y$.
@@ -208,9 +184,7 @@ This is the cleanest operational definition. Mutual information is the uncertain
 Because the same logic works in the other direction,
 
 $$
-
 I[X;Y]=H[Y]-H[Y\mid X].
-
 $$
 
 So mutual information is symmetric even though conditional entropies themselves are not.
@@ -220,9 +194,7 @@ So mutual information is symmetric even though conditional entropies themselves 
 Another exact form is
 
 $$
-
 I[X;Y]=H[X]+H[Y]-H[X,Y].
-
 $$
 
 This says the total separate uncertainty exceeds the joint uncertainty by exactly the amount of shared information.
@@ -234,17 +206,13 @@ Two edge cases should be fixed immediately.
 - If $X$ and $Y$ are independent, then observing one does not reduce uncertainty about the other, so
 
 $$
-
 I[X;Y]=0.
-
 $$
 
 - If $Y=X$ exactly, then $H[X\mid Y]=0$, so
 
 $$
-
 I[X;Y]=H[X].
-
 $$
 
 In that case, revealing $Y$ removes all uncertainty about $X$.
@@ -256,9 +224,7 @@ Let commute choice $C$ take values in $\{\text{walk},\text{bike},\text{drive}\}$
 Assume
 
 $$
-
 p(R=\text{clear})=0.9,\qquad p(R=\text{rain})=0.1.
-
 $$
 
 Suppose the conditional commute distributions are
@@ -269,54 +235,44 @@ Suppose the conditional commute distributions are
 Then
 
 $$
-
 H[C\mid R=\text{clear}]
 =
 -0.9\log_2 0.9 - 0.1\log_2 0.1
 \approx 0.47,
-
 $$
 
 and
 
 $$
-
 H[C\mid R=\text{rain}]
 =
 -0.5\log_2 0.5 - 0.5\log_2 0.5
 =
 1.
-
 $$
 
 Averaging with the weather probabilities gives
 
 $$
-
 H[C\mid R]
 =
 0.9(0.47)+0.1(1)
 \approx 0.52\text{ bits}.
-
 $$
 
 If the marginal commute entropy is about
 
 $$
-
 H[C]\approx 0.72\text{ bits},
-
 $$
 
 then
 
 $$
-
 I[C;R]
 =
 H[C]-H[C\mid R]
 \approx 0.20\text{ bits}.
-
 $$
 
 This is the right qualitative interpretation:
@@ -334,11 +290,9 @@ How well does one distribution approximate another?
 For discrete distributions $p$ and $q$,
 
 $$
-
 D(p\|q)
 =
 \sum_x p(x)\log\!\left(\frac{p(x)}{q(x)}\right).
-
 $$
 
 This should be read in order:
@@ -355,19 +309,15 @@ Before examples, the domain restriction must be fixed.
 If there exists some outcome $x$ with
 
 $$
-
 p(x)>0
 \qquad\text{and}\qquad
 q(x)=0,
-
 $$
 
 then
 
 $$
-
 D(p\|q)=\infty.
-
 $$
 
 This is not a technical side remark. It means the approximating distribution assigns zero probability to something the target distribution says can actually happen.
@@ -377,9 +327,7 @@ This is not a technical side remark. It means the approximating distribution ass
 KL divergence satisfies
 
 $$
-
 D(p\|q)\ge 0,
-
 $$
 
 with equality only when $p=q$.
@@ -387,9 +335,7 @@ with equality only when $p=q$.
 But KL is **not symmetric**. In general,
 
 $$
-
 D(p\|q)\ne D(q\|p).
-
 $$
 
 So it is not a true metric.
@@ -401,33 +347,27 @@ This asymmetry matters because the direction tells you which distribution is bei
 Let
 
 $$
-
 p=(0.9,0.1),\qquad q=(0.5,0.5).
-
 $$
 
 Then
 
 $$
-
 D(p\|q)
 =
 0.9\log_2\frac{0.9}{0.5}
 +
 0.1\log_2\frac{0.1}{0.5}.
-
 $$
 
 If you reverse the order, you get
 
 $$
-
 D(q\|p)
 =
 0.5\log_2\frac{0.5}{0.9}
 +
 0.5\log_2\frac{0.5}{0.1},
-
 $$
 
 which is a different number.
@@ -439,11 +379,9 @@ The reason is structural: the average is taken under different weighting distrib
 Mutual information can also be written as
 
 $$
-
 I[X;Y]
 =
 D\!\bigl(p(x,y)\,\|\,p(x)p(y)\bigr).
-
 $$
 
 This is a beautiful identity, but it should be read **after** the uncertainty-reduction interpretation, not before it.

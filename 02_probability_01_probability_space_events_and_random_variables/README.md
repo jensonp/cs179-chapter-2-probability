@@ -28,9 +28,7 @@ Without a formal structure, those three jobs blur together. The outcome “the d
 A probability space is written as
 
 $$
-
 (\Omega,\mathcal{F},P).
-
 $$
 
 Each symbol plays a different role:
@@ -54,9 +52,7 @@ This definition is simple, but it does real work. It fixes the most detailed res
 If one fair six-sided die is rolled once, the natural sample space is
 
 $$
-
 \Omega = \{1,2,3,4,5,6\}.
-
 $$
 
 Each outcome names one fully resolved result of the experiment.
@@ -66,17 +62,13 @@ Each outcome names one fully resolved result of the experiment.
 If a coin is flipped twice and order matters, then the sample space is not
 
 $$
-
 \{H,T\},
-
 $$
 
 because that ignores which flip occurred first. The right sample space is
 
 $$
-
 \Omega = \{HH, HT, TH, TT\}.
-
 $$
 
 This is an important early lesson: the sample space must be chosen at the level of detail required by the questions you plan to ask.
@@ -86,9 +78,7 @@ This is an important early lesson: the sample space must be chosen at the level 
 Suppose you only care how many heads occur in two flips. Then the variable of interest takes values in $\{0,1,2\}$. But that is **not** usually the sample space of the underlying experiment. It is the image of a random variable defined on the more detailed space
 
 $$
-
 \{HH,HT,TH,TT\}.
-
 $$
 
 This distinction matters because the random variable “number of heads” compresses several outcomes into one value. The underlying space and the derived numerical quantity are not the same object.
@@ -110,25 +100,19 @@ This is one of the most important conceptual shifts in the whole chapter. Probab
 Let
 
 $$
-
 \Omega = \{1,2,3,4,5,6\}.
-
 $$
 
 Then the statement “the die lands on an even number” corresponds to the event
 
 $$
-
 E = \{2,4,6\}.
-
 $$
 
 The statement “the die lands on a value at least 5” corresponds to
 
 $$
-
 A = \{5,6\}.
-
 $$
 
 The event “the die lands on 4” is the singleton set $\{4\}$.
@@ -146,9 +130,7 @@ That closure is why the second component of a probability space is not merely �
 If an event is meaningful, then its complement should also be meaningful. If two events are meaningful, their union should be meaningful. Otherwise probability identities such as
 
 $$
-
 P(A^c)=1-P(A)
-
 $$
 
 or inclusion-exclusion would have nowhere to live.
@@ -166,9 +148,7 @@ The event collection $\mathcal{F}$ is a **sigma-algebra** on $\Omega$. This mean
 3. If $A_1,A_2,\dots\in\mathcal{F}$, then
 
 $$
-
 \bigcup_{n=1}^{\infty} A_n \in \mathcal{F}.
-
 $$
 
 From these three properties, many others follow automatically, including closure under countable intersections and finite unions.
@@ -188,9 +168,7 @@ These are not arbitrary technicalities. They are the exact closure rules needed 
 In finite examples, the most common choice is
 
 $$
-
 \mathcal{F}=2^\Omega,
-
 $$
 
 the full power set of $\Omega$.
@@ -213,9 +191,7 @@ Once the outcome space and event collection are fixed, a probability measure ass
 Formally, a probability measure is a function
 
 $$
-
 P:\mathcal{F}\to[0,1]
-
 $$
 
 satisfying the Kolmogorov axioms:
@@ -223,25 +199,19 @@ satisfying the Kolmogorov axioms:
 1. **Nonnegativity**:
 
 $$
-
    P(A)\ge 0 \quad \text{for all } A\in\mathcal{F}.
-
 $$
 
 2. **Normalization**:
 
 $$
-
    P(\Omega)=1.
-
 $$
 
 3. **Countable additivity**: if $A_1,A_2,\dots$ are pairwise disjoint events, then
 
 $$
-
    P\!\left(\bigcup_{n=1}^{\infty} A_n\right)=\sum_{n=1}^{\infty} P(A_n).
-
 $$
 
 These three axioms are the whole formal foundation of probability.
@@ -267,25 +237,19 @@ A good mastery note should not merely list the axioms and move on. The first imp
 Because
 
 $$
-
 \Omega = \Omega \cup \varnothing
-
 $$
 
 and the union is disjoint, countable additivity gives
 
 $$
-
 P(\Omega)=P(\Omega)+P(\varnothing).
-
 $$
 
 Therefore
 
 $$
-
 P(\varnothing)=0.
-
 $$
 
 So the impossible event has probability zero.
@@ -295,25 +259,19 @@ So the impossible event has probability zero.
 If $A\in\mathcal{F}$, then $A$ and $A^c$ are disjoint and satisfy
 
 $$
-
 A\cup A^c=\Omega.
-
 $$
 
 So
 
 $$
-
 P(A)+P(A^c)=P(\Omega)=1,
-
 $$
 
 hence
 
 $$
-
 P(A^c)=1-P(A).
-
 $$
 
 This is the first example of why closure under complements matters.
@@ -323,17 +281,13 @@ This is the first example of why closure under complements matters.
 If $A\subseteq B$, then $B$ can be written as the disjoint union
 
 $$
-
 B = A \cup (B\setminus A).
-
 $$
 
 So
 
 $$
-
 P(B)=P(A)+P(B\setminus A)\ge P(A).
-
 $$
 
 Thus larger events cannot have smaller probability.
@@ -343,9 +297,7 @@ Thus larger events cannot have smaller probability.
 Any two events satisfy
 
 $$
-
 P(A\cup B)=P(A)+P(B)-P(A\cap B).
-
 $$
 
 The subtraction is necessary because outcomes in the overlap are counted twice in the raw sum.
@@ -361,35 +313,27 @@ In finite settings, probability measures are especially concrete.
 Suppose
 
 $$
-
 \Omega=\{\omega_1,\dots,\omega_n\}.
-
 $$
 
 To define a probability measure, it is enough to assign numbers
 
 $$
-
 p_i = P(\{\omega_i\})
-
 $$
 
 such that
 
 $$
-
 p_i\ge 0
 \qquad\text{and}\qquad
 \sum_{i=1}^{n} p_i = 1.
-
 $$
 
 Then every event $A\subseteq\Omega$ has probability
 
 $$
-
 P(A)=\sum_{\omega_i\in A} p_i.
-
 $$
 
 ### Example: biased die
@@ -397,38 +341,30 @@ $$
 Let
 
 $$
-
 \Omega=\{1,2,3,4,5,6\}
-
 $$
 
 with
 
 $$
-
 P(\{1\})=0.10,\;
 P(\{2\})=0.10,\;
 P(\{3\})=0.15,\;
 P(\{4\})=0.15,\;
 P(\{5\})=0.20,\;
 P(\{6\})=0.30.
-
 $$
 
 Then the event “roll at least 5” is
 
 $$
-
 A=\{5,6\},
-
 $$
 
 so
 
 $$
-
 P(A)=0.20+0.30=0.50.
-
 $$
 
 This is the concrete finite model behind the general axioms.
@@ -438,17 +374,13 @@ This is the concrete finite model behind the general axioms.
 A finite sample space is uniform if all singletons receive equal probability. If $|\Omega|=n$, then
 
 $$
-
 P(\{\omega\})=\frac1n
-
 $$
 
 for every outcome $\omega$, and therefore
 
 $$
-
 P(A)=\frac{|A|}{|\Omega|}.
-
 $$
 
 This counting rule is valid only because all elementary outcomes are equally likely. Students often overgeneralize this. It is a special case, not the general definition of probability.
@@ -460,9 +392,7 @@ This counting rule is valid only because all elementary outcomes are equally lik
 A random variable is a function
 
 $$
-
 X:\Omega\to\mathbb{R}.
-
 $$
 
 This definition looks innocent, but it solves a major practical problem. Real experiments often produce structured outcomes — sequences, configurations, paths, tables, assignments, graphs — while most statistical questions are about numerical summaries of those outcomes. A random variable is the device that turns the former into the latter.
@@ -472,20 +402,16 @@ This definition looks innocent, but it solves a major practical problem. Real ex
 Let
 
 $$
-
 \Omega=\{HH,HT,TH,TT\}.
-
 $$
 
 Define the random variable $X$ by
 
 $$
-
 X(HH)=2,\qquad
 X(HT)=1,\qquad
 X(TH)=1,\qquad
 X(TT)=0.
-
 $$
 
 Then $X$ is the “number of heads” random variable.
@@ -513,9 +439,7 @@ For this level of notes, the key condition is:
 For every threshold $a$, the set
 
 $$
-
 \{\omega\in\Omega: X(\omega)\le a\}
-
 $$
 
 must be an event in $\mathcal{F}$.
@@ -527,17 +451,13 @@ This condition ensures that probability questions about $X$ can be translated ba
 When we ask
 
 $$
-
 P(X\le a),
-
 $$
 
 we are really asking for the probability of the event
 
 $$
-
 \{\omega: X(\omega)\le a\}.
-
 $$
 
 If that set were not in $\mathcal{F}$, the question would not even be legally posed inside the probability space.
@@ -571,17 +491,13 @@ all correspond to events in the underlying space.
 Let $X(\omega)=\omega$ on
 
 $$
-
 \Omega=\{1,2,3,4,5,6\}.
-
 $$
 
 Then the event “$X$ is even” is
 
 $$
-
 \{\omega:X(\omega)\in\{2,4,6\}\}=\{2,4,6\}.
-
 $$
 
 This example looks trivial, but it shows the core mechanism: numerical claims about the random variable are really set claims about the underlying outcomes.
@@ -589,9 +505,7 @@ This example looks trivial, but it shows the core mechanism: numerical claims ab
 That mechanism becomes even more important when several random variables are defined on the same space, because joint statements such as
 
 $$
-
 X+Y\ge 3
-
 $$
 
 are also events in the background space.
@@ -605,9 +519,7 @@ A random variable pushes the probability measure on $\Omega$ forward to a probab
 For a discrete random variable, the induced distribution is given by
 
 $$
-
 P(X=x)=P(\{\omega:X(\omega)=x\}).
-
 $$
 
 This is the probability mass function of $X$.
@@ -617,37 +529,27 @@ This is the probability mass function of $X$.
 Using
 
 $$
-
 \Omega=\{HH,HT,TH,TT\},
-
 $$
 
 with each outcome having probability $1/4$, and the random variable
 
 $$
-
 X(HH)=2,\quad X(HT)=1,\quad X(TH)=1,\quad X(TT)=0,
-
 $$
 
 we obtain
 
 $$
-
 P(X=0)=P(\{TT\})=\frac14,
-
 $$
 
 $$
-
 P(X=1)=P(\{HT,TH\})=\frac12,
-
 $$
 
 $$
-
 P(X=2)=P(\{HH\})=\frac14.
-
 $$
 
 This is the first full example of a random variable compressing multiple outcomes into one numerical distribution.
@@ -667,11 +569,9 @@ The real power of probability spaces appears when several random variables are d
 Suppose $\Omega$ is the set of all possible underlying outcomes, and define two random variables
 
 $$
-
 X:\Omega\to\mathbb{R},
 \qquad
 Y:\Omega\to\mathbb{R}.
-
 $$
 
 Then both variables are functions of the same underlying outcome. This is how dependence enters probability theory.
@@ -688,25 +588,19 @@ Define
 Then
 
 $$
-
 X(HH)=1,\; X(HT)=1,\; X(TH)=0,\; X(TT)=0,
-
 $$
 
 and
 
 $$
-
 Y(HH)=1,\; Y(HT)=0,\; Y(TH)=1,\; Y(TT)=0.
-
 $$
 
 Because $X$ and $Y$ are defined on the same underlying space, we can ask joint questions such as
 
 $$
-
 P(X=1,Y=0)=P(\{HT\})=\frac14.
-
 $$
 
 This is the structural source of joint distributions. They come from several measurable functions sharing one probability space.
@@ -731,17 +625,13 @@ Probability is assigned to events.
 The sample space for two coin flips may be
 
 $$
-
 \{HH,HT,TH,TT\},
-
 $$
 
 while the random variable “number of heads” takes values in
 
 $$
-
 \{0,1,2\}.
-
 $$
 
 These are not the same object.
@@ -758,9 +648,7 @@ The statement “$X\le 1$” is an event induced by the variable $X$.
 The rule
 
 $$
-
 P(A)=\frac{|A|}{|\Omega|}
-
 $$
 
 holds only when the space is finite and all elementary outcomes are equally likely.
@@ -782,9 +670,7 @@ Consider the experiment “flip a fair coin twice.”
 Because order matters, set
 
 $$
-
 \Omega=\{HH,HT,TH,TT\}.
-
 $$
 
 ### Step 2: choose the event collection
@@ -792,9 +678,7 @@ $$
 Since the space is finite, take
 
 $$
-
 \mathcal{F}=2^\Omega.
-
 $$
 
 So every subset is an event.
@@ -804,10 +688,8 @@ So every subset is an event.
 Because the flips are fair and the four ordered outcomes are equally likely,
 
 $$
-
 P(\{\omega\})=\frac14
 \qquad\text{for each }\omega\in\Omega.
-
 $$
 
 ### Step 4: define events
@@ -815,33 +697,25 @@ $$
 Let
 
 $$
-
 A=\{\text{at least one head}\}=\{HH,HT,TH\}.
-
 $$
 
 Then
 
 $$
-
 P(A)=\frac34.
-
 $$
 
 Let
 
 $$
-
 B=\{\text{exactly one head}\}=\{HT,TH\}.
-
 $$
 
 Then
 
 $$
-
 P(B)=\frac12.
-
 $$
 
 ### Step 5: define a random variable
@@ -849,9 +723,7 @@ $$
 Let $X$ be the number of heads:
 
 $$
-
 X(HH)=2,\quad X(HT)=1,\quad X(TH)=1,\quad X(TT)=0.
-
 $$
 
 ### Step 6: recover probabilities of the variable from events
@@ -859,21 +731,15 @@ $$
 Now
 
 $$
-
 P(X=0)=P(\{TT\})=\frac14,
-
 $$
 
 $$
-
 P(X=1)=P(\{HT,TH\})=\frac12,
-
 $$
 
 $$
-
 P(X=2)=P(\{HH\})=\frac14.
-
 $$
 
 ### What this one example contains

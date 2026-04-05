@@ -45,9 +45,7 @@ That is why PMFs are the right next topic after random variables. They are the s
 A **probability mass function** for a discrete random variable $X$ is
 
 $$
-
 p_X(x)=\mathbb{P}(X=x).
-
 $$
 
 This is the first formal definition of the section, but the reader should immediately attach the right interpretation to it.
@@ -59,17 +57,13 @@ There are three structural requirements:
 1. **Nonnegativity**
 
 $$
-
    p_X(x)\ge 0 \quad \text{for every } x.
-
 $$
 
 2. **Normalization**
 
 $$
-
    \sum_x p_X(x)=1,
-
 $$
 
    where the sum runs over the support of $X$.
@@ -78,9 +72,7 @@ $$
    for any set $A$ of values,
 
 $$
-
    \mathbb{P}(X\in A)=\sum_{x\in A} p_X(x).
-
 $$
 
 These are not independent facts. The PMF is just the distribution of a discrete random variable written value by value.
@@ -96,19 +88,15 @@ That is the right first intuition. You can display a PMF as a table, but mathema
 Suppose a weather variable takes values in
 
 $$
-
 \{\text{sun},\text{cloud},\text{rain}\}
-
 $$
 
 with probabilities
 
 $$
-
 p_X(\text{sun})=0.5,\qquad
 p_X(\text{cloud})=0.3,\qquad
 p_X(\text{rain})=0.2.
-
 $$
 
 This is a complete PMF because
@@ -117,17 +105,13 @@ This is a complete PMF because
 - the masses sum to 1:
 
 $$
-
   0.5+0.3+0.2=1.
-
 $$
 
 From this PMF, any event probability can be computed by summing the relevant entries. For example,
 
 $$
-
 \mathbb{P}(X\in\{\text{cloud},\text{rain}\})=0.3+0.2=0.5.
-
 $$
 
 So a PMF is not merely a definition. It is already a computational object.
@@ -147,9 +131,7 @@ This matters because the sum-to-one condition is not over all real numbers. It i
 If $X$ is Bernoulli, then the support is
 
 $$
-
 \{0,1\}.
-
 $$
 
 That fact does real work. It is the reason the PMF has only two masses, why one of them determines the other, and why compact forms like $\rho^x(1-\rho)^{1-x}$ are possible.
@@ -179,9 +161,7 @@ The PMF is the natural object for exact-state probabilities. The cumulative dist
 The CDF is
 
 $$
-
 F_X(x)=\mathbb{P}(X\le x).
-
 $$
 
 In the discrete setting, this is the running total of the PMF masses up to the threshold $x$.
@@ -193,9 +173,7 @@ PMF and CDF are not competing definitions. They answer different kinds of questi
 - PMF:
 
 $$
-
   p_X(x)=\mathbb{P}(X=x)
-
 $$
 
   answers exact-state questions.
@@ -203,9 +181,7 @@ $$
 - CDF:
 
 $$
-
   F_X(x)=\mathbb{P}(X\le x)
-
 $$
 
   answers threshold questions.
@@ -217,9 +193,7 @@ The CDF is especially useful because interval probabilities can be obtained by s
 Let $X$ take values in $\{0,1,2\}$ with
 
 $$
-
 p_X(0)=0.2,\qquad p_X(1)=0.5,\qquad p_X(2)=0.3.
-
 $$
 
 Then the CDF is
@@ -239,9 +213,7 @@ Then the CDF is
 Now consider the interval event
 
 $$
-
 1<X\le 2.
-
 $$
 
 Since only the value $2$ lies in that interval, we already know the answer should be $0.3$ from the PMF.
@@ -249,9 +221,7 @@ Since only the value $2$ lies in that interval, we already know the answer shoul
 Using the CDF,
 
 $$
-
 \mathbb{P}(1<X\le 2)=F_X(2)-F_X(1)=1-0.7=0.3.
-
 $$
 
 This example teaches the right structural lesson:
@@ -265,17 +235,13 @@ This example teaches the right structural lesson:
 Do not confuse
 
 $$
-
 F_X(x)
-
 $$
 
 with
 
 $$
-
 p_X(x).
-
 $$
 
 The PMF is the mass at one state.  
@@ -292,9 +258,7 @@ Indicator notation is introduced here because it is one of the cleanest ways to 
 For any statement $S$, the indicator
 
 $$
-
 \mathbf{1}[S]
-
 $$
 
 equals
@@ -320,9 +284,7 @@ It turns a condition into a number that can be multiplied, summed, or used as an
 The indicator
 
 $$
-
 \mathbf{1}[X=x]
-
 $$
 
 is 1 exactly when the realized value of $X$ equals $x$, and 0 otherwise.
@@ -350,25 +312,19 @@ The Bernoulli distribution is the simplest nontrivial discrete distribution and 
 A Bernoulli random variable has support
 
 $$
-
 X\in\{0,1\}.
-
 $$
 
 If
 
 $$
-
 \mathbb{P}(X=1)=\rho,
-
 $$
 
 then automatically
 
 $$
-
 \mathbb{P}(X=0)=1-\rho,
-
 $$
 
 because the two masses must sum to 1.
@@ -396,10 +352,8 @@ This already makes Bernoulli special. The support is fixed, so only the mass all
 The PMF can be written as
 
 $$
-
 p_X(x)=\rho^x(1-\rho)^{1-x},
 \qquad x\in\{0,1\}.
-
 $$
 
 This formula should not be memorized blindly. It should be read as a selector.
@@ -407,17 +361,13 @@ This formula should not be memorized blindly. It should be read as a selector.
 - If $x=1$, then
 
 $$
-
   \rho^1(1-\rho)^0=\rho.
-
 $$
 
 - If $x=0$, then
 
 $$
-
   \rho^0(1-\rho)^1=1-\rho.
-
 $$
 
 So the exponents choose the correct probability automatically.
@@ -427,9 +377,7 @@ So the exponents choose the correct probability automatically.
 An equivalent form is
 
 $$
-
 p_X(x)=\rho\,\mathbf{1}[x=1]+(1-\rho)\,\mathbf{1}[x=0].
-
 $$
 
 This is less elegant algebraically, but more transparent conceptually. It literally says:
@@ -454,9 +402,7 @@ Suppose a classifier outputs a binary correctness variable $X$ where
 If the classifier is correct with probability $\rho=0.8$, then
 
 $$
-
 p_X(1)=0.8,\qquad p_X(0)=0.2.
-
 $$
 
 Using the compact formula:
@@ -464,17 +410,13 @@ Using the compact formula:
 - for $x=1$,
 
 $$
-
   p_X(1)=0.8^1\cdot 0.2^0=0.8;
-
 $$
 
 - for $x=0$,
 
 $$
-
   p_X(0)=0.8^0\cdot 0.2^1=0.2.
-
 $$
 
 This example is worth noticing because Bernoulli variables appear everywhere:
@@ -505,21 +447,17 @@ The categorical distribution generalizes Bernoulli from two states to $d$ states
 If $X$ takes values in
 
 $$
-
 \{1,2,\dots,d\},
-
 $$
 
 then a categorical distribution is specified by probabilities
 
 $$
-
 \mathbb{P}(X=i)=\rho_i,
 \qquad
 \rho_i\ge 0,
 \qquad
 \sum_{i=1}^{d}\rho_i=1.
-
 $$
 
 ### What changes from Bernoulli to categorical
@@ -543,9 +481,7 @@ Only $d-1$ of the parameters are free.
 Once $\rho_1,\dots,\rho_{d-1}$ are chosen, the last one is forced by normalization:
 
 $$
-
 \rho_d=1-\sum_{i=1}^{d-1}\rho_i.
-
 $$
 
 This is a small but important structural fact. Normalization constraints reduce the number of independent parameters.
@@ -555,9 +491,7 @@ This is a small but important structural fact. Normalization constraints reduce 
 A compact form for the categorical PMF is
 
 $$
-
 p_X(x)=\prod_{i=1}^{d}\rho_i^{\mathbf{1}[x=i]}.
-
 $$
 
 This works because exactly one indicator exponent equals 1 and all others equal 0.
@@ -565,9 +499,7 @@ This works because exactly one indicator exponent equals 1 and all others equal 
 So if the realized state is $k$, then the product becomes
 
 $$
-
 \rho_1^0\cdots \rho_k^1\cdots \rho_d^0=\rho_k.
-
 $$
 
 The product form is compact because indicators again act as selectors.
@@ -577,37 +509,29 @@ The product form is compact because indicators again act as selectors.
 Let a weather variable take values
 
 $$
-
 \{\text{sun},\text{cloud},\text{rain}\}
-
 $$
 
 with probabilities
 
 $$
-
 \rho_{\text{sun}}=0.5,\qquad
 \rho_{\text{cloud}}=0.3,\qquad
 \rho_{\text{rain}}=0.2.
-
 $$
 
 If the realized state is rain, then
 
 $$
-
 \mathbf{1}[X=\text{sun}]=0,\qquad
 \mathbf{1}[X=\text{cloud}]=0,\qquad
 \mathbf{1}[X=\text{rain}]=1,
-
 $$
 
 and the product form becomes
 
 $$
-
 0.5^0\cdot 0.3^0\cdot 0.2^1=0.2.
-
 $$
 
 So the table form and indicator-product form are not two different models. They are two different ways of writing the same PMF.
@@ -638,17 +562,13 @@ Because categorical states are often encoded numerically in machine learning, it
 A categorical observation can be represented as a one-hot indicator vector. If $X$ takes one of $d$ states, define a vector
 
 $$
-
 z=(z_1,\dots,z_d)
-
 $$
 
 with
 
 $$
-
 z_i=\mathbf{1}[X=i].
-
 $$
 
 Then exactly one coordinate equals 1 and the rest equal 0.
@@ -656,9 +576,7 @@ Then exactly one coordinate equals 1 and the rest equal 0.
 The categorical PMF can then be written as
 
 $$
-
 p(X)=\prod_{i=1}^{d}\rho_i^{z_i}.
-
 $$
 
 This is the vectorized version of the indicator-product form.
@@ -700,9 +618,7 @@ In this section, the variable counts the **number of failures before the first s
 So the support is
 
 $$
-
 X\in\{0,1,2,\dots\}.
-
 $$
 
 That support should be noticed immediately. Zero is included because the very first trial might already be a success, in which case the number of failures before the first success is 0.
@@ -720,9 +636,7 @@ For mastery, never write a geometric PMF before stating the convention.
 Under the failures-before-success convention, the event
 
 $$
-
 X=x
-
 $$
 
 means:
@@ -733,18 +647,14 @@ means:
 If the success probability on each independent trial is $\rho$, then failure probability is
 
 $$
-
 1-\rho.
-
 $$
 
 So the probability of exactly $x$ failures before the first success is
 
 $$
-
 p_X(x)=(1-\rho)^x\rho,
 \qquad x=0,1,2,\dots
-
 $$
 
 ### Why this formula has that shape
@@ -762,9 +672,7 @@ This is one of the earliest important examples of “translate an event story in
 Let $\rho=0.2$. Then
 
 $$
-
 p_X(0)=0.2,
-
 $$
 
 because zero failures before the first success means immediate success on the first trial.
@@ -772,9 +680,7 @@ because zero failures before the first success means immediate success on the fi
 Also,
 
 $$
-
 p_X(1)=0.8\cdot 0.2=0.16,
-
 $$
 
 because one failure before the first success means:
@@ -785,9 +691,7 @@ because one failure before the first success means:
 And
 
 $$
-
 p_X(2)=0.8^2\cdot 0.2=0.128.
-
 $$
 
 Each step to the right multiplies by another factor of $1-\rho=0.8$, so the masses decay geometrically. That decay pattern is exactly where the name comes from.
@@ -807,28 +711,22 @@ A proper PMF must sum to 1. This should be checked, not merely assumed.
 We compute
 
 $$
-
 \sum_{x=0}^{\infty}(1-\rho)^x\rho
 =
 \rho\sum_{x=0}^{\infty}(1-\rho)^x.
-
 $$
 
 Now use the geometric-series identity
 
 $$
-
 \sum_{x=0}^{\infty} r^x=\frac{1}{1-r},
 \qquad |r|<1.
-
 $$
 
 Here
 
 $$
-
 r=1-\rho,
-
 $$
 
 and since $0<\rho\le 1$, we have $|1-\rho|<1$ unless $\rho=0$, which would mean success never occurs and the model degenerates.
@@ -836,7 +734,6 @@ and since $0<\rho\le 1$, we have $|1-\rho|<1$ unless $\rho=0$, which would mean 
 So
 
 $$
-
 \rho\sum_{x=0}^{\infty}(1-\rho)^x
 =
 \rho\cdot \frac{1}{1-(1-\rho)}
@@ -844,7 +741,6 @@ $$
 \rho\cdot \frac{1}{\rho}
 =
 1.
-
 $$
 
 So the PMF is properly normalized.
@@ -864,82 +760,64 @@ The geometric mean is worth deriving carefully because it illustrates a general 
 For a discrete random variable,
 
 $$
-
 \mathbb{E}[X]=\sum_x x\,p_X(x).
-
 $$
 
 So for the geometric PMF,
 
 $$
-
 \mathbb{E}[X]
 =
 \sum_{x=0}^{\infty} x(1-\rho)^x\rho.
-
 $$
 
 Let
 
 $$
-
 r=1-\rho.
-
 $$
 
 Then
 
 $$
-
 \mathbb{E}[X]
 =
 \rho\sum_{x=0}^{\infty} x r^x.
-
 $$
 
 Now start from the standard geometric series
 
 $$
-
 \sum_{x=0}^{\infty} r^x = \frac{1}{1-r},
 \qquad |r|<1.
-
 $$
 
 Differentiate with respect to $r$:
 
 $$
-
 \sum_{x=1}^{\infty} x r^{x-1} = \frac{1}{(1-r)^2}.
-
 $$
 
 Multiply by $r$:
 
 $$
-
 \sum_{x=0}^{\infty} x r^x = \frac{r}{(1-r)^2}.
-
 $$
 
 Substitute back:
 
 $$
-
 \mathbb{E}[X]
 =
 \rho\cdot \frac{1-\rho}{\rho^2}
 =
 \frac{1-\rho}{\rho}.
-
 $$
 
 So under the failures-before-success convention,
 
 $$
-
 \mathbb{E}[X]=\frac{1-\rho}{\rho}.
-
 $$
 
 ### Interpretation
@@ -952,9 +830,7 @@ This formula should be interpreted, not just memorized.
 For example, if $\rho=0.2$, then
 
 $$
-
 \mathbb{E}[X]=\frac{0.8}{0.2}=4.
-
 $$
 
 So on average, we expect 4 failures before the first success.
@@ -978,25 +854,19 @@ Some texts define a geometric variable $Y$ as the **number of trials until the f
 Then the support is
 
 $$
-
 Y\in\{1,2,3,\dots\},
-
 $$
 
 and the PMF is
 
 $$
-
 p_Y(y)=(1-\rho)^{y-1}\rho.
-
 $$
 
 Under that convention, the mean is
 
 $$
-
 \mathbb{E}[Y]=\frac{1}{\rho}.
-
 $$
 
 ### Why the two formulas differ by exactly one
@@ -1004,17 +874,13 @@ $$
 The variables are related by
 
 $$
-
 Y=X+1.
-
 $$
 
 So the difference in their means is also exactly one:
 
 $$
-
 \mathbb{E}[Y]=\mathbb{E}[X]+1.
-
 $$
 
 This is not a minor technicality. It is a major source of mistakes in homework, software libraries, and textbook comparisons.
@@ -1038,9 +904,7 @@ The geometric distribution is not only important because it models waiting time.
 For $m,n\ge 0$,
 
 $$
-
 \mathbb{P}(X>m+n\mid X>m)=\mathbb{P}(X>n).
-
 $$
 
 ### What this means
@@ -1072,9 +936,7 @@ Define $X$ as the number of non-click impressions before the first click.
 Because the first click may happen immediately or after any finite number of misses,
 
 $$
-
 X\in\{0,1,2,\dots\}.
-
 $$
 
 ### Step 2: identify the distribution family
@@ -1084,9 +946,7 @@ This is a geometric model under the failures-before-success convention.
 ### Step 3: write the PMF
 
 $$
-
 p_X(x)=(1-0.25)^x(0.25)=0.75^x\cdot 0.25.
-
 $$
 
 ### Step 4: compute a few values
@@ -1094,25 +954,19 @@ $$
 Immediate click:
 
 $$
-
 p_X(0)=0.25.
-
 $$
 
 One miss before first click:
 
 $$
-
 p_X(1)=0.75\cdot 0.25=0.1875.
-
 $$
 
 Two misses before first click:
 
 $$
-
 p_X(2)=0.75^2\cdot 0.25=0.140625.
-
 $$
 
 ### Step 5: compute a cumulative probability
@@ -1122,33 +976,25 @@ What is the probability the first click occurs within the first three impression
 Under the failures-before-success convention, “within the first three impressions” means
 
 $$
-
 X\le 2.
-
 $$
 
 So
 
 $$
-
 \mathbb{P}(X\le 2)=p_X(0)+p_X(1)+p_X(2).
-
 $$
 
 That is
 
 $$
-
 0.25+0.1875+0.140625=0.578125.
-
 $$
 
 ### Step 6: compute the mean
 
 $$
-
 \mathbb{E}[X]=\frac{1-\rho}{\rho}=\frac{0.75}{0.25}=3.
-
 $$
 
 So on average there are 3 misses before the first click.
