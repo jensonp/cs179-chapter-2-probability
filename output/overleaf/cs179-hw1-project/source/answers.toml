@@ -4,7 +4,7 @@
 # Short answer fields should stay inline; reserve $$...$$ blocks and multi-line derivations for work/reasoning fields.
 
 # Page 1
-student_name = '''jenson'''
+student_name = '''Jenson Phan'''
 student_ucinetid = '''jensonp'''
 
 # Page 2
@@ -12,30 +12,66 @@ student_ucinetid = '''jensonp'''
 
 # Page 3
 # `problem1_p_*` fields are the small answer boxes; put derivations and $$...$$ in `problem1_work*`.
-problem1_p_d_eq_1 = ''
-problem1_p_c_eq_1_d_eq_1 = ''
-problem1_p_d_eq_1_given_c_eq_1 = ''
-problem1_p_c_eq_1_given_t_eq_1_d_eq_0 = ''
-problem1_work = ''
-problem1_work2 = ''
-problem1_work3 = ''
-problem1_work4 = ''
+problem1_p_d_eq_1 = '''$$ P(C = 1, D = 1) = P(C = 1)P(D = 1 \mid C = 1) $$ '''
+problem1_p_c_eq_1_d_eq_1 = '''
+
+'''
+problem1_p_d_eq_1_given_c_eq_1 = '''
+
+'''
+problem1_p_c_eq_1_given_t_eq_1_d_eq_0 = '''
+
+'''
+problem1_work = '''
+$$
+
+$$
+'''
+problem1_work2 = '''
+
+'''
+problem1_work3 = '''
+
+'''
+problem1_work4 = '''
+
+'''
 
 # Page 4
 # `problem2_*` answer fields are short boxes; use `problem2_work*` for derivations and block math.
-problem2_p_coolant_low_given_warning = ''
-problem2_p_coolant_low_given_warning_and_hot = ''
-problem2_state_count = ''
-problem2_parameter_count = ''
-problem2_work = ''
-problem2_work2 = ''
+problem2_p_coolant_low_given_warning = '''
+
+'''
+problem2_p_coolant_low_given_warning_and_hot = '''
+
+'''
+problem2_state_count = '''
+
+'''
+problem2_parameter_count = '''
+
+'''
+problem2_work = '''
+
+'''
+problem2_work2 = '''
+
+'''
 
 # Page 5
 # `problem3_q*_reasoning` fields are the large reasoning boxes; the yes/no fields are booleans.
-problem3_q1_reasoning = ''
-problem3_q2_reasoning = ''
-problem3_q3_reasoning = ''
-problem3_q4_reasoning = ''
+problem3_q1_reasoning = '''
+
+'''
+problem3_q2_reasoning = '''
+
+'''
+problem3_q3_reasoning = '''
+
+'''
+problem3_q4_reasoning = '''
+
+'''
 problem3_q1_yes = false
 problem3_q1_no = false
 problem3_q2_yes = false
@@ -50,29 +86,65 @@ problem3_q4_set3_yes = false
 problem3_q4_set3_no = false
 
 # Page 6
-problem4_beta_histogram_notes = ''
-problem4_geometric_histogram_notes = ''
+problem4_beta_histogram_notes = '''
+
+'''
+problem4_geometric_histogram_notes = '''
+
+'''
 
 # Page 7
 # `problem5_*_rho/loglik/bic` fields are short answers; use `problem5_*_work*` for derivations.
-problem5_short_one_coin_rho = ''
-problem5_short_two_coin_rhos = ''
-problem5_short_one_coin_loglik = ''
-problem5_short_two_coin_loglik = ''
-problem5_short_one_coin_bic = ''
-problem5_short_two_coin_bic = ''
-problem5_short_work_mle = ''
-problem5_short_work_loglik = ''
-problem5_short_work = ''
+problem5_short_one_coin_rho = '''
+
+'''
+problem5_short_two_coin_rhos = '''
+
+'''
+problem5_short_one_coin_loglik = '''
+
+'''
+problem5_short_two_coin_loglik = '''
+
+'''
+problem5_short_one_coin_bic = '''
+
+'''
+problem5_short_two_coin_bic = '''
+
+'''
+problem5_short_work_mle = '''
+
+'''
+problem5_short_work_loglik = '''
+
+'''
+problem5_short_work = '''
+
+'''
 
 # Page 8
 # `problem5_long_*` answer fields are short boxes; use `problem5_long_work*` for derivations.
-problem5_long_one_coin_rho = ''
-problem5_long_two_coin_rhos = ''
-problem5_long_one_coin_bic = ''
-problem5_long_two_coin_bic = ''
-problem5_long_work_mle = ''
-problem5_long_work = ''
+problem5_long_one_coin_rho = '''
+
+'''
+problem5_long_two_coin_rhos = '''
+
+'''
+problem5_long_one_coin_bic = '''
+
+'''
+problem5_long_two_coin_bic = '''
+
+'''
+problem5_long_work_mle = '''
+
+'''
+problem5_long_work = '''
+
+'''
 
 # Page 9
-statement_of_collaboration = ''
+statement_of_collaboration = '''
+
+'''

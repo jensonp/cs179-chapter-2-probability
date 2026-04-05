@@ -22,7 +22,7 @@ REPO_ROOT = SCRIPT_DIR.parents[3]
 
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 from hw1_layout import ALL_FIELD_NAMES, validate_layout_specs  # noqa: E402
-from render_hw1_latex_answers import load_answers, render_answers_tex  # noqa: E402
+from render_hw1_latex_answers import collect_answers_content_issues, load_answers, render_answers_tex  # noqa: E402
 
 
 def release_target() -> tuple[str, str]:
@@ -337,7 +337,18 @@ def regenerate_answers_tex_from_toml(doc_path: Path) -> None:
             "Create it or pass --no-regenerate to compile an existing answers.tex."
         )
 
-    rendered_from_toml = render_answers_tex(load_answers(answers_toml_path))
+    answers = load_answers(answers_toml_path)
+    issues = collect_answers_content_issues(answers)
+    if issues:
+        preview = "; ".join(issues[:3])
+        suffix = "" if len(issues) <= 3 else f"; ... ({len(issues)} content warnings total)"
+        print(
+            "warning: answers.toml contains content that does not match the recommended field type: "
+            f"{preview}{suffix}",
+            file=sys.stderr,
+        )
+
+    rendered_from_toml = render_answers_tex(answers)
     existing = answers_path.read_text(encoding="utf-8") if answers_path.exists() else None
     if existing != rendered_from_toml:
         answers_path.write_text(rendered_from_toml, encoding="utf-8")
@@ -348,7 +359,7 @@ OVERFULL_RE = re.compile(r"^(Overfull \\\\[hv]box .*?)$", re.MULTILINE)
 UNDERFULL_RE = re.compile(r"^(Underfull \\\\[hv]box .*?)$", re.MULTILINE)
 
 
-def check_log_for_layout_issues(doc_path: Path) -> None:
+def check_log_for_layout_issues(doc_path: Path, *, strict: bool = False) -> None:
     log_path = doc_path.parent.parent / BUILD_DIR_NAME / "main.log"
     if not log_path.exists():
         return
@@ -365,11 +376,14 @@ def check_log_for_layout_issues(doc_path: Path) -> None:
     if overfull:
         preview = "; ".join(overfull[:3])
         suffix = "" if len(overfull) <= 3 else f"; ... ({len(overfull)} overfull warnings total)"
-        raise RuntimeError(
+        message = (
             "Detected rendered content overflow in build/main.log: "
             f"{preview}{suffix}. Shorten the content, move work into a larger field, "
             "or adjust the layout/font settings."
         )
+        if strict:
+            raise RuntimeError(message)
+        print(f"warning: {message}", file=sys.stderr)
 
 
 def parse_args() -> argparse.Namespace:
@@ -383,6 +397,11 @@ def parse_args() -> argparse.Namespace:
         "--no-regenerate",
         action="store_true",
         help="Skip regenerating answers.tex from answers.toml before compile.",
+    )
+    parser.add_argument(
+        "--strict-layout",
+        action="store_true",
+        help="Treat rendered overfull box warnings as hard build failures.",
     )
     return parser.parse_args()
 
@@ -414,7 +433,7 @@ def main() -> None:
     command, cwd = compiler_command(kind, executable, doc_path)
     result = subprocess.run(command, cwd=cwd, check=False)
     if result.returncode == 0:
-        check_log_for_layout_issues(doc_path)
+        check_log_for_layout_issues(doc_path, strict=args.strict_layout)
     raise SystemExit(result.returncode)
 
 

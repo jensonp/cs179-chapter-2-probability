@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import subprocess
 import textwrap
@@ -41,6 +42,13 @@ BLOCK_MATH_MARKERS = (
     r"\begin{multline",
     r"\begin{cases",
     r"\begin{array",
+)
+DISPLAY_WRAPPER_PATTERNS = (
+    (re.compile(r"^\s*\$\$(?P<body>.*)\$\$\s*$", re.DOTALL), "$", "$"),
+    (re.compile(r"^\s*\\\\\[(?P<body>.*)\\\\\]\s*$", re.DOTALL), "$", "$"),
+    (re.compile(r"^\s*\\begin\{equation\*?\}(?P<body>.*)\\end\{equation\*?\}\s*$", re.DOTALL), "$", "$"),
+    (re.compile(r"^\s*\\begin\{gather\*?\}(?P<body>.*)\\end\{gather\*?\}\s*$", re.DOTALL), "$", "$"),
+    (re.compile(r"^\s*\\begin\{multline\*?\}(?P<body>.*)\\end\{multline\*?\}\s*$", re.DOTALL), "$", "$"),
 )
 RAW_BLOCK_HINTS = BLOCK_MATH_MARKERS + (
     r"\begin{",
@@ -150,12 +158,47 @@ def default_toml_template() -> str:
     return render_answers_toml({})
 
 
+def is_blank_text_value(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+
+    stripped = value.strip()
+    if not stripped:
+        return True
+
+    wrapped_body = unwrap_display_math_body(stripped)
+    if wrapped_body is None:
+        return False
+
+    return not collapse_inline_whitespace(wrapped_body)
+
+
 def _looks_like_raw_latex_block(text: str) -> bool:
     stripped = text.lstrip()
     return any(marker in stripped for marker in RAW_BLOCK_HINTS)
 
 
+def unwrap_display_math_body(text: str) -> str | None:
+    stripped = text.strip()
+    if not stripped:
+        return None
+
+    for pattern, _, _ in DISPLAY_WRAPPER_PATTERNS:
+        match = pattern.match(stripped)
+        if match:
+            return match.group("body")
+
+    return None
+
+
 def preserve_user_linebreaks(text: str) -> str:
+    if is_blank_text_value(text):
+        return ""
+
+    stripped_text = text.strip()
+    if stripped_text and _looks_like_raw_latex_block(stripped_text):
+        return stripped_text
+
     paragraphs: list[str] = []
     current_lines: list[str] = []
 
@@ -182,8 +225,33 @@ def preserve_user_linebreaks(text: str) -> str:
     return "\n\\par\n".join(paragraphs)
 
 
+def collapse_inline_whitespace(text: str) -> str:
+    text = text.replace("\n", " ")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def coerce_inline_field_text(text: str) -> str:
+    if is_blank_text_value(text):
+        return ""
+
+    stripped = text.strip()
+
+    wrapped_body = unwrap_display_math_body(stripped)
+    if wrapped_body is not None:
+        body = collapse_inline_whitespace(wrapped_body)
+        body = body.replace(r"\\", " ")
+        body = re.sub(r"\s+", " ", body).strip()
+        return f"${body}$" if body else ""
+
+    if "\n" in stripped:
+        return collapse_inline_whitespace(stripped)
+
+    return text
+
+
 def answer_to_tex(field: TextFieldSpec | CheckboxSpec, value: object) -> str:
-    if value is None:
+    if value is None or is_blank_text_value(value):
         return ""
     if field.name in CHECKBOX_NAMES and isinstance(value, bool):
         return r"\Checkmark" if value else ""
@@ -192,23 +260,27 @@ def answer_to_tex(field: TextFieldSpec | CheckboxSpec, value: object) -> str:
     if isinstance(value, (int, float)):
         return str(value)
     text = str(value)
+    if is_blank_text_value(text):
+        return ""
+    if isinstance(field, TextFieldSpec) and field.content_mode == "inline":
+        return coerce_inline_field_text(text)
     if isinstance(field, TextFieldSpec) and field.preserve_linebreaks:
         return preserve_user_linebreaks(text)
     return text
 
 
-def validate_answers_content(answers: dict[str, object]) -> None:
-    errors: list[str] = []
+def collect_answers_content_issues(answers: dict[str, object]) -> list[str]:
+    issues: list[str] = []
 
     for name, value in answers.items():
-        if value in (None, ""):
+        if value is None or value == "" or is_blank_text_value(value):
             continue
 
         if name in CHECKBOX_NAMES:
             continue
 
         if isinstance(value, bool):
-            errors.append(
+            issues.append(
                 f"{name}: boolean values are only valid for checkbox fields; use quoted text or raw LaTeX here."
             )
             continue
@@ -221,19 +293,23 @@ def validate_answers_content(answers: dict[str, object]) -> None:
         has_newlines = "\n" in text
         has_block_math = any(marker in text for marker in BLOCK_MATH_MARKERS)
         if has_newlines or has_block_math:
-            errors.append(
+            issues.append(
                 f"{name}: short answer slots only support inline/final answers. "
                 "Move derivations, display math, or multi-line work into the corresponding "
                 "`*_work`, `*_reasoning`, or notes field."
             )
 
-    if errors:
-        raise SystemExit("Invalid answers.toml content:\n" + "\n".join(errors))
+    return issues
+
+
+def validate_answers_content(answers: dict[str, object]) -> None:
+    issues = collect_answers_content_issues(answers)
+    if issues:
+        raise SystemExit("Invalid answers.toml content:\n" + "\n".join(issues))
 
 
 def render_answers_tex(answers: dict[str, object]) -> str:
     validate_layout_specs()
-    validate_answers_content(answers)
     pages = fields_by_page()
     lines = [
         "% !TEX root = main.tex",
@@ -261,8 +337,8 @@ def toml_literal(value: object) -> str:
         return "true" if value else "false"
     if isinstance(value, (int, float)):
         return str(value)
-    if value in (None, ""):
-        return "''"
+    if value is None or value == "" or is_blank_text_value(value):
+        return "'''\n\n'''"
     text = str(value)
     return "'''" + text + "'''"
 
@@ -320,8 +396,10 @@ def render_readme() -> str:
         Notes:
         - Answer content is raw LaTeX, so math, aligned equations, and `\\includegraphics` all work.
         - Keep short answer fields inline. Use `*_work`, `*_reasoning`, and notes fields for multi-line derivations or `$$...$$`.
+        - If a short answer field receives display math or multi-line content, local builds warn and coerce it to the safest inline form they can render.
+        - Empty display-math placeholders like `$$ ... $$` with no body are treated as blank so they do not break the build.
         - Block/work fields preserve manual line breaks for plain text and auto-scale content down to fit their boxes.
-        - Local builds fail fast on invalid field usage and on overfull LaTeX boxes, which catches layout collisions/overflow early.
+        - Overfull LaTeX boxes are still surfaced during build so layout collisions/overflow remain visible.
         - Checkbox markers accept `\\Checkmark` in `source/answers.tex`, or `true` / `false` in `source/answers.toml`.
         - The layout is faithful because the original `source/cs179-hw1.pdf` is embedded page-for-page.
         """
