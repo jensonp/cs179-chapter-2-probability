@@ -114,9 +114,7 @@ $$
 For any $x,x'$ and $\alpha \in [0,1]$,
 
 $$
-f\bigl(\alpha x + (1-\alpha)x'\bigr)
-=
-(\alpha x + (1-\alpha)x')^2.
+f\bigl(\alpha x + (1-\alpha)x'\bigr) = (\alpha x + (1-\alpha)x')^2.
 $$
 
 Expanding gives
@@ -190,11 +188,7 @@ $$
 while
 
 $$
-\mathbb{E}[f(X)]
-=
-\frac{1}{2}f(0)+\frac{1}{2}f(2)
-=
-2.
+\mathbb{E}[f(X)] = \frac{1}{2}f(0)+\frac{1}{2}f(2) = 2.
 $$
 
 So indeed
@@ -210,33 +204,19 @@ Now connect the abstract definitions back to estimation.
 For a canonical exponential-family model,
 
 $$
-p_\theta(x)
-=
-h(x)\exp\!\bigl(\theta^\top \phi(x) - A(\theta)\bigr),
+p_\theta(x)=h(x)\exp\!\bigl(\theta^\top \phi(x) - A(\theta)\bigr),
 $$
 
 the log-likelihood of i.i.d. data $x^{(1)},\dots,x^{(m)}$ is
 
 $$
-\ell(\theta)
-=
-\sum_{i=1}^{m}\log h(x^{(i)})
-+
-\theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
--
-mA(\theta).
+\ell(\theta)=\sum_{i=1}^{m}\log h(x^{(i)}) + \theta^\top \sum_{i=1}^{m}\phi(x^{(i)}) - mA(\theta).
 $$
 
 Therefore the negative log-likelihood is
 
 $$
--\ell(\theta)
-=
-mA(\theta)
--
-\theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
--
-\sum_{i=1}^{m}\log h(x^{(i)}).
+-\ell(\theta)=mA(\theta) - \theta^\top \sum_{i=1}^{m}\phi(x^{(i)}) - \sum_{i=1}^{m}\log h(x^{(i)}).
 $$
 
 The last term is constant in $\theta$.  
@@ -248,17 +228,13 @@ So all curvature comes from the log-partition function $A(\theta)$.
 Differentiating $A(\theta)$ gives
 
 $$
-\frac{\partial A(\theta)}{\partial \theta_j}
-=
-\mathbb{E}_\theta[\phi_j(X)].
+\frac{\partial A(\theta)}{\partial \theta_j} = \mathbb{E}_\theta[\phi_j(X)].
 $$
 
 Differentiating again gives
 
 $$
-\frac{\partial^2 A(\theta)}{\partial \theta_j \partial \theta_k}
-=
-\mathrm{Cov}_\theta\!\bigl(\phi_j(X),\phi_k(X)\bigr).
+\frac{\partial^2 A(\theta)}{\partial \theta_j \partial \theta_k} = \mathrm{Cov}_\theta\!\bigl(\phi_j(X),\phi_k(X)\bigr).
 $$
 
 In matrix form,
@@ -271,12 +247,7 @@ Now apply the positive-semidefinite test.
 For any vector $v$,
 
 $$
-v^\top \nabla^2 A(\theta) v
-=
-v^\top \mathrm{Cov}_\theta(\phi(X)) v
-=
-\mathrm{Var}_\theta\!\bigl(v^\top \phi(X)\bigr)
-\ge 0.
+v^\top \nabla^2 A(\theta) v = v^\top \mathrm{Cov}_\theta(\phi(X)) v = \mathrm{Var}_\theta\!\bigl(v^\top \phi(X)\bigr) \ge 0.
 $$
 
 Variance is never negative, so the Hessian is positive semidefinite.  

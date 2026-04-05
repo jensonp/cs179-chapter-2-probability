@@ -46,23 +46,13 @@ When $f$ is monotone and invertible, the formula above is valid directly.
 If $f$ is increasing, then
 
 $$
-F_X(x)
-=
-\mathbb{P}(X \le x)
-=
-\mathbb{P}(f(Z)\le x)
-=
-\mathbb{P}(Z \le g(x))
-=
-F_Z(g(x)).
+F_X(x)=\mathbb{P}(X \le x)=\mathbb{P}(f(Z)\le x)=\mathbb{P}(Z \le g(x))=F_Z(g(x)).
 $$
 
 Differentiating gives
 
 $$
-p_X(x)
-=
-p_Z(g(x))\,g'(x).
+p_X(x)=p_Z(g(x))\,g'(x).
 $$
 
 If $f$ is decreasing, the derivative is negative, so the absolute value is needed to keep the density nonnegative.
@@ -192,13 +182,7 @@ $$
 Therefore
 
 $$
-p_X(x)
-=
-\frac{1}{x\sqrt{2\pi\sigma^2}}
-\exp\!\left(
--\frac{(\log x-\mu)^2}{2\sigma^2}
-\right),
-\qquad x>0.
+p_X(x)=\frac{1}{x\sqrt{2\pi\sigma^2}}\exp\!\left(-\frac{(\log x-\mu)^2}{2\sigma^2}\right), \qquad x>0.
 $$
 
 The extra factor $1/x$ is the Jacobian correction.  
@@ -226,9 +210,7 @@ $$
 then
 
 $$
-\mathbb{P}(1 \le X \le e)
-=
-\mathbb{P}(0 \le Z \le 1).
+\mathbb{P}(1 \le X \le e)=\mathbb{P}(0 \le Z \le 1).
 $$
 
 This is the clean operational lesson: transformed-variable probabilities are often easiest to compute by mapping the event back to the base variable.
@@ -241,9 +223,7 @@ Let $X=f(Z)$, with inverse $g=f^{-1}$.
 Then
 
 $$
-p_X(x)
-=
-p_Z(g(x))\,\bigl|\det J_g(x)\bigr|,
+p_X(x)=p_Z(g(x))\,\bigl|\det J_g(x)\bigr|,
 $$
 
 where $J_g(x)$ is the Jacobian matrix of the inverse map.
@@ -251,9 +231,7 @@ where $J_g(x)$ is the Jacobian matrix of the inverse map.
 Its $(i,j)$ entry is
 
 $$
-\bigl(J_g(x)\bigr)_{ij}
-=
-\frac{\partial g_i}{\partial x_j}.
+\bigl(J_g(x)\bigr)_{ij}=\frac{\partial g_i}{\partial x_j}.
 $$
 
 The determinant is the local volume-scaling factor.
@@ -285,9 +263,7 @@ $$
 So the inverse Jacobian is
 
 $$
-J_g(x)
-=
-\begin{pmatrix}
+J_g(x)=\begin{pmatrix}
 1/2 & 0 \\
 0 & 1/3
 \end{pmatrix},
@@ -314,9 +290,7 @@ Copulas separate two modeling tasks that are often mixed together:
 For two variables,
 
 $$
-\mathbb{P}(X_1 \le x_1, X_2 \le x_2)
-=
-C\bigl(F_1(x_1), F_2(x_2)\bigr),
+\mathbb{P}(X_1 \le x_1, X_2 \le x_2)=C\bigl(F_1(x_1), F_2(x_2)\bigr),
 $$
 
 where $F_1$ and $F_2$ are the marginal CDFs.
@@ -369,11 +343,7 @@ where $f$ is invertible.
 Then
 
 $$
-\log p_X(x)
-=
-\log p_Z(f^{-1}(x))
-+
-\log\bigl|\det J_{f^{-1}}(x)\bigr|.
+\log p_X(x)=\log p_Z(f^{-1}(x))+\log\bigl|\det J_{f^{-1}}(x)\bigr|.
 $$
 
 Flows are often built as compositions of simple invertible layers:

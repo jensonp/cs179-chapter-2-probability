@@ -62,20 +62,13 @@ It is a numerical measure of uncertainty built from the outcome probabilities th
 A fair coin has
 
 $$
-H[X]
-=
--0.5\log_2 0.5 - 0.5\log_2 0.5
-=
-1 \text{ bit}.
+H[X] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}.
 $$
 
 A biased coin with probabilities $(0.9, 0.1)$ has
 
 $$
-H[X]
-=
--0.9\log_2 0.9 - 0.1\log_2 0.1
-\approx 0.47 \text{ bits}.
+H[X] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47 \text{ bits}.
 $$
 
 The biased coin is more predictable, so it carries less uncertainty per flip.
@@ -93,12 +86,7 @@ $$
 Then
 
 $$
-H[X]
-=
--0.999\log_2 0.999
--
-0.001\log_2 0.001
-\approx 0.011 \text{ bits}.
+H[X] = -0.999\log_2 0.999 - 0.001\log_2 0.001 \approx 0.011 \text{ bits}.
 $$
 
 That number is tiny because almost every symbol is the same.  
@@ -111,17 +99,13 @@ Conditional entropy measures the uncertainty left in one variable after another 
 It can be written as
 
 $$
-H[X \mid Y]
-=
-\sum_y p(y)\,H[X \mid Y=y],
+H[X \mid Y] = \sum_y p(y)\,H[X \mid Y=y],
 $$
 
 or equivalently,
 
 $$
-H[X \mid Y]
-=
-H[X,Y]-H[Y].
+H[X \mid Y] = H[X,Y]-H[Y].
 $$
 
 The average form should be read first.  
@@ -172,9 +156,7 @@ This says the shared information is the amount by which the total separate uncer
 Mutual information can also be written as a KL divergence:
 
 $$
-I[X;Y]
-=
-D\!\bigl(p(x,y)\,\|\,p(x)p(y)\bigr).
+I[X;Y] = D\!\bigl(p(x,y)\,\|\,p(x)p(y)\bigr).
 $$
 
 This form says mutual information is the penalty for pretending the joint distribution factorizes when it actually does not.
@@ -207,27 +189,17 @@ Suppose the conditional commute distributions are:
 The conditional entropies are
 
 $$
-H[C \mid R=\text{clear}]
-=
--0.9\log_2 0.9 - 0.1\log_2 0.1
-\approx 0.47,
+H[C \mid R=\text{clear}] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47,
 $$
 
 $$
-H[C \mid R=\text{rain}]
-=
--0.5\log_2 0.5 - 0.5\log_2 0.5
-=
-1.
+H[C \mid R=\text{rain}] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1.
 $$
 
 Averaging with the weather probabilities gives
 
 $$
-H[C \mid R]
-=
-0.9(0.47)+0.1(1)
-\approx 0.52 \text{ bits}.
+H[C \mid R] = 0.9(0.47)+0.1(1) \approx 0.52 \text{ bits}.
 $$
 
 From the marginal commute distribution one obtains
@@ -239,11 +211,7 @@ $$
 So the mutual information is
 
 $$
-I[C;R]
-=
-H[C]-H[C \mid R]
-\approx 0.72 - 0.52
-\approx 0.20 \text{ bits}.
+I[C;R] = H[C]-H[C \mid R] \approx 0.72 - 0.52 \approx 0.20 \text{ bits}.
 $$
 
 Interpretation:
@@ -260,9 +228,7 @@ KL divergence measures mismatch between two distributions.
 For discrete distributions $p$ and $q$,
 
 $$
-D(p \,\|\, q)
-=
-\sum_x p(x)\log\!\left(\frac{p(x)}{q(x)}\right).
+D(p \,\|\, q) = \sum_x p(x)\log\!\left(\frac{p(x)}{q(x)}\right).
 $$
 
 This should be read in order:
@@ -335,11 +301,7 @@ $$
 Then
 
 $$
-D(p \,\|\, q)
-=
-0.8\log\!\left(\frac{0.8}{0.5}\right)
-+
-0.2\log\!\left(\frac{0.2}{0.5}\right).
+D(p \,\|\, q) = 0.8\log\!\left(\frac{0.8}{0.5}\right) + 0.2\log\!\left(\frac{0.2}{0.5}\right).
 $$
 
 The first contribution is positive because $q$ underweights the more likely event under $p$.  
