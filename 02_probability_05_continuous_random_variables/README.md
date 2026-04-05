@@ -161,8 +161,8 @@ That gives the step-function description:
     <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>$0$</td><td>$x<0$</td></tr>
-    <tr><td>$0.7$</td><td>$0 \le x < 1$</td></tr>
+    <tr><td>$0$</td><td>$x \lt 0$</td></tr>
+    <tr><td>$0.7$</td><td>$0 \le x \lt 1$</td></tr>
     <tr><td>$1$</td><td>$x \ge 1$</td></tr>
   </tbody>
 </table>
@@ -220,7 +220,7 @@ So
     <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>$0$</td><td>$x<0$</td></tr>
+    <tr><td>$0$</td><td>$x \lt 0$</td></tr>
     <tr><td>$x/2$</td><td>$0 \le x \le 2$</td></tr>
     <tr><td>$1$</td><td>$x>2$</td></tr>
   </tbody>
@@ -290,9 +290,9 @@ So the mixed-distribution CDF is
     <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
   </thead>
   <tbody>
-    <tr><td>$0$</td><td>$x<0$</td></tr>
+    <tr><td>$0$</td><td>$x \lt 0$</td></tr>
     <tr><td>$0.7$</td><td>$x=0$</td></tr>
-    <tr><td>$0.7 + 0.3x$</td><td>$0<x<1$</td></tr>
+    <tr><td>$0.7 + 0.3x$</td><td>$0 \lt x \lt 1$</td></tr>
     <tr><td>$1$</td><td>$x \ge 1$</td></tr>
   </tbody>
 </table>
