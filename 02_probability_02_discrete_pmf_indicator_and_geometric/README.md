@@ -57,13 +57,13 @@ There are three structural requirements:
 1. **Nonnegativity**
 
 $$
-   p_X(x)\ge 0 \quad \text{for every } x.
+p_X(x)\ge 0 \quad \text{for every } x.
 $$
 
 2. **Normalization**
 
 $$
-   \sum_x p_X(x)=1,
+\sum_x p_X(x)=1,
 $$
 
    where the sum runs over the support of $X$.
@@ -72,7 +72,7 @@ $$
    for any set $A$ of values,
 
 $$
-   \mathbb{P}(X\in A)=\sum_{x\in A} p_X(x).
+\mathbb{P}(X\in A)=\sum_{x\in A} p_X(x).
 $$
 
 These are not independent facts. The PMF is just the distribution of a discrete random variable written value by value.
@@ -93,11 +93,7 @@ $$
 
 with probabilities
 
-$$
-p_X(\text{sun})=0.5,\qquad
-p_X(\text{cloud})=0.3,\qquad
-p_X(\text{rain})=0.2.
-$$
+$$ p_X(\text{sun})=0.5,\qquad p_X(\text{cloud})=0.3,\qquad p_X(\text{rain})=0.2. $$
 
 This is a complete PMF because
 
@@ -105,7 +101,7 @@ This is a complete PMF because
 - the masses sum to 1:
 
 $$
-  0.5+0.3+0.2=1.
+0.5+0.3+0.2=1.
 $$
 
 From this PMF, any event probability can be computed by summing the relevant entries. For example,
@@ -173,7 +169,7 @@ PMF and CDF are not competing definitions. They answer different kinds of questi
 - PMF:
 
 $$
-  p_X(x)=\mathbb{P}(X=x)
+p_X(x)=\mathbb{P}(X=x)
 $$
 
   answers exact-state questions.
@@ -181,7 +177,7 @@ $$
 - CDF:
 
 $$
-  F_X(x)=\mathbb{P}(X\le x)
+F_X(x)=\mathbb{P}(X\le x)
 $$
 
   answers threshold questions.
@@ -351,23 +347,20 @@ This already makes Bernoulli special. The support is fixed, so only the mass all
 
 The PMF can be written as
 
-$$
-p_X(x)=\rho^x(1-\rho)^{1-x},
-\qquad x\in\{0,1\}.
-$$
+$$ p_X(x)=\rho^x(1-\rho)^{1-x}, \qquad x\in\{0,1\}. $$
 
 This formula should not be memorized blindly. It should be read as a selector.
 
 - If $x=1$, then
 
 $$
-  \rho^1(1-\rho)^0=\rho.
+\rho^1(1-\rho)^0=\rho.
 $$
 
 - If $x=0$, then
 
 $$
-  \rho^0(1-\rho)^1=1-\rho.
+\rho^0(1-\rho)^1=1-\rho.
 $$
 
 So the exponents choose the correct probability automatically.
@@ -410,13 +403,13 @@ Using the compact formula:
 - for $x=1$,
 
 $$
-  p_X(1)=0.8^1\cdot 0.2^0=0.8;
+p_X(1)=0.8^1\cdot 0.2^0=0.8;
 $$
 
 - for $x=0$,
 
 $$
-  p_X(0)=0.8^0\cdot 0.2^1=0.2.
+p_X(0)=0.8^0\cdot 0.2^1=0.2.
 $$
 
 This example is worth noticing because Bernoulli variables appear everywhere:
@@ -452,13 +445,7 @@ $$
 
 then a categorical distribution is specified by probabilities
 
-$$
-\mathbb{P}(X=i)=\rho_i,
-\qquad
-\rho_i\ge 0,
-\qquad
-\sum_{i=1}^{d}\rho_i=1.
-$$
+$$ \mathbb{P}(X=i)=\rho_i, \qquad \rho_i\ge 0, \qquad \sum_{i=1}^{d}\rho_i=1. $$
 
 ### What changes from Bernoulli to categorical
 
@@ -514,19 +501,11 @@ $$
 
 with probabilities
 
-$$
-\rho_{\text{sun}}=0.5,\qquad
-\rho_{\text{cloud}}=0.3,\qquad
-\rho_{\text{rain}}=0.2.
-$$
+$$ \rho_{\text{sun}}=0.5,\qquad \rho_{\text{cloud}}=0.3,\qquad \rho_{\text{rain}}=0.2. $$
 
 If the realized state is rain, then
 
-$$
-\mathbf{1}[X=\text{sun}]=0,\qquad
-\mathbf{1}[X=\text{cloud}]=0,\qquad
-\mathbf{1}[X=\text{rain}]=1,
-$$
+$$ \mathbf{1}[X=\text{sun}]=0,\qquad \mathbf{1}[X=\text{cloud}]=0,\qquad \mathbf{1}[X=\text{rain}]=1, $$
 
 and the product form becomes
 
@@ -652,10 +631,7 @@ $$
 
 So the probability of exactly $x$ failures before the first success is
 
-$$
-p_X(x)=(1-\rho)^x\rho,
-\qquad x=0,1,2,\dots
-$$
+$$ p_X(x)=(1-\rho)^x\rho, \qquad x=0,1,2,\dots $$
 
 ### Why this formula has that shape
 
@@ -710,18 +686,11 @@ A proper PMF must sum to 1. This should be checked, not merely assumed.
 
 We compute
 
-$$
-\sum_{x=0}^{\infty}(1-\rho)^x\rho
-=
-\rho\sum_{x=0}^{\infty}(1-\rho)^x.
-$$
+$$ \sum_{x=0}^{\infty}(1-\rho)^x\rho = \rho\sum_{x=0}^{\infty}(1-\rho)^x. $$
 
 Now use the geometric-series identity
 
-$$
-\sum_{x=0}^{\infty} r^x=\frac{1}{1-r},
-\qquad |r|<1.
-$$
+$$ \sum_{x=0}^{\infty} r^x=\frac{1}{1-r}, \qquad |r|<1. $$
 
 Here
 
@@ -733,15 +702,7 @@ and since $0<\rho\le 1$, we have $|1-\rho|<1$ unless $\rho=0$, which would mean 
 
 So
 
-$$
-\rho\sum_{x=0}^{\infty}(1-\rho)^x
-=
-\rho\cdot \frac{1}{1-(1-\rho)}
-=
-\rho\cdot \frac{1}{\rho}
-=
-1.
-$$
+$$ \rho\sum_{x=0}^{\infty}(1-\rho)^x = \rho\cdot \frac{1}{1-(1-\rho)} = \rho\cdot \frac{1}{\rho} = 1. $$
 
 So the PMF is properly normalized.
 
@@ -765,11 +726,7 @@ $$
 
 So for the geometric PMF,
 
-$$
-\mathbb{E}[X]
-=
-\sum_{x=0}^{\infty} x(1-\rho)^x\rho.
-$$
+$$ \mathbb{E}[X] = \sum_{x=0}^{\infty} x(1-\rho)^x\rho. $$
 
 Let
 
@@ -779,18 +736,11 @@ $$
 
 Then
 
-$$
-\mathbb{E}[X]
-=
-\rho\sum_{x=0}^{\infty} x r^x.
-$$
+$$ \mathbb{E}[X] = \rho\sum_{x=0}^{\infty} x r^x. $$
 
 Now start from the standard geometric series
 
-$$
-\sum_{x=0}^{\infty} r^x = \frac{1}{1-r},
-\qquad |r|<1.
-$$
+$$ \sum_{x=0}^{\infty} r^x = \frac{1}{1-r}, \qquad |r|<1. $$
 
 Differentiate with respect to $r$:
 
@@ -806,13 +756,7 @@ $$
 
 Substitute back:
 
-$$
-\mathbb{E}[X]
-=
-\rho\cdot \frac{1-\rho}{\rho^2}
-=
-\frac{1-\rho}{\rho}.
-$$
+$$ \mathbb{E}[X] = \rho\cdot \frac{1-\rho}{\rho^2} = \frac{1-\rho}{\rho}. $$
 
 So under the failures-before-success convention,
 

@@ -199,19 +199,19 @@ satisfying the Kolmogorov axioms:
 1. **Nonnegativity**:
 
 $$
-   P(A)\ge 0 \quad \text{for all } A\in\mathcal{F}.
+P(A)\ge 0 \quad \text{for all } A\in\mathcal{F}.
 $$
 
 2. **Normalization**:
 
 $$
-   P(\Omega)=1.
+P(\Omega)=1.
 $$
 
 3. **Countable additivity**: if $A_1,A_2,\dots$ are pairwise disjoint events, then
 
 $$
-   P\!\left(\bigcup_{n=1}^{\infty} A_n\right)=\sum_{n=1}^{\infty} P(A_n).
+P\!\left(\bigcup_{n=1}^{\infty} A_n\right)=\sum_{n=1}^{\infty} P(A_n).
 $$
 
 These three axioms are the whole formal foundation of probability.
@@ -324,11 +324,7 @@ $$
 
 such that
 
-$$
-p_i\ge 0
-\qquad\text{and}\qquad
-\sum_{i=1}^{n} p_i = 1.
-$$
+$$ p_i\ge 0 \qquad\text{and}\qquad \sum_{i=1}^{n} p_i = 1. $$
 
 Then every event $A\subseteq\Omega$ has probability
 
@@ -346,14 +342,7 @@ $$
 
 with
 
-$$
-P(\{1\})=0.10,\;
-P(\{2\})=0.10,\;
-P(\{3\})=0.15,\;
-P(\{4\})=0.15,\;
-P(\{5\})=0.20,\;
-P(\{6\})=0.30.
-$$
+$$ P(\{1\})=0.10,\; P(\{2\})=0.10,\; P(\{3\})=0.15,\; P(\{4\})=0.15,\; P(\{5\})=0.20,\; P(\{6\})=0.30. $$
 
 Then the event “roll at least 5” is
 
@@ -407,12 +396,7 @@ $$
 
 Define the random variable $X$ by
 
-$$
-X(HH)=2,\qquad
-X(HT)=1,\qquad
-X(TH)=1,\qquad
-X(TT)=0.
-$$
+$$ X(HH)=2,\qquad X(HT)=1,\qquad X(TH)=1,\qquad X(TT)=0. $$
 
 Then $X$ is the “number of heads” random variable.
 
@@ -568,11 +552,7 @@ The real power of probability spaces appears when several random variables are d
 
 Suppose $\Omega$ is the set of all possible underlying outcomes, and define two random variables
 
-$$
-X:\Omega\to\mathbb{R},
-\qquad
-Y:\Omega\to\mathbb{R}.
-$$
+$$ X:\Omega\to\mathbb{R}, \qquad Y:\Omega\to\mathbb{R}. $$
 
 Then both variables are functions of the same underlying outcome. This is how dependence enters probability theory.
 
@@ -687,10 +667,7 @@ So every subset is an event.
 
 Because the flips are fair and the four ordered outcomes are equally likely,
 
-$$
-P(\{\omega\})=\frac14
-\qquad\text{for each }\omega\in\Omega.
-$$
+$$ P(\{\omega\})=\frac14 \qquad\text{for each }\omega\in\Omega. $$
 
 ### Step 4: define events
 

@@ -88,22 +88,11 @@ These are not separate facts to memorize. They are exactly what the “average s
 
 A fair coin has
 
-$$
-H[X]
-=
--0.5\log_2 0.5 - 0.5\log_2 0.5
-=
-1 \text{ bit}.
-$$
+$$ H[X] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1 \text{ bit}. $$
 
 A biased coin with probabilities $(0.9,0.1)$ has
 
-$$
-H[X]
-=
--0.9\log_2 0.9 - 0.1\log_2 0.1
-\approx 0.47 \text{ bits}.
-$$
+$$ H[X] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47 \text{ bits}. $$
 
 The biased coin is more predictable, so it carries less uncertainty per flip.
 
@@ -117,12 +106,7 @@ $$
 
 Then
 
-$$
-H[X]
-=
--0.999\log_2 0.999 - 0.001\log_2 0.001
-\approx 0.011 \text{ bits}.
-$$
+$$ H[X] = -0.999\log_2 0.999 - 0.001\log_2 0.001 \approx 0.011 \text{ bits}. $$
 
 This is tiny because almost every symbol is the same. This is also the compression interpretation of entropy: highly predictable sources can be encoded with very few bits per symbol on average.
 
@@ -134,11 +118,7 @@ That is exactly what conditional entropy measures.
 
 It can be written as
 
-$$
-H[X\mid Y]
-=
-\sum_y p(y)\,H[X\mid Y=y],
-$$
+$$ H[X\mid Y] = \sum_y p(y)\,H[X\mid Y=y], $$
 
 or equivalently,
 
@@ -234,31 +214,15 @@ Suppose the conditional commute distributions are
 
 Then
 
-$$
-H[C\mid R=\text{clear}]
-=
--0.9\log_2 0.9 - 0.1\log_2 0.1
-\approx 0.47,
-$$
+$$ H[C\mid R=\text{clear}] = -0.9\log_2 0.9 - 0.1\log_2 0.1 \approx 0.47, $$
 
 and
 
-$$
-H[C\mid R=\text{rain}]
-=
--0.5\log_2 0.5 - 0.5\log_2 0.5
-=
-1.
-$$
+$$ H[C\mid R=\text{rain}] = -0.5\log_2 0.5 - 0.5\log_2 0.5 = 1. $$
 
 Averaging with the weather probabilities gives
 
-$$
-H[C\mid R]
-=
-0.9(0.47)+0.1(1)
-\approx 0.52\text{ bits}.
-$$
+$$ H[C\mid R] = 0.9(0.47)+0.1(1) \approx 0.52\text{ bits}. $$
 
 If the marginal commute entropy is about
 
@@ -268,12 +232,7 @@ $$
 
 then
 
-$$
-I[C;R]
-=
-H[C]-H[C\mid R]
-\approx 0.20\text{ bits}.
-$$
+$$ I[C;R] = H[C]-H[C\mid R] \approx 0.20\text{ bits}. $$
 
 This is the right qualitative interpretation:
 
@@ -289,11 +248,7 @@ How well does one distribution approximate another?
 
 For discrete distributions $p$ and $q$,
 
-$$
-D(p\|q)
-=
-\sum_x p(x)\log\!\left(\frac{p(x)}{q(x)}\right).
-$$
+$$ D(p\|q) = \sum_x p(x)\log\!\left(\frac{p(x)}{q(x)}\right). $$
 
 This should be read in order:
 
@@ -308,11 +263,7 @@ Before examples, the domain restriction must be fixed.
 
 If there exists some outcome $x$ with
 
-$$
-p(x)>0
-\qquad\text{and}\qquad
-q(x)=0,
-$$
+$$ p(x)>0 \qquad\text{and}\qquad q(x)=0, $$
 
 then
 
@@ -352,23 +303,11 @@ $$
 
 Then
 
-$$
-D(p\|q)
-=
-0.9\log_2\frac{0.9}{0.5}
-+
-0.1\log_2\frac{0.1}{0.5}.
-$$
+$$ D(p\|q) = 0.9\log_2\frac{0.9}{0.5} + 0.1\log_2\frac{0.1}{0.5}. $$
 
 If you reverse the order, you get
 
-$$
-D(q\|p)
-=
-0.5\log_2\frac{0.5}{0.9}
-+
-0.5\log_2\frac{0.5}{0.1},
-$$
+$$ D(q\|p) = 0.5\log_2\frac{0.5}{0.9} + 0.5\log_2\frac{0.5}{0.1}, $$
 
 which is a different number.
 
@@ -378,11 +317,7 @@ The reason is structural: the average is taken under different weighting distrib
 
 Mutual information can also be written as
 
-$$
-I[X;Y]
-=
-D\!\bigl(p(x,y)\,\|\,p(x)p(y)\bigr).
-$$
+$$ I[X;Y] = D\!\bigl(p(x,y)\,\|\,p(x)p(y)\bigr). $$
 
 This is a beautiful identity, but it should be read **after** the uncertainty-reduction interpretation, not before it.
 

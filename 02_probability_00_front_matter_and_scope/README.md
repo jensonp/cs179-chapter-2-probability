@@ -193,11 +193,7 @@ One of the easiest ways to lose clarity in probability is to let notation drift.
 
 Probability of an event is written as
 
-$$
-P(A)
-\quad\text{or}\quad
-\mathbb{P}(A).
-$$
+$$ P(A) \quad\text{or}\quad \mathbb{P}(A). $$
 
 Here, $A$ is an event — a set of outcomes.
 

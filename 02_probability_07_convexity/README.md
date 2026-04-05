@@ -87,11 +87,7 @@ That is exactly the kind of domain one wants in optimization, because moving par
 
 A function $f$ defined on a convex domain is **convex** if
 
-$$
-f\bigl(\alpha x + (1-\alpha)x'\bigr)
-\le
-\alpha f(x) + (1-\alpha)f(x')
-$$
+$$ f\bigl(\alpha x + (1-\alpha)x'\bigr) \le \alpha f(x) + (1-\alpha)f(x') $$
 
 for all $x,x'$ in the domain and all $\alpha \in [0,1]$.
 
@@ -119,11 +115,7 @@ A convex function may increase everywhere, decrease everywhere, or decrease and 
 
 A function is **strictly convex** if
 
-$$
-f\bigl(\alpha x + (1-\alpha)x'\bigr)
-<
-\alpha f(x) + (1-\alpha)f(x')
-$$
+$$ f\bigl(\alpha x + (1-\alpha)x'\bigr) < \alpha f(x) + (1-\alpha)f(x') $$
 
 whenever $x\neq x'$ and $0<\alpha<1$.
 
@@ -151,11 +143,7 @@ This is the original definition in geometric language.
 
 If $f$ is differentiable, convexity is equivalent to
 
-$$
-f(x')
-\ge
-f(x) + \nabla f(x)\cdot(x'-x).
-$$
+$$ f(x') \ge f(x) + \nabla f(x)\cdot(x'-x). $$
 
 This says the tangent line or tangent plane at $x$ is a global lower bound on the graph.
 
@@ -234,11 +222,7 @@ is the simplest exact example of convexity and is worth checking algebraically.
 
 Take any $x,x'$ and $\alpha \in [0,1]$. Then
 
-$$
-f\bigl(\alpha x + (1-\alpha)x'\bigr)
-=
-(\alpha x + (1-\alpha)x')^2.
-$$
+$$ f\bigl(\alpha x + (1-\alpha)x'\bigr) = (\alpha x + (1-\alpha)x')^2. $$
 
 Expanding gives
 
@@ -254,11 +238,7 @@ $$
 
 we obtain
 
-$$
-(\alpha x + (1-\alpha)x')^2
-\le
-\alpha x^2 + (1-\alpha)x'^2.
-$$
+$$ (\alpha x + (1-\alpha)x')^2 \le \alpha x^2 + (1-\alpha)x'^2. $$
 
 That is exactly the convexity inequality.
 
@@ -315,23 +295,11 @@ Let $f(x)=x^2$ and let $X$ equal $0$ or $2$ with probability $1/2$ each.
 
 Then
 
-$$
-\mathbb{E}[X]=1,
-\qquad
-f(\mathbb{E}[X])=1,
-$$
+$$ \mathbb{E}[X]=1, \qquad f(\mathbb{E}[X])=1, $$
 
 while
 
-$$
-\mathbb{E}[f(X)]
-=
-\frac12 f(0)+\frac12 f(2)
-=
-\frac12\cdot 0+\frac12\cdot 4
-=
-2.
-$$
+$$ \mathbb{E}[f(X)] = \frac12 f(0)+\frac12 f(2) = \frac12\cdot 0+\frac12\cdot 4 = 2. $$
 
 So
 
@@ -349,35 +317,15 @@ Now return to the statistical reason this section exists.
 
 For a canonical exponential-family model,
 
-$$
-p_\theta(x)
-=
-h(x)\exp\!\bigl(\theta^\top \phi(x) - A(\theta)\bigr),
-$$
+$$ p_\theta(x) = h(x)\exp\!\bigl(\theta^\top \phi(x) - A(\theta)\bigr), $$
 
 the log-likelihood of i.i.d. data $x^{(1)},\dots,x^{(m)}$ is
 
-$$
-\ell(\theta)
-=
-\sum_{i=1}^{m}\log h(x^{(i)})
-+
-\theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
--
-mA(\theta).
-$$
+$$ \ell(\theta) = \sum_{i=1}^{m}\log h(x^{(i)}) + \theta^\top \sum_{i=1}^{m}\phi(x^{(i)}) - mA(\theta). $$
 
 Therefore the negative log-likelihood is
 
-$$
--\ell(\theta)
-=
-mA(\theta)
--
-\theta^\top \sum_{i=1}^{m}\phi(x^{(i)})
--
-\sum_{i=1}^{m}\log h(x^{(i)}).
-$$
+$$ -\ell(\theta) = mA(\theta) - \theta^\top \sum_{i=1}^{m}\phi(x^{(i)}) - \sum_{i=1}^{m}\log h(x^{(i)}). $$
 
 Read the structure carefully:
 
@@ -395,21 +343,13 @@ The log-partition function is special because its derivatives have direct probab
 
 For each component,
 
-$$
-\frac{\partial A(\theta)}{\partial \theta_j}
-=
-\mathbb{E}_\theta[\phi_j(X)].
-$$
+$$ \frac{\partial A(\theta)}{\partial \theta_j} = \mathbb{E}_\theta[\phi_j(X)]. $$
 
 So the gradient of $A(\theta)$ gives model expectations of the sufficient statistics.
 
 Differentiating again gives
 
-$$
-\frac{\partial^2 A(\theta)}{\partial \theta_j\partial \theta_k}
-=
-\mathrm{Cov}_\theta\!\bigl(\phi_j(X),\phi_k(X)\bigr).
-$$
+$$ \frac{\partial^2 A(\theta)}{\partial \theta_j\partial \theta_k} = \mathrm{Cov}_\theta\!\bigl(\phi_j(X),\phi_k(X)\bigr). $$
 
 In matrix form,
 
@@ -423,14 +363,7 @@ This is the critical identity.
 
 A covariance matrix is always positive semidefinite. For any vector $v$,
 
-$$
-v^\top \nabla^2 A(\theta) v
-=
-v^\top \mathrm{Cov}_\theta(\phi(X)) v
-=
-\mathrm{Var}_\theta\!\bigl(v^\top \phi(X)\bigr)
-\ge 0.
-$$
+$$ v^\top \nabla^2 A(\theta) v = v^\top \mathrm{Cov}_\theta(\phi(X)) v = \mathrm{Var}_\theta\!\bigl(v^\top \phi(X)\bigr) \ge 0. $$
 
 Variance can never be negative. Therefore the Hessian is positive semidefinite, so $A(\theta)$ is convex.
 
@@ -466,19 +399,11 @@ The sufficient statistic is simply $\phi(x)=x$.
 
 For i.i.d. data $x^{(1)},\dots,x^{(m)}$, the negative log-likelihood is
 
-$$
--\ell(\theta)
-=
-mA(\theta)-\theta\sum_{i=1}^{m}x^{(i)}.
-$$
+$$ -\ell(\theta) = mA(\theta)-\theta\sum_{i=1}^{m}x^{(i)}. $$
 
 The derivative is
 
-$$
-\frac{d}{d\theta}[-\ell(\theta)]
-=
-mA'(\theta)-\sum_{i=1}^{m}x^{(i)}.
-$$
+$$ \frac{d}{d\theta}[-\ell(\theta)] = mA'(\theta)-\sum_{i=1}^{m}x^{(i)}. $$
 
 Since
 
@@ -494,21 +419,11 @@ $$
 
 The second derivative is
 
-$$
-\frac{d^2}{d\theta^2}[-\ell(\theta)]
-=
-mA''(\theta).
-$$
+$$ \frac{d^2}{d\theta^2}[-\ell(\theta)] = mA''(\theta). $$
 
 And
 
-$$
-A''(\theta)
-=
-\frac{e^\theta}{(1+e^\theta)^2}
-=
-\rho(1-\rho)\ge 0.
-$$
+$$ A''(\theta) = \frac{e^\theta}{(1+e^\theta)^2} = \rho(1-\rho)\ge 0. $$
 
 Therefore
 

@@ -170,7 +170,7 @@ Notice two things:
 1. The marginal distribution for $T$ is
 
 $$
-   p(T=0)=0.80,\qquad p(T=1)=0.20.
+p(T=0)=0.80,\qquad p(T=1)=0.20.
 $$
 
 2. These values sum to 1, as a valid marginal must.
@@ -219,10 +219,7 @@ $$
 
 When variables are involved, the same logic becomes
 
-$$
-p(D=d\mid T=t)=\frac{p(D=d,T=t)}{p(T=t)},
-\qquad \text{provided } p(T=t)>0.
-$$
+$$ p(D=d\mid T=t)=\frac{p(D=d,T=t)}{p(T=t)}, \qquad \text{provided } p(T=t)>0. $$
 
 ### What conditioning is really doing
 
@@ -260,11 +257,7 @@ Now within those rows, the rows with $D=1$ are:
 
 So
 
-$$
-p(D=1\mid T=1)=\frac{0.016+0.108}{0.20}
-=\frac{0.124}{0.20}
-=0.62.
-$$
+$$ p(D=1\mid T=1)=\frac{0.016+0.108}{0.20} =\frac{0.124}{0.20} =0.62. $$
 
 ### What this means
 
@@ -479,25 +472,25 @@ It is a bookkeeping identity that becomes powerful because it rewrites a posteri
 - **prior**:
 
 $$
-  p(C=c)
+p(C=c)
 $$
 
 - **likelihood**:
 
 $$
-  p(D=d\mid C=c)
+p(D=d\mid C=c)
 $$
 
 - **evidence**:
 
 $$
-  p(D=d)
+p(D=d)
 $$
 
 - **posterior**:
 
 $$
-  p(C=c\mid D=d)
+p(C=c\mid D=d)
 $$
 
 ### Why this direction is useful
@@ -677,32 +670,26 @@ This is the standard finite inference pattern.
 
 For two competing hypotheses $H_1$ and $H_0$ and evidence $E$, Bayes’ rule can be written in odds form:
 
-$$
-\frac{p(H_1\mid E)}{p(H_0\mid E)}
-=
-\frac{p(E\mid H_1)}{p(E\mid H_0)}
-\cdot
-\frac{p(H_1)}{p(H_0)}.
-$$
+$$ \frac{p(H_1\mid E)}{p(H_0\mid E)} = \frac{p(E\mid H_1)}{p(E\mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}. $$
 
 ### What each term means
 
 - **prior odds**:
 
 $$
-  \frac{p(H_1)}{p(H_0)}
+\frac{p(H_1)}{p(H_0)}
 $$
 
 - **likelihood ratio**:
 
 $$
-  \frac{p(E\mid H_1)}{p(E\mid H_0)}
+\frac{p(E\mid H_1)}{p(E\mid H_0)}
 $$
 
 - **posterior odds**:
 
 $$
-  \frac{p(H_1\mid E)}{p(H_0\mid E)}
+\frac{p(H_1\mid E)}{p(H_0\mid E)}
 $$
 
 So the rule says:
@@ -728,19 +715,19 @@ Suppose:
 - disease prevalence:
 
 $$
-  p(D=1)=0.01,
+p(D=1)=0.01,
 $$
 
 - test sensitivity:
 
 $$
-  p(T=+\mid D=1)=0.95,
+p(T=+\mid D=1)=0.95,
 $$
 
 - false-positive rate:
 
 $$
-  p(T=+\mid D=0)=0.10.
+p(T=+\mid D=0)=0.10.
 $$
 
 We want the posterior disease probability after a positive test:
@@ -784,13 +771,13 @@ The test result is strongly informative:
 - prior disease probability:
 
 $$
-  1\%
+1\%
 $$
 
 - posterior disease probability after a positive test:
 
 $$
-  8.76\%
+8.76\%
 $$
 
 So the positive test increases the disease probability a lot.

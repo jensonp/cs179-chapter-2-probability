@@ -54,11 +54,7 @@ $$
 
 The maximum likelihood estimator is
 
-$$
-\hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta} L(\theta;D)
-=
-\arg\max_{\theta}\ell(\theta).
-$$
+$$ \hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta} L(\theta;D) = \arg\max_{\theta}\ell(\theta). $$
 
 The pattern is always the same:
 
@@ -121,12 +117,7 @@ $$
 
 and
 
-$$
-\hat{\sigma}^2_{\mathrm{MLE}}
-=
-\frac1m\sum_{i=1}^{m}
-\bigl(x^{(i)}-\hat{\mu}_{\mathrm{MLE}}\bigr)^2.
-$$
+$$ \hat{\sigma}^2_{\mathrm{MLE}} = \frac1m\sum_{i=1}^{m} \bigl(x^{(i)}-\hat{\mu}_{\mathrm{MLE}}\bigr)^2. $$
 
 The denominator here is $m$, not $m-1$. That distinction matters because the MLE is optimizing likelihood, while the classical unbiased sample variance is optimizing a different criterion.
 
@@ -291,10 +282,7 @@ The posterior therefore keeps more information than the MLE. It records not only
 
 The categorical analogue of the Beta prior is the Dirichlet prior. If
 
-$$
-\pi=(\pi_1,\dots,\pi_K),
-\qquad \sum_{k=1}^{K}\pi_k=1,
-$$
+$$ \pi=(\pi_1,\dots,\pi_K), \qquad \sum_{k=1}^{K}\pi_k=1, $$
 
 and
 
@@ -380,11 +368,7 @@ $$
 
 For the earlier posterior $\mathrm{Beta}(5,4)$,
 
-$$
-\mathbb{E}[\rho\mid D]=\frac59,\qquad
-\hat{\rho}_{\mathrm{MAP}}=\frac47,\qquad
-\hat{\rho}_{\mathrm{MLE}}=\frac35.
-$$
+$$ \mathbb{E}[\rho\mid D]=\frac59,\qquad \hat{\rho}_{\mathrm{MAP}}=\frac47,\qquad \hat{\rho}_{\mathrm{MLE}}=\frac35. $$
 
 These differ because they summarize different objects.
 
@@ -443,13 +427,7 @@ A very flexible histogram can fit sample quirks extremely well. Its maximum like
 
 The Bayesian information criterion is a large-sample approximation to the log evidence:
 
-$$
-\mathrm{BIC}
-=
-\log p(D\mid \hat{\theta}_{\mathrm{MLE}},M)
--
-\frac{k}{2}\log m,
-$$
+$$ \mathrm{BIC} = \log p(D\mid \hat{\theta}_{\mathrm{MLE}},M) - \frac{k}{2}\log m, $$
 
 up to sign and convention differences across texts.
 

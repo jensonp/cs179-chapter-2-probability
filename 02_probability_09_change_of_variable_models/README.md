@@ -70,17 +70,7 @@ When $f$ is monotone and invertible on the support, the one-branch formula is va
 
 If $f$ is increasing, then
 
-$$
-F_X(x)
-=
-\mathbb{P}(X\le x)
-=
-\mathbb{P}(f(Z)\le x)
-=
-\mathbb{P}(Z\le g(x))
-=
-F_Z(g(x)).
-$$
+$$ F_X(x) = \mathbb{P}(X\le x) = \mathbb{P}(f(Z)\le x) = \mathbb{P}(Z\le g(x)) = F_Z(g(x)). $$
 
 Differentiating gives
 
@@ -112,19 +102,11 @@ That boundary condition should never be left implicit. This is one of the most c
 
 Let
 
-$$
-Z\sim \mathrm{Unif}[0,1],
-\qquad
-X=2Z.
-$$
+$$ Z\sim \mathrm{Unif}[0,1], \qquad X=2Z. $$
 
 Then the inverse map is
 
-$$
-g(x)=x/2,
-\qquad
-g'(x)=1/2.
-$$
+$$ g(x)=x/2, \qquad g'(x)=1/2. $$
 
 Therefore
 
@@ -134,18 +116,11 @@ $$
 
 Now apply the support condition carefully:
 
-$$
-0\le x/2 \le 1
-\quad\Longleftrightarrow\quad
-0\le x\le 2.
-$$
+$$ 0\le x/2 \le 1 \quad\Longleftrightarrow\quad 0\le x\le 2. $$
 
 Since $p_Z(z)=1$ on $[0,1]$, we get
 
-$$
-p_X(x)=\frac12
-\qquad\text{for }0\le x\le 2,
-$$
+$$ p_X(x)=\frac12 \qquad\text{for }0\le x\le 2, $$
 
 and $p_X(x)=0$ elsewhere.
 
@@ -159,19 +134,11 @@ This is the simplest exact picture of probability conservation:
 
 Let
 
-$$
-Z\sim \mathrm{Unif}[0,1],
-\qquad
-X=1-Z.
-$$
+$$ Z\sim \mathrm{Unif}[0,1], \qquad X=1-Z. $$
 
 Then
 
-$$
-g(x)=1-x,
-\qquad
-g'(x)=-1.
-$$
+$$ g(x)=1-x, \qquad g'(x)=-1. $$
 
 So
 
@@ -193,11 +160,7 @@ A lognormal distribution is the canonical first nontrivial transformed family.
 
 Let
 
-$$
-Z\sim \mathcal{N}(\mu,\sigma^2),
-\qquad
-X=e^Z.
-$$
+$$ Z\sim \mathcal{N}(\mu,\sigma^2), \qquad X=e^Z. $$
 
 Then the transformed support is
 
@@ -207,23 +170,11 @@ $$
 
 The inverse map is
 
-$$
-z=\log x,
-\qquad
-\frac{dz}{dx}=\frac1x.
-$$
+$$ z=\log x, \qquad \frac{dz}{dx}=\frac1x. $$
 
 Therefore
 
-$$
-p_X(x)
-=
-\frac{1}{x\sqrt{2\pi\sigma^2}}
-\exp\!\left(
--\frac{(\log x-\mu)^2}{2\sigma^2}
-\right),
-\qquad x>0.
-$$
+$$ p_X(x) = \frac{1}{x\sqrt{2\pi\sigma^2}} \exp\!\left( -\frac{(\log x-\mu)^2}{2\sigma^2} \right), \qquad x>0. $$
 
 The factor $1/x$ is the Jacobian correction. Without it, the transformed density would not integrate to one.
 
@@ -318,13 +269,7 @@ $$
 
 So the inverse Jacobian is
 
-$$
-J_g(x)=
-\begin{pmatrix}
-1/2 & 0\\
-0 & 1/3
-\end{pmatrix},
-$$
+$$ J_g(x)= \begin{pmatrix} 1/2 & 0\\ 0 & 1/3 \end{pmatrix}, $$
 
 and
 
@@ -345,11 +290,7 @@ Copulas separate two modeling tasks that are often mixed together:
 
 For two variables,
 
-$$
-\mathbb{P}(X_1\le x_1, X_2\le x_2)
-=
-C\bigl(F_1(x_1),F_2(x_2)\bigr),
-$$
+$$ \mathbb{P}(X_1\le x_1, X_2\le x_2) = C\bigl(F_1(x_1),F_2(x_2)\bigr), $$
 
 where $F_1$ and $F_2$ are marginal CDFs.
 
@@ -398,13 +339,7 @@ $$
 
 where $f$ is invertible. Then
 
-$$
-\log p_X(x)
-=
-\log p_Z(f^{-1}(x))
-+
-\log\bigl|\det J_{f^{-1}}(x)\bigr|.
-$$
+$$ \log p_X(x) = \log p_Z(f^{-1}(x)) + \log\bigl|\det J_{f^{-1}}(x)\bigr|. $$
 
 Flows are often built as compositions of simple invertible layers:
 

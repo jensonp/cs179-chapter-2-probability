@@ -133,29 +133,17 @@ Therefore
 
 Uniformity on an interval means equal lengths receive equal probability. It is not merely “flat looking.” The exact content is:
 
-$$
-P(a\le X\le b)=\frac{b-a}{T}
-\qquad\text{for }0\le a\le b\le T.
-$$
+$$ P(a\le X\le b)=\frac{b-a}{T} \qquad\text{for }0\le a\le b\le T. $$
 
 ### Worked example
 
 If $X\sim \mathrm{Unif}([0,2])$, then
 
-$$
-p(x)=\frac12
-\qquad\text{for }0\le x\le 2.
-$$
+$$ p(x)=\frac12 \qquad\text{for }0\le x\le 2. $$
 
 So
 
-$$
-P(0.3\le X\le 0.9)
-=
-\int_{0.3}^{0.9}\frac12\,dx
-=
-\frac12(0.6)=0.3.
-$$
+$$ P(0.3\le X\le 0.9) = \int_{0.3}^{0.9}\frac12\,dx = \frac12(0.6)=0.3. $$
 
 The probability comes from interval length times density height.
 
@@ -263,14 +251,7 @@ A one-dimensional Gaussian is the continuous family that matters most in introdu
 
 Its density is
 
-$$
-p(x)=\mathcal{N}(x;\mu,\sigma^2)
-=
-\frac{1}{\sqrt{2\pi\sigma^2}}
-\exp\!\left(
--\frac{(x-\mu)^2}{2\sigma^2}
-\right).
-$$
+$$ p(x)=\mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left( -\frac{(x-\mu)^2}{2\sigma^2} \right). $$
 
 ### What the parameters mean
 
@@ -318,13 +299,7 @@ This is not just a symbolic trick. It is the main computational bridge for Gauss
 
 Let $\Phi$ denote the standard-normal CDF. Then
 
-$$
-P(a\le X\le b)
-=
-\Phi\!\left(\frac{b-\mu}{\sigma}\right)
--
-\Phi\!\left(\frac{a-\mu}{\sigma}\right).
-$$
+$$ P(a\le X\le b) = \Phi\!\left(\frac{b-\mu}{\sigma}\right) - \Phi\!\left(\frac{a-\mu}{\sigma}\right). $$
 
 ### Why this matters
 
@@ -340,13 +315,7 @@ $$
 
 so $\mu=2$ and $\sigma=3$. Then
 
-$$
-P(-1\le X\le 5)
-=
-P\!\left(\frac{-1-2}{3}\le Z\le \frac{5-2}{3}\right)
-=
-P(-1\le Z\le 1).
-$$
+$$ P(-1\le X\le 5) = P\!\left(\frac{-1-2}{3}\le Z\le \frac{5-2}{3}\right) = P(-1\le Z\le 1). $$
 
 Therefore
 
@@ -362,11 +331,7 @@ The interval probability was reduced to a standard-normal CDF difference.
 
 Because the standard normal satisfies
 
-$$
-P(|Z|\le 1)\approx 0.68,\qquad
-P(|Z|\le 2)\approx 0.95,\qquad
-P(|Z|\le 3)\approx 0.997,
-$$
+$$ P(|Z|\le 1)\approx 0.68,\qquad P(|Z|\le 2)\approx 0.95,\qquad P(|Z|\le 3)\approx 0.997, $$
 
 a Gaussian with mean $\mu$ and standard deviation $\sigma$ places about
 
@@ -421,25 +386,13 @@ A good mastery note does not start with the matrix formula alone. The reader mus
 
 If
 
-$$
-\Sigma=
-\begin{pmatrix}
-4 & 0\\
-0 & 1
-\end{pmatrix},
-$$
+$$ \Sigma= \begin{pmatrix} 4 & 0\\ 0 & 1 \end{pmatrix}, $$
 
 then the distribution is more spread in the first direction than the second, and the contours are axis-aligned.
 
 If instead
 
-$$
-\Sigma=
-\begin{pmatrix}
-1 & 0.8\\
-0.8 & 1
-\end{pmatrix},
-$$
+$$ \Sigma= \begin{pmatrix} 1 & 0.8\\ 0.8 & 1 \end{pmatrix}, $$
 
 then the variables tend to move together and the contours are tilted.
 
@@ -447,14 +400,7 @@ then the variables tend to move together and the contours are tilted.
 
 The nonsingular multivariate Gaussian density is
 
-$$
-p(x)=\mathcal{N}(x;\mu,\Sigma)
-=
-(2\pi)^{-n/2}|\Sigma|^{-1/2}
-\exp\!\left(
--\frac12 (x-\mu)^T\Sigma^{-1}(x-\mu)
-\right).
-$$
+$$ p(x)=\mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2}|\Sigma|^{-1/2} \exp\!\left( -\frac12 (x-\mu)^T\Sigma^{-1}(x-\mu) \right). $$
 
 For this formula as written, we assume $\Sigma$ is symmetric and positive definite. That guarantees the inverse exists and the quadratic form behaves like a genuine squared distance.
 
@@ -500,13 +446,7 @@ $$
 
 A Beta distribution is a distribution over possible values of that parameter:
 
-$$
-p(\rho)=\mathrm{Beta}(\rho;a,b)
-=
-\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}
-\rho^{a-1}(1-\rho)^{b-1},
-\qquad 0\le \rho\le 1.
-$$
+$$ p(\rho)=\mathrm{Beta}(\rho;a,b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} \rho^{a-1}(1-\rho)^{b-1}, \qquad 0\le \rho\le 1. $$
 
 ### Why this matters conceptually
 
@@ -529,19 +469,11 @@ Dirichlet is the categorical analogue of Beta.
 
 If
 
-$$
-\pi=(\pi_1,\dots,\pi_K),
-\qquad \pi_k\ge 0,
-\qquad \sum_{k=1}^{K}\pi_k=1,
-$$
+$$ \pi=(\pi_1,\dots,\pi_K), \qquad \pi_k\ge 0, \qquad \sum_{k=1}^{K}\pi_k=1, $$
 
 then the Dirichlet density is
 
-$$
-p(\pi)=\mathrm{Dir}(\pi;\alpha_1,\dots,\alpha_K)
-\propto
-\prod_{k=1}^{K}\pi_k^{\alpha_k-1}.
-$$
+$$ p(\pi)=\mathrm{Dir}(\pi;\alpha_1,\dots,\alpha_K) \propto \prod_{k=1}^{K}\pi_k^{\alpha_k-1}. $$
 
 ### What object this is
 
