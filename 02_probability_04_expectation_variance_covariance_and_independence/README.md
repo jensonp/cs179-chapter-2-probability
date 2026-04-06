@@ -1,26 +1,22 @@
-# Expectation, Variance, Covariance, and Independence
+# 2.4 Expectation, Variance, Covariance, and Independence
 
-This section is not just a list of definitions. It is a chain of answers to four different questions:
+This section answers four different questions about random variables.
 
-- **Expectation** asks where a distribution is centered on average.
-- **Variance** asks how tightly or loosely the distribution is spread around that center.
-- **Covariance** asks how two variables move together relative to their own means.
-- **Independence** asks whether the full joint distribution truly factorizes into separate marginal pieces.
+1. Where is a distribution centered?
+2. How spread out is it around that center?
+3. If two variables are present, how do they move together?
+4. When does the full joint distribution actually split into simpler pieces?
 
-That order matters. First we want a notion of center. Then we want a notion of spread around that center. Then, once more than one variable is present, we want a notion of joint movement. Finally, we want to know when the entire joint structure splits into simpler pieces. If those distinctions stay sharp, later sections on Gaussian models, likelihoods, entropy, and graphical models become much easier to understand.
+Those questions correspond to four major ideas:
 
-## Why this section exists
+- **expectation** measures center;
+- **variance** measures spread around that center;
+- **covariance** measures centered co-movement;
+- **independence** is a structural factorization property of the joint distribution.
 
-Earlier sections introduced probability spaces, random variables, distributions, conditioning, and Bayes’ rule. Those tools describe what probabilities are assigned to events and variables. But many practical questions are not about full distributions directly. They are about summaries.
+These ideas are related, but they are not interchangeable. One of the most common beginner mistakes is to treat them as if they were all versions of the same summary statistic. They are not. Each one compresses a different aspect of a distribution.
 
-Examples:
-
-- If a model predicts a distribution over outcomes, where is that distribution centered?
-- If two distributions have the same center, how do we distinguish one that is concentrated from one that is diffuse?
-- If two variables are observed together, how do we quantify whether high values of one tend to coincide with high values of the other?
-- When can a joint model be simplified into separate pieces without losing information?
-
-Expectation, variance, covariance, and independence answer those questions. They are not interchangeable, and one of the most common failure modes in probability is to treat them as if they were all versions of the same thing. They are not. Each one compresses a different feature of a distribution or joint distribution.
+The goal of this section is not merely to list formulas. The goal is to explain what each object means, why the formula has that form, and what the formula can and cannot tell you.
 
 ---
 
@@ -28,51 +24,135 @@ Expectation, variance, covariance, and independence answer those questions. They
 
 ### What expectation is trying to summarize
 
-A probability distribution may assign mass to many different outcomes. The first natural summary question is: **where is the distribution located on average?**
+Suppose a discrete random variable $X$ can take several possible values.
 
-Expectation answers that question by taking a weighted average of possible values, where the weights are the probabilities of those values.
+A natural question is:
 
-For a discrete random variable,
+**Where is the distribution located on average?**
+
+Expectation answers that question by forming a weighted average of the possible values, where the weights are the probabilities of those values.
+
+If $X$ has PMF $p_X(x)=\mathbb{P}(X=x)$, then its expectation is
 
 $$
-\mathbb{E}[X] = \sum_x x\,p(x).
+\mathbb{E}[X]=\sum_x x\,p_X(x).
 $$
 
-This formula is easy to memorize and easy to misuse. The expectation is **not** the most likely next value. It is **not** required to be a value the variable can actually take. It is the long-run average, or the center of mass, of the distribution.
+This is the direct probability analogue of an ordinary weighted average.
+
+If one value of $X$ is very likely, it contributes more heavily to the average. If one value is very unlikely, it contributes less.
+
+### Why this formula makes sense
+
+The formula
+
+$$
+\mathbb{E}[X]=\sum_x x\,p_X(x)
+$$
+
+can be read term by term.
+
+For each possible value $x$:
+
+- the number $x$ tells you what value the variable contributes;
+- the factor $p_X(x)$ tells you how often that value occurs in the long run;
+- multiplying gives the value weighted by its frequency;
+- summing over all possible values gives the long-run average.
+
+So expectation is not a mysterious symbol. It is literally "value times probability, summed over possibilities."
 
 ### Bernoulli example
 
-Suppose
+Suppose $X$ is a Bernoulli variable with
 
 $$
-p(X=0)=0.7,\qquad p(X=1)=0.3.
+\mathbb{P}(X=0)=0.7
 $$
 
-Then
+and
 
-$$ \mathbb{E}[X] = 0\cdot 0.7 + 1\cdot 0.3 = 0.3. $$
+$$
+\mathbb{P}(X=1)=0.3.
+$$
 
-This is one of the cleanest examples because the expectation has a direct interpretation. A Bernoulli variable records success as $1$ and failure as $0$, so the average value is just the success probability.
+Then the expectation is
+
+$$
+\mathbb{E}[X]=0\cdot 0.7+1\cdot 0.3.
+$$
+
+Now simplify step by step.
+
+Because $0\cdot 0.7=0$, we get
+
+$$
+\mathbb{E}[X]=0+0.3.
+$$
+
+So
+
+$$
+\mathbb{E}[X]=0.3.
+$$
+
+This example is especially important because the expectation has a direct interpretation. A Bernoulli variable records failure as $0$ and success as $1$, so its average value is exactly its success probability.
 
 ### Fair die example
 
-For a fair die,
+Let $X$ be the outcome of a fair six-sided die. Then
 
-$$ \mathbb{E}[X] = \sum_{x=1}^{6} x\cdot \frac{1}{6} = \frac{1+2+3+4+5+6}{6} = 3.5. $$
+$$
+\mathbb{P}(X=x)=\frac16
+$$
 
-This example is important because it prevents a bad intuition from taking root. A die never lands on $3.5$, but $3.5$ is still its expectation. So expectation is not “the predicted next observation.” It is the balance point of the distribution.
+for each $x\in\{1,2,3,4,5,6\}$.
 
-A useful physical analogy is a weighted rod or a set of masses on a line. The expectation is where the system balances.
+Write the expectation formula:
 
-### What expectation does and does not capture
+$$
+\mathbb{E}[X]=\sum_{x=1}^{6} x\cdot \frac16.
+$$
 
-Expectation is a summary of **location** only. It does not tell us:
+Expand the sum explicitly:
 
-- how spread out the outcomes are,
-- whether the distribution is symmetric or skewed,
-- whether the variable is concentrated or diffuse.
+$$
+\mathbb{E}[X]=1\cdot \frac16+2\cdot \frac16+3\cdot \frac16+4\cdot \frac16+5\cdot \frac16+6\cdot \frac16.
+$$
 
-Two variables can share the same expectation and still behave very differently. That is exactly why variance is introduced next.
+Factor out the common factor $1/6$:
+
+$$
+\mathbb{E}[X]=\frac16(1+2+3+4+5+6).
+$$
+
+Add the numbers inside the parentheses:
+
+$$
+1+2+3+4+5+6=21.
+$$
+
+So
+
+$$
+\mathbb{E}[X]=\frac{21}{6}=3.5.
+$$
+
+This example matters because a die never lands on $3.5$. So expectation is not "the next value we predict will appear." It is the balance point of the distribution, not necessarily one of the realized outcomes.
+
+### What expectation is not
+
+Expectation is often confused with several different ideas. Those confusions should be removed immediately.
+
+Expectation is **not**:
+
+- the most likely outcome;
+- the next value that will be observed;
+- a guarantee that the variable ever actually takes that value;
+- a description of spread.
+
+Expectation is only a summary of center.
+
+That is why two variables can have the same expectation and still behave very differently. Variance will measure the part expectation cannot capture.
 
 ---
 
@@ -80,77 +160,194 @@ Two variables can share the same expectation and still behave very differently. 
 
 One of the most useful facts in all of probability is
 
-$$ \mathbb{E}[aX+bY+c] = a\,\mathbb{E}[X] + b\,\mathbb{E}[Y] + c. $$
+$$
+\mathbb{E}[aX+bY+c]=a\,\mathbb{E}[X]+b\,\mathbb{E}[Y]+c.
+$$
 
-This is called linearity of expectation.
+This is called **linearity of expectation**.
 
 ### Why linearity matters
 
-This identity is powerful because it lets us analyze totals, sums, and counts without needing the full joint distribution first. In many problems, the hard part is figuring out the entire distribution of a complicated random quantity. But its expectation may still be easy because the quantity can be decomposed into simpler pieces.
+Linearity matters because it lets us compute expectations of sums without first finding the full distribution of the sum.
 
-That is why linearity is not just a convenient algebraic rule. It is one of the main tools for turning complicated probability questions into manageable ones.
+That is a major simplification.
+
+In many problems, the random quantity we care about can be written as a sum of simpler pieces. Even when the full distribution of that sum is hard to derive, the expectation is often easy because linearity lets us work term by term.
 
 ### Independence is not required
 
-A common mistake is to think linearity needs independence. It does not.
+This point is important enough to say explicitly:
 
-The identity
+**Linearity of expectation does not require independence.**
+
+Beginners often remember that products behave differently under dependence and then mistakenly think sums do too. For expectation, sums are always linear whether or not the variables are independent.
+
+### Step-by-step derivation for two variables
+
+Assume for now that $X$ and $Y$ are discrete. Let their joint PMF be $p(x,y)=\mathbb{P}(X=x,Y=y)$.
+
+Then
 
 $$
-\mathbb{E}[X+Y] = \mathbb{E}[X] + \mathbb{E}[Y]
+\mathbb{E}[aX+bY+c]=\sum_x\sum_y (ax+by+c)\,p(x,y).
 $$
 
-holds whether or not $X$ and $Y$ are independent. This is one of the most important distinctions in the section because later formulas, especially for variance, do depend on independence assumptions. Expectation does not.
+Distribute the sum across the three terms:
+
+$$
+\mathbb{E}[aX+bY+c]=a\sum_x\sum_y x\,p(x,y)+b\sum_x\sum_y y\,p(x,y)+c\sum_x\sum_y p(x,y).
+$$
+
+Now treat the three sums one at a time.
+
+For the first sum,
+
+$$
+\sum_x\sum_y x\,p(x,y)=\sum_x x\left(\sum_y p(x,y)\right).
+$$
+
+But
+
+$$
+\sum_y p(x,y)=p_X(x),
+$$
+
+the marginal PMF of $X$. So
+
+$$
+\sum_x\sum_y x\,p(x,y)=\sum_x x\,p_X(x)=\mathbb{E}[X].
+$$
+
+Similarly,
+
+$$
+\sum_x\sum_y y\,p(x,y)=\sum_y y\,p_Y(y)=\mathbb{E}[Y].
+$$
+
+Finally,
+
+$$
+\sum_x\sum_y p(x,y)=1
+$$
+
+because the joint PMF sums to $1$.
+
+Substituting those three results back in gives
+
+$$
+\mathbb{E}[aX+bY+c]=a\,\mathbb{E}[X]+b\,\mathbb{E}[Y]+c.
+$$
+
+Notice that no independence assumption appeared anywhere in the derivation.
 
 ### Dependent example
 
 Let $X$ be Bernoulli with
 
 $$
-p(X=1)=0.3,\qquad p(X=0)=0.7,
+\mathbb{P}(X=1)=0.3
 $$
 
-and define
+and
 
 $$
-Y = 1-X.
+\mathbb{P}(X=0)=0.7.
 $$
 
-Then $X$ and $Y$ are completely dependent. If you know one, you know the other exactly.
+Now define
 
-But linearity still gives
+$$
+Y=1-X.
+$$
 
-$$ \mathbb{E}[X+Y] = \mathbb{E}[1] = 1. $$
+Then $X$ and $Y$ are completely dependent. If you know $X$, then you know $Y$ exactly.
+
+Now compute
+
+$$
+X+Y=X+(1-X)=1.
+$$
+
+So
+
+$$
+\mathbb{E}[X+Y]=\mathbb{E}[1]=1.
+$$
 
 Separately,
 
-$$ \mathbb{E}[X] + \mathbb{E}[Y] = 0.3 + 0.7 = 1. $$
+$$
+\mathbb{E}[X]=0.3
+$$
 
-So dependence does not break linearity.
-
-### Indicator variables and counting
-
-The most useful application of linearity in elementary probability comes through indicator variables.
-
-Suppose $H_1, H_2, H_3$ are indicators for whether the first, second, and third coin flips are heads. Let
+and
 
 $$
-N = H_1 + H_2 + H_3.
+\mathbb{E}[Y]=\mathbb{E}[1-X]=1-\mathbb{E}[X]=0.7.
+$$
+
+Therefore
+
+$$
+\mathbb{E}[X]+\mathbb{E}[Y]=0.3+0.7=1.
+$$
+
+So linearity still holds even though the variables are fully dependent.
+
+### Indicator variables
+
+An **indicator variable** records whether an event happened.
+
+It is defined by two rules:
+
+- $\mathbf{1}_A=1$ if the event $A$ occurs;
+- $\mathbf{1}_A=0$ if the event $A$ does not occur.
+
+Indicator variables are extremely useful because their expectation is just the probability of the event.
+
+To prove that, note that $\mathbf{1}_A$ can only take the values $1$ and $0$. Therefore
+
+$$
+\mathbb{E}[\mathbf{1}_A]=1\cdot \mathbb{P}(A)+0\cdot \mathbb{P}(A^c)=\mathbb{P}(A).
+$$
+
+This identity is one of the most useful small facts in the section.
+
+### Counting example
+
+Suppose three coin flips are made, and let $H_1,H_2,H_3$ be the indicators for whether the first, second, and third flips are heads.
+
+Let
+
+$$
+N=H_1+H_2+H_3.
 $$
 
 Then $N$ is the total number of heads.
 
-Even if we do not derive the full distribution of $N$, linearity immediately gives
-
-$$ \mathbb{E}[N] = \mathbb{E}[H_1] + \mathbb{E}[H_2] + \mathbb{E}[H_3]. $$
-
-If each flip has head probability $\rho$, then each indicator has expectation $\rho$, so
+By linearity,
 
 $$
-\mathbb{E}[N]=3\rho.
+\mathbb{E}[N]=\mathbb{E}[H_1]+\mathbb{E}[H_2]+\mathbb{E}[H_3].
 $$
 
-This is the deeper pattern: complicated counts are often easy to **expect** even when they are not easy to **distribute**.
+If each flip has head probability $\rho$, then
+
+$$
+\mathbb{E}[H_i]=\rho
+$$
+
+for each $i$, because each $H_i$ is an indicator of the event "flip $i$ is heads."
+
+So
+
+$$
+\mathbb{E}[N]=\rho+\rho+\rho=3\rho.
+$$
+
+This is the deeper lesson:
+
+complicated counts are often easy to take expectations of even when their full distributions are harder to derive.
 
 ---
 
@@ -158,78 +355,273 @@ This is the deeper pattern: complicated counts are often easy to **expect** even
 
 ### Why expectation is not enough
 
-Expectation tells us where a distribution is centered, but it says nothing about how tightly the mass sits around that center.
+Expectation tells us where a distribution is centered, but it does not tell us how far typical values lie from that center.
 
-A variable that is almost always near its mean and a variable that swings wildly around the same mean have the same expectation but very different behavior. Variance is introduced to measure that difference.
+Two variables can share the same expectation while having completely different spreads. Variance is introduced to measure that spread.
 
 ### Definition
 
-Variance is
+The variance of $X$ is
 
-$$ \mathrm{Var}(X) = \mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right]. $$
+$$
+\mathrm{Var}(X)=\mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right].
+$$
 
-The quantity inside the expectation is the squared deviation from the mean.
+This formula should be read literally:
+
+1. subtract the mean from $X$ to measure deviation from center;
+2. square that deviation so negative and positive deviations do not cancel;
+3. average the squared deviations.
 
 ### Why the square appears
 
-The square is doing two jobs at once:
+The square is doing two jobs at once.
 
-1. it makes all deviations nonnegative, so positive and negative deviations do not cancel;
-2. it penalizes large deviations more heavily than small ones.
+First, it makes every contribution nonnegative. Without the square, deviations above the mean and below the mean would cancel.
 
-So variance is not just “another average.” It is a summary of spread around the mean.
+Second, it penalizes large deviations more heavily than small ones.
+
+So variance is not just "another average." It is a summary of spread around the mean.
 
 ### Computational identity
 
-Expanding the square gives
+The definition
 
-$$ \mathrm{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2. $$
+$$
+\mathrm{Var}(X)=\mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right]
+$$
 
-This is usually the easier formula to compute from a probability table.
+is conceptually clear, but there is a second formula that is often easier to compute. We now derive it step by step.
+
+Start with the square:
+
+$$
+(X-\mathbb{E}[X])^2=X^2-2X\,\mathbb{E}[X]+\mathbb{E}[X]^2.
+$$
+
+Take expectations of both sides:
+
+$$
+\mathrm{Var}(X)=\mathbb{E}[X^2-2X\,\mathbb{E}[X]+\mathbb{E}[X]^2].
+$$
+
+Use linearity of expectation:
+
+$$
+\mathrm{Var}(X)=\mathbb{E}[X^2]-2\,\mathbb{E}[X\,\mathbb{E}[X]]+\mathbb{E}[\mathbb{E}[X]^2].
+$$
+
+Now use the fact that $\mathbb{E}[X]$ is a constant, not a random variable.
+
+So
+
+$$
+\mathbb{E}[X\,\mathbb{E}[X]]=\mathbb{E}[X]\mathbb{E}[X]=\mathbb{E}[X]^2
+$$
+
+and
+
+$$
+\mathbb{E}[\mathbb{E}[X]^2]=\mathbb{E}[X]^2.
+$$
+
+Substitute those into the variance formula:
+
+$$
+\mathrm{Var}(X)=\mathbb{E}[X^2]-2\mathbb{E}[X]^2+\mathbb{E}[X]^2.
+$$
+
+Combine the last two terms:
+
+$$
+\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2.
+$$
+
+This is the computational identity for variance.
 
 ### Bernoulli variance
 
-If $X\in\{0,1\}$ with
+Let $X\in\{0,1\}$ with
 
 $$
-p(X=1)=\rho,
+\mathbb{P}(X=1)=\rho
 $$
 
-then $X^2=X$, so
+and
 
-$$ \mathbb{E}[X]=\rho, \qquad \mathbb{E}[X^2]=\rho. $$
+$$
+\mathbb{P}(X=0)=1-\rho.
+$$
 
-Therefore
+First compute $\mathbb{E}[X]$:
 
-$$ \mathrm{Var}(X) = \rho-\rho^2 = \rho(1-\rho). $$
+$$
+\mathbb{E}[X]=0\cdot (1-\rho)+1\cdot \rho=\rho.
+$$
 
-This formula is worth interpreting. The spread is largest near $\rho=\tfrac12$, where the outcomes are most uncertain, and shrinks toward $0$ as $\rho$ approaches $0$ or $1$, where the variable becomes nearly deterministic.
+Now compute $X^2$. Since $0^2=0$ and $1^2=1$, we have
+
+$$
+X^2=X
+$$
+
+for every Bernoulli outcome.
+
+So
+
+$$
+\mathbb{E}[X^2]=\mathbb{E}[X]=\rho.
+$$
+
+Now use the computational identity:
+
+$$
+\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2=\rho-\rho^2.
+$$
+
+Factor out $\rho$:
+
+$$
+\mathrm{Var}(X)=\rho(1-\rho).
+$$
+
+This formula is worth interpreting.
+
+- If $\rho$ is near $0$ or $1$, the variable is almost deterministic, so the variance is small.
+- If $\rho=1/2$, the two outcomes are maximally uncertain, and the variance is largest.
 
 ### Same mean, different variance
 
-Let $X$ be constant at $3$, and let $Y$ equal $0$ or $6$ with probabilities $\tfrac12$ and $\tfrac12$.
+Let $X$ be constant at $3$.
 
 Then
 
 $$
-\mathbb{E}[X]=3,\qquad \mathbb{E}[Y]=3.
+\mathbb{P}(X=3)=1.
 $$
 
-But
+Let $Y$ take the values $0$ and $6$ with probabilities $1/2$ and $1/2$.
+
+First compute the means.
+
+For $X$,
 
 $$
-\mathrm{Var}(X)=0
+\mathbb{E}[X]=3.
 $$
 
-because $X$ never deviates from its mean, while
+For $Y$,
 
-$$ \mathrm{Var}(Y) = \left(0^2\cdot \tfrac12 + 6^2\cdot \tfrac12\right)-3^2 = 18-9 = 9. $$
+$$
+\mathbb{E}[Y]=0\cdot \frac12+6\cdot \frac12=3.
+$$
 
-This example shows exactly why mean and variance are different summaries. The center is the same. The spread is not.
+So both variables have the same expectation.
 
-### What variance does and does not tell us
+Now compute the variances.
 
-Variance captures spread around the mean, but it does not tell us everything about a distribution. Two very different distributions may share the same mean and variance. So variance is extremely useful, but it is not a complete description of shape.
+For $X$, because $X$ is always equal to its mean,
+
+$$
+X-\mathbb{E}[X]=3-3=0
+$$
+
+always, so
+
+$$
+\mathrm{Var}(X)=0.
+$$
+
+For $Y$, use the computational identity.
+
+First compute $Y^2$:
+
+If $Y=0$, then $Y^2=0^2=0$.
+
+If $Y=6$, then $Y^2=6^2=36$.
+
+So $Y^2$ takes the value $0$ with probability $1/2$ and the value $36$ with probability $1/2$.
+
+So
+
+$$
+\mathbb{E}[Y^2]=0\cdot \frac12+36\cdot \frac12=18.
+$$
+
+Therefore
+
+$$
+\mathrm{Var}(Y)=\mathbb{E}[Y^2]-\mathbb{E}[Y]^2=18-3^2=18-9=9.
+$$
+
+This example shows why mean and variance are different summaries:
+
+- both variables are centered at $3$;
+- one is perfectly concentrated there;
+- the other is spread widely around that same center.
+
+### Standard deviation
+
+The **standard deviation** of $X$ is the square root of the variance:
+
+$$
+\mathrm{sd}(X)=\sqrt{\mathrm{Var}(X)}.
+$$
+
+Variance uses squared units, but standard deviation returns to the same units as the variable itself. That is why standard deviation is often easier to interpret numerically.
+
+### Variance under affine transformations
+
+It is useful to know how variance changes when a variable is shifted or rescaled.
+
+Let
+
+$$
+Y=aX+b.
+$$
+
+Then
+
+$$
+\mathbb{E}[Y]=a\,\mathbb{E}[X]+b
+$$
+
+by linearity of expectation.
+
+Now compute the variance:
+
+$$
+\mathrm{Var}(Y)=\mathbb{E}\!\left[(Y-\mathbb{E}[Y])^2\right].
+$$
+
+Substitute $Y=aX+b$:
+
+$$
+\mathrm{Var}(Y)=\mathbb{E}\!\left[(aX+b-(a\,\mathbb{E}[X]+b))^2\right].
+$$
+
+The $b$ terms cancel:
+
+$$
+\mathrm{Var}(Y)=\mathbb{E}\!\left[(aX-a\,\mathbb{E}[X])^2\right].
+$$
+
+Factor out $a$:
+
+$$
+\mathrm{Var}(Y)=\mathbb{E}\!\left[a^2(X-\mathbb{E}[X])^2\right].
+$$
+
+Since $a^2$ is constant,
+
+$$
+\mathrm{Var}(Y)=a^2\,\mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right]=a^2\mathrm{Var}(X).
+$$
+
+So:
+
+- adding a constant does not change variance;
+- multiplying by $a$ multiplies variance by $a^2$.
 
 ---
 
@@ -237,101 +629,412 @@ Variance captures spread around the mean, but it does not tell us everything abo
 
 ### Why covariance is introduced
 
-Once more than one random variable is present, there is a new question expectation and variance cannot answer:
+Expectation and variance describe one variable at a time.
 
-**How do the variables move together?**
+Once two variables are present, a new question appears:
 
-It is not enough to know each variable’s center and spread separately. We want to know whether values above the mean of one variable tend to occur with values above the mean of the other, or whether high values of one tend to occur with low values of the other.
+**Do the variables tend to rise and fall together, or does one tend to be high when the other is low?**
+
+Covariance is introduced to answer that question.
 
 ### Definition
 
-Covariance is
+The covariance of $X$ and $Y$ is
 
-$$ \mathrm{Cov}(X,Y) = \mathbb{E}\!\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right]. $$
+$$
+\mathrm{Cov}(X,Y)=\mathbb{E}\!\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right].
+$$
 
-This should be read as a centered co-movement statistic.
+This formula should be read as follows.
 
-- If both variables tend to be above their means together, or below their means together, the product tends to be positive.
-- If one tends to be above its mean when the other is below, the product tends to be negative.
-- If there is no consistent linear pattern in those centered movements, covariance may be near zero.
+For each outcome:
 
-### Interpretation
+1. measure how far $X$ is from its own mean;
+2. measure how far $Y$ is from its own mean;
+3. multiply those two centered deviations;
+4. average the products.
 
-Covariance is not about raw values. It is about **deviation from each variable’s own mean**.
+### Sign interpretation
 
-That detail matters. Covariance is asking whether the variables move together relative to their typical levels. A variable can have a large mean and still have small covariance with another variable if their centered fluctuations do not line up.
+The sign of the product
 
-### Affine transformations
+$$
+(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])
+$$
 
-Covariance interacts with shifts and scalings in predictable ways:
+tells us how the two deviations align.
+
+- If both deviations are positive, the product is positive.
+- If both deviations are negative, the product is also positive.
+- If one is positive and the other is negative, the product is negative.
+
+So:
+
+- positive covariance means the variables tend to be above their means together or below their means together;
+- negative covariance means one tends to be above its mean when the other is below;
+- covariance near zero means there is no consistent **linear centered** pattern.
+
+### Computational identity
+
+As with variance, there is a computational form that is often easier to use. We now derive it.
+
+Start with the definition:
+
+$$
+\mathrm{Cov}(X,Y)=\mathbb{E}\!\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right].
+$$
+
+Expand the product:
+
+$$
+(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])=XY-X\mathbb{E}[Y]-Y\mathbb{E}[X]+\mathbb{E}[X]\mathbb{E}[Y].
+$$
+
+Take expectations:
+
+$$
+\mathrm{Cov}(X,Y)=\mathbb{E}[XY]-\mathbb{E}[X\mathbb{E}[Y]]-\mathbb{E}[Y\mathbb{E}[X]]+\mathbb{E}[\mathbb{E}[X]\mathbb{E}[Y]].
+$$
+
+Now use the fact that $\mathbb{E}[X]$ and $\mathbb{E}[Y]$ are constants:
+
+$$
+\mathbb{E}[X\mathbb{E}[Y]]=\mathbb{E}[Y]\mathbb{E}[X],
+$$
+
+$$
+\mathbb{E}[Y\mathbb{E}[X]]=\mathbb{E}[X]\mathbb{E}[Y],
+$$
+
+and
+
+$$
+\mathbb{E}[\mathbb{E}[X]\mathbb{E}[Y]]=\mathbb{E}[X]\mathbb{E}[Y].
+$$
+
+Substitute these back:
+
+$$
+\mathrm{Cov}(X,Y)=\mathbb{E}[XY]-\mathbb{E}[X]\mathbb{E}[Y]-\mathbb{E}[X]\mathbb{E}[Y]+\mathbb{E}[X]\mathbb{E}[Y].
+$$
+
+Combine the last three terms:
+
+$$
+\mathrm{Cov}(X,Y)=\mathbb{E}[XY]-\mathbb{E}[X]\mathbb{E}[Y].
+$$
+
+That is the main computational identity for covariance.
+
+### Special case: covariance with itself
+
+If $Y=X$, then
+
+$$
+\mathrm{Cov}(X,X)=\mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right]=\mathrm{Var}(X).
+$$
+
+So variance is a special case of covariance.
+
+### Covariance under affine transformations
+
+Let
+
+$$
+U=aX+b
+$$
+
+and
+
+$$
+V=cY+d.
+$$
+
+Then
+
+$$
+\mathrm{Cov}(U,V)=ac\,\mathrm{Cov}(X,Y).
+$$
+
+We now derive it.
+
+First compute the expectations:
+
+$$
+\mathbb{E}[U]=a\,\mathbb{E}[X]+b,
+$$
+
+$$
+\mathbb{E}[V]=c\,\mathbb{E}[Y]+d.
+$$
+
+Now subtract the expectations:
+
+$$
+U-\mathbb{E}[U]=aX+b-(a\,\mathbb{E}[X]+b)=a(X-\mathbb{E}[X]),
+$$
+
+$$
+V-\mathbb{E}[V]=cY+d-(c\,\mathbb{E}[Y]+d)=c(Y-\mathbb{E}[Y]).
+$$
+
+Multiply them:
+
+$$
+(U-\mathbb{E}[U])(V-\mathbb{E}[V])=ac(X-\mathbb{E}[X])(Y-\mathbb{E}[Y]).
+$$
+
+Take expectations:
+
+$$
+\mathrm{Cov}(U,V)=ac\,\mathbb{E}\!\left[(X-\mathbb{E}[X])(Y-\mathbb{E}[Y])\right].
+$$
+
+So
 
 $$
 \mathrm{Cov}(aX+b,cY+d)=ac\,\mathrm{Cov}(X,Y).
 $$
 
-This means:
+This tells us:
 
-- adding constants does not change covariance,
-- multiplying by positive constants rescales its magnitude,
-- multiplying one variable by a negative constant flips the sign.
-
-Those facts are exactly what we should expect from a statistic measuring centered linear co-movement.
+- adding constants does not change covariance;
+- scaling one variable rescales covariance by the same factor;
+- a negative scaling flips the sign.
 
 ---
 
 ## 5. Correlation
 
-Covariance depends on scale. If one variable is measured in dollars and another in cents, the covariance changes even if the dependence pattern is the same. Correlation corrects for that.
+Covariance depends on units.
 
-It is defined by
+If one variable is measured in dollars and then re-expressed in cents, the covariance changes numerically even if the underlying dependence pattern is the same.
 
-$$ \mathrm{Corr}(X,Y) = \frac{\mathrm{Cov}(X,Y)} {\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}. $$
+Correlation corrects for this by dividing out the variables' standard deviations.
 
-This normalization divides out the variables’ standard deviations, producing a scale-free summary of linear association.
+If $\mathrm{Var}(X)>0$ and $\mathrm{Var}(Y)>0$, the correlation is
 
-### Why correlation is useful
+$$
+\mathrm{Corr}(X,Y)=\frac{\mathrm{Cov}(X,Y)}{\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}}.
+$$
 
-Correlation is useful when we want to compare relationships across different units or different variables. Covariance says how centered values move together in raw units. Correlation says how strong that co-movement is relative to each variable’s own scale.
+### Why correlation is scale-free
 
-### What correlation still does not do
+Suppose we replace $X$ by $100X$. Then
 
-Correlation is still a measure of linear association. It does not detect every kind of dependence. That limitation leads directly to the next key warning.
+$$
+\mathrm{Cov}(100X,Y)=100\,\mathrm{Cov}(X,Y)
+$$
+
+and
+
+$$
+\sqrt{\mathrm{Var}(100X)\mathrm{Var}(Y)}=\sqrt{100^2\mathrm{Var}(X)\mathrm{Var}(Y)}=100\sqrt{\mathrm{Var}(X)\mathrm{Var}(Y)}.
+$$
+
+So the factor of $100$ cancels in the ratio, leaving correlation unchanged.
+
+That is why correlation is a unit-free measure of linear association.
+
+### Why correlation must lie between -1 and 1
+
+This is a standard fact, and it can be proved with only variance algebra.
+
+Define the standardized variables
+
+$$
+U=\frac{X-\mathbb{E}[X]}{\sqrt{\mathrm{Var}(X)}}
+$$
+
+and
+
+$$
+V=\frac{Y-\mathbb{E}[Y]}{\sqrt{\mathrm{Var}(Y)}}.
+$$
+
+Then
+
+$$
+\mathbb{E}[U]=0,\qquad \mathbb{E}[V]=0,
+$$
+
+and
+
+$$
+\mathrm{Var}(U)=1,\qquad \mathrm{Var}(V)=1.
+$$
+
+Also,
+
+$$
+\mathrm{Cov}(U,V)=\mathrm{Corr}(X,Y).
+$$
+
+Now consider the variance of $U+V$:
+
+$$
+\mathrm{Var}(U+V)=\mathrm{Var}(U)+\mathrm{Var}(V)+2\,\mathrm{Cov}(U,V).
+$$
+
+Substitute the known values:
+
+$$
+\mathrm{Var}(U+V)=1+1+2\,\mathrm{Corr}(X,Y)=2+2\,\mathrm{Corr}(X,Y).
+$$
+
+Variance is always nonnegative, so
+
+$$
+2+2\,\mathrm{Corr}(X,Y)\ge 0.
+$$
+
+Therefore
+
+$$
+\mathrm{Corr}(X,Y)\ge -1.
+$$
+
+Now consider the variance of $U-V$:
+
+$$
+\mathrm{Var}(U-V)=\mathrm{Var}(U)+\mathrm{Var}(V)-2\,\mathrm{Cov}(U,V)=2-2\,\mathrm{Corr}(X,Y).
+$$
+
+Again variance is nonnegative, so
+
+$$
+2-2\,\mathrm{Corr}(X,Y)\ge 0.
+$$
+
+Therefore
+
+$$
+\mathrm{Corr}(X,Y)\le 1.
+$$
+
+Combining the two inequalities gives
+
+$$
+-1\le \mathrm{Corr}(X,Y)\le 1.
+$$
+
+### What correlation still does not tell us
+
+Correlation measures linear association only.
+
+So even a correlation of zero does **not** imply full independence. That distinction is important enough to get its own section next.
 
 ---
 
 ## 6. Zero covariance does not imply independence
 
-This is one of the most important conceptual warnings in elementary probability.
+This is one of the most important warning statements in elementary probability.
 
-Let $X$ take values $-1,0,1$ with equal probability, and define
+Let $X$ take the values $-1,0,1$ with equal probabilities:
+
+$$
+\mathbb{P}(X=-1)=\mathbb{P}(X=0)=\mathbb{P}(X=1)=\frac13.
+$$
+
+Now define
 
 $$
 Y=X^2.
 $$
 
-Then $Y$ is completely determined by $X$, so the variables are obviously dependent.
+Then $Y$ is completely determined by $X$. So $X$ and $Y$ are certainly dependent.
 
-But
+We now compute the covariance anyway.
 
-$$ \mathbb{E}[X]=0, \qquad \mathbb{E}[XY]=\mathbb{E}[X^3]=0. $$
+### Step 1: compute $\mathbb{E}[X]$
+
+$$
+\mathbb{E}[X]=(-1)\cdot \frac13+0\cdot \frac13+1\cdot \frac13=0.
+$$
+
+### Step 2: compute $XY$
+
+Because $Y=X^2$, we have
+
+$$
+XY=X\cdot X^2=X^3.
+$$
+
+So it is enough to compute $\mathbb{E}[X^3]$.
+
+### Step 3: compute $\mathbb{E}[XY]$
+
+$$
+\mathbb{E}[XY]=\mathbb{E}[X^3]=(-1)^3\cdot \frac13+0^3\cdot \frac13+1^3\cdot \frac13=0.
+$$
+
+### Step 4: compute covariance
+
+Use the computational identity:
+
+$$
+\mathrm{Cov}(X,Y)=\mathbb{E}[XY]-\mathbb{E}[X]\mathbb{E}[Y].
+$$
+
+We already know
+
+$$
+\mathbb{E}[XY]=0
+$$
+
+and
+
+$$
+\mathbb{E}[X]=0.
+$$
+
+Therefore
+
+$$
+\mathrm{Cov}(X,Y)=0-0\cdot \mathbb{E}[Y]=0.
+$$
+
+So the covariance is zero.
+
+### Why the variables are still dependent
+
+Even though the covariance is zero, the variables are not independent because $Y$ is determined by $X$.
+
+For example, if $X=0$, then
+
+$$
+Y=0
+$$
+
+with probability $1$.
+
+But marginally, $Y$ is not always $0$. In fact,
+
+$$
+\mathbb{P}(Y=0)=\mathbb{P}(X=0)=\frac13.
+$$
 
 So
 
 $$
-\mathrm{Cov}(X,Y)=0.
+\mathbb{P}(Y=0\mid X=0)=1
 $$
 
-### What this teaches
+while
 
-Covariance only captures linear dependence in centered variables. The relationship $Y=X^2$ is nonlinear and symmetric around zero, so the positive and negative contributions cancel.
+$$
+\mathbb{P}(Y=0)=\frac13.
+$$
 
-So:
+These are not equal, so $Y$ depends on $X$.
 
-- zero covariance means no linear centered association,
-- it does **not** mean the variables are fully unrelated,
+This example teaches the exact boundary:
+
+- zero covariance means no linear centered association;
+- it does **not** mean no dependence;
 - it does **not** mean independence.
 
-This distinction becomes extremely important later, especially when Gaussian models are introduced, because some families have special properties that make covariance more informative than it is in general. But in general probability theory, uncorrelated is strictly weaker than independent.
+The term **uncorrelated** means "covariance zero." Uncorrelated is weaker than independent.
 
 ---
 
@@ -339,64 +1042,114 @@ This distinction becomes extremely important later, especially when Gaussian mod
 
 ### What independence is really saying
 
-Independence is a much stronger statement than zero covariance or small correlation.
+Independence is a much stronger statement than covariance zero.
 
-It says the full joint distribution factorizes into separate marginal pieces:
+For discrete variables, $X$ and $Y$ are independent if
 
 $$
-p(X=x,Y=y)=p(X=x)p(Y=y)
+\mathbb{P}(X=x,Y=y)=\mathbb{P}(X=x)\mathbb{P}(Y=y)
 $$
 
 for every pair of values $(x,y)$.
 
-Equivalently,
+This says the full joint distribution factorizes into separate marginal pieces.
+
+### Equivalent conditional form
+
+If $\mathbb{P}(Y=y)>0$, then the conditional probability formula gives
 
 $$
-p(X=x\mid Y=y)=p(X=x)
+\mathbb{P}(X=x\mid Y=y)=\frac{\mathbb{P}(X=x,Y=y)}{\mathbb{P}(Y=y)}.
 $$
 
-whenever $p(Y=y)>0$.
+Now assume independence, so
 
-These two forms say the same thing, but from different angles:
+$$
+\mathbb{P}(X=x,Y=y)=\mathbb{P}(X=x)\mathbb{P}(Y=y).
+$$
 
-- the factorization form says the joint table contains no interaction term beyond the marginals;
-- the conditional form says observing $Y$ does not change the distribution of $X$.
+Substitute that into the conditional formula:
 
-That is why independence is a structural property of the whole joint distribution, not a vague statement that two variables seem only weakly related.
+$$
+\mathbb{P}(X=x\mid Y=y)=\frac{\mathbb{P}(X=x)\mathbb{P}(Y=y)}{\mathbb{P}(Y=y)}.
+$$
+
+Cancel the factor $\mathbb{P}(Y=y)$:
+
+$$
+\mathbb{P}(X=x\mid Y=y)=\mathbb{P}(X=x).
+$$
+
+So independence implies that observing $Y$ does not change the distribution of $X$.
+
+Conversely, if
+
+$$
+\mathbb{P}(X=x\mid Y=y)=\mathbb{P}(X=x)
+$$
+
+for all $x,y$ with $\mathbb{P}(Y=y)>0$, then multiply both sides by $\mathbb{P}(Y=y)$:
+
+$$
+\mathbb{P}(X=x,Y=y)=\mathbb{P}(X=x)\mathbb{P}(Y=y).
+$$
+
+So the factorization form and the conditional form are equivalent.
 
 ### Small discrete example
 
 Suppose
 
 $$
-p(X=0)=0.7,\qquad p(X=1)=0.3,
+\mathbb{P}(X=0)=0.7,\qquad \mathbb{P}(X=1)=0.3,
 $$
 
 and
 
 $$
-p(Y=1)=0.2,\quad p(Y=2)=0.3,\quad p(Y=3)=0.4,\quad p(Y=4)=0.1.
+\mathbb{P}(Y=1)=0.2,\qquad \mathbb{P}(Y=2)=0.3,\qquad \mathbb{P}(Y=3)=0.4,\qquad \mathbb{P}(Y=4)=0.1.
 $$
 
-If $X$ and $Y$ are independent, then every joint entry is the product of one marginal from $X$ and one from $Y$.
+If $X$ and $Y$ are independent, then each joint entry is just a product.
 
 For example,
 
 $$
-p(X=1,Y=2)=p(X=1)p(Y=2)=0.3\cdot 0.3=0.09.
+\mathbb{P}(X=1,Y=2)=\mathbb{P}(X=1)\mathbb{P}(Y=2)=0.3\cdot 0.3=0.09.
 $$
 
-The entire joint table is built this way. That is what makes independent models so much simpler than arbitrary joint models.
+Likewise,
 
----
+$$
+\mathbb{P}(X=0,Y=4)=0.7\cdot 0.1=0.07.
+$$
 
-## 8. Degrees of freedom under independence
+That is what independence buys you: the entire joint table is determined by the marginals.
 
-This is where the simplification becomes quantitative.
+### Degrees of freedom under independence
 
-Suppose $X$ and $Y$ are both $d$-ary.
+This simplification can be counted explicitly.
 
-A completely general joint table has $d^2$ entries. Because they must sum to one, the unrestricted model has
+Suppose $X$ and $Y$ are both **$d$-ary**, meaning each one has exactly $d$ possible values.
+
+For example:
+
+- a binary variable is $2$-ary;
+- a weather variable with values {sun, cloud, rain} is $3$-ary.
+
+Now define **degrees of freedom**.
+
+Degrees of freedom means:
+
+**How many numerical entries may be chosen freely before the normalization constraints determine the rest?**
+
+For a completely general joint table of two $d$-ary variables:
+
+- there are $d^2$ joint probabilities;
+- they must sum to $1$;
+- once $d^2-1$ of them are chosen, the last one is forced by the sum-to-one rule.
+
+So the unrestricted joint model has
 
 $$
 d^2-1
@@ -404,13 +1157,15 @@ $$
 
 degrees of freedom.
 
-If $X$ and $Y$ are independent, then
+If the variables are independent, we no longer choose a full joint table directly. We choose two marginals.
 
-$$
-p(X,Y)=p(X)p(Y).
-$$
+Each $d$-ary marginal has:
 
-Now we only need to specify the two marginals. Each marginal has $d-1$ free parameters, so the independent model has
+- $d$ entries,
+- one sum-to-one constraint,
+- therefore $d-1$ degrees of freedom.
+
+Since there are two marginals, the independent model has
 
 $$
 (d-1)+(d-1)=2d-2
@@ -418,61 +1173,255 @@ $$
 
 degrees of freedom.
 
-### Why this matters
+### Concrete example: $d=3$
 
-This reduction is one of the main reasons independence assumptions are attractive in AI, statistics, and machine learning. They drastically simplify models and reduce parameter counts.
+If both variables are $3$-ary, then:
 
-But that simplification comes at a price: independence is a strong claim. If the real joint distribution has structure that matters, forcing factorization may erase exactly the dependence pattern we need to learn.
+- a general joint table has $3^2=9$ entries and therefore $8$ degrees of freedom;
+- an independent model has $2(3-1)=4$ degrees of freedom.
+
+So independence cuts the parameter count in half in this example.
+
+This is one major reason independence assumptions are attractive in probability, statistics, and machine learning: they simplify models dramatically.
+
+But the simplification only helps if independence is actually a reasonable structural assumption.
+
+---
+
+## 8. Pairwise independence versus mutual independence
+
+Another important misconception is the idea that if every pair of variables is independent, then the whole collection must be independent. That is false.
+
+### Definitions
+
+Three variables $A,B,C$ are **pairwise independent** if every pair is independent:
+
+$$
+A\perp B,\qquad A\perp C,\qquad B\perp C.
+$$
+
+They are **mutually independent** if every joint factorization also holds, in particular
+
+$$
+\mathbb{P}(A=a,B=b,C=c)=\mathbb{P}(A=a)\mathbb{P}(B=b)\mathbb{P}(C=c)
+$$
+
+for every triple $(a,b,c)$.
+
+Mutual independence implies pairwise independence, but the converse is not true.
+
+### Worked example
+
+Let $U$ and $V$ be independent fair coin bits taking values in $\{0,1\}$, each with probability $1/2$ for each value.
+
+Define
+
+$$
+A=U,
+$$
+
+$$
+B=V,
+$$
+
+and
+
+$$
+C=U\oplus V,
+$$
+
+where $\oplus$ means exclusive OR: $C=1$ exactly when $U$ and $V$ are different.
+
+The four equally likely outcomes are:
+
+| $U$ | $V$ | $A$ | $B$ | $C$ | probability |
+|---|---|---|---|---|---:|
+| 0 | 0 | 0 | 0 | 0 | $1/4$ |
+| 0 | 1 | 0 | 1 | 1 | $1/4$ |
+| 1 | 0 | 1 | 0 | 1 | $1/4$ |
+| 1 | 1 | 1 | 1 | 0 | $1/4$ |
+
+Now check pairwise independence.
+
+For $(A,B)$, all four pairs $(0,0),(0,1),(1,0),(1,1)$ occur with probability $1/4$, so $A$ and $B$ are independent.
+
+For $(A,C)$, all four pairs again occur with probability $1/4$, so $A$ and $C$ are independent.
+
+For $(B,C)$, the same is true, so $B$ and $C$ are independent.
+
+Thus the variables are pairwise independent.
+
+But they are not mutually independent, because
+
+$$
+C=A\oplus B
+$$
+
+holds exactly.
+
+In particular,
+
+$$
+\mathbb{P}(A=1,B=1,C=1)=0
+$$
+
+since whenever $A=1$ and $B=1$, we must have $C=0$.
+
+However, if the three variables were mutually independent, we would have
+
+$$
+\mathbb{P}(A=1,B=1,C=1)=\mathbb{P}(A=1)\mathbb{P}(B=1)\mathbb{P}(C=1)=\frac12\cdot\frac12\cdot\frac12=\frac18.
+$$
+
+Since $0\neq 1/8$, mutual independence fails.
+
+So pairwise independence is weaker than mutual independence.
 
 ---
 
 ## 9. Conditional independence
 
-In practice, full independence is often too strong. But a weaker and more useful simplification often holds: two variables may become independent **after conditioning on a third variable**.
+Full independence is often too strong to be realistic. A weaker and more useful structure is **conditional independence**.
 
 We write
 
 $$
-X \perp Y \mid Z
+X\perp Y \mid Z
 $$
 
-to mean
+to mean that once $Z$ is known, the remaining uncertainty in $X$ and $Y$ factorizes.
+
+For discrete variables, the definition is:
 
 $$
-p(X,Y\mid Z)=p(X\mid Z)p(Y\mid Z).
+\mathbb{P}(X=x,Y=y\mid Z=z)=\mathbb{P}(X=x\mid Z=z)\mathbb{P}(Y=y\mid Z=z)
 $$
 
-This says that once $Z$ is known, the remaining uncertainty in $X$ and $Y$ factorizes.
+for every $z$ with positive probability.
 
-### Why this matters
+### What this means in words
 
-Conditional independence is the real structural language behind Bayesian networks, graphical models, hidden-variable models, and many probabilistic learning systems.
+Conditional independence says:
 
-So even though this section is about basic probability summaries, it is already pointing toward a much bigger modeling idea:
+- before $Z$ is known, $X$ and $Y$ may be dependent;
+- after $Z$ is fixed, the dependence disappears.
 
-- unconditional independence is rare and strong,
-- conditional independence is often the structural simplification that actually powers useful models.
+So the variable $Z$ explains the association.
+
+### Worked example
+
+Let $Z$ be a hidden binary state with
+
+$$
+\mathbb{P}(Z=0)=\frac12,\qquad \mathbb{P}(Z=1)=\frac12.
+$$
+
+Now define two binary observations $X$ and $Y$ as follows.
+
+If $Z=0$, let
+
+$$
+\mathbb{P}(X=1\mid Z=0)=0.1,\qquad \mathbb{P}(Y=1\mid Z=0)=0.1.
+$$
+
+If $Z=1$, let
+
+$$
+\mathbb{P}(X=1\mid Z=1)=0.9,\qquad \mathbb{P}(Y=1\mid Z=1)=0.9.
+$$
+
+Assume that once $Z$ is fixed, the variables $X$ and $Y$ are generated independently.
+
+That means, for example,
+
+$$
+\mathbb{P}(X=1,Y=1\mid Z=0)=0.1\cdot 0.1=0.01
+$$
+
+and
+
+$$
+\mathbb{P}(X=1,Y=1\mid Z=1)=0.9\cdot 0.9=0.81.
+$$
+
+So by construction,
+
+$$
+X\perp Y \mid Z.
+$$
+
+Now look at the variables marginally, without conditioning on $Z$.
+
+First compute $\mathbb{P}(X=1)$:
+
+$$
+\mathbb{P}(X=1)=\mathbb{P}(X=1\mid Z=0)\mathbb{P}(Z=0)+\mathbb{P}(X=1\mid Z=1)\mathbb{P}(Z=1).
+$$
+
+Substitute the numbers:
+
+$$
+\mathbb{P}(X=1)=0.1\cdot \frac12+0.9\cdot \frac12=0.5.
+$$
+
+Similarly,
+
+$$
+\mathbb{P}(Y=1)=0.5.
+$$
+
+Now compute the joint probability:
+
+$$
+\mathbb{P}(X=1,Y=1)=\mathbb{P}(X=1,Y=1\mid Z=0)\mathbb{P}(Z=0)+\mathbb{P}(X=1,Y=1\mid Z=1)\mathbb{P}(Z=1).
+$$
+
+Substitute the numbers:
+
+$$
+\mathbb{P}(X=1,Y=1)=0.01\cdot \frac12+0.81\cdot \frac12=0.41.
+$$
+
+If $X$ and $Y$ were marginally independent, we would need
+
+$$
+\mathbb{P}(X=1,Y=1)=\mathbb{P}(X=1)\mathbb{P}(Y=1)=0.5\cdot 0.5=0.25.
+$$
+
+But
+
+$$
+0.41\neq 0.25.
+$$
+
+So $X$ and $Y$ are **not** marginally independent even though they **are** conditionally independent given $Z$.
+
+This is the most important structural lesson of the section:
+
+conditioning can remove dependence when the dependence is created by mixing over a hidden common cause.
 
 ---
 
 ## 10. What to retain
 
-- Expectation summarizes center, not the next realized outcome.
+- Expectation measures center, not the most likely next value.
 - Linearity of expectation does not require independence.
-- Indicator variables are a powerful way to turn counting problems into expectation problems.
+- Indicator variables turn probability questions into expectation questions.
 - Variance measures spread around the mean.
 - Covariance measures centered linear co-movement.
-- Correlation rescales covariance into a unit-free measure.
+- Correlation is the scale-free version of covariance.
 - Zero covariance does not imply independence.
 - Independence is a factorization property of the full joint distribution.
-- Conditional independence is often the practically important simplification in probabilistic models.
+- Pairwise independence is weaker than mutual independence.
+- Conditional independence is often the practically useful structural simplification.
 
 ## 11. Do not confuse
 
 - Do not confuse expectation with the most likely value.
 - Do not confuse same mean with same distribution.
-- Do not assume linearity of expectation needs independence.
-- Do not confuse covariance with general dependence.
+- Do not assume linearity of expectation requires independence.
+- Do not confuse variance with general uncertainty about every aspect of shape.
+- Do not confuse covariance with arbitrary dependence.
 - Do not confuse zero covariance with independence.
-- Do not confuse correlation with causation.
-- Do not confuse full independence with conditional independence.
+- Do not confuse pairwise independence with mutual independence.
+- Do not confuse independence with conditional independence.
