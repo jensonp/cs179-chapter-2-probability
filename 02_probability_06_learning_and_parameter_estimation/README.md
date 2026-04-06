@@ -129,6 +129,8 @@ Likelihood means:
 - vary the parameter;
 - ask which parameter values make the observed data more or less plausible under the model.
 
+There is one more important boundary here: as a function of $\theta$, the likelihood usually does **not** integrate or sum to $1$. So likelihood is not itself a probability distribution over parameter values. It is a scoring rule for comparing parameter values inside a fixed model family.
+
 ### Why log-likelihood is introduced
 
 Products of many terms are awkward to differentiate and can become numerically tiny. Taking logs turns products into sums:
@@ -297,6 +299,15 @@ $$
 \hat{\rho}_{\mathrm{MLE}}=\frac{m_1}{m}.
 $$
 
+This calculus derivation assumed an interior maximizer with $0<\rho<1$. That is the generic case in which the sample contains at least one $0$ and at least one $1$.
+
+If the sample is degenerate, the maximum moves to the boundary:
+
+- if every observation is $0$, then $L(\rho;D)=(1-\rho)^m$, which is maximized at $\rho=0$;
+- if every observation is $1$, then $L(\rho;D)=\rho^m$, which is maximized at $\rho=1$.
+
+So the formula $\hat{\rho}_{\mathrm{MLE}}=m_1/m$ still gives the right answer in the boundary cases, but the argument has to include that boundary check.
+
 ### Step 5: check that it is a maximum
 
 Differentiate once more:
@@ -431,6 +442,16 @@ $$
 \hat{\mu}_{\mathrm{MLE}}=\frac1m\sum_{i=1}^{m}x^{(i)}.
 $$
 
+### Step 5: check that it is a maximum
+
+Differentiate once more:
+
+$$
+\ell''(\mu)=-\frac{m}{\sigma^2}.
+$$
+
+Because $\sigma^2>0$, this second derivative is strictly negative. So the log-likelihood is concave in $\mu$, and the critical point above is indeed the unique maximizer.
+
 ### Interpretation
 
 The Gaussian mean MLE is the sample mean.
@@ -545,6 +566,8 @@ $$
 \hat{\sigma}^2_{\mathrm{MLE}}=\frac1m\sum_{i=1}^{m}\bigl(x^{(i)}-\hat{\mu}_{\mathrm{MLE}}\bigr)^2.
 $$
 
+At that critical point, the second derivative with respect to $\sigma^2$ is negative, so this candidate is the maximizing variance as well. The likelihood therefore chooses the empirical average squared deviation around the fitted mean.
+
 ### Why the denominator is $m$, not $m-1$
 
 The MLE is chosen to maximize likelihood. The unbiased sample variance from elementary statistics is chosen to correct expected bias under repeated sampling.
@@ -584,6 +607,8 @@ Up to the order of the sample, the likelihood is proportional to
 $$
 L(\pi;D)\propto \prod_{k=1}^{K}\pi_k^{n_k}.
 $$
+
+The omitted proportionality constant is the multinomial counting factor. It depends on the observed counts, but not on $\pi$, so it does not affect which parameter value maximizes the likelihood.
 
 ### Step 2: take logs
 
@@ -831,6 +856,8 @@ $$
 p(D\mid \rho)\propto \rho^{m_1}(1-\rho)^{m_0}.
 $$
 
+The proportionality sign means we have dropped factors that do not depend on $\rho$. For identifying the posterior family, only the $\rho$-dependent kernel matters.
+
 Substitute $m_1=3$ and $m_0=2$:
 
 $$
@@ -929,6 +956,8 @@ $$
 p(D\mid \pi)\propto \prod_{k=1}^{K}\pi_k^{n_k}.
 $$
 
+As in the Bernoulli example, the omitted factors do not depend on $\pi$, so they do not matter for recognizing the posterior family.
+
 Multiply prior and likelihood:
 
 $$
@@ -990,6 +1019,8 @@ p(\theta\mid D)\propto p(D\mid \theta)p(\theta),
 $$
 
 the MAP estimate maximizes likelihood times prior.
+
+This statement is only about where the posterior is largest. The posterior itself is still the fully normalized distribution obtained after dividing by the evidence.
 
 ### MLE versus MAP
 

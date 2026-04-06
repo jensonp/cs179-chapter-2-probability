@@ -105,19 +105,21 @@ That is why continuous probability uses densities rather than point masses.
 
 ## 3. Probability density functions
 
-A probability density function, or PDF, is a nonnegative function $p(x)$ such that
+A real-valued random variable $X$ has a probability density function, or PDF, if there exists a nonnegative function $p_X(x)$ such that
 
 $$
-\int_{-\infty}^{\infty} p(x)\,dx = 1.
+P(X\in A)=\int_A p_X(x)\,dx
 $$
 
-If $A$ is a region on the real line, then the probability that $X$ lands in $A$ is
+for every interval or region $A$ on the real line.
+
+Because the whole real line must carry total probability $1$, the density must satisfy
 
 $$
-P(X\in A)=\int_A p(x)\,dx.
+\int_{-\infty}^{\infty} p_X(x)\,dx = 1.
 $$
 
-This is the central definition.
+So a PDF is not a second random variable or a separate probabilistic object. It is the function that reproduces the probabilities of $X$ through integration.
 
 ### What a density is
 
@@ -130,6 +132,24 @@ The best beginner interpretation is:
 - an actual probability comes from accumulating that density over an interval.
 
 That is why the PDF is called a density.
+
+### How the PDF connects back to the CDF
+
+If $X$ has density $p_X$, then its CDF can be written as
+
+$$
+F_X(x)=\int_{-\infty}^{x} p_X(t)\,dt.
+$$
+
+This formula matters because it reconnects the continuous story to the universal object from the start of the section. In the absolutely continuous case, the PDF is the local rate at which the CDF accumulates mass.
+
+Where the derivative exists,
+
+$$
+F_X'(x)=p_X(x).
+$$
+
+That does not mean the CDF and PDF are interchangeable. It means the PDF is obtained by differentiating the CDF in the continuous case, while probabilities are still read from the CDF or from interval integrals.
 
 ### Small-interval approximation
 
@@ -605,6 +625,14 @@ $$
 
 This special Gaussian is called the standard normal.
 
+One quick justification is to rewrite the Gaussian density at the point $x=\mu+\sigma z$. Then
+
+$$
+\frac{(x-\mu)^2}{2\sigma^2}=\frac{(\mu+\sigma z-\mu)^2}{2\sigma^2}=\frac{\sigma^2 z^2}{2\sigma^2}=\frac{z^2}{2}.
+$$
+
+so subtracting $\mu$ removes location and dividing by $\sigma$ removes scale. What remains is the standard bell curve centered at $0$ with unit variance.
+
 ### The standard normal CDF
 
 The CDF of the standard normal is written
@@ -735,10 +763,16 @@ This means:
 Spread and joint movement are summarized by the covariance matrix
 
 $$
+\Sigma=\mathbb{E}\!\left[(X-\mu)(X-\mu)^T\right].
+$$
+
+Its $(i,j)$ entry is
+
+$$
 \Sigma_{ij}=\mathrm{Cov}(X_i,X_j).
 $$
 
-This definition means:
+This means:
 
 - diagonal entry $\Sigma_{ii}$ is the variance of coordinate $i$;
 - off-diagonal entry $\Sigma_{ij}$ tells how coordinates $i$ and $j$ move together.
@@ -747,6 +781,8 @@ So the covariance matrix combines two kinds of information:
 
 1. how spread out each coordinate is by itself;
 2. whether pairs of coordinates tend to rise and fall together.
+
+Because covariance is symmetric, $\Sigma_{ij}=\Sigma_{ji}$, the covariance matrix is symmetric as well.
 
 ### Why covariance must be understood before the density formula
 
@@ -886,6 +922,12 @@ $$
 p(\rho)=\mathrm{Beta}(\rho;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\rho^{a-1}(1-\rho)^{b-1}.
 $$
 
+The parameters must satisfy
+
+$$
+a>0 \quad \text{and} \quad b>0.
+$$
+
 The support condition is essential:
 
 $$
@@ -993,6 +1035,12 @@ $$
 p(\pi)=\mathrm{Dir}(\pi;\alpha_1,\dots,\alpha_K)\propto \prod_{k=1}^{K}\pi_k^{\alpha_k-1}.
 $$
 
+Its parameters must satisfy
+
+$$
+\alpha_k>0 \quad \text{for every } k.
+$$
+
 Again, the proportionality sign means a normalization constant exists but is not written explicitly here.
 
 ### What this object is
@@ -1008,7 +1056,7 @@ That is exactly parallel to the Beta-Bernoulli relationship:
 
 The parameters $\alpha_1,\dots,\alpha_K$ are often interpreted as pseudo-counts.
 
-Why? Because later, when categorical data are observed, each observed count gets added to the corresponding $\alpha_k$. So the prior behaves algebraically like though it had already seen some imaginary counts before the real data arrived.
+Why? Because later, when categorical data are observed, each observed count gets added to the corresponding $\alpha_k$. So the prior behaves algebraically as though it had already seen some imaginary counts before the real data arrived.
 
 That is a structural preview for Bayesian learning in the next section.
 
