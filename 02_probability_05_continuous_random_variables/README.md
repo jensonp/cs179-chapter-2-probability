@@ -1,163 +1,321 @@
 # 2.5 Continuous Random Variables
 
-Up to now, the chapter has worked in the discrete setting, where probabilities are assigned directly to isolated states. The continuous setting changes that logic in a fundamental way.
+This section rebuilds probability for variables that take values on a continuum rather than on a finite or countable list of isolated states.
 
-For a continuous variable:
+The main beginner difficulty is not usually algebra. It is carrying a discrete mental model into a setting where that model is no longer correct. In the discrete setting, it makes sense to ask for the probability of one exact state. In the continuous setting, the central quantity is usually the probability of an interval or region, not of one single point.
 
-- probability is assigned to intervals or regions,
-- not to single points,
-- and the main descriptive object is a density rather than a mass function.
+So the section has one main job: replace the wrong intuition before later formulas are introduced.
 
-This is the point where many students start writing correct formulas but carrying the wrong discrete intuition. The purpose of this section is to remove that confusion carefully.
+We will proceed in the following order:
 
-The section has four main goals:
-
-1. explain what a density is and what it is not;
-2. distinguish PMFs, PDFs, and CDFs cleanly;
-3. introduce Gaussian models in one and several dimensions in a way that makes their geometry clear;
-4. explain Beta and Dirichlet distributions as distributions over parameters rather than over observed outcomes.
+1. start from the universal object, the CDF;
+2. define what a PDF is and what it is not;
+3. contrast PMFs, PDFs, and CDFs using worked examples;
+4. build the Gaussian from one dimension to many dimensions;
+5. explain Beta and Dirichlet distributions as distributions over unknown parameters rather than over observed outcomes.
 
 ---
 
-## 1. Why continuous variables require a new object
+## 1. The universal starting point: the CDF
 
-In the discrete setting, a PMF directly answers
+Before discussing discrete or continuous cases separately, it helps to start from the one object that always exists for a real-valued random variable.
+
+For a real-valued random variable $X$, the cumulative distribution function is
+
+$$
+F_X(x)=P(X\le x).
+$$
+
+This definition makes sense whether $X$ is discrete, continuous, or mixed.
+
+The CDF answers a threshold question:
+
+- "How much total probability has accumulated by the time we reach the point $x$ on the number line?"
+
+That is why the CDF is the safest object to begin with. Every real-valued random variable has a CDF. Not every real-valued random variable has a PMF. Not every real-valued random variable has a PDF. But every real-valued random variable has a CDF.
+
+### Basic facts about CDFs
+
+For every real-valued random variable:
+
+1. $0\le F_X(x)\le 1$ for every $x$.
+2. $F_X(x)$ is nondecreasing in $x$.
+3. $\lim_{x\to -\infty}F_X(x)=0$.
+4. $\lim_{x\to \infty}F_X(x)=1$.
+5. $F_X(x)$ is right-continuous.
+
+These facts are not arbitrary rules. They follow directly from the event definition $X\le x$:
+
+- if $x$ increases, the event $\{X\le x\}$ can only get larger, so its probability cannot decrease;
+- very far to the left, the event becomes impossible, so the probability tends to $0$;
+- very far to the right, the event eventually contains all outcomes, so the probability tends to $1$.
+
+### Interval probabilities from the CDF
+
+The CDF is useful because interval probabilities can be recovered from it.
+
+For $a<b$,
+
+$$
+P(a<X\le b)=F_X(b)-F_X(a).
+$$
+
+Why does this work? Because the event $\{X\le b\}$ can be decomposed into two disjoint pieces:
+
+- the outcomes with $X\le a$;
+- the outcomes with $a<X\le b$.
+
+So
+
+$$
+P(X\le b)=P(X\le a)+P(a<X\le b).
+$$
+
+Subtracting $P(X\le a)$ from both sides gives the formula above.
+
+This identity is universal. It works in discrete settings, continuous settings, and mixed settings.
+
+---
+
+## 2. Why the discrete picture stops working
+
+In the discrete setting, a PMF directly answers questions of the form
 
 $$
 P(X=x).
 $$
 
-That works because isolated states can have positive probability mass.
+That works because an isolated state such as $x=0$ or $x=7$ can carry positive probability mass.
 
-In the continuous setting, the logic changes. Probability is spread across a continuum of values, so an individual point typically carries probability zero. If a reader keeps the discrete intuition and treats a density value as a point probability, later reasoning will go wrong immediately.
+In a continuous setting, that logic fails. The probability is spread across infinitely many nearby values. An individual point usually carries no mass at all.
 
-So the first mastery-level distinction is:
+For a genuinely continuous variable with density $p(x)$,
 
-- discrete: probabilities attach to exact states through a PMF;
-- continuous: probabilities attach to intervals or sets through integration of a density;
-- universal: the CDF still describes threshold probabilities in both settings.
+$$
+P(X=x)=0 \quad \text{for every single point } x.
+$$
+
+This sentence often feels wrong the first time one sees it, so it is worth explaining carefully.
+
+Suppose $X$ is uniform on $[0,1]$. Intuitively, the variable can land anywhere in that interval. But if any single point, say $x=0.37$, had positive probability, then the infinitely many points in $[0,1]$ would force the total probability to exceed $1$. So the probability must be spread over intervals, not stored at points.
+
+That is why continuous probability uses densities rather than point masses.
 
 ---
 
-## 2. Probability density functions
+## 3. Probability density functions
 
-A probability density function is a nonnegative function $p(x)$ satisfying
+A probability density function, or PDF, is a nonnegative function $p(x)$ such that
 
 $$
 \int_{-\infty}^{\infty} p(x)\,dx = 1.
 $$
 
-For a set $A$,
+If $A$ is a region on the real line, then the probability that $X$ lands in $A$ is
 
 $$
 P(X\in A)=\int_A p(x)\,dx.
 $$
 
+This is the central definition.
+
 ### What a density is
 
-A density is a **probability per unit of the variable’s scale**. It is not itself a probability. Probability arises only after integrating over an interval or region.
+A density is not itself a probability. A density is a quantity that must be integrated to produce a probability.
 
-That is the key interpretation.
+The best beginner interpretation is:
 
-### Point probabilities
+- a PMF gives probability at a point;
+- a PDF gives probability per unit of horizontal distance near a point;
+- an actual probability comes from accumulating that density over an interval.
 
-For a continuous variable,
-
-$$
-P(X=x)=0
-$$
-
-for every individual point $x$.
-
-This is one of the first statements students often resist because the density at that point may be positive. But positive density height does not mean positive point probability. Probability comes from area, not height alone.
+That is why the PDF is called a density.
 
 ### Small-interval approximation
 
-When a density exists,
+If $p(x)$ is smooth near a point $x$, then for a very small interval of width $\Delta$,
 
 $$
-P(x\le X\le x+\Delta)\approx p(x)\,\Delta
+P(x\le X\le x+\Delta)\approx p(x)\Delta.
 $$
 
-for small $\Delta$.
-
-This is the precise sense in which a PDF acts like “probability per unit $x$.”
+This approximation explains the phrase "probability per unit $x$." The density value $p(x)$ behaves like a local height, and multiplying by a small width $\Delta$ produces a small area.
 
 ### Why a density may exceed 1
 
-A density value can be larger than 1 if the support is narrow enough. This does not violate probability rules because the integral, not the pointwise height, must equal 1.
+Because density is not the same as probability, a density value may be larger than $1$.
 
-That is another place where discrete intuition fails if not corrected explicitly.
+For example, on the interval $[0,\tfrac12]$, the uniform density is
+
+$$
+p(x)=2 \quad \text{for } 0\le x\le \tfrac12.
+$$
+
+This does not violate probability rules, because the total probability is the integral:
+
+$$
+\int_0^{1/2} 2\,dx = 2\cdot \frac12 = 1.
+$$
+
+So the requirement is not "height must be at most 1." The requirement is "total area must equal 1."
+
+### What a PDF does not answer
+
+A PDF does not answer the question
+
+$$
+P(X=x).
+$$
+
+For a continuous variable, that probability is $0$ no matter what the density height is.
+
+That is the first major "do not confuse" boundary in the section.
 
 ---
 
-## 3. Uniform density on an interval
+## 4. Uniform density on an interval
 
-A uniform density on $[0,T]$ has the form
+The simplest continuous density is the uniform density on an interval.
 
-<table align="center">
-  <thead>
-    <tr><th>$p(x)$</th><th>condition on $x$</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>$c$</td><td>$x \in [0,T]$</td></tr>
-    <tr><td>$0$</td><td>otherwise</td></tr>
-  </tbody>
-</table>
+Suppose $X$ is uniform on $[0,T]$. "Uniform" means that equal-length subintervals have equal probability. So the density should be constant on the interval.
 
-Normalization forces
+Write that constant as $c$. Then the density must be
+
+| $p(x)$ | condition on $x$ |
+|---|---|
+| $c$ | $0\le x\le T$ |
+| $0$ | otherwise |
+
+The constant $c$ is not arbitrary. It must be chosen so that the total area is $1$.
+
+Step 1: write the normalization equation.
 
 $$
-\int_0^T c\,dx = cT = 1,
+\int_{-\infty}^{\infty} p(x)\,dx = 1.
 $$
 
-so
+Step 2: use the fact that the density is $0$ outside $[0,T]$.
+
+$$
+\int_0^T c\,dx = 1.
+$$
+
+Step 3: integrate the constant.
+
+$$
+c\int_0^T 1\,dx = 1.
+$$
+
+Step 4: evaluate the interval length.
+
+$$
+c(T-0)=1.
+$$
+
+So
+
+$$
+cT=1.
+$$
+
+Finally,
 
 $$
 c=\frac1T.
 $$
 
-Therefore
+Therefore the uniform density on $[0,T]$ is
 
-<table align="center">
-  <thead>
-    <tr><th>$p(x)$</th><th>condition on $x$</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>$1/T$</td><td>$x \in [0,T]$</td></tr>
-    <tr><td>$0$</td><td>otherwise</td></tr>
-  </tbody>
-</table>
+| $p(x)$ | condition on $x$ |
+|---|---|
+| $1/T$ | $0\le x\le T$ |
+| $0$ | otherwise |
 
-### What uniformity means
-
-Uniformity on an interval means equal lengths receive equal probability. It is not merely “flat looking.” The exact content is:
-
-$$ P(a\le X\le b)=\frac{b-a}{T} \qquad\text{for }0\le a\le b\le T. $$
-
-### Worked example
+### Worked example: uniform on $[0,2]$
 
 If $X\sim \mathrm{Unif}([0,2])$, then
 
-$$ p(x)=\frac12 \qquad\text{for }0\le x\le 2. $$
+$$
+p(x)=\frac12 \quad \text{for } 0\le x\le 2.
+$$
 
-So
+Now compute the probability of the interval $[0.3,0.9]$.
 
-$$ P(0.3\le X\le 0.9) = \int_{0.3}^{0.9}\frac12\,dx = \frac12(0.6)=0.3. $$
+Step 1: start from the interval formula.
 
-The probability comes from interval length times density height.
+$$
+P(0.3\le X\le 0.9)=\int_{0.3}^{0.9} p(x)\,dx.
+$$
+
+Step 2: substitute the density on that interval.
+
+$$
+P(0.3\le X\le 0.9)=\int_{0.3}^{0.9}\frac12\,dx.
+$$
+
+Step 3: pull out the constant.
+
+$$
+P(0.3\le X\le 0.9)=\frac12\int_{0.3}^{0.9} 1\,dx.
+$$
+
+Step 4: compute the interval length.
+
+$$
+P(0.3\le X\le 0.9)=\frac12(0.9-0.3).
+$$
+
+Step 5: simplify.
+
+$$
+P(0.3\le X\le 0.9)=\frac12(0.6)=0.3.
+$$
+
+The calculation is simple, but the concept is important: probability came from area, which here equals height times width.
 
 ---
 
-## 4. PMF, PDF, and CDF
+## 5. PMF, PDF, and CDF: what each one answers
 
-A high-quality note must separate these three objects by the question each answers.
+Many beginner confusions disappear if each object is tied to a question.
 
-- **PMF**: what probability is assigned to this exact discrete state?
-- **PDF**: how densely is probability packed near this location?
-- **CDF**: how much total probability lies to the left of this threshold?
+### PMF
 
-The cumulative distribution function is
+A probability mass function belongs to a discrete random variable. It answers:
+
+$$
+\text{What probability is assigned to the exact value } x\text{?}
+$$
+
+Formally,
+
+$$
+p_X(x)=P(X=x).
+$$
+
+### PDF
+
+A probability density function belongs to an absolutely continuous random variable. It answers:
+
+$$
+\text{How densely is probability packed near the location } x\text{?}
+$$
+
+Formally, probabilities come from integration:
+
+$$
+P(a\le X\le b)=\int_a^b p_X(x)\,dx.
+$$
+
+### CDF
+
+A cumulative distribution function belongs to every real-valued random variable. It answers:
+
+$$
+\text{How much total probability lies to the left of } x\text{?}
+$$
+
+Formally,
 
 $$
 F_X(x)=P(X\le x).
@@ -165,183 +323,227 @@ $$
 
 ### Why the CDF is the universal object
 
-Every real-valued random variable has threshold events of the form $X\le x$, so every real-valued random variable has a CDF.
+Every real-valued random variable has left-of-threshold events such as $X\le x$, so every real-valued random variable has a CDF.
 
-That is not true of PMFs or PDFs:
+But:
 
-- PMFs belong to discrete variables,
-- PDFs belong to absolutely continuous variables,
-- CDFs work for discrete, continuous, and mixed cases.
+- only discrete variables have PMFs in the usual sense;
+- only absolutely continuous variables have PDFs;
+- mixed variables may have neither a pure PMF nor a pure PDF that describes everything by itself.
 
-So when in doubt, the CDF is the safest general object.
-
-### Core facts about CDFs
-
-For every CDF:
-
-1. $0\le F_X(x)\le 1$
-2. $F_X$ is nondecreasing
-3. $\lim_{x\to-\infty}F_X(x)=0$
-4. $\lim_{x\to\infty}F_X(x)=1$
-5. $F_X$ is right-continuous
-
-Also,
-
-$$
-P(a<X\le b)=F_X(b)-F_X(a).
-$$
-
-This subtraction rule works in all settings.
+So if you ever lose track of what object should be used, start from the CDF.
 
 ---
 
-## 5. Discrete, continuous, and mixed CDFs
+## 6. Discrete, continuous, and mixed CDFs
+
+The CDF is easiest to understand when one sees the three main shapes side by side.
 
 ### Discrete example: Bernoulli
-
-If
-
-$$
-P(X=1)=0.3,\qquad P(X=0)=0.7,
-$$
-
-then
-
-<table align="center">
-  <thead>
-    <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>$0$</td><td>$x \lt 0$</td></tr>
-    <tr><td>$0.7$</td><td>$0\le x \lt 1$</td></tr>
-    <tr><td>$1$</td><td>$x \ge 1$</td></tr>
-  </tbody>
-</table>
-
-The jumps are exactly the point masses.
-
-### Continuous example: uniform on $[0,2]$
-
-If $X\sim \mathrm{Unif}([0,2])$, then
-
-<table align="center">
-  <thead>
-    <tr><th>$F_X(x)$</th><th>condition on $x$</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>$0$</td><td>$x \lt 0$</td></tr>
-    <tr><td>$x/2$</td><td>$0\le x\le 2$</td></tr>
-    <tr><td>$1$</td><td>$x \gt 2$</td></tr>
-  </tbody>
-</table>
-
-This rises smoothly because mass is spread continuously.
-
-### Mixed example
-
-A mixed distribution has both atoms and continuous spread. For example, a broken sensor might output exactly $0$ with positive probability but otherwise produce a continuous real measurement. In that case, the CDF has both jumps and smooth parts.
-
-This is another reason the CDF is the cleanest universal description.
-
----
-
-## 6. One-dimensional Gaussian distributions
-
-A one-dimensional Gaussian is the continuous family that matters most in introductory probability, statistics, and machine learning.
-
-Its density is
-
-$$ p(x)=\mathcal{N}(x;\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\!\left( -\frac{(x-\mu)^2}{2\sigma^2} \right). $$
-
-### What the parameters mean
-
-- $\mu$ is the center or mean;
-- $\sigma^2$ is the variance, which controls spread;
-- $\sigma$ is the standard deviation.
-
-### What the exponent is doing
-
-The exponent is the most important part to interpret first. It says that density decays according to squared distance from the mean, measured in units scaled by the variance.
-
-So:
-
-- values near $\mu$ receive larger density,
-- values far from $\mu$ receive smaller density,
-- the rate of decay depends on the spread parameter.
-
-### Why Gaussians matter
-
-Gaussians are mathematically tractable and also arise naturally in many approximate models of noise and aggregate variation. They are not the answer to every modeling problem, but they are so central that deep familiarity is necessary.
-
----
-
-## 7. Standardization and the standard normal
-
-If
-
-$$
-X\sim \mathcal{N}(\mu,\sigma^2),
-$$
-
-then the standardized variable
-
-$$
-Z=\frac{X-\mu}{\sigma}
-$$
-
-satisfies
-
-$$
-Z\sim \mathcal{N}(0,1).
-$$
-
-This is not just a symbolic trick. It is the main computational bridge for Gaussian probabilities.
-
-Let $\Phi$ denote the standard-normal CDF. Then
-
-$$ P(a\le X\le b) = \Phi\!\left(\frac{b-\mu}{\sigma}\right) - \Phi\!\left(\frac{a-\mu}{\sigma}\right). $$
-
-### Why this matters
-
-Standardization turns a whole family of Gaussian interval questions into one standard-normal question. That is the real reason the transformation is introduced.
-
-### Worked example
 
 Suppose
 
 $$
-X\sim \mathcal{N}(2,9),
+P(X=0)=0.7 \quad \text{and} \quad P(X=1)=0.3.
 $$
 
-so $\mu=2$ and $\sigma=3$. Then
+We now compute the CDF directly from the definition $F_X(x)=P(X\le x)$.
 
-$$ P(-1\le X\le 5) = P\!\left(\frac{-1-2}{3}\le Z\le \frac{5-2}{3}\right) = P(-1\le Z\le 1). $$
+#### Case 1: $x<0$
+
+If $x<0$, then neither $0$ nor $1$ is less than or equal to $x$. So the event $X\le x$ is impossible.
 
 Therefore
 
 $$
-P(-1\le X\le 5)=\Phi(1)-\Phi(-1).
+F_X(x)=0 \quad \text{for } x<0.
 $$
 
-The interval probability was reduced to a standard-normal CDF difference.
+#### Case 2: $0\le x<1$
+
+If $x$ lies between $0$ and $1$, then the value $0$ is included but the value $1$ is not.
+
+So
+
+$$
+F_X(x)=P(X=0)=0.7 \quad \text{for } 0\le x<1.
+$$
+
+#### Case 3: $x\ge 1$
+
+If $x\ge 1$, then both possible values are included.
+
+So
+
+$$
+F_X(x)=P(X=0)+P(X=1)=0.7+0.3=1 \quad \text{for } x\ge 1.
+$$
+
+Putting the cases together:
+
+| $F_X(x)$ | condition on $x$ |
+|---|---|
+| $0$ | $x<0$ |
+| $0.7$ | $0\le x<1$ |
+| $1$ | $x\ge 1$ |
+
+The key visual feature is the jump. In a discrete CDF, jumps occur exactly where point masses are located.
+
+### Continuous example: uniform on $[0,2]$
+
+Now let $X\sim \mathrm{Unif}([0,2])$ with density $p(x)=\tfrac12$ on $[0,2]$.
+
+Again compute the CDF from the definition.
+
+#### Case 1: $x<0$
+
+The variable cannot land below $0$, so
+
+$$
+F_X(x)=0 \quad \text{for } x<0.
+$$
+
+#### Case 2: $0\le x\le 2$
+
+Now
+
+$$
+F_X(x)=P(X\le x)=\int_0^x \frac12\,dt.
+$$
+
+Pull out the constant:
+
+$$
+F_X(x)=\frac12\int_0^x 1\,dt.
+$$
+
+Evaluate the integral:
+
+$$
+F_X(x)=\frac12(x-0)=\frac{x}{2} \quad \text{for } 0\le x\le 2.
+$$
+
+#### Case 3: $x>2$
+
+By the time the threshold passes $2$, all probability has already been accumulated, so
+
+$$
+F_X(x)=1 \quad \text{for } x>2.
+$$
+
+Putting the cases together:
+
+| $F_X(x)$ | condition on $x$ |
+|---|---|
+| $0$ | $x<0$ |
+| $x/2$ | $0\le x\le 2$ |
+| $1$ | $x>2$ |
+
+The key visual feature is that the CDF rises smoothly rather than jumping.
+
+### Mixed example
+
+A mixed distribution has both a point mass and a continuous part.
+
+For example, suppose:
+
+- with probability $0.7$, the variable equals exactly $0$;
+- with probability $0.3$, the variable is uniform on $[0,1]$.
+
+This means the continuous part contributes density
+
+$$
+0.3 \quad \text{on } [0,1],
+$$
+
+because a uniform density on $[0,1]$ has height $1$, and the total continuous mass is scaled down to $0.3$.
+
+Now compute the CDF.
+
+#### Case 1: $x<0$
+
+Nothing has accumulated yet, so
+
+$$
+F_X(x)=0.
+$$
+
+#### Case 2: $x=0$
+
+At $x=0$, the atom at $0$ is included. So
+
+$$
+F_X(0)=0.7.
+$$
+
+#### Case 3: $0<x<1$
+
+Now the point mass at $0$ is still included, and the continuous part contributes the interval probability from $0$ to $x$:
+
+$$
+F_X(x)=0.7+\int_0^x 0.3\,dt.
+$$
+
+Compute the integral:
+
+$$
+F_X(x)=0.7+0.3x \quad \text{for } 0<x<1.
+$$
+
+#### Case 4: $x\ge 1$
+
+All mass has accumulated, so
+
+$$
+F_X(x)=1 \quad \text{for } x\ge 1.
+$$
+
+This example shows why the CDF is universal: it can handle jumps and smooth accumulation in one object.
 
 ---
 
-## 8. The 68–95–99.7 rule
+## 7. One-dimensional Gaussian distributions
 
-Because the standard normal satisfies
+The Gaussian family is the most important continuous family in elementary probability and in much of later machine learning.
 
-$$ P(|Z|\le 1)\approx 0.68,\qquad P(|Z|\le 2)\approx 0.95,\qquad P(|Z|\le 3)\approx 0.997, $$
+### What object is being defined
 
-a Gaussian with mean $\mu$ and standard deviation $\sigma$ places about
+A one-dimensional Gaussian is a density on the whole real line:
 
-- 68% of its mass within $\mu\pm \sigma$,
-- 95% within $\mu\pm 2\sigma$,
-- 99.7% within $\mu\pm 3\sigma$.
+$$
+p(x)=\mathcal{N}(x;\mu,\sigma^2)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).
+$$
 
-These are not disconnected folklore facts. They are direct consequences of standardization and the standard-normal CDF.
+Here:
 
-### Why the normalization constant is there
+- $\mu$ is the mean;
+- $\sigma^2$ is the variance;
+- $\sigma$ is the standard deviation.
+
+### What each part of the formula does
+
+The formula has two conceptually different parts.
+
+#### The exponential term
+
+The factor
+
+$$
+\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)
+$$
+
+controls shape.
+
+Read the exponent from the inside out:
+
+1. compute the deviation from the mean, $x-\mu$;
+2. square it, so positive and negative deviations are treated symmetrically;
+3. divide by $2\sigma^2$, so larger variance makes the decay slower;
+4. place a minus sign in front, so larger squared distance gives smaller density.
+
+So points near $\mu$ get more density, and points far from $\mu$ get less density.
+
+#### The normalization constant
 
 The factor
 
@@ -349,60 +551,260 @@ $$
 \frac{1}{\sqrt{2\pi\sigma^2}}
 $$
 
-ensures the total area under the Gaussian curve is 1. The exponential term shapes the curve. The prefactor rescales it into a valid density.
+does not determine the bell shape. Its job is to make the total area equal to $1$.
+
+In other words:
+
+- the exponential term says what shape we want;
+- the prefactor rescales that shape into a valid density.
+
+### Why Gaussians matter
+
+Gaussians matter for two separate reasons:
+
+1. they are mathematically tractable;
+2. they often provide good models or approximations for noise and aggregate variation.
+
+The second point is a modeling heuristic, not a universal law. It is common, not automatic.
+
+---
+
+## 8. Standardization and the standard normal
+
+If
+
+$$
+X\sim \mathcal{N}(\mu,\sigma^2),
+$$
+
+define
+
+$$
+Z=\frac{X-\mu}{\sigma}.
+$$
+
+This transformation is called standardization.
+
+### Why this transformation is used
+
+Standardization does two jobs at once.
+
+#### Step 1: subtract the mean
+
+Subtracting $\mu$ moves the center to $0$.
+
+#### Step 2: divide by the standard deviation
+
+Dividing by $\sigma$ changes the unit of measurement from "raw units of $X$" to "number of standard deviations away from the mean."
+
+After this transformation,
+
+$$
+Z\sim \mathcal{N}(0,1).
+$$
+
+This special Gaussian is called the standard normal.
+
+### The standard normal CDF
+
+The CDF of the standard normal is written
+
+$$
+\Phi(z)=P(Z\le z).
+$$
+
+The reason $\Phi$ matters is computational:
+
+every Gaussian interval question can be turned into a standard-normal interval question.
+
+### General Gaussian interval formula
+
+Suppose $X\sim \mathcal{N}(\mu,\sigma^2)$. Then
+
+$$
+P(a\le X\le b)=P\!\left(\frac{a-\mu}{\sigma}\le Z\le \frac{b-\mu}{\sigma}\right).
+$$
+
+Using the CDF subtraction rule,
+
+$$
+P(a\le X\le b)=\Phi\!\left(\frac{b-\mu}{\sigma}\right)-\Phi\!\left(\frac{a-\mu}{\sigma}\right).
+$$
+
+That is the real point of standardization. It is not a decorative algebraic move. It is the bridge from an arbitrary Gaussian to the one standard table or software function $\Phi$.
+
+### Worked example: $X\sim \mathcal{N}(2,9)$
+
+Suppose
+
+$$
+X\sim \mathcal{N}(2,9).
+$$
+
+Then:
+
+- $\mu=2$;
+- $\sigma^2=9$;
+- $\sigma=3$.
+
+Now compute
+
+$$
+P(-1\le X\le 5).
+$$
+
+Step 1: standardize the left endpoint.
+
+$$
+\frac{-1-\mu}{\sigma}=\frac{-1-2}{3}=\frac{-3}{3}=-1.
+$$
+
+Step 2: standardize the right endpoint.
+
+$$
+\frac{5-\mu}{\sigma}=\frac{5-2}{3}=\frac{3}{3}=1.
+$$
+
+Step 3: rewrite the probability in terms of $Z$.
+
+$$
+P(-1\le X\le 5)=P(-1\le Z\le 1).
+$$
+
+Step 4: express it using the standard-normal CDF.
+
+$$
+P(-1\le X\le 5)=\Phi(1)-\Phi(-1).
+$$
+
+That is the complete computation pipeline:
+
+1. identify $\mu$ and $\sigma$;
+2. standardize endpoints;
+3. rewrite as a standard-normal interval;
+4. evaluate with $\Phi$.
+
+### The 68-95-99.7 rule
+
+For the standard normal,
+
+$$
+P(|Z|\le 1)\approx 0.68, \quad P(|Z|\le 2)\approx 0.95, \quad P(|Z|\le 3)\approx 0.997.
+$$
+
+Because every Gaussian standardizes to $Z$, this implies:
+
+- about 68% of Gaussian mass lies within one standard deviation of the mean;
+- about 95% lies within two standard deviations;
+- about 99.7% lies within three standard deviations.
+
+These are approximations, not exact identities, but they are useful sanity checks.
 
 ---
 
 ## 9. Multivariate Gaussian distributions
 
-A multivariate Gaussian extends the same basic idea from one coordinate to many.
+The one-dimensional Gaussian describes one number. A multivariate Gaussian describes several numbers observed together.
 
-Let
+### The random vector
+
+Instead of one scalar variable, write
 
 $$
 X=(X_1,\dots,X_n)^T.
 $$
 
-Now the center is a mean vector
+Now one outcome is not a single point on a line. It is a point in $n$-dimensional space.
+
+### The mean vector
+
+The center is now described coordinate by coordinate:
 
 $$
-\mu=\mathbb{E}[X],
+\mu=\mathbb{E}[X]=\bigl(\mathbb{E}[X_1],\dots,\mathbb{E}[X_n]\bigr)^T.
 $$
 
-and spread/dependence are encoded by the covariance matrix
+This means:
+
+- the first component of $\mu$ is the average value of $X_1$;
+- the second component is the average value of $X_2$;
+- and so on.
+
+### The covariance matrix
+
+Spread and joint movement are summarized by the covariance matrix
 
 $$
 \Sigma_{ij}=\mathrm{Cov}(X_i,X_j).
 $$
 
-### Why covariance must be introduced first
+This definition means:
 
-A good mastery note does not start with the matrix formula alone. The reader must first understand what the covariance matrix means.
+- diagonal entry $\Sigma_{ii}$ is the variance of coordinate $i$;
+- off-diagonal entry $\Sigma_{ij}$ tells how coordinates $i$ and $j$ move together.
 
-- diagonal entries tell the variance of each coordinate,
-- off-diagonal entries tell how coordinates move together.
+So the covariance matrix combines two kinds of information:
 
-### Example covariance structures
+1. how spread out each coordinate is by itself;
+2. whether pairs of coordinates tend to rise and fall together.
 
-If
+### Why covariance must be understood before the density formula
 
-$$ \Sigma= \begin{pmatrix} 4 & 0\\ 0 & 1 \end{pmatrix}, $$
+If the covariance matrix is just treated as a block of symbols, the multivariate Gaussian formula becomes meaningless.
 
-then the distribution is more spread in the first direction than the second, and the contours are axis-aligned.
+So read the matrix first as geometry:
 
-If instead
+- large variance in one coordinate means more spread along that axis;
+- positive covariance means two coordinates tend to move together;
+- negative covariance means they tend to move in opposite directions;
+- zero covariance means no linear co-movement.
 
-$$ \Sigma= \begin{pmatrix} 1 & 0.8\\ 0.8 & 1 \end{pmatrix}, $$
+### Two concrete covariance examples
 
-then the variables tend to move together and the contours are tilted.
+#### Example 1: axis-aligned spread
 
-### Density formula
+Suppose
 
-The nonsingular multivariate Gaussian density is
+$$
+\Sigma=\begin{pmatrix} 4 & 0 \\ 0 & 1 \end{pmatrix}.
+$$
 
-$$ p(x)=\mathcal{N}(x;\mu,\Sigma) = (2\pi)^{-n/2}|\Sigma|^{-1/2} \exp\!\left( -\frac12 (x-\mu)^T\Sigma^{-1}(x-\mu) \right). $$
+Interpret each entry:
 
-For this formula as written, we assume $\Sigma$ is symmetric and positive definite. That guarantees the inverse exists and the quadratic form behaves like a genuine squared distance.
+- variance of the first coordinate is $4$;
+- variance of the second coordinate is $1$;
+- covariance is $0$.
+
+So the cloud is more spread out horizontally than vertically, and there is no tilt caused by covariance.
+
+#### Example 2: tilted contours
+
+Now suppose
+
+$$
+\Sigma=\begin{pmatrix} 1 & 0.8 \\ 0.8 & 1 \end{pmatrix}.
+$$
+
+Interpret each entry:
+
+- each coordinate has variance $1$;
+- the positive off-diagonal value $0.8$ says the coordinates tend to increase together.
+
+So the cloud is tilted along a positively sloped direction.
+
+### The density formula
+
+For a nonsingular multivariate Gaussian,
+
+$$
+p(x)=\mathcal{N}(x;\mu,\Sigma)=(2\pi)^{-n/2}|\Sigma|^{-1/2}\exp\!\left(-\frac12(x-\mu)^T\Sigma^{-1}(x-\mu)\right).
+$$
+
+For this formula as written, we assume $\Sigma$ is symmetric and positive definite. Those assumptions guarantee:
+
+1. the inverse $\Sigma^{-1}$ exists;
+2. the determinant $|\Sigma|$ is positive;
+3. the quadratic form behaves like a covariance-aware squared distance.
 
 ### Mahalanobis distance
 
@@ -412,103 +814,221 @@ $$
 (x-\mu)^T\Sigma^{-1}(x-\mu)
 $$
 
-is the squared Mahalanobis distance. It is the covariance-aware notion of distance from the mean.
+is the squared Mahalanobis distance from $x$ to the mean.
 
-That gives the geometry:
+Why is this the right notion of distance here?
 
-- diagonal covariance gives axis-aligned ellipses or ellipsoids;
-- larger variances stretch along the corresponding directions;
-- off-diagonal covariance rotates the principal axes.
+- it is small when $x$ lies in a direction where the distribution naturally has a lot of spread;
+- it is large when $x$ lies far away in a direction where the distribution is tight.
 
-### Zero covariance in the Gaussian family
+So unlike ordinary Euclidean distance, it respects the covariance structure of the distribution.
 
-In general, zero covariance does not imply independence. But for jointly Gaussian variables, zero covariance does imply independence of the corresponding coordinates.
+### Geometry of equal-density contours
 
-This is one of the reasons Gaussian models are so structurally special.
+The exponential term depends only on the Mahalanobis distance. So points with the same Mahalanobis distance from $\mu$ have the same density.
+
+That is why:
+
+- in two dimensions, equal-density contours are ellipses;
+- in higher dimensions, equal-density contours are ellipsoids.
+
+Diagonal covariance gives axis-aligned ellipses. Off-diagonal covariance rotates them.
+
+### A special Gaussian fact
+
+In general probability theory,
+
+$$
+\mathrm{Cov}(X,Y)=0
+$$
+
+does not imply independence.
+
+But in the jointly Gaussian family, zero covariance does imply independence of the corresponding coordinates.
+
+This is a Gaussian-specific structural fact, and it is one of the reasons Gaussian models are unusually convenient.
 
 ---
 
 ## 10. Beta distributions
 
-Up to this point, most random variables represented observed outcomes. Beta changes the role of the random object.
+Up to now, most examples used random variables to represent observed outcomes. Beta distributions change the role of the random quantity.
 
-For a Bernoulli model, the outcome variable is
+### The underlying Bernoulli model
+
+Suppose
 
 $$
-X\in\{0,1\},
+X\in\{0,1\}.
 $$
 
-with success probability
+Let
 
 $$
 \rho=P(X=1).
 $$
 
-A Beta distribution is a distribution over possible values of that parameter:
+Here:
 
-$$ p(\rho)=\mathrm{Beta}(\rho;a,b) = \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)} \rho^{a-1}(1-\rho)^{b-1}, \qquad 0\le \rho\le 1. $$
+- $X$ is the observed outcome;
+- $\rho$ is the success probability parameter of the Bernoulli model.
 
-### Why this matters conceptually
+The key role distinction is:
 
-This is the first place the chapter strongly separates:
+- the Bernoulli distribution is a distribution over $X$;
+- the Beta distribution is a distribution over possible values of $\rho$.
 
-- a distribution over outcomes,
-- from a distribution over possible parameter values.
+### Beta density
 
-That distinction is essential for later Bayesian inference.
+A Beta distribution on $\rho\in[0,1]$ has density
+
+$$
+p(\rho)=\mathrm{Beta}(\rho;a,b)=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\rho^{a-1}(1-\rho)^{b-1}.
+$$
+
+The support condition is essential:
+
+$$
+0\le \rho \le 1.
+$$
+
+This must be true because $\rho$ itself is a probability parameter.
+
+### What the normalization constant is doing
+
+The factor
+
+$$
+\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}
+$$
+
+is the constant that forces the total area under the density on $[0,1]$ to equal $1$.
+
+For beginner understanding, the crucial point is not memorizing Gamma functions. The crucial point is knowing that this constant exists so that the kernel
+
+$$
+\rho^{a-1}(1-\rho)^{b-1}
+$$
+
+becomes a valid probability density.
 
 ### Shape interpretation
 
-The parameters $a$ and $b$ control whether the density is concentrated in the interior, skewed toward one boundary, or concentrated near both ends.
+The parameters $a$ and $b$ control shape.
+
+#### Case 1: $a=b=1$
+
+Then
+
+$$
+p(\rho)\propto \rho^0(1-\rho)^0=1.
+$$
+
+So the Beta density is uniform on $[0,1]$.
+
+#### Case 2: $a>1$ and $b>1$
+
+Both exponents are positive, so the density tends to be low near the boundaries and higher in the interior. This gives an interior peak.
+
+#### Case 3: $a<b$
+
+The density leans toward smaller $\rho$ values.
+
+#### Case 4: $a>b$
+
+The density leans toward larger $\rho$ values.
+
+#### Case 5: one parameter below $1$
+
+If either parameter is below $1$, the density may become very large near a boundary. That does not violate probability rules because the total integral remains finite.
+
+### Mean of a Beta distribution
+
+One useful summary is
+
+$$
+\mathbb{E}[\rho]=\frac{a}{a+b}.
+$$
+
+This formula is worth interpreting, not just storing:
+
+- the ratio $a:b$ determines where the distribution is centered;
+- the sum $a+b$ determines how concentrated or diffuse that distribution is.
+
+So $\mathrm{Beta}(2,2)$ and $\mathrm{Beta}(20,20)$ are both centered at $0.5$, but the second is much more concentrated near $0.5$.
 
 ---
 
 ## 11. Dirichlet distributions
 
-Dirichlet is the categorical analogue of Beta.
+The Dirichlet distribution is the multi-category analogue of the Beta distribution.
 
-If
+### The parameter object
 
-$$ \pi=(\pi_1,\dots,\pi_K), \qquad \pi_k\ge 0, \qquad \sum_{k=1}^{K}\pi_k=1, $$
+Suppose a categorical variable can take one of $K$ categories with parameter vector
 
-then the Dirichlet density is
+$$
+\pi=(\pi_1,\dots,\pi_K).
+$$
 
-$$ p(\pi)=\mathrm{Dir}(\pi;\alpha_1,\dots,\alpha_K) \propto \prod_{k=1}^{K}\pi_k^{\alpha_k-1}. $$
+Because these are probabilities, the vector must satisfy two constraints:
 
-### What object this is
+$$
+\pi_k\ge 0 \quad \text{for every } k,
+$$
 
-Again, this is not a distribution over observed categories. It is a distribution over possible categorical parameter vectors.
+and
 
-That is why it matters later for Bayesian learning with categorical or multinomial data.
+$$
+\sum_{k=1}^{K}\pi_k=1.
+$$
+
+So $\pi$ lives on the probability simplex.
+
+### Dirichlet density
+
+The Dirichlet distribution has density
+
+$$
+p(\pi)=\mathrm{Dir}(\pi;\alpha_1,\dots,\alpha_K)\propto \prod_{k=1}^{K}\pi_k^{\alpha_k-1}.
+$$
+
+Again, the proportionality sign means a normalization constant exists but is not written explicitly here.
+
+### What this object is
+
+This is not a distribution over observed category labels. It is a distribution over possible categorical parameter vectors.
+
+That is exactly parallel to the Beta-Bernoulli relationship:
+
+- Bernoulli outcome $X$ corresponds to Beta-distributed parameter $\rho$;
+- categorical outcome corresponds to Dirichlet-distributed parameter vector $\pi$.
+
+### Pseudo-count intuition
+
+The parameters $\alpha_1,\dots,\alpha_K$ are often interpreted as pseudo-counts.
+
+Why? Because later, when categorical data are observed, each observed count gets added to the corresponding $\alpha_k$. So the prior behaves algebraically like though it had already seen some imaginary counts before the real data arrived.
+
+That is a structural preview for Bayesian learning in the next section.
 
 ---
 
-## 12. How this section connects forward
+## 12. What to retain
 
-This section introduces the main descriptive language for continuous probability and the core Gaussian family that later dominates much of statistics and machine learning.
+- The CDF is the universal object for real-valued random variables.
+- A PDF is not a point probability. It must be integrated to produce probabilities.
+- For a continuous variable, $P(X=x)=0$ at every point.
+- PMFs, PDFs, and CDFs answer different questions.
+- Standardization converts an arbitrary Gaussian probability problem into a standard-normal probability problem.
+- In a multivariate Gaussian, the covariance matrix controls spread and geometric orientation.
+- Beta and Dirichlet distributions are distributions over parameters, not over observed outcomes.
 
-- Densities prepare the ground for continuous expectations and likelihoods.
-- CDFs remain the universal description across discrete and continuous settings.
-- Gaussian models become central in estimation, geometry, and latent-variable modeling.
-- Beta and Dirichlet prepare the conceptual distinction between observed outcomes and distributions over parameters.
+## 13. Do not confuse
 
-So the real mastery goal here is not merely learning a few formulas. It is learning the new logic of continuous probability and the new roles different families can play.
-
----
-
-## 13. Retain from 2.5
-
-- A density is not a point probability.
-- Continuous probabilities come from integration over intervals or regions.
-- The CDF is the universal object across discrete, continuous, and mixed cases.
-- Standardization reduces arbitrary Gaussian interval questions to standard-normal ones.
-- Multivariate Gaussian geometry is controlled by covariance.
-- Beta and Dirichlet are distributions over parameters, not over observed outcomes.
-
-## 14. Do not confuse in 2.5
-
-- Do not confuse PDF values with probabilities at points.
-- Do not confuse PMFs, PDFs, and CDFs.
-- Do not forget support when interpreting any density.
-- Do not treat standardization as symbolic decoration; it is a computational tool.
-- Do not confuse a Bernoulli outcome distribution with a Beta prior over the Bernoulli parameter.
+- Do not confuse density height with probability.
+- Do not confuse a smooth CDF with a PDF. They are different objects.
+- Do not forget that CDFs work in discrete, continuous, and mixed settings.
+- Do not treat the Gaussian formula as just symbols; the mean and covariance have direct geometric meaning.
+- Do not confuse the Bernoulli outcome $X$ with the Bernoulli parameter $\rho$.
+- Do not confuse a categorical observation with a Dirichlet-distributed parameter vector.
