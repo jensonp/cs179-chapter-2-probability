@@ -1169,7 +1169,7 @@ So each CPT row can be optimized independently.
 Let
 
 $$
-N_i(x, x') = \#\{j : x_i^{(j)} = x,\; x_{\mathrm{pa}(i)}^{(j)} = x'\}
+N_i(x, x') = \left|\{j : x_i^{(j)} = x,\; x_{\mathrm{pa}(i)}^{(j)} = x'\}\right|
 $$
 
 be the count of data points in which node $i$ takes value $x$ and its parents take configuration $x'$.
@@ -1177,7 +1177,7 @@ be the count of data points in which node $i$ takes value $x$ and its parents ta
 Let
 
 $$
-N_i(x') = \#\{j : x_{\mathrm{pa}(i)}^{(j)} = x'\}
+N_i(x') = \left|\{j : x_{\mathrm{pa}(i)}^{(j)} = x'\}\right|
 $$
 
 be the number of data points in which the parents of node $i$ take configuration $x'$, regardless of the child's value.
