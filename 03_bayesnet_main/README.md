@@ -1004,17 +1004,17 @@ Once you know the present state, the future is independent of the past. In d-sep
 Let $X_t$ be the $t$-th word in a sentence (from a vocabulary of size $d$). A bigram model estimates:
 
 $$
-\hat p(x_t \mid x_{t-1}) = \frac{\#(x_{t-1}\to x_t)}{\#(x_{t-1})},
+\hat p(x_t \mid x_{t-1}) = \frac{N(x_{t-1}\to x_t)}{N(x_{t-1})},
 $$
 
-where $\#(x_{t-1}\to x_t)$ counts adjacent occurrences in a corpus.
+where $N(x_{t-1}\to x_t)$ is the number of times the adjacent pair $(x_{t-1},x_t)$ appears in the corpus, and $N(x_{t-1})=\sum_{x} N(x_{t-1}\to x)$ is the number of times the word $x_{t-1}$ appears as a “previous word” in such adjacent pairs.
 
-If $\#(x_{t-1}\to x_t)=0$ for many transitions (which is common), naive MLE makes those transitions impossible, producing brittle models. A simple Dirichlet prior yields smoothing:
+If $N(x_{t-1}\to x_t)=0$ for many transitions (which is common), naive MLE makes those transitions impossible, producing brittle models. A simple Dirichlet prior yields smoothing:
 
 $$
 \hat p_{\text{MAP}}(x_t \mid x_{t-1})
 =
-\frac{\#(x_{t-1}\to x_t) + \alpha(x_t)}{\#(x_{t-1}) + \sum_{x'} \alpha(x')}.
+\frac{N(x_{t-1}\to x_t) + \alpha(x_t)}{N(x_{t-1}) + \sum_{x'} \alpha(x')}.
 $$
 
 Choosing $\alpha(x_t)$ to reflect unigram frequencies is a principled way to encode “common words are more likely as unseen next words than rare words.”
