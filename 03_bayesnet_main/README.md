@@ -50,9 +50,7 @@ This exponential growth is the first major pressure that forces Bayesian network
 Before introducing graphs, recall that any joint distribution can always be expanded by repeated conditioning:
 
 $$
-p(X_1,\dots,X_n)
-=
-p(X_1)\,p(X_2\mid X_1)\,p(X_3\mid X_1,X_2)\cdots p(X_n\mid X_1,\dots,X_{n-1}).
+p(X_1,\dots,X_n) = p(X_1)\,p(X_2\mid X_1)\,p(X_3\mid X_1,X_2)\cdots p(X_n\mid X_1,\dots,X_{n-1}).
 $$
 
 This identity is always true. It requires no independence assumptions. It is just the chain rule of probability.
@@ -65,9 +63,7 @@ But the chain rule alone does **not** solve the complexity problem. It only rewr
 - Continuing this way, the total is
 
 $$
-(d-1) + d(d-1) + d^2(d-1) + \cdots + d^{n-1}(d-1)
-=
-d^n - 1.
+(d-1) + d(d-1) + d^2(d-1) + \cdots + d^{n-1}(d-1) = d^n - 1.
 $$
 
 So the chain rule changes the shape of the representation, but not its raw complexity.
@@ -153,9 +149,7 @@ $$
 So the joint distribution factors as
 
 $$
-p(B,E,A,W,H)
-=
-p(B)\,p(E)\,p(A\mid B,E)\,p(W\mid A)\,p(H\mid A).
+p(B,E,A,W,H) = p(B)\,p(E)\,p(A\mid B,E)\,p(W\mid A)\,p(H\mid A).
 $$
 
 Now specify the local probabilities.
@@ -864,9 +858,7 @@ What is fixed is the graph and the choice of the target node $i$. What varies is
 Let $G$ be a Bayesian network graph. The **Markov blanket** of node $i$ is the set
 
 $$
-\mathrm{MB}(i)
-=
-\mathrm{pa}(i)
+\mathrm{MB}(i) = \mathrm{pa}(i)
 \;\cup\;
 \mathrm{ch}(i)
 \;\cup\;
@@ -995,9 +987,7 @@ What is fixed is the model $p$ (equivalently, the BN structure and its CPDs). Wh
 For a discrete model, the fundamental identity is:
 
 $$
-p(x_Q \mid x_E)
-=
-\frac{\sum_{x_H} p(x_Q, x_H, x_E)}{\sum_{x_Q}\sum_{x_H} p(x_Q, x_H, x_E)}.
+p(x_Q \mid x_E) = \frac{\sum_{x_H} p(x_Q, x_H, x_E)}{\sum_{x_Q}\sum_{x_H} p(x_Q, x_H, x_E)}.
 $$
 
 The Bayesian network factorization tells us how to compute $p(x_Q, x_H, x_E)$ as a product of local conditionals, but the summation over $x_H$ can still be exponentially large if done naively.
@@ -1031,9 +1021,7 @@ We will not compute a final number here; the goal is to practice translating a q
 **Step 2: write the posterior as “joint over evidence, summed over hidden, normalized.”**
 
 $$
-P(B=b\mid W=1)
-=
-\frac{\sum_{e,a,h} P(B=b,E=e,A=a,W=1,H=h)}{\sum_{b'}\sum_{e,a,h} P(B=b',E=e,A=a,W=1,H=h)}.
+P(B=b\mid W=1) = \frac{\sum_{e,a,h} P(B=b,E=e,A=a,W=1,H=h)}{\sum_{b'}\sum_{e,a,h} P(B=b',E=e,A=a,W=1,H=h)}.
 $$
 
 **Step 3: expand the joint using the BN factorization.**
@@ -1047,9 +1035,7 @@ $$
 Plugging $w=1$,
 
 $$
-P(B=b\mid W=1)
-=
-\frac{\sum_{e,a,h} P(b)\,P(e)\,P(a\mid b,e)\,P(W=1\mid a)\,P(h\mid a)}{\sum_{b'}\sum_{e,a,h} P(b')\,P(e)\,P(a\mid b',e)\,P(W=1\mid a)\,P(h\mid a)}.
+P(B=b\mid W=1) = \frac{\sum_{e,a,h} P(b)\,P(e)\,P(a\mid b,e)\,P(W=1\mid a)\,P(h\mid a)}{\sum_{b'}\sum_{e,a,h} P(b')\,P(e)\,P(a\mid b',e)\,P(W=1\mid a)\,P(h\mid a)}.
 $$
 
 **Step 4: simplify by summing out a factor that normalizes.**
@@ -1147,9 +1133,7 @@ $$
 Taking logs,
 
 $$
-\ell(\rho)
-=
-\sum_{j=1}^m \log p(x^{(j)};\rho).
+\ell(\rho) = \sum_{j=1}^m \log p(x^{(j)};\rho).
 $$
 
 Now use the Bayesian network factorization for each data point:
@@ -1161,25 +1145,19 @@ $$
 So
 
 $$
-\ell(\rho)
-=
-\sum_{j=1}^m \sum_{i=1}^n \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)}^{(j)};\rho).
+\ell(\rho) = \sum_{j=1}^m \sum_{i=1}^n \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)}^{(j)};\rho).
 $$
 
 At this step, each term corresponds to one node $i$ in one data point $j$. Now reverse the order of summation:
 
 $$
-\ell(\rho)
-=
-\sum_{i=1}^n \sum_{j=1}^m \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)}^{(j)};\rho).
+\ell(\rho) = \sum_{i=1}^n \sum_{j=1}^m \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)}^{(j)};\rho).
 $$
 
 This is already informative: the full log-likelihood is a sum of node-specific contributions. But we can go one step further and group data points according to the parent configuration they present for node $i$:
 
 $$
-\ell(\rho)
-=
-\sum_{i=1}^n \sum_{x_{\mathrm{pa}(i)}} \sum_{j: \, x_{\mathrm{pa}(i)}^{(j)} = x_{\mathrm{pa}(i)}} \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)};\rho).
+\ell(\rho) = \sum_{i=1}^n \sum_{x_{\mathrm{pa}(i)}} \sum_{j: \, x_{\mathrm{pa}(i)}^{(j)} = x_{\mathrm{pa}(i)}} \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)};\rho).
 $$
 
 Now the decomposition becomes conceptually clear. Fix a node $i$ and fix one parent configuration $x_{\mathrm{pa}(i)}$. The inner sum uses exactly those data points in which the parents of $X_i$ took that configuration. Within that subset of the data, we are simply estimating a discrete distribution over the possible values of $X_i$.
@@ -1207,9 +1185,7 @@ be the number of data points in which the parents of node $i$ take configuration
 Then the maximum likelihood estimate is
 
 $$
-\widehat p(X_i = x \mid X_{\mathrm{pa}(i)} = x')
-=
-\frac{N_i(x,x')}{N_i(x')}.
+\widehat p(X_i = x \mid X_{\mathrm{pa}(i)} = x') = \frac{N_i(x,x')}{N_i(x')}.
 $$
 
 ### Interpretation paragraph
@@ -1240,9 +1216,7 @@ This clean estimator depends on several conditions.
 The standard remedy is regularization or Bayesian smoothing. For example, with pseudo-counts $\alpha_{x,x'} > 0$,
 
 $$
-\widehat p(X_i=x \mid X_{\mathrm{pa}(i)}=x')
-=
-\frac{N_i(x,x') + \alpha_{x,x'}}{N_i(x') + \sum_x \alpha_{x,x'}}.
+\widehat p(X_i=x \mid X_{\mathrm{pa}(i)}=x') = \frac{N_i(x,x') + \alpha_{x,x'}}{N_i(x') + \sum_x \alpha_{x,x'}}.
 $$
 
 This corresponds to a Dirichlet prior over each CPT row.
@@ -1482,9 +1456,7 @@ Several cautions matter.
 For binary classification with classes $y \in \{\text{spam}, \text{ham}\}$, the posterior odds satisfy
 
 $$
-\frac{p(\text{spam}\mid x)}{p(\text{ham}\mid x)}
-=
-\frac{p(\text{spam})}{p(\text{ham})}
+\frac{p(\text{spam}\mid x)}{p(\text{ham}\mid x)} = \frac{p(\text{spam})}{p(\text{ham})}
 \prod_{i=1}^n
 \frac{p(x_i\mid \text{spam})}{p(x_i\mid \text{ham})}.
 $$
@@ -1492,11 +1464,7 @@ $$
 Taking logs,
 
 $$
-\eta
-=
-\log \frac{p(\text{spam}\mid x)}{p(\text{ham}\mid x)}
-=
-\log \frac{p(\text{spam})}{p(\text{ham})}
+\eta = \log \frac{p(\text{spam}\mid x)}{p(\text{ham}\mid x)} = \log \frac{p(\text{spam})}{p(\text{ham})}
 +
 \sum_{i=1}^n
 \log \frac{p(x_i\mid \text{spam})}{p(x_i\mid \text{ham})}.
@@ -1769,17 +1737,13 @@ In a **noisy-OR** model, each cause $X_i$ has an associated parameter $\rho_i \i
 The conditional probability of the effect is
 
 $$
-p(Y=1 \mid X_1,\dots,X_n)
-=
-1 - \prod_{i=1}^n \rho_i^{\mathbf 1[X_i=1]}.
+p(Y=1 \mid X_1,\dots,X_n) = 1 - \prod_{i=1}^n \rho_i^{\mathbf 1[X_i=1]}.
 $$
 
 Equivalently,
 
 $$
-p(Y=0 \mid X_1,\dots,X_n)
-=
-\prod_{i=1}^n \rho_i^{\mathbf 1[X_i=1]}.
+p(Y=0 \mid X_1,\dots,X_n) = \prod_{i=1}^n \rho_i^{\mathbf 1[X_i=1]}.
 $$
 
 If all $X_i=0$, then the empty product equals $1$, so $p(Y=0)=1$ and $p(Y=1)=0$, unless a separate leak parameter is added.
