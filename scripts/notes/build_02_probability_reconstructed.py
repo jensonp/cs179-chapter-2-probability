@@ -64,6 +64,7 @@ HAT_BRACE_RE = re.compile(r"\\hat\{([^{}]+)\}")
 HAT_TOKEN_RE = re.compile(r"\\hat\s+([A-Za-zα-ωΑ-Ω])")
 BAR_SYMBOL_RE = re.compile(r"\\bar([A-Za-zα-ωΑ-Ω])")
 HAT_SYMBOL_RE = re.compile(r"\\hat([A-Za-zα-ωΑ-Ω])")
+CODE_FENCE_RE = re.compile(r"^(`{3,}|~{3,})(.*)$")
 
 
 @dataclass
@@ -340,9 +341,14 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
     paragraph: list[str] = []
     table_lines: list[str] = []
     math_lines: list[str] = []
+    code_lines: list[str] = []
     table_stack_lines: list[str] = []
     html_table_lines: list[str] = []
     in_math = False
+    in_code = False
+    code_fence = ""
+    code_lang = ""
+    skip_code_block = False
     in_table_stack = False
     in_html_table = False
     html_table_depth = 0
@@ -367,6 +373,27 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
 
     for raw in markdown_path.read_text(encoding="utf-8").splitlines():
         line = raw.rstrip()
+
+        if in_code:
+            stripped = line.strip()
+            if (
+                stripped
+                and code_fence
+                and stripped[0] == code_fence[0]
+                and set(stripped) == {code_fence[0]}
+                and len(stripped) >= len(code_fence)
+            ):
+                if not skip_code_block and code_lines:
+                    blocks.append(Block(kind="code", lines=code_lines.copy()))
+                code_lines = []
+                in_code = False
+                code_fence = ""
+                code_lang = ""
+                skip_code_block = False
+            else:
+                if not skip_code_block:
+                    code_lines.append(line)
+            continue
 
         if in_html_table:
             html_table_lines.append(line)
@@ -401,6 +428,19 @@ def parse_markdown(markdown_path: Path) -> list[Block]:
 
         if not line.strip():
             flush_paragraph()
+            continue
+
+        stripped = line.strip()
+        fence_match = CODE_FENCE_RE.match(stripped)
+        if fence_match:
+            flush_paragraph()
+            flush_table()
+            in_code = True
+            code_fence = fence_match.group(1)
+            info = fence_match.group(2).strip()
+            code_lang = info.split()[0].lower() if info else ""
+            skip_code_block = code_lang in {"mermaid", "dot", "graphviz"}
+            code_lines = []
             continue
 
         # Centering wrappers used for GitHub readability should not appear as literal text in the PDF.
@@ -698,6 +738,51 @@ def render_math_block(
     return page, page_num, y
 
 
+def render_code_block(
+    doc: fitz.Document,
+    page: fitz.Page,
+    page_num: int,
+    y: float,
+    block: Block,
+) -> tuple[fitz.Page, int, float]:
+    lines = block.lines or []
+    if not lines:
+        return page, page_num, y
+
+    fontname = "body"
+    fontsize = 9.6
+    gap_after = 8
+    max_width = PAGE_WIDTH - 2 * MARGIN_X - 18
+    wrapped_lines: list[str] = []
+    for line in lines:
+        stripped = line.rstrip()
+        if not stripped:
+            wrapped_lines.append("")
+            continue
+        wrapped_lines.extend(wrap_text(stripped, fontname, fontsize, max_width))
+
+    needed = len(wrapped_lines) * fontsize * 1.28 + 18 + gap_after + LINE_GAP
+    if y + needed > PAGE_HEIGHT - MARGIN_BOTTOM:
+        page_num += 1
+        page, y = add_page(doc, page_num)
+
+    box = fitz.Rect(MARGIN_X, y, PAGE_WIDTH - MARGIN_X, y + needed - gap_after - LINE_GAP)
+    page.draw_rect(box, fill=(0.98, 0.98, 0.98), color=(0.86, 0.86, 0.86), width=0.7)
+    y = draw_wrapped_lines(
+        page,
+        y + 8,
+        wrapped_lines,
+        MARGIN_X + 10,
+        fontname,
+        fontsize,
+        (0.16, 0.16, 0.16),
+        lineheight=1.28,
+        center=False,
+    )
+    y += gap_after
+    return page, page_num, y
+
+
 def render_image_block(
     doc: fitz.Document,
     page: fitz.Page,
@@ -920,6 +1005,8 @@ def render_blocks(blocks: list[Block], output_pdf: Path) -> None:
             page, page_num, y = render_text_block(doc, page, page_num, y, block)
         elif block.kind == "math":
             page, page_num, y = render_math_block(doc, page, page_num, y, block)
+        elif block.kind == "code":
+            page, page_num, y = render_code_block(doc, page, page_num, y, block)
         elif block.kind == "table":
             page, page_num, y = render_table_block(doc, page, page_num, y, block)
         elif block.kind == "table_group":

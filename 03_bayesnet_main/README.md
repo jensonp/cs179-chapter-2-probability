@@ -146,6 +146,16 @@ $$
 B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
 $$
 
+```mermaid
+graph LR
+  B --> A
+  E --> A
+  A --> W
+  A --> H
+```
+
+(DOT source: `graphs/burglar_alarm.dot`)
+
 So the joint distribution factors as
 
 $$
@@ -531,6 +541,13 @@ $$
 
 Here $Z$ lies on a transmitting chain between $X$ and $Y$. If $Z$ is unobserved, the path can remain active. If $Z$ is observed, the path is blocked.
 
+```mermaid
+graph LR
+  X --> Z --> Y
+```
+
+(DOT source: `graphs/motif_chain.dot`)
+
 #### 2. Fork
 
 $$
@@ -539,6 +556,14 @@ $$
 
 Here $Z$ is a common cause of $X$ and $Y$. Again, if $Z$ is unobserved, the path can remain active. If $Z$ is observed, the path is blocked because conditioning on the common cause explains away the dependence.
 
+```mermaid
+graph LR
+  Z --> X
+  Z --> Y
+```
+
+(DOT source: `graphs/motif_fork.dot`)
+
 #### 3. Collider
 
 $$
@@ -546,6 +571,14 @@ X \to Z \leftarrow Y
 $$
 
 Here $Z$ is a common effect. This case is the opposite of the first two. If neither $Z$ nor any descendant of $Z$ is observed, the path is blocked. If $Z$ itself is observed, or any descendant of $Z$ is observed, the path becomes active.
+
+```mermaid
+graph LR
+  X --> Z
+  Y --> Z
+```
+
+(DOT source: `graphs/motif_collider.dot`)
 
 That last rule is the one most readers initially find counterintuitive. It is also the most important one to master.
 
@@ -775,6 +808,28 @@ The following three graphs are Markov equivalent:
 2. $A \leftarrow B \leftarrow C$
 3. $A \leftarrow B \to C$
 
+```mermaid
+graph LR
+  A --> B --> C
+```
+
+(DOT source: `graphs/markov_equiv_chain.dot`)
+
+```mermaid
+graph LR
+  C --> B --> A
+```
+
+(DOT source: `graphs/markov_equiv_reverse_chain.dot`)
+
+```mermaid
+graph LR
+  B --> A
+  B --> C
+```
+
+(DOT source: `graphs/markov_equiv_fork.dot`)
+
 In each graph, the key structural statement is the same:
 
 $$
@@ -788,6 +843,14 @@ Now compare them with the collider graph
 $$
 A \to B \leftarrow C.
 $$
+
+```mermaid
+graph LR
+  A --> B
+  C --> B
+```
+
+(DOT source: `graphs/markov_non_equiv_collider.dot`)
 
 This graph is different. Here the path between $A$ and $C$ goes through a collider, so
 
@@ -1433,6 +1496,16 @@ $$
 
 Equivalently, in graph form, $Y$ is a parent of every feature $X_i$, and there are no edges among the features.
 
+```mermaid
+graph LR
+  Y --> X1
+  Y --> X2
+  Y --> X3
+  Y --> X4
+```
+
+(DOT source: `graphs/naive_bayes_4_features.dot`; this is a 4-feature illustrative instance of the general $Y \to X_i$ pattern.)
+
 ### Interpretation paragraph
 
 The model says that once the class $Y$ is known, the remaining dependence among the features is ignored. That is the "naive" part. The features may be strongly dependent marginally, but the model treats them as separate pieces of evidence whose relationship is mediated only through the class label.
@@ -1596,6 +1669,13 @@ $$
 p(X_1,\dots,X_n)=p(X_1)\prod_{t=2}^n p(X_t \mid X_{t-1}).
 $$
 
+```mermaid
+graph LR
+  X1 --> X2 --> X3 --> X4 --> X5
+```
+
+(DOT source: `graphs/markov_chain_5.dot`; this is a 5-node illustrative instance of the general chain $X_1 \to X_2 \to \cdots \to X_n$.)
+
 If the transition distribution is the same for every time $t$, so that the same table $p(X_t \mid X_{t-1})$ is reused across positions, the chain is called **homogeneous**.
 
 ### Interpretation paragraph
@@ -1723,6 +1803,24 @@ We consider one binary child variable $Y$ and many binary parent variables
 $$
 X_1,\dots,X_n.
 $$
+
+```mermaid
+graph LR
+  X1 --> Y
+  X2 --> Y
+  X3 --> Y
+```
+
+(DOT source: `graphs/noisy_or_headache.dot`; the DOT uses the concrete headache example with causes `C,F,D` and effect `H`. The mermaid sketch here is a minimal “many-causes → one-effect” template.)
+
+If you want to see the same structure with the concrete variable names used in the worked example, it is:
+
+```mermaid
+graph LR
+  C --> H
+  F --> H
+  D --> H
+```
 
 What is fixed is that each $X_i$ is a possible cause and $Y$ is an effect that can be triggered by one or more of them. What varies is which causes are present in a given case.
 
@@ -1916,6 +2014,19 @@ $$
 H = \widetilde X \lor \widetilde D.
 $$
 
+```mermaid
+graph LR
+  C --> C_tilde["C~"]
+  F --> F_tilde["F~"]
+  D --> D_tilde["D~"]
+  C_tilde --> X_tilde["X~"]
+  F_tilde --> X_tilde
+  X_tilde --> H
+  D_tilde --> H
+```
+
+(DOT source: `graphs/noisy_or_auxiliary.dot`)
+
 ### Interpretation paragraph
 
 This construction separates two ideas that were implicit in the original noisy-OR formula:
@@ -2010,6 +2121,14 @@ Assume the true causal structure is
 $$
 U \to X,\qquad U \to Y,
 $$
+
+```mermaid
+graph LR
+  U --> X
+  U --> Y
+```
+
+(DOT source: `graphs/confounding_U_X_Y.dot`)
 
 and there is **no** arrow from $X$ to $Y$. So treatment has no causal effect; both treatment and outcome are driven by the hidden risk variable $U$.
 
