@@ -1,0 +1,7 @@
+digraph markov_equiv_chain {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  A -> B -> C;
+}
+

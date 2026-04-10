@@ -1,0 +1,11 @@
+digraph noisy_or_headache {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  C; F; D; H;
+
+  C -> H;
+  F -> H;
+  D -> H;
+}
+

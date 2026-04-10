@@ -1,0 +1,8 @@
+digraph confounding_U_X_Y {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  U -> X;
+  U -> Y;
+}
+

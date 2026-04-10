@@ -1,0 +1,8 @@
+digraph motif_fork {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  Z -> X;
+  Z -> Y;
+}
+

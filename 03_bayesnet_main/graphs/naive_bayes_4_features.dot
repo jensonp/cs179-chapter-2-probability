@@ -1,0 +1,13 @@
+digraph naive_bayes_4_features {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  Y;
+  X1; X2; X3; X4;
+
+  Y -> X1;
+  Y -> X2;
+  Y -> X3;
+  Y -> X4;
+}
+

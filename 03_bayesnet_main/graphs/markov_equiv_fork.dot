@@ -1,0 +1,8 @@
+digraph markov_equiv_fork {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  B -> A;
+  B -> C;
+}
+

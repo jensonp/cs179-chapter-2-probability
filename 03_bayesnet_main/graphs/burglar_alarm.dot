@@ -1,0 +1,12 @@
+digraph burglar_alarm {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  B; E; A; W; H;
+
+  B -> A;
+  E -> A;
+  A -> W;
+  A -> H;
+}
+

@@ -1,0 +1,8 @@
+digraph motif_collider {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  X -> Z;
+  Y -> Z;
+}
+

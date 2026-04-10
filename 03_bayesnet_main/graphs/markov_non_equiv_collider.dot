@@ -1,0 +1,8 @@
+digraph markov_non_equiv_collider {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  A -> B;
+  C -> B;
+}
+

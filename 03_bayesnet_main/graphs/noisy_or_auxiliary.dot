@@ -1,0 +1,22 @@
+digraph noisy_or_auxiliary {
+  rankdir=LR;
+  node [shape=ellipse];
+
+  C; F; D;
+  C_tilde [label="C\u0303"];
+  F_tilde [label="F\u0303"];
+  D_tilde [label="D\u0303"];
+  X_tilde [label="X\u0303"];
+  H;
+
+  C -> C_tilde;
+  F -> F_tilde;
+  D -> D_tilde;
+
+  C_tilde -> X_tilde;
+  F_tilde -> X_tilde;
+
+  X_tilde -> H;
+  D_tilde -> H;
+}
+
