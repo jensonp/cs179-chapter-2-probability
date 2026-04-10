@@ -18,6 +18,7 @@
 !hw1_reading_guide/**
 !03_bayesnet_main/
 !03_bayesnet_main/**
+!03_bayesnet_rewritten.md
 
 !notes/
 notes/*
