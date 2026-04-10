@@ -22,9 +22,11 @@ Without this section, the graph would be only a mnemonic. With it, the graph bec
 ### The object being introduced
 
 The object of interest is a probability distribution over many random variables,
+
 $$
 X = (X_1, X_2, \dots, X_n).
 $$
+
 For most of this chapter, we assume the variables are discrete and each $X_i$ takes values in a finite set $\mathcal X_i$. What is fixed is the set of variables and the state space of each variable. What varies are the probabilities assigned to the possible configurations of those variables.
 
 A Bayesian network answers the following modeling question:
@@ -36,6 +38,7 @@ The graph does not replace the probability distribution. It organizes it. Each n
 ### The difficulty with an unrestricted joint distribution
 
 Suppose, for simplicity, that each variable has the same number of possible values, say $|\mathcal X_i| = d$. Then the joint table for $p(X_1,\dots,X_n)$ has $d^n$ entries. Since the probabilities must sum to one, the number of free parameters is
+
 $$
 d^n - 1.
 $$
@@ -45,6 +48,7 @@ This exponential growth is the first major pressure that forces Bayesian network
 ### A first step: the chain rule
 
 Before introducing graphs, recall that any joint distribution can always be expanded by repeated conditioning:
+
 $$
 p(X_1,\dots,X_n)
 =
@@ -59,6 +63,7 @@ But the chain rule alone does **not** solve the complexity problem. It only rewr
 - $p(X_2\mid X_1)$ needs $d(d-1)$ free parameters because for each of the $d$ values of $X_1$, we must specify a distribution over $X_2$.
 - $p(X_3\mid X_1,X_2)$ needs $d^2(d-1)$ free parameters.
 - Continuing this way, the total is
+
 $$
 (d-1) + d(d-1) + d^2(d-1) + \cdots + d^{n-1}(d-1)
 =
@@ -70,9 +75,11 @@ So the chain rule changes the shape of the representation, but not its raw compl
 ### Why conditional independence changes everything
 
 The real simplification appears when some of those conditionals do not actually depend on every variable that comes earlier in the ordering. For example, if
+
 $$
 p(X_3\mid X_1,X_2) = p(X_3\mid X_2),
 $$
+
 then once $X_2$ is known, the value of $X_1$ no longer matters for predicting $X_3$. In probabilistic language, $X_3$ is conditionally independent of $X_1$ given $X_2$.
 
 This is the central idea of Bayesian networks: if the true dependence structure is sparse, we should represent only the dependencies that actually matter.
@@ -83,12 +90,15 @@ A **Bayesian network** for random variables $X_1,\dots,X_n$ consists of:
 
 1. A directed acyclic graph $G = (V,E)$ with one node for each random variable.
 2. For each node $i$, a conditional distribution
+
 $$
    p(X_i \mid X_{\mathrm{pa}(i)}),
 $$
+
    where $\mathrm{pa}(i)$ denotes the set of parent nodes of $i$ in the graph.
 
 The joint distribution is then defined by the factorization
+
 $$
 p(X_1,\dots,X_n) = \prod_{i=1}^n p(X_i \mid X_{\mathrm{pa}(i)}).
 $$
@@ -135,11 +145,13 @@ The qualitative assumptions are:
 - Hudson's call also depends only on whether the alarm is sounding.
 
 Those assumptions lead to the graph
+
 $$
 B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
 $$
 
 So the joint distribution factors as
+
 $$
 p(B,E,A,W,H)
 =
@@ -179,6 +191,7 @@ For the alarm:
 | 1,1 | 0.02 | 0.98 |
 
 Now compute one joint probability:
+
 $$
 p(B=0,E=1,A=1,W=1,H=0).
 $$
@@ -192,6 +205,7 @@ The graph tells us exactly which factors to multiply. We check each variable in 
 5. For $H=0$ given $A=1$, the needed factor is $p(H=0\mid A=1)=0.30$.
 
 Multiplying,
+
 $$
 0.999 \times 0.002 \times 0.75 \times 0.90 \times 0.30 \approx 0.0004046.
 $$
@@ -276,6 +290,7 @@ Parents are the variables that appear directly in a node's factor. Ancestors are
 ### Fully worked example
 
 Return to the burglar alarm graph:
+
 $$
 B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
 $$
@@ -288,11 +303,13 @@ Check the structural roles one by one.
 - $H$ has no children, so $H$ is a leaf.
 
 Now find descendants of $B$. Starting at $B$, there is a directed edge to $A$, and from $A$ directed edges to $W$ and $H$. Therefore
+
 $$
 \mathrm{de}(B) = \{A,W,H\}.
 $$
 
 Now find ancestors of $W$. The directed paths ending at $W$ come from $A$, and upstream of $A$ from both $B$ and $E$. Therefore
+
 $$
 \mathrm{an}(W) = \{A,B,E\}.
 $$
@@ -349,10 +366,13 @@ A good ordering places likely causes before their effects. In that case, many va
 ### Worked comparison using the alarm example
 
 Using the natural order
+
 $$
 B, E, A, W, H,
 $$
+
 the factorization is
+
 $$
 p(B,E,A,W,H)=p(B)\,p(E)\,p(A\mid B,E)\,p(W\mid A)\,p(H\mid A).
 $$
@@ -360,10 +380,13 @@ $$
 This is compact. The parent sets are small and intuitive.
 
 Now reverse the perspective and consider the order
+
 $$
 H, W, A, B, E.
 $$
+
 The chain rule gives
+
 $$
 p(B,E,A,W,H)=p(H)\,p(W\mid H)\,p(A\mid H,W)\,p(B\mid A,W,H)\,p(E\mid A,B,W,H).
 $$
@@ -383,6 +406,7 @@ Now ask, step by step, which factors simplify.
    Yes. Once $A$ and $B$ are known, the calls still add no further information about earthquake, so this reduces to $p(E\mid A,B)$.
 
 So the resulting factorization becomes
+
 $$
 p(B,E,A,W,H)=p(H)\,p(W\mid H)\,p(A\mid H,W)\,p(B\mid A)\,p(E\mid A,B).
 $$
@@ -441,6 +465,7 @@ If one variable directly influences another in the graph, then observing the dow
 ### Fully worked example
 
 In the alarm model, the marginal probability of an earthquake is easy to read off:
+
 $$
 p(E=1)=0.002.
 $$
@@ -503,23 +528,29 @@ What is fixed is the graph and the evidence set $E$. What varies is the status o
 Before stating the formal definition, it helps to isolate the three local path motifs that can occur at an interior node on a path.
 
 #### 1. Chain
+
 $$
 X \to Z \to Y
 \quad\text{or}\quad
 X \leftarrow Z \leftarrow Y
 $$
+
 Here $Z$ lies on a transmitting chain between $X$ and $Y$. If $Z$ is unobserved, the path can remain active. If $Z$ is observed, the path is blocked.
 
 #### 2. Fork
+
 $$
 X \leftarrow Z \to Y
 $$
+
 Here $Z$ is a common cause of $X$ and $Y$. Again, if $Z$ is unobserved, the path can remain active. If $Z$ is observed, the path is blocked because conditioning on the common cause explains away the dependence.
 
 #### 3. Collider
+
 $$
 X \to Z \leftarrow Y
 $$
+
 Here $Z$ is a common effect. This case is the opposite of the first two. If neither $Z$ nor any descendant of $Z$ is observed, the path is blocked. If $Z$ itself is observed, or any descendant of $Z$ is observed, the path becomes active.
 
 That last rule is the one most readers initially find counterintuitive. It is also the most important one to master.
@@ -527,15 +558,19 @@ That last rule is the one most readers initially find counterintuitive. It is al
 ### Formal definition
 
 Let $G$ be a Bayesian network graph, and let $E$ be a set of observed nodes. An undirected path
+
 $$
 i_1 - i_2 - \cdots - i_L
 $$
+
 is **active given $E$** if for every interior node $i_\ell$ on the path, one of the following holds:
 
 1. If the local pattern at $i_\ell$ is a collider,
+
 $$
    i_{\ell-1} \to i_\ell \leftarrow i_{\ell+1},
 $$
+
    then either $i_\ell \in E$ or some descendant of $i_\ell$ is in $E$.
 
 2. If the local pattern at $i_\ell$ is not a collider, then $i_\ell \notin E$.
@@ -551,6 +586,7 @@ The collider rule deserves special emphasis. A collider blocks a path by default
 ### What d-separation guarantees
 
 If $A$ and $B$ are d-separated by $E$ in a Bayesian network graph $G$, then for **every** probability distribution that factors according to $G$,
+
 $$
 X_A \perp X_B \mid X_E.
 $$
@@ -574,6 +610,7 @@ Fourth, if there are multiple paths between two variables, one active path is en
 ### Fully worked example: d-separation in the alarm network
 
 Use the graph
+
 $$
 B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
 $$
@@ -581,6 +618,7 @@ $$
 #### Example 1: Are $B$ and $E$ independent with no observations?
 
 The only path between $B$ and $E$ is
+
 $$
 B \to A \leftarrow E.
 $$
@@ -588,6 +626,7 @@ $$
 The middle node $A$ is a collider. No node is observed, and no descendant of $A$ is observed either. Therefore the path is blocked. Since there is no other path, $B$ and $E$ are d-separated given the empty evidence set.
 
 Conclusion:
+
 $$
 B \perp E.
 $$
@@ -595,6 +634,7 @@ $$
 #### Example 2: Are $B$ and $E$ independent given $A$?
 
 The same path still connects them:
+
 $$
 B \to A \leftarrow E.
 $$
@@ -602,6 +642,7 @@ $$
 Now $A$ is observed. Since $A$ is a collider and it is observed, the path becomes active.
 
 Conclusion:
+
 $$
 B \not\!\perp E \mid A.
 $$
@@ -611,6 +652,7 @@ This is the classic "explaining away" effect. If we learn that the alarm has sou
 #### Example 3: Are $W$ and $H$ independent with no observations?
 
 The path is
+
 $$
 W \leftarrow A \to H.
 $$
@@ -618,6 +660,7 @@ $$
 This is a fork. The middle node $A$ is unobserved, so the path is active. Therefore $W$ and $H$ are not marginally independent.
 
 Conclusion:
+
 $$
 W \not\!\perp H.
 $$
@@ -627,6 +670,7 @@ $$
 The same path is a fork through $A$, but now $A$ is observed. Observing the middle node in a fork blocks the path.
 
 Conclusion:
+
 $$
 W \perp H \mid A.
 $$
@@ -634,6 +678,7 @@ $$
 #### Example 5: Are $E$ and $W$ independent given $A$?
 
 The path is
+
 $$
 E \to A \to W.
 $$
@@ -641,6 +686,7 @@ $$
 This is a chain through $A$. Once $A$ is observed, the chain is blocked.
 
 Conclusion:
+
 $$
 E \perp W \mid A.
 $$
@@ -667,9 +713,11 @@ This path-by-path discipline matters because the same node can behave differentl
 
 **Most important misconception: observing a collider opens a path.**  
 Many readers initially expect observation always to block dependence. That is false. In
+
 $$
 X \to Z \leftarrow Y,
 $$
+
 the path between $X$ and $Y$ is blocked when $Z$ is unobserved, and opened when $Z$ or a descendant of $Z$ is observed.
 
 **Do not forget descendants of colliders.**  
@@ -734,21 +782,27 @@ The following three graphs are Markov equivalent:
 3. $A \leftarrow B \to C$
 
 In each graph, the key structural statement is the same:
+
 $$
 A \perp C \mid B,
 $$
+
 and there is no marginal independence between $A$ and $C$.
 
 Now compare them with the collider graph
+
 $$
 A \to B \leftarrow C.
 $$
 
 This graph is different. Here the path between $A$ and $C$ goes through a collider, so
+
 $$
 A \perp C
 $$
+
 marginally, but
+
 $$
 A \not\!\perp C \mid B.
 $$
@@ -808,6 +862,7 @@ What is fixed is the graph and the choice of the target node $i$. What varies is
 ### Formal definition
 
 Let $G$ be a Bayesian network graph. The **Markov blanket** of node $i$ is the set
+
 $$
 \mathrm{MB}(i)
 =
@@ -817,6 +872,7 @@ $$
 \;\cup\;
 \bigcup_{c \in \mathrm{ch}(i)} \Bigl(\mathrm{pa}(c)\setminus\{i\}\Bigr),
 $$
+
 that is:
 
 - the parents of $i$,
@@ -844,6 +900,7 @@ Also, remember that “blanket” is a probabilistic statement, not a causal one
 ### Fully worked example: the Markov blanket in the burglar alarm network
 
 Use the burglar network
+
 $$
 B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
 $$
@@ -855,14 +912,17 @@ Consider the blanket of the alarm $A$.
 - The children $W$ and $H$ have no other parents besides $A$, so there are no co-parents to add.
 
 Therefore
+
 $$
 \mathrm{MB}(A)=\{B,E,W,H\}.
 $$
 
 The Markov blanket claim is:
+
 $$
 A \perp \{ \text{every other variable} \} \mid (B,E,W,H).
 $$
+
 In this tiny model there are no other variables, so the statement is trivial, but the structure is the point: if this network were embedded in a much larger model, conditioning on burglary, earthquake, and the two calls would screen the alarm off from everything else.
 
 Now consider the blanket of $B$ (burglary).
@@ -872,6 +932,7 @@ Now consider the blanket of $B$ (burglary).
 - The other parent of $A$ is $E$, so $E$ is a co-parent of $B$ through child $A$.
 
 Therefore
+
 $$
 \mathrm{MB}(B)=\{A,E\}.
 $$
@@ -916,9 +977,11 @@ For example, in the burglary network we want $P(B=1\mid W=1)$: how likely is a b
 ### The object being introduced
 
 The object is an **inference query** of the form
+
 $$
 p(X_Q \mid X_E = x_E),
 $$
+
 where:
 
 - $Q$ is a set of query variables whose distribution we want,
@@ -930,6 +993,7 @@ What is fixed is the model $p$ (equivalently, the BN structure and its CPDs). Wh
 ### Formal definition
 
 For a discrete model, the fundamental identity is:
+
 $$
 p(x_Q \mid x_E)
 =
@@ -965,6 +1029,7 @@ We will not compute a final number here; the goal is to practice translating a q
 - Hidden variables: $H=\{E,A,H\}$ (earthquake, alarm, Hudson call).
 
 **Step 2: write the posterior as “joint over evidence, summed over hidden, normalized.”**
+
 $$
 P(B=b\mid W=1)
 =
@@ -974,10 +1039,13 @@ $$
 **Step 3: expand the joint using the BN factorization.**
 
 The model factorizes as
+
 $$
 P(b,e,a,w,h)=P(b)\,P(e)\,P(a\mid b,e)\,P(w\mid a)\,P(h\mid a).
 $$
+
 Plugging $w=1$,
+
 $$
 P(B=b\mid W=1)
 =
@@ -987,9 +1055,11 @@ $$
 **Step 4: simplify by summing out a factor that normalizes.**
 
 Because $P(h\mid a)$ is a conditional distribution over $h$, we always have
+
 $$
 \sum_h P(h\mid a) = 1.
 $$
+
 So the sum over $h$ disappears, leaving a sum only over $e$ and $a$.
 
 This step illustrates the general pattern: inference is hard when hidden variables connect many factors, and easy when you can sum out a variable locally without creating large intermediate dependencies.
@@ -1028,6 +1098,7 @@ This section fills that gap. It shows how the structure of a Bayesian network ma
 ### The object being introduced
 
 The object is a parameterized Bayesian network together with a complete dataset
+
 $$
 D = \{x^{(1)}, x^{(2)}, \dots, x^{(m)}\}.
 $$
@@ -1046,11 +1117,13 @@ The question is:
 ### Formal parameterization
 
 For each node $i$, each state $x_i$, and each parent configuration $x_{\mathrm{pa}(i)}$, define a parameter
+
 $$
 \rho_{i,x_i,x_{\mathrm{pa}(i)}} = p(X_i = x_i \mid X_{\mathrm{pa}(i)} = x_{\mathrm{pa}(i)}).
 $$
 
 These parameters must satisfy the usual probability constraints. For each fixed node $i$ and each fixed parent configuration $x_{\mathrm{pa}(i)}$,
+
 $$
 \sum_{x_i} \rho_{i,x_i,x_{\mathrm{pa}(i)}} = 1,
 \qquad
@@ -1066,10 +1139,13 @@ The structure of the graph is what makes this manageable. It breaks a large join
 ### The log-likelihood and why it decomposes
 
 The likelihood of the dataset under parameters $\rho$ is
+
 $$
 p(D;\rho)=\prod_{j=1}^m p(x^{(j)};\rho).
 $$
+
 Taking logs,
+
 $$
 \ell(\rho)
 =
@@ -1077,10 +1153,13 @@ $$
 $$
 
 Now use the Bayesian network factorization for each data point:
+
 $$
 p(x^{(j)};\rho)=\prod_{i=1}^n p(x_i^{(j)} \mid x_{\mathrm{pa}(i)}^{(j)};\rho).
 $$
+
 So
+
 $$
 \ell(\rho)
 =
@@ -1088,6 +1167,7 @@ $$
 $$
 
 At this step, each term corresponds to one node $i$ in one data point $j$. Now reverse the order of summation:
+
 $$
 \ell(\rho)
 =
@@ -1095,6 +1175,7 @@ $$
 $$
 
 This is already informative: the full log-likelihood is a sum of node-specific contributions. But we can go one step further and group data points according to the parent configuration they present for node $i$:
+
 $$
 \ell(\rho)
 =
@@ -1108,18 +1189,23 @@ So each CPT row can be optimized independently.
 ### Formal maximum likelihood estimate
 
 Let
+
 $$
 N_i(x, x') = \#\{j : x_i^{(j)} = x,\; x_{\mathrm{pa}(i)}^{(j)} = x'\}
 $$
+
 be the count of data points in which node $i$ takes value $x$ and its parents take configuration $x'$.
 
 Let
+
 $$
 N_i(x') = \#\{j : x_{\mathrm{pa}(i)}^{(j)} = x'\}
 $$
+
 be the number of data points in which the parents of node $i$ take configuration $x'$, regardless of the child's value.
 
 Then the maximum likelihood estimate is
+
 $$
 \widehat p(X_i = x \mid X_{\mathrm{pa}(i)} = x')
 =
@@ -1152,19 +1238,23 @@ This clean estimator depends on several conditions.
    If a child value never appears in a particular row, the MLE assigns probability $0$ to it, which may be too extreme for small samples.
 
 The standard remedy is regularization or Bayesian smoothing. For example, with pseudo-counts $\alpha_{x,x'} > 0$,
+
 $$
 \widehat p(X_i=x \mid X_{\mathrm{pa}(i)}=x')
 =
 \frac{N_i(x,x') + \alpha_{x,x'}}{N_i(x') + \sum_x \alpha_{x,x'}}.
 $$
+
 This corresponds to a Dirichlet prior over each CPT row.
 
 ### Fully worked example: fitting a small network
 
 Consider the three-node chain
+
 $$
 X_1 \to X_2 \to X_3
 $$
+
 and the following dataset of $m=10$ complete observations:
 
 | Case | $X_1$ | $X_2$ | $X_3$ |
@@ -1192,6 +1282,7 @@ Count the number of zeros and ones:
 - $X_1=1$ appears in the remaining $8$ cases.
 
 Therefore
+
 $$
 \widehat p(X_1=0)=\frac{2}{10},\qquad
 \widehat p(X_1=1)=\frac{8}{10}.
@@ -1207,6 +1298,7 @@ When $X_1=0$, the relevant cases are 7 and 10.
 - In case 10, $X_2=0$.
 
 So among the two cases with $X_1=0$,
+
 $$
 \widehat p(X_2=0\mid X_1=0)=\frac{1}{2},\qquad
 \widehat p(X_2=1\mid X_1=0)=\frac{1}{2}.
@@ -1220,6 +1312,7 @@ Among these eight cases:
 - $X_2=1$ occurs in cases 2,3,5,6,8, so count $5$.
 
 Thus
+
 $$
 \widehat p(X_2=0\mid X_1=1)=\frac{3}{8},\qquad
 \widehat p(X_2=1\mid X_1=1)=\frac{5}{8}.
@@ -1237,6 +1330,7 @@ Their $X_3$ values are $0,1,0,1$, so:
 - $X_3=1$ occurs $2$ times.
 
 Therefore
+
 $$
 \widehat p(X_3=0\mid X_2=0)=\frac{2}{4},\qquad
 \widehat p(X_3=1\mid X_2=0)=\frac{2}{4}.
@@ -1250,6 +1344,7 @@ Their $X_3$ values are $1,1,1,0,0,1$, so:
 - $X_3=1$ occurs $4$ times.
 
 Hence
+
 $$
 \widehat p(X_3=0\mid X_2=1)=\frac{2}{6},\qquad
 \widehat p(X_3=1\mid X_2=1)=\frac{4}{6}.
@@ -1275,6 +1370,7 @@ For $X_3 \mid X_2$:
 | 1 | 2/6 | 4/6 |
 
 Now compute the probability of a configuration that was never observed directly, say
+
 $$
 X=(0,0,0).
 $$
@@ -1286,6 +1382,7 @@ Check the relevant local factors:
 - $\widehat p(X_3=0\mid X_2=0)=2/4$.
 
 So
+
 $$
 \widehat p(0,0,0)=\frac{2}{10}\cdot\frac{1}{2}\cdot\frac{2}{4}=0.05.
 $$
@@ -1355,6 +1452,7 @@ The question the model answers is:
 ### Formal definition
 
 A **naive Bayes model** assumes that the features are conditionally independent given the class label:
+
 $$
 p(Y,X_1,\dots,X_n)=p(Y)\prod_{i=1}^n p(X_i \mid Y).
 $$
@@ -1382,6 +1480,7 @@ Several cautions matter.
 ### Posterior form and log-odds interpretation
 
 For binary classification with classes $y \in \{\text{spam}, \text{ham}\}$, the posterior odds satisfy
+
 $$
 \frac{p(\text{spam}\mid x)}{p(\text{ham}\mid x)}
 =
@@ -1391,6 +1490,7 @@ $$
 $$
 
 Taking logs,
+
 $$
 \eta
 =
@@ -1409,20 +1509,25 @@ This form is extremely interpretable. The prior contributes one term, and each f
 Suppose we build a naive Bayes spam classifier from SMS messages. Let $Y$ indicate whether a message is spam or ham, and let the features encode the presence or count of words.
 
 From the dataset, estimate the class prior. In the source example,
+
 $$
 \widehat p(Y=\text{spam}) \approx 0.134.
 $$
+
 So before seeing the words, spam is already the less likely class.
 
 Now estimate word probabilities within each class using smoothed counts. The source text gives examples such as:
+
 $$
 \widehat p(\text{prize}\mid \text{spam}) = 0.00623,\qquad
 \widehat p(\text{prize}\mid \text{ham}) = 0.00002,
 $$
+
 $$
 \widehat p(\text{the}\mid \text{spam}) = 0.01386,\qquad
 \widehat p(\text{the}\mid \text{ham}) = 0.01788,
 $$
+
 $$
 \widehat p(\text{later}\mid \text{spam}) = 0.00007,\qquad
 \widehat p(\text{later}\mid \text{ham}) = 0.00215.
@@ -1448,9 +1553,11 @@ To score this message, we proceed term by term.
 Words such as "winner," "selected," "prize," and "reward" contribute large positive values because they are much more probable in spam than in ham. Function words and uninformative tokens contribute little. If some word is rare or omitted from the model vocabulary, its contribution may be negligible or handled through smoothing.
 
 In the source example, the total score is strongly positive, around $\eta \approx 16$. Converting log-odds to probability,
+
 $$
 p(\text{spam}\mid x)=\frac{1}{1+e^{-\eta}}.
 $$
+
 With $\eta \approx 16$, this posterior probability is extremely close to $1$, so the message is classified as spam.
 
 Now consider a much more ordinary message:
@@ -1500,9 +1607,11 @@ Many datasets are inherently sequential: words in a sentence, states over time, 
 ### The object being introduced
 
 We introduce a sequence of random variables
+
 $$
 X_1, X_2, \dots, X_n,
 $$
+
 where $X_t$ is the state at time or position $t$.
 
 What is fixed is the sequence length $n$ and the state space of each $X_t$. What varies is the realized sequence $x_1,\dots,x_n$.
@@ -1514,6 +1623,7 @@ The modeling question is:
 ### Formal definition
 
 A first-order **Markov chain** assumes
+
 $$
 p(X_1,\dots,X_n)=p(X_1)\prod_{t=2}^n p(X_t \mid X_{t-1}).
 $$
@@ -1539,10 +1649,13 @@ This is a modeling statement, not a logical truth. In some systems it is a good 
 ### Why every node separates past from future
 
 In the graph
+
 $$
 X_1 \to X_2 \to X_3 \to \cdots \to X_n,
 $$
+
 pick an index $t$ with $1 < t < n$. The only paths from a node on the left of $X_t$ to a node on the right pass through $X_t$ as a chain node. If $X_t$ is observed, those paths are blocked. Therefore
+
 $$
 (X_1,\dots,X_{t-1}) \perp (X_{t+1},\dots,X_n) \mid X_t.
 $$
@@ -1574,15 +1687,19 @@ That is not a bug in the theory. It is the direct consequence of the model's bou
 ### Higher-order $n$-gram models
 
 A trigram model allows
+
 $$
 p(X_t \mid X_{t-1},X_{t-2}),
 $$
+
 and more generally an $n$-gram model conditions on the previous $n-1$ words.
 
 Conceptually, such a model is still a Markov chain if we redefine the state to include the recent history. For example, in a trigram model we can define a new state
+
 $$
 \widetilde X_t = (X_t, X_{t-1}).
 $$
+
 Then the process becomes first-order in the enlarged state space. This is conceptually useful because it shows that higher-order temporal dependence can be absorbed into the definition of the state.
 
 But the practical cost is severe: if each word can take $d$ values, the state space grows rapidly, and sparse counts become a major problem.
@@ -1634,6 +1751,7 @@ Bayesian networks are compact when each node has only a few parents. But some ef
 ### The object being introduced
 
 We consider one binary child variable $Y$ and many binary parent variables
+
 $$
 X_1,\dots,X_n.
 $$
@@ -1649,6 +1767,7 @@ The model answers the question:
 In a **noisy-OR** model, each cause $X_i$ has an associated parameter $\rho_i \in [0,1]$, interpreted as the probability that cause $i$ fails to trigger the effect when it is active.
 
 The conditional probability of the effect is
+
 $$
 p(Y=1 \mid X_1,\dots,X_n)
 =
@@ -1656,6 +1775,7 @@ p(Y=1 \mid X_1,\dots,X_n)
 $$
 
 Equivalently,
+
 $$
 p(Y=0 \mid X_1,\dots,X_n)
 =
@@ -1691,6 +1811,7 @@ Let $H$ indicate whether a person has a headache. Let the possible causes be:
 - $D$: dehydration.
 
 Suppose the noisy-OR parameters are
+
 $$
 \rho_C = 0.2,\qquad
 \rho_F = 0.1,\qquad
@@ -1707,46 +1828,59 @@ Now compute the conditional probabilities row by row.
 
 #### Case 1: no causes present
 If $C=F=D=0$, there are no active causes. Therefore
+
 $$
 p(H=0\mid 0,0,0)=1,\qquad p(H=1\mid 0,0,0)=0.
 $$
 
 #### Case 2: only dehydration present
 If $C=0,F=0,D=1$, then only $D$ can trigger headache:
+
 $$
 p(H=0\mid 0,0,1)=\rho_D=0.5,
 $$
+
 so
+
 $$
 p(H=1\mid 0,0,1)=1-0.5=0.5.
 $$
 
 #### Case 3: only flu present
 If $C=0,F=1,D=0$,
+
 $$
 p(H=0\mid 0,1,0)=\rho_F=0.1,
 $$
+
 so
+
 $$
 p(H=1\mid 0,1,0)=0.9.
 $$
 
 #### Case 4: cold and flu both present
 If $C=1,F=1,D=0$, the effect stays off only if **both** active causes fail:
+
 $$
 p(H=0\mid 1,1,0)=\rho_C \rho_F = 0.2\times 0.1 = 0.02.
 $$
+
 Therefore
+
 $$
 p(H=1\mid 1,1,0)=1-0.02=0.98.
 $$
 
 #### Case 5: all three causes present
 If $C=F=D=1$,
+
 $$
 p(H=0\mid 1,1,1)=\rho_C\rho_F\rho_D = 0.2\times 0.1 \times 0.5 = 0.01,
 $$
+
 so
+
 $$
 p(H=1\mid 1,1,1)=0.99.
 $$
@@ -1800,6 +1934,7 @@ The new objects are **auxiliary variables** representing whether each cause succ
 For each cause $X_i$, introduce an auxiliary binary variable $\widetilde X_i$ that indicates whether cause $i$ actually succeeds in transmitting activation.
 
 For example, for cause $C$, define
+
 $$
 p(\widetilde C = 1 \mid C=0)=0,\qquad
 p(\widetilde C = 1 \mid C=1)=1-\rho_C.
@@ -1810,6 +1945,7 @@ So if the cause is absent, its auxiliary activation must be $0$. If the cause is
 Do the same for $F$ and $D$, producing $\widetilde F$ and $\widetilde D$.
 
 Next, combine these auxiliary activations through deterministic OR operations. For instance, one can define intermediate variables so that no node ever has more than two parents, such as
+
 $$
 \widetilde X = \widetilde C \lor \widetilde F,
 \qquad
@@ -1876,9 +2012,11 @@ The question is:
 ### Formal idea
 
 In a causal reading of a Bayesian network, intervening on $X$ means replacing the usual conditional mechanism
+
 $$
 p(X \mid X_{\mathrm{pa}(X)})
 $$
+
 with a degenerate distribution that forces $X$ to the chosen value. Graphically, this is often described as removing the incoming edges into $X$, because under intervention, $X$ no longer responds to its usual causes.
 
 The resulting interventional distribution is different from the ordinary conditional distribution in general.
@@ -1904,9 +2042,11 @@ Consider three binary variables:
 - $Y$: outcome.
 
 Assume the true causal structure is
+
 $$
 U \to X,\qquad U \to Y,
 $$
+
 and there is **no** arrow from $X$ to $Y$. So treatment has no causal effect; both treatment and outcome are driven by the hidden risk variable $U$.
 
 Now choose a very simple parameterization:
@@ -1924,11 +2064,13 @@ Now compare conditioning and intervention.
 Compute $P(Y=1\mid X=1)$.
 
 If $X=1$, then because $X=U$ deterministically, we know $U=1$. Since $Y=U$, this implies $Y=1$ with probability $1$. Therefore
+
 $$
 P(Y=1\mid X=1)=1.
 $$
 
 Similarly,
+
 $$
 P(Y=1\mid X=0)=0.
 $$
@@ -1940,11 +2082,13 @@ From observational data alone, treatment and bad outcome appear perfectly associ
 Now compute $P(Y=1\mid \mathrm{do}(X=1))$.
 
 Under intervention, we force $X=1$, but we do **not** alter the distribution of $U$, and $Y$ still depends only on $U$. Since $U$ remains $1$ with probability $0.5$,
+
 $$
 P(Y=1\mid \mathrm{do}(X=1)) = P(U=1)=0.5.
 $$
 
 Likewise,
+
 $$
 P(Y=1\mid \mathrm{do}(X=0)) = 0.5.
 $$

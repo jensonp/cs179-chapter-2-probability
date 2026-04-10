@@ -23,19 +23,25 @@ This section exists to fill that gap. It introduces the core object of the chapt
 ### The object being introduced
 
 Let
+
 $$
 X = (X_1, X_2, \dots, X_n)
 $$
+
 be a collection of random variables. For now, think mainly of the discrete case, although the same ideas extend beyond it. What is fixed is the variable collection and the set of local factor scopes. What varies are the values taken by the factors and therefore the resulting probability distribution.
 
 The key object is not initially a probability distribution but a nonnegative function
+
 $$
 f(X).
 $$
+
 We assume this function can be written as a product of smaller terms,
+
 $$
 f(X) = \prod_{\alpha \in I} f_\alpha(X_\alpha),
 $$
+
 where each index set $\alpha \subseteq [n] = \{1,\dots,n\}$ specifies a subset of variables, and $X_\alpha$ denotes the variables whose indices lie in $\alpha$. The subset of variables that a factor actually depends on is called its **scope**.
 
 This factorization answers the modeling question,
@@ -47,17 +53,23 @@ That is the right question for undirected models. Each factor scores or weights 
 ### Formal definition
 
 An **undirected graphical model** begins with a factorization
+
 $$
 p(X) = \frac{1}{Z} f(X), \qquad f(X) = \prod_{\alpha \in I} f_\alpha(X_\alpha),
 $$
+
 where each factor satisfies
+
 $$
 f_\alpha(X_\alpha) \ge 0,
 $$
+
 and the normalization constant
+
 $$
 Z = \sum_x f(x)
 $$
+
 in the discrete case is called the **partition function**.
 
 The factorization yields two common graph representations.
@@ -93,10 +105,13 @@ Finally, undirected edges do not mean causation, temporal order, or directional 
 Suppose we have variables $A,B,C,D,E,F$. Consider two different factorizations.
 
 In the first,
+
 $$
 f(x) = f_{AB}(A,B)\,f_{AE}(A,E)\,f_{BE}(B,E)\,f_{BCD}(B,C,D)\,f_{DEF}(D,E,F).
 $$
+
 In the second, replace the three pairwise factors involving $A,B,E$ by one three-variable factor,
+
 $$
 f(x) = f_{ABE}(A,B,E)\,f_{BCD}(B,C,D)\,f_{DEF}(D,E,F).
 $$
@@ -109,9 +124,11 @@ But the factor graph distinguishes them immediately.
 - In the second, it is expressed by one joint three-variable factor.
 
 Why does that matter? Because a general factor $f_{ABE}$ can represent interactions that cannot be decomposed into a product of pairwise terms. The first factorization can always be folded into the second by defining
+
 $$
 f_{ABE}(A,B,E) = f_{AB}(A,B)f_{AE}(A,E)f_{BE}(B,E),
 $$
+
 but the reverse is not true in general. A truly three-way interaction may not split into pairwise parts.
 
 So the reasoning proceeds in a definite order.
@@ -181,6 +198,7 @@ What is fixed is the set of variables and the local constraints. What varies is 
 #### Formal definition
 
 If $E$ is a collection of constrained pairs, define for each $(i,j) \in E$ a factor
+
 $$
 f_{ij}(X_i,X_j) =
 \begin{cases}
@@ -188,14 +206,19 @@ f_{ij}(X_i,X_j) =
 1 & \text{otherwise.}
 \end{cases}
 $$
+
 Then
+
 $$
 f(X) = \prod_{(i,j)\in E} f_{ij}(X_i,X_j)
 $$
+
 returns
+
 $$
 f(X)=1 \text{ if all constraints are satisfied, and } 0 \text{ otherwise.}
 $$
+
 If we normalize this function, $p(X) \propto f(X)$, the resulting probability distribution is uniform over all satisfying assignments.
 
 #### Interpretation paragraph
@@ -205,10 +228,13 @@ This factorization is not interesting because of the probabilities alone. Its va
 #### Fully worked example: map coloring
 
 Consider the map-coloring problem with regions $X_0,\dots,X_6$, each taking values in the color set
+
 $$
 \mathcal C = \{\text{red},\text{green},\text{blue}\}.
 $$
+
 If two regions share a border, they cannot receive the same color. For each adjacent pair $(i,j)$, define
+
 $$
 f_{ij}(X_i,X_j) =
 \begin{cases}
@@ -216,30 +242,41 @@ f_{ij}(X_i,X_j) =
 1 & \text{if } X_i \ne X_j.
 \end{cases}
 $$
+
 Now evaluate two assignments.
 
 Take first
+
 $$
 X = [r,g,b,r,g,r,b].
 $$
+
 To decide whether this is valid, we check each neighboring pair. At every edge, the two colors differ. Therefore every factor equals one, so
+
 $$
 f(X)=1.
 $$
+
 This assignment satisfies all constraints.
 
 Now take
+
 $$
 X = [r,g,b,r,g,b,r].
 $$
+
 Suppose regions 2 and 5 are neighbors. Then $X_2=b$ and $X_5=b$, so the edge factor for that pair is
+
 $$
 f_{25}(X_2=b,X_5=b)=0.
 $$
+
 At that moment the whole product becomes zero, regardless of every other factor. Therefore
+
 $$
 f(X)=0.
 $$
+
 This assignment is invalid.
 
 The general lesson is the same in every constraint network: the global decision is made by local checks, and the first violated local check is enough to rule out the full assignment.
@@ -268,16 +305,21 @@ In the independent-set problem, each node of a graph gets a binary indicator var
 #### Formal definition
 
 Let $X_i \in \{0,1\}$ indicate whether vertex $i$ belongs to the set. For each edge $(i,j)$, define
+
 $$
 f_{ij}(X_i,X_j) = 1 - 1[X_i=1 \ \& \ X_j=1].
 $$
+
 So $f_{ij}=0$ exactly when adjacent vertices are both chosen.
 
 To prefer larger independent sets, include unary factors
+
 $$
 f_i(X_i) = a^{1[X_i=1]}, \qquad a>1.
 $$
+
 Then
+
 $$
 f(X)=\left(\prod_{(i,j)\in E} f_{ij}(X_i,X_j)\right)\left(\prod_i f_i(X_i)\right).
 $$
@@ -289,9 +331,11 @@ The pairwise factors enforce feasibility. The unary factors reward choosing vert
 #### Fully worked example
 
 Suppose a graph has three vertices in a line: 1-2-3. Then the feasible independent sets are
+
 $$
 \varnothing, \{1\}, \{2\}, \{3\}, \{1,3\}.
 $$
+
 Set $a=2$. Then:
 
 - For $X=(0,0,0)$, all pairwise constraints are satisfied and the unary contribution is $2^0=1$.
@@ -317,6 +361,7 @@ A logical clause can be treated as a local factor. The variables of the clause a
 #### Formal definition
 
 If a clause $c_\alpha(x_\alpha)$ depends on a subset of Boolean variables $X_\alpha$, define
+
 $$
 f_\alpha(X_\alpha)=
 \begin{cases}
@@ -324,11 +369,15 @@ f_\alpha(X_\alpha)=
 0 & \text{if the clause is false}.
 \end{cases}
 $$
+
 Then a CNF formula,
+
 $$
 \bigwedge_\alpha c_\alpha(X_\alpha),
 $$
+
 corresponds to the factor product
+
 $$
 f(X)=\prod_\alpha f_\alpha(X_\alpha).
 $$
@@ -342,17 +391,23 @@ This is the same idea as the earlier constraint networks, but now the local cons
 For map coloring, introduce atoms such as $R_0,G_0,B_0$, where $R_0$ means “region 0 is red,” and similarly for the other colors and regions.
 
 A statement like
+
 $$
 R_0 \vee G_0 \vee B_0
 $$
+
 forces region 0 to take at least one color. A statement like
+
 $$
 R_0 \Rightarrow \neg R_1
 $$
+
 means that neighboring regions 0 and 1 cannot both be red. In CNF form this becomes
+
 $$
 \neg R_0 \vee \neg R_1.
 $$
+
 Each such clause becomes a factor that is one unless the clause is violated.
 
 The logic-to-factor translation proceeds in a fixed order.
@@ -384,14 +439,19 @@ What is fixed is the graph structure and the parameterization. What varies are t
 #### Formal definition: Boltzmann machine
 
 For binary variables $X_i \in \{0,1\}$, a pairwise Boltzmann machine has the form
+
 $$
 p(X=x) \propto f(x) = \exp\left(\sum_{i<j} \theta_{ij}x_ix_j + \sum_i \theta_i x_i\right).
 $$
+
 Equivalently, this is a product of unary and pairwise factors,
+
 $$
 f(x)=\prod_{i<j} f_{ij}(x_i,x_j) \prod_i f_i(x_i),
 $$
+
 where
+
 $$
 f_{ij}(x_i,x_j)=\exp(\theta_{ij}x_ix_j), \qquad f_i(x_i)=\exp(\theta_i x_i).
 $$
@@ -405,15 +465,18 @@ That last point is crucial. In a Bayesian network, a local conditional table has
 #### Fully worked example: a three-variable Boltzmann machine
 
 Let $X_1,X_2,X_3 \in \{0,1\}$, and define
+
 $$
 f(x)=\exp(\theta_{12}x_1x_2 + \theta_{13}x_1x_3 + \theta_{23}x_2x_3 + \theta_1x_1 + \theta_2x_2 + \theta_3x_3).
 $$
+
 To understand what this means, inspect the eight configurations.
 
 - If $x=(0,0,0)$, every term is zero, so $f(x)=1$.
 - If $x=(1,0,0)$, only the unary term for $X_1$ contributes, so $f(x)=\exp(\theta_1)$.
 - If $x=(1,1,0)$, the contribution is $\exp(\theta_1+\theta_2+\theta_{12})$.
 - If $x=(1,1,1)$, every unary and every pairwise term appears, giving
+
 $$
 f(1,1,1)=\exp(\theta_1+\theta_2+\theta_3+\theta_{12}+\theta_{13}+\theta_{23}).
 $$
@@ -425,13 +488,17 @@ If $\theta_1>0$, then any configuration with $X_1=1$ is multiplied by $\exp(\the
 If $\theta_{12}>0$, then configurations with $X_1=X_2=1$ receive a boost relative to those where at least one of them is zero. If $\theta_{12}<0$, that joint activation is penalized.
 
 To find a genuine probability, we must compute
+
 $$
 p(x)=\frac{f(x)}{Z}, \qquad Z=\sum_{x_1,x_2,x_3} f(x_1,x_2,x_3).
 $$
+
 For example,
+
 $$
 \Pr[X_1=1] = \frac{\sum_{x_2,x_3} f(1,x_2,x_3)}{\sum_{x_1,x_2,x_3} f(x_1,x_2,x_3)}.
 $$
+
 This shows exactly why the parameters are not marginals: even $\Pr[X_1=1]$ depends on all unary and pairwise terms through the partition function.
 
 The graph associated with the model includes an edge $(i,j)$ precisely when $\theta_{ij}\ne 0$. If $\theta_{ij}=0$, then $f_{ij}(x_i,x_j)=1$ is a constant factor and has no effect on the distribution.
@@ -439,9 +506,11 @@ The graph associated with the model includes an edge $(i,j)$ precisely when $\th
 #### Formal definition: Ising model
 
 For spin variables $X_i \in \{-1,+1\}$, the Ising model uses
+
 $$
 p(X=x) \propto \exp\left(\sum_{i<j} \theta_{ij}x_ix_j + \sum_i \theta_i x_i\right).
 $$
+
 The algebra looks similar, but the interpretation of pairwise terms is cleaner than in the $\{0,1\}$ encoding.
 
 - If $x_i=x_j$, then $x_ix_j=+1$.
@@ -458,9 +527,11 @@ The unary term $\theta_i x_i$ pushes spin $i$ toward $+1$ when $\theta_i>0$ and 
 
 Consider two spins $X_1,X_2 \in \{-1,+1\}$ with no unary terms and one interaction $\theta_{12}$.
 Then
+
 $$
 p(x_1,x_2) \propto \exp(\theta_{12}x_1x_2).
 $$
+
 There are four states.
 
 - $(+1,+1)$ and $(-1,-1)$ have product $+1$, so each gets weight $\exp(\theta_{12})$.
@@ -505,13 +576,17 @@ A logical clause now contributes a multiplicative weight rather than a hard zero
 #### Formal definition
 
 If $c_\alpha(x_\alpha)\in\{0,1\}$ indicates whether a clause is true, and $\theta_\alpha$ is the weight of that clause, define
+
 $$
 f(x)=\prod_\alpha \exp\big(\theta_\alpha c_\alpha(x_\alpha)\big).
 $$
+
 Equivalently,
+
 $$
 f(x)=\exp\left(\sum_\alpha \theta_\alpha c_\alpha(x_\alpha)\right).
 $$
+
 If a clause is true, it contributes a factor of $\exp(\theta_\alpha)$; if false, it contributes $1$.
 
 #### Interpretation paragraph
@@ -526,14 +601,19 @@ Suppose we use two weighted first-order rules:
 2. $\text{Friends}(x,y) \Rightarrow (\text{Smokes}(x) \Leftrightarrow \text{Smokes}(y))$ with weight 1.1.
 
 Instantiate the domain to two people, Alice $(A)$ and Bob $(B)$. Then the model contains Boolean variables such as
+
 $$
 S_A, S_B, C_A, C_B, F_{AB}, F_{BA}, F_{AA}, F_{BB}.
 $$
+
 Now consider just one grounded factor from the first rule,
+
 $$
 S_A \Rightarrow C_A.
 $$
+
 This clause is false only when $S_A=1$ and $C_A=0$. So its factor is
+
 $$
 f(S_A,C_A)=
 \begin{cases}
@@ -541,6 +621,7 @@ f(S_A,C_A)=
 \exp(1.5) & \text{otherwise.}
 \end{cases}
 $$
+
 Thus smoking without cancer is not impossible, but it is downweighted relative to the cases that satisfy the rule.
 
 Now consider one grounded friendship rule for Alice and Bob. If $F_{AB}=0$, then the implication is automatically satisfied, so the factor always contributes $\exp(1.1)$. If $F_{AB}=1$, then the rule prefers $S_A=S_B$. In particular,
@@ -588,9 +669,11 @@ Conditioning means fixing the value of one or more variables and asking for the 
 #### Formal statement
 
 Suppose
+
 $$
 p(X)=\frac{1}{Z}\prod_\alpha f_\alpha(X_\alpha).
 $$
+
 If variable $X_i$ is observed to equal $x_i$, then every factor involving $X_i$ becomes a smaller factor obtained by plugging in that value. The conditional distribution over the unobserved variables is again proportional to a product of factors, now defined only on the unobserved variables.
 
 Graphically, the conditioned variable is removed from the graph, together with all incident edges.
@@ -602,21 +685,29 @@ This is one of the main conceptual differences from Bayesian networks. In a dire
 #### Fully worked example
 
 Suppose
+
 $$
 p(A,B,C,D,E,F)=\frac{1}{Z}f_1(A,B,C)f_2(B,D,E,F).
 $$
+
 Now observe $B=b$. Substituting into the factors gives
+
 $$
 p(A,B=b,C,D,E,F)=\frac{1}{Z}f_1(A,b,C)f_2(b,D,E,F).
 $$
+
 Define the reduced factors
+
 $$
 f_1'(A,C)=f_1(A,b,C), \qquad f_2'(D,E,F)=f_2(b,D,E,F).
 $$
+
 Then the conditional distribution becomes
+
 $$
 p(A,C,D,E,F\mid B=b)=\frac{1}{Z'}f_1'(A,C)f_2'(D,E,F).
 $$
+
 The reasoning is straightforward.
 
 1. Identify every factor that depends on the observed variable $B$.
@@ -686,13 +777,17 @@ So far the direction “factorization implies Markov properties” is clear: if 
 #### Formal statement
 
 **Theorem (Hammersley-Clifford).** If a distribution $p(X)$ is strictly positive,
+
 $$
 p(x)>0 \quad \text{for all } x,
 $$
+
 and is Markov with respect to an undirected graph $G$, then $p$ factorizes over the cliques of $G$:
+
 $$
 p(X) \propto \prod_{\alpha \in \mathcal C} f_\alpha(X_\alpha),
 $$
+
 where $\mathcal C$ is the set of cliques, typically taken to mean maximal cliques for a compact representation.
 
 #### Interpretation paragraph
@@ -702,10 +797,13 @@ The theorem says that for strictly positive distributions, graph separation is n
 #### Fully worked example
 
 Consider a graph with maximal cliques
+
 $$
 \{A,B,C\},\ \{B,D,E,F\},\ \{D,F,G\},\ \{E,F,H\},\ \{H,J\},\ \{F,H,K\},\ \{K,L,M\}.
 $$
+
 If a strictly positive distribution is Markov with respect to this graph, then it must admit a factorization of the form
+
 $$
 p(X)=\frac{1}{Z}
  f_1(A,B,C)
@@ -716,6 +814,7 @@ p(X)=\frac{1}{Z}
  f_6(F,H,K)
  f_7(K,L,M).
 $$
+
 A smaller clique factor such as one on $\{B,D,F\}$ is not needed explicitly, because it can be absorbed into any maximal-clique factor that contains it, here $f_2$.
 
 So the theorem tells us exactly what factor scopes are sufficient: clique scopes.
@@ -780,6 +879,7 @@ If a factor $f_\alpha(X_\alpha)$ involves more than two variables, introduce a n
 #### Fully worked example
 
 Suppose we have a three-variable factor $f_{ABE}(A,B,E)$. Introduce a new variable $X$ whose domain consists of tuples $(a,b,e)$. Replace the original factor by a unary factor $f_{ABE}(X)$. Then add pairwise consistency factors such as
+
 $$
 f_{AX}(A=a, X=(a',b',e'))=
 \begin{cases}
@@ -787,6 +887,7 @@ f_{AX}(A=a, X=(a',b',e'))=
 0 & \text{otherwise.}
 \end{cases}
 $$
+
 Similarly define $f_{BX}$ and $f_{EX}$.
 
 Now every factor is unary or pairwise.
@@ -808,9 +909,11 @@ Some logical or combinatorial frameworks insist on Boolean variables only. So it
 #### Method
 
 For each variable-value pair, create a binary indicator variable
+
 $$
 X_{i;x}=1[X_i=x].
 $$
+
 Then represent the original factors in terms of these indicators, together with constraints enforcing that exactly one indicator is on for each original variable.
 
 #### Interpretation paragraph
@@ -832,21 +935,27 @@ Bayesian networks and undirected models often represent related independence str
 #### Formal procedure
 
 Start from a Bayesian network with factors $p(X_i\mid X_{\mathrm{pa}(i)})$. For each node $i$, connect all variables in the set
+
 $$
 \{X_i\} \cup X_{\mathrm{pa}(i)}
 $$
+
 into a clique. Equivalently, take the original directed edges, drop the arrowheads, and add extra undirected edges between any two parents that share a child. This process is called **moralization**.
 
 #### Fully worked example: burglar alarm
 
 The burglary model has
+
 $$
 B \to A \leftarrow E, \qquad A \to W, \qquad A \to H.
 $$
+
 The factor graph representation is immediate: one factor for each conditional probability table,
+
 $$
 p(B),\ p(E),\ p(A\mid B,E),\ p(W\mid A),\ p(H\mid A).
 $$
+
 To form the Markov graph, we connect variables appearing in each factor. The factor $p(A\mid B,E)$ depends jointly on $A,B,E$, so the undirected graph must contain edges among all three. In particular, even though $B$ and $E$ had no directed edge between them, they become neighbors in the moralized graph.
 
 #### What is lost
@@ -883,11 +992,13 @@ This produces a valid directed model, but not all independencies visible in the 
 #### Strategy 2: introduce observed auxiliary variables for factors
 
 For each factor $f_\alpha(X_\alpha)$, introduce a binary auxiliary variable $Z_\alpha$ with conditional distribution
+
 $$
 p(Z_\alpha=0\mid X_\alpha)=\frac{f_\alpha(X_\alpha)}{f^*_\alpha},
 \qquad
 f^*_\alpha = \max_{x_\alpha} f_\alpha(x_\alpha).
 $$
+
 Set the $X_i$ to have some simple prior, for example uniform. Then condition on all $Z_\alpha=0$. Up to an overall constant, the resulting directed model reproduces the original undirected factor product.
 
 #### Interpretation paragraph
@@ -927,21 +1038,29 @@ What is fixed is the set of local configurations that define features. What vari
 ### Formal definition
 
 Suppose
+
 $$
 p(X) \propto \prod_\alpha f_\alpha(X_\alpha).
 $$
+
 For each factor scope $\alpha$ and each local configuration $x'_{\alpha}$, define the feature
+
 $$
 \phi_{x'_{\alpha}}(X_\alpha)=1[X_\alpha=x'_{\alpha}].
 $$
+
 Then write
+
 $$
 f_\alpha(X_\alpha)=\exp\left(\sum_{x'_{\alpha}} \theta_{x'_{\alpha}} 1[X_\alpha=x'_{\alpha}]\right).
 $$
+
 Multiplying factors and collecting exponents gives
+
 $$
 p(X) \propto \exp\big(\theta \cdot \phi(X)\big).
 $$
+
 This is canonical exponential-family form.
 
 ### Interpretation paragraph
@@ -951,23 +1070,31 @@ Each feature asks a very specific yes-or-no question about the configuration, su
 ### Fully worked example
 
 Suppose the model is
+
 $$
 f(X)=f_{12}(X_1,X_2)f_{13}(X_1,X_3)f_{23}(X_2,X_3),
 $$
+
 with each variable taking values in $\{0,1,2\}$. Focus on just one factor, say $f_{12}$. For each pair $(a,b)\in\{0,1,2\}^2$, define the feature
+
 $$
 \phi_{12;ab}(X)=1[(X_1,X_2)=(a,b)].
 $$
+
 Then
+
 $$
 f_{12}(X_1,X_2)=\exp\left(\sum_{a,b} \theta_{12;ab}\, \phi_{12;ab}(X)\right).
 $$
+
 Now do the same for $f_{13}$ and $f_{23}$. The log-score becomes
+
 $$
 \log f(X)= \sum_{a,b}\theta_{12;ab}\phi_{12;ab}(X)
 + \sum_{a,c}\theta_{13;ac}\phi_{13;ac}(X)
 + \sum_{b,c}\theta_{23;bc}\phi_{23;bc}(X).
 $$
+
 This is linear in the feature vector.
 
 What does one parameter mean? Suppose $\theta_{12;01}=\log 3$. Then whenever $(X_1,X_2)=(0,1)$, the factor $f_{12}$ contributes a multiplicative weight of 3 from that entry.
@@ -975,13 +1102,17 @@ What does one parameter mean? Suppose $\theta_{12;01}=\log 3$. Then whenever $(X
 ### Why the representation is called overcomplete
 
 The features are not linearly independent. For example,
+
 $$
 1[(X_1,X_2)=(0,0)] + 1[(X_1,X_2)=(0,1)] + 1[(X_1,X_2)=(0,2)] = 1[X_1=0],
 $$
+
 and the same unary event can also be written using the $(X_1,X_3)$ features:
+
 $$
 1[(X_1,X_3)=(0,0)] + 1[(X_1,X_3)=(0,1)] + 1[(X_1,X_3)=(0,2)] = 1[X_1=0].
 $$
+
 So different parameter changes can cancel out and leave the overall distribution unchanged. Such changes are called **reparameterizations**.
 
 ### Misconception block
@@ -1023,28 +1154,37 @@ This is a major conceptual payoff. It reveals that graphical-model structure is 
 ### The object being introduced
 
 A multivariate Gaussian over $X=(X_1,\dots,X_n)$ is usually written in terms of its mean vector $\mu$ and covariance matrix $\Sigma$. That is the moment form. The same distribution can be reparameterized in terms of the precision matrix
+
 $$
 J = \Sigma^{-1}
 $$
+
 and the information vector
+
 $$
 h = \mu \Sigma^{-1}.
 $$
+
 In information form, the exponent is quadratic and visibly pairwise in the coordinates of $X$.
 
 ### Formal definition
 
 The moment form is
+
 $$
 p(X)=\mathcal N(X;\mu,\Sigma)
 = (2\pi)^{-n/2}|\Sigma|^{-1/2}
 \exp\left(-\frac12 (X-\mu)\Sigma^{-1}(X-\mu)^T\right).
 $$
+
 Define
+
 $$
 J=\Sigma^{-1}, \qquad h=\mu\Sigma^{-1}.
 $$
+
 Then the information form is
+
 $$
 p(X)=\mathcal N^{-1}(X;h,J)
 =(2\pi)^{-n/2}|J|^{1/2}
@@ -1054,9 +1194,11 @@ $$
 ### Interpretation paragraph
 
 The quadratic term
+
 $$
 -\frac12 XJX^T
 $$
+
 contains terms of the form $J_{ij}X_iX_j$. So if $J_{ij}=0$, there is no pairwise interaction term between $X_i$ and $X_j$ in the exponent. This is why the Gaussian graphical model places an edge between $i$ and $j$ exactly when $J_{ij}\ne 0$.
 
 The striking conclusion is:
@@ -1070,22 +1212,27 @@ That is one of the most important facts in Gaussian graphical modeling.
 The two parameterizations make different operations easy.
 
 If we partition variables into $X_A$ and $X_B$, then in moment form,
+
 $$
 p(X_A,X_B)=\mathcal N([X_A,X_B];\mu,\Sigma)
 \quad \Rightarrow \quad
 p(X_A)=\mathcal N(X_A;\mu_A,\Sigma_{AA}).
 $$
+
 So marginalization is easy in covariance form: keep the relevant subvectors and submatrices.
 
 In information form, conditioning is easy:
+
 $$
 p(X_A\mid X_B=x_B)=\mathcal N^{-1}(X_A; h_A - J_{AB}x_B, J_{AA}).
 $$
+
 So when some variables are observed, the precision matrix of the remaining variables is just the corresponding principal submatrix. This matches the graphical intuition that conditioning removes observed nodes and leaves the remaining adjacency pattern among the unobserved variables.
 
 ### Fully worked example: Gaussian Markov chain
 
 Consider the chain
+
 $$
 X_1 \sim \mathcal N(0,1),
 \qquad
@@ -1093,32 +1240,42 @@ X_2 \mid X_1 \sim \mathcal N\left(\frac12 X_1, 0.5\right),
 \qquad
 X_3 \mid X_2 \sim \mathcal N(X_2,1).
 $$
+
 We want to see whether the undirected graphical interpretation recovers the chain structure.
 
 First compute the mean. Since $E[X_1]=0$,
+
 $$
 E[X_2]=\frac12 E[X_1]=0,
 \qquad
 E[X_3]=E[X_2]=0.
 $$
+
 So the mean vector is zero.
 
 Next compute the covariances.
 
 - $E[X_1^2]=1$.
 - Since $X_2=\frac12 X_1+\varepsilon_2$ with independent $\varepsilon_2\sim\mathcal N(0,0.5)$,
+
 $$
   E[X_1X_2]=E\left[X_1\cdot \frac12 X_1\right]=\frac12.
 $$
+
 - Since $X_3=X_2+\varepsilon_3$ with independent $\varepsilon_3\sim\mathcal N(0,1)$,
+
 $$
   E[X_1X_3]=E[X_1X_2]=\frac12.
 $$
+
 - Also,
+
 $$
   E[X_2^2]=E\left[\left(\frac12 X_1\right)^2\right]+0.5 = \frac14 + 0.5 = \frac34.
 $$
+
 - Then
+
 $$
   E[X_2X_3]=E[X_2^2]=\frac34,
   \qquad
@@ -1126,6 +1283,7 @@ $$
 $$
 
 So
+
 $$
 \Sigma=
 \begin{bmatrix}
@@ -1134,7 +1292,9 @@ $$
 0.5 & 0.75 & 1.75
 \end{bmatrix}.
 $$
+
 Now invert it. The chapter gives
+
 $$
 J=\Sigma^{-1}=
 \begin{bmatrix}
@@ -1143,6 +1303,7 @@ J=\Sigma^{-1}=
 0 & -1 & 1
 \end{bmatrix}.
 $$
+
 Now inspect the off-diagonal pattern.
 
 - $J_{12}\ne 0$: edge between $X_1$ and $X_2$.
@@ -1150,6 +1311,7 @@ Now inspect the off-diagonal pattern.
 - $J_{13}=0$: no edge between $X_1$ and $X_3$.
 
 Therefore the undirected graph is exactly the chain $X_1 - X_2 - X_3$, and the zero entry $J_{13}=0$ expresses the conditional independence
+
 $$
 X_1 \perp X_3 \mid X_2.
 $$
@@ -1204,14 +1366,19 @@ Suppose the graph structure is fixed and we want to estimate the factor paramete
 #### Formal definition
 
 For a model
+
 $$
 p_\theta(X)=\frac{1}{Z(\theta)}\exp\left(\sum_\alpha \theta_\alpha(X_\alpha)\right),
 $$
+
 the log-likelihood of the data is
+
 $$
 L(\theta)=\sum_{s=1}^m \sum_\alpha \theta_\alpha(x_\alpha^{(s)}) - m\log Z(\theta).
 $$
+
 Its gradient with respect to one local table entry $\theta_\alpha(x_\alpha)$ is
+
 $$
 \frac{\partial L}{\partial \theta_\alpha(x_\alpha)}
 = \sum_{s=1}^m 1[x_\alpha^{(s)}=x_\alpha] - m\,E_\theta[1[X_\alpha=x_\alpha]].
@@ -1242,54 +1409,71 @@ If the undirected graph is pairwise and acyclic, choose any root and orient the 
 #### Symmetric closed-form expression
 
 For a tree-structured undirected model, one convenient estimator is
+
 $$
 \hat p(X) = \left(\prod_i \hat p_i(X_i)\right)
 \left(\prod_{(i,j)\in E}
 \frac{\hat p_{ij}(X_i,X_j)}{\hat p_i(X_i)\hat p_j(X_j)}
 \right).
 $$
+
 This formula multiplies the empirical unary marginals and then corrects them using pairwise dependence ratios along the edges.
 
 #### Fully worked example
 
 Using the same three-variable chain as in the earlier Bayesian-network chapter, with graph
+
 $$
 X_1 - X_2 - X_3,
 $$
+
 suppose the data produce empirical marginals
+
 $$
 \hat p_1(X_1=0)=2/10, \quad \hat p_1(X_1=1)=8/10,
 $$
+
 $$
 \hat p_2(X_2=0)=4/10, \quad \hat p_2(X_2=1)=6/10,
 $$
+
 $$
 \hat p_3(X_3=0)=4/10, \quad \hat p_3(X_3=1)=6/10,
 $$
+
 and empirical pairwise marginals that imply
+
 $$
 \hat p_{12}(0,0)=1/10, \qquad \hat p_{23}(0,0)=2/10.
 $$
+
 We want $\hat p(0,0,0)$.
 
 Apply the tree formula in a careful order.
 
 1. Start with the unary product:
+
 $$
    \hat p_1(0)\hat p_2(0)\hat p_3(0)
    = (2/10)(4/10)(4/10).
 $$
+
 2. Correct for the edge $(1,2)$:
+
 $$
    \frac{\hat p_{12}(0,0)}{\hat p_1(0)\hat p_2(0)}
    = \frac{1/10}{(2/10)(4/10)}.
 $$
+
 3. Correct for the edge $(2,3)$:
+
 $$
    \frac{\hat p_{23}(0,0)}{\hat p_2(0)\hat p_3(0)}
    = \frac{2/10}{(4/10)(4/10)}.
 $$
+
 4. Multiply everything:
+
 $$
    \hat p(0,0,0)
    = (2/10)(4/10)(4/10)
@@ -1320,38 +1504,50 @@ IPF is a block-coordinate ascent method. One factor at a time, it updates the fa
 #### Update rule
 
 If the current model marginal on scope $\alpha$ is $p(X_\alpha)$ and the target empirical marginal is $\hat p_D(X_\alpha)$, then update
+
 $$
 f_\alpha(X_\alpha) \leftarrow f_\alpha(X_\alpha)
 \frac{\hat p_D(X_\alpha)}{p(X_\alpha)}.
 $$
+
 One typically rescales the factor afterward for numerical stability.
 
 #### Why this update makes sense
 
 Hold all factors except $f_\alpha$ fixed. Then the current marginal on $X_\alpha$ is proportional to
+
 $$
 f_\alpha(X_\alpha) g(X_\alpha),
 $$
+
 where $g$ summarizes the rest of the model. Multiplying $f_\alpha$ by the ratio $\hat p_D/p$ forces the resulting marginal on $X_\alpha$ to equal the target marginal exactly. The catch is that this update perturbs other marginals, so the process must cycle until convergence.
 
 #### Fully worked example
 
 Suppose $X=(A,B,C)$ is binary and we want to fit the pairwise model
+
 $$
 p(X) \propto f_{AB}(A,B)f_{BC}(B,C)f_{AC}(A,C)
 $$
+
 to an empirical distribution in which
+
 $$
 \hat p_{AB}(0,0)=0.4,\quad \hat p_{AB}(0,1)=0.3,\quad \hat p_{AB}(1,0)=0.1,\quad \hat p_{AB}(1,1)=0.2.
 $$
+
 Assume our current model has marginal
+
 $$
 p_{AB}(0,0)=0.047,\quad p_{AB}(0,1)=0.163,\quad p_{AB}(1,0)=0.279,\quad p_{AB}(1,1)=0.512.
 $$
+
 The model is clearly mismatched to the data on this pair. To update $f_{AB}$, multiply each entry by the ratio of target to current:
+
 $$
 \frac{0.4}{0.047},\quad \frac{0.3}{0.163},\quad \frac{0.1}{0.279},\quad \frac{0.2}{0.512}.
 $$
+
 After this update and renormalization, the model's new $AB$ marginal matches the empirical $AB$ marginal exactly.
 
 But now the $AC$ and $BC$ marginals may have moved away from their targets. So:
@@ -1381,9 +1577,11 @@ Even IPF may be costly because it still requires computing marginals under the c
 #### Formal definition
 
 The pseudo-log-likelihood is
+
 $$
 PL = \sum_{s=1}^m \sum_i \log p(X_i=x_i^{(s)} \mid X_{\neg i}=x_{\neg i}^{(s)}),
 $$
+
 where $X_{\neg i}$ denotes all variables except $X_i$.
 
 #### Interpretation paragraph
@@ -1395,27 +1593,35 @@ The price is conceptual: the objective double-counts dependence information. In 
 #### Fully worked contrast with ordinary likelihood
 
 For a single observation $(A=a,B=b)$, the true log-likelihood can be written as
+
 $$
 L = \log p(A=a) + \log p(B=b\mid A=a).
 $$
+
 The pseudo-log-likelihood is instead
+
 $$
 PL = \log p(A=a\mid B=b) + \log p(B=b\mid A=a).
 $$
+
 The second term is the same in both. The first differs. In the true likelihood, the model must explain $A=a$ without already knowing $B=b$. In pseudo-likelihood, it gets to use $B=b$ as conditioning information. That is why pseudo-likelihood is not itself a genuine joint-probability score.
 
 #### Example: Boltzmann pseudo-likelihood as coupled logistic regressions
 
 For the Boltzmann model with $X_i\in\{0,1\}$, the conditional distribution of a single variable has the form
+
 $$
 p(X_i\mid X_{\neg i}=x_{\neg i}) \propto
 \exp\left(X_i\left(b_i + \sum_{j\ne i}\theta_{ij}x_j\right)\right).
 $$
+
 Since $X_i$ is binary,
+
 $$
 p(X_i=1\mid X_{\neg i}=x_{\neg i})
 = \left(1+\exp\left(-b_i-\sum_{j\ne i}\theta_{ij}x_j\right)\right)^{-1}.
 $$
+
 So each local conditional is a logistic-regression-style probability.
 
 This is extremely useful computationally. It means pseudo-likelihood optimization in a Boltzmann machine resembles training a collection of linked logistic regression models, one for each node.
