@@ -1,30 +1,60 @@
 # 2.6 Change-of-Variable Models
 
-Change-of-variable modeling appears when a random quantity is easier to describe in one space than in another. Sometimes the observed variable is constrained, such as being always positive. Sometimes the observed distribution is strongly skewed, even though a transformed version looks regular. Sometimes dependence becomes easier to describe only after the coordinates are remapped. So this chapter is not mainly about a calculus trick. It is about a modeling strategy: begin with a variable whose distribution is easy to understand, transform it into the variable we actually care about, and then describe the resulting distribution correctly.
+This chapter is about what happens to a probability model when the random variable itself is re-expressed through a deterministic transformation.
 
-The central law behind the whole chapter is **probability conservation**. A deterministic transformation can move probability mass from one region of the line or space to another. It can stretch some neighborhoods and compress others. But it cannot create or destroy total probability. That is why transformed-density formulas always contain some local scaling factor. In one dimension that factor is an absolute derivative. In several dimensions it becomes an absolute determinant. These terms are not decorative corrections attached after the main idea. They are the mathematical expression of probability conservation under a change of coordinates.
+That sentence is worth slowing down. In many earlier chapters, the random variable was already given, and the task was simply to describe its distribution. Here the situation is different. We begin with one random variable that is easy to model, and then we define a new random variable from it by applying a function. The main question is then no longer "what is the original density?" It becomes "what is the distribution of the new variable, and how do we describe it correctly?"
 
-Before any formula appears, it helps to separate the objects involved.
+This topic appears because probabilistic modeling often works that way. A variable may be easier to understand in one representation than in another. A latent variable may have a simple and familiar distribution, while the observed variable is positive, skewed, or constrained in some other way. A multivariate dependence structure may be easier to express after the coordinates are remapped. So change of variables is not merely a calculus technique. It is a way of building more useful probability models out of simpler ones.
 
-There is first the **base variable**, often written $Z$. This is the variable whose distribution we already know, or choose deliberately because it is simple.
+The central law behind the whole chapter is **probability conservation**. A deterministic transformation can move probability from one region of the space to another. It can spread probability out, squeeze it together, reflect it, or fold it. But it cannot create extra total probability and it cannot destroy total probability. That is why transformed-density formulas always contain a correction term: if the map changes how much space a neighborhood occupies, then the density, which measures how much probability is packed into that neighborhood, must change accordingly.
 
-There is next the **transformed variable**, often written $X$, defined by a deterministic map such as $X = f(Z)$. The transformation acts on the variable itself. It does not act directly on the density formula.
+Before doing any calculation, it helps to separate four different objects that students often blend together.
 
-There is also the **support** of each variable. The support is the set of values the variable can actually take. Transformations often change support, and many algebraically tidy answers are wrong because they ignore that change.
+First, there is the **random variable** itself. This is the quantity whose values vary randomly. In this chapter, the simpler starting variable will usually be written $Z$, and the transformed variable will usually be written $X$.
 
-Finally, there are **events**. A probability statement about $X$, such as $a \le X \le b$, can often be understood most easily by translating it back into an equivalent statement about $Z$.
+Second, there is the **distribution** of a variable. The distribution tells us how probability is assigned across the possible values of that variable. It is the full probabilistic law.
 
-That object separation is worth taking seriously, because most confusion in this topic comes from mixing these roles together. A good working discipline is this: start with the base variable and its known distribution; define the transformed variable by an explicit map; identify the transformed support; translate events in observed space back to the base space; and only then write the transformed density formula.
+Third, in the continuous setting, there is the **density**. A density is not the same thing as the variable and not the same thing as the full distribution in the most abstract sense. It is a coordinate-based way of describing how probability is distributed across a continuum of values. Densities tell us how concentrated probability is locally, but probability itself is always attached to intervals or regions, not to isolated points.
+
+Fourth, there are **events**. An event is a statement about the variable, such as $a \le X \le b$. In this chapter, events matter because the cleanest way to understand a transformed variable is often to translate an event about $X$ back into an equivalent event about $Z$.
+
+With those distinctions in place, we can now say more carefully what it means for the transformation to act on the variable rather than directly on the density. If we define
+
+$$
+X = f(Z),
+$$
+
+the function $f$ takes values of $Z$ and produces values of $X$. So the transformation changes the random variable and the space in which that variable lives. It does not mean that we should mechanically replace symbols inside the old density formula and hope the result is correct. The density has to be recomputed because the coordinates and local spacing of the space have changed.
+
+A reliable mental workflow for this chapter is therefore: start with the base variable and its distribution; define the transformed variable by an explicit function; identify the support of the transformed variable; translate events in the transformed space back into the base space; and only then write the transformed density formula.
+
+## A short prerequisite: variable, distribution, density, and event
+
+Before continuing, it helps to make four nearby ideas explicit.
+
+A **random variable** is the quantity whose value is random. If $Z$ is a random variable, then on one draw it may take one value, and on another draw it may take another.
+
+A **distribution** is the full probabilistic law of that variable. It tells us how likely different values or regions of values are.
+
+A **density** is the continuous-case tool that describes how probability is locally distributed across the line or space. The density itself is not a probability assigned to a point. Instead, probability over a small interval is approximated by density times interval width. That is why densities can be bigger than $1$ and why a point can have zero probability even when the density there is positive.
+
+An **event** is a statement about the variable, such as $X \le x$ or $a \le X \le b$. Events matter because probabilities attach directly to events. Densities are useful because they let us compute the probabilities of small intervals and larger regions, but the probability statements themselves are statements about events.
+
+The phrase **probability mass** in this chapter should be read informally as "the probability assigned to a small interval or region." In the discrete case, probability mass sits on separate outcomes. In the continuous case, probability is spread across intervals or regions. So when this chapter says that a transformation moves probability mass, it means that the same total probability attached to one region in the base variable's space is represented in a different region of the transformed variable's space.
+
+This is the reason density corrections are needed. If the same probability is spread across a wider region, the density must become lower. If the same probability is squeezed into a narrower region, the density must become higher.
 
 ## Why transformations appear in probabilistic modeling
 
-This topic has to appear once densities have been introduced, because a density by itself only describes a distribution in one coordinate system. It does not tell us automatically what happens if the variable is re-expressed.
+This topic becomes necessary as soon as continuous densities have been introduced, because a density describes a distribution **relative to a particular variable and its coordinates**. If we change the variable, we have changed the coordinate system in which that probability law is being described. So we do not automatically get the new density for free.
 
-Earlier chapters focused on describing random variables once the space and coordinates were fixed. But probabilistic modeling immediately asks a harder question. What if the quantity we observe is defined indirectly from another variable? What if we choose a different representation because it makes the model simpler? What if we want to start from a simple distribution and generate a more complicated one through transformation? At that point the question is no longer "what is the density of this variable?" It becomes "how does a density change when the variable itself is remapped?"
+That point is subtle but important. The underlying randomness has not disappeared. We are still talking about one probabilistic system. But once we define a new variable from the old one, the question changes. We are no longer describing probability in the original coordinates. We are describing it in the new coordinates. That means the density must be recomputed in a way that respects how the transformation redistributes probability across space.
 
-The wrong instinct is to think that we should simply substitute the transformation into the old density. That is not the right operation. The transformation changes not only where probability mass sits, but also how densely that mass is packed in the new coordinates. That is why the inverse map appears, and that is why the local scaling factor is unavoidable.
+This is why a density and a distribution should not be carelessly interchanged in language. The **distribution** is the underlying probabilistic law. The **density** is one way of describing that law for a continuous variable in a particular coordinate system. When the variable is re-expressed, the underlying law is still describing the same random mechanism, but the density formula changes because the coordinate spacing has changed.
 
-This idea matters later for at least three reasons. First, it explains transformed families such as the lognormal, where a simple latent variable produces a positively supported and skewed observed variable. Second, it supports constructions such as copulas, where variables are moved into percentile space so that marginal behavior and dependence can be separated. All of these reuse the same law. What changes is only the complexity of the transformation and the modeling goal.
+This is also why the wrong shortcut is to plug the transformation directly into the old density. That would ignore the fact that a transformation changes not only where values land, but also how tightly or loosely nearby values are packed in the new variable's space.
+
+Later in the chapter, and later in the course, this idea supports three important patterns. It explains transformed families such as the lognormal. It explains constructions such as copulas, where coordinates are moved into new spaces to separate marginal behavior from dependence. And it explains normalizing flows, where a simple base density is pushed through an invertible learned map to produce a flexible observed density. Those later applications are all reuses of the same central law.
 
 ## Scalar change of variables
 
@@ -38,13 +68,19 @@ $$
 
 We are trying to answer one specific question:
 
-**What is the density of $X$?**
+**What is the density of the transformed variable $X$?**
 
-To answer that question cleanly, it helps to say exactly what is fixed and what is varying. The transformation $f$ is fixed. The base density $p_Z$ is fixed. The transformed variable $X$ is already defined by that map. What varies is the observed location $x$ where we want to evaluate the density of $X$.
+At this point it helps to say exactly what is fixed and what varies. The base variable $Z$ is already part of the model. Its density $p_Z$ is known. The transformation $f$ is also already fixed. The transformed variable $X$ is defined from $Z$ by that map. What varies is the observed location $x$ at which we want to evaluate the density of $X$.
 
-That point matters because it prevents a common misunderstanding. We are not trying to "transform the graph of $p_Z$." We are asking a local question: if we look near one observed point $x$, which latent point or latent points in $Z$-space could have produced it, and how did the map change local width near those points?
+Now we can say more carefully what it means for the transformation to act on the variable rather than directly on the density.
 
-That is the core mechanism of the scalar case. First identify the latent source of the observed point. Then correct for local stretching or compression. The inverse map appears because we must work backward from $x$ to the latent location that generated it. The derivative appears because density is measured per unit width, and the transformation changes local width.
+The transformation acts on the **values** of the random variable. If the latent value is $z$, then the observed value is $x = f(z)$. So the function changes points in the variable's space. It tells us where latent values go.
+
+The density formula is a different object. It tells us how much probability is concentrated near each location in that space. Since the transformation changes where points go and how neighborhoods are stretched or compressed, we cannot obtain the new density by simply replacing symbols inside the old one. We must recompute the density from the transformed geometry of the space.
+
+So the real question is not "how do I transform the graph of $p_Z$?" The real question is this: if I look near an observed point $x$, which latent point or latent points could have produced it, and how has the map changed the size of a small neighborhood around that point?
+
+Once that question is clear, the inverse map and the derivative stop looking like arbitrary pieces of algebra.
 
 ### The object being introduced
 
@@ -76,6 +112,16 @@ First, to know the density at $x$, you must ask which latent point $z$ produced 
 
 Second, once that latent point is found, the density must be corrected by a local width-conversion factor. If a short interval in $X$-space corresponds to a narrower interval in $Z$-space, then the density in $X$-space must be higher, because the same probability mass is now packed into less width. If the interval becomes wider, the density must be lower. The factor $|g'(x)|$ is exactly that local width ratio.
 
+### Why events are the right starting point
+
+A transformed-density problem becomes much easier when we begin with events rather than with formulas.
+
+The reason is simple: probabilities are attached directly to events. If we know how an event about $X$ translates into an equivalent event about $Z$, then we can use the distribution of $Z$, which is already known. That is often the cleanest way to derive a transformed formula.
+
+For example, if $X = f(Z)$, then the event $X \le x$ is really a statement about which values of $Z$ produce observed values no larger than $x$. Once that event has been translated back into $Z$-language, the known distribution of $Z$ can evaluate it.
+
+This is the conceptual pattern to retain: transformed-variable questions are often solved by rewriting an event about the observed variable into an equivalent event about the base variable.
+
 ### Why the inverse appears
 
 The inverse appears because the density at an observed point $x$ depends on the latent point that produced it. The forward map tells us how to move from latent space to observed space. But when we evaluate the transformed density at a particular observed point, we must work backward. We must ask: which value of $z$ satisfies $f(z) = x$? That is an inverse question.
@@ -98,23 +144,41 @@ If $f$ is decreasing, the same event logic still works, but orientation reverses
 
 ### Why the derivative appears
 
-The derivative appears because density is measured per unit width. A transformation changes local width.
+The derivative appears because density is a measure of how much probability is packed into a small amount of space.
 
-Suppose a tiny interval around $x$ has width $dx$. Under the inverse map, it corresponds to a tiny interval around $z = g(x)$ whose width is approximately
+That sentence is easiest to understand by comparing two nearby descriptions of the same small probability.
+
+Suppose we look at a tiny interval around an observed point $x$. Write its width as $dx$. The probability that $X$ falls in that tiny interval is approximately
+
+$$
+p_X(x)\,dx.
+$$
+
+This is the meaning of density in one dimension: density times small width gives approximate probability for a small interval.
+
+Now ask where that same observed interval came from in the latent variable's space. Under the inverse map $z = g(x)$, the small interval around $x$ corresponds to a small interval around $z = g(x)$. That latent interval will usually not have the same width. Its width is approximately
 
 $$
 |g'(x)|\,dx.
 $$
 
-Those two intervals carry the same probability mass, because they represent the same event described in different coordinates. So
+This is what **local width change** means. It does not mean that the whole line is uniformly stretched. It means that if you zoom in near one observed point $x$, the inverse map tells you how a very small interval there compares in size to the corresponding very small interval back in latent space.
+
+Now the key conservation statement enters. Those two intervals represent the same event, just written in two coordinate systems. So they must carry the same probability. That gives
 
 $$
 p_X(x)\,dx \approx p_Z(g(x))\,|g'(x)|\,dx,
 $$
 
-which gives the formula.
+After cancelling $dx$, we get
 
-This is the right interpretation to retain. The derivative is not there because differentiation happened to appear in the derivation. It is there because local width changed.
+$$
+p_X(x)=p_Z(g(x))\,|g'(x)|.
+$$
+
+So the derivative is not present because differentiation happened to show up in a derivation. It is present because the transformation changes how much length in one space corresponds to how much length in the other.
+
+A good picture to retain is this. If the inverse map turns a small observed interval into an even smaller latent interval, then the observed density must be larger, because the same probability is being packed into less observed width. If the inverse map turns the observed interval into a larger latent interval, then the observed density must be smaller.
 
 ### Boundary conditions and failure modes
 
@@ -292,7 +356,7 @@ That pattern is the one to look for in future problems. Whenever a transformatio
 
 ## Example: lognormal distribution
 
-The lognormal is the first transformed family worth remembering because it shows how a familiar base distribution can generate a qualitatively different observed shape.
+The lognormal is the first transformed family worth remembering because it shows how a familiar base distribution can produce an observed variable with very different visible behavior: the new variable is automatically positive, it is typically skewed rather than symmetric, and values can spread over several scales even though the latent Gaussian variable is described by a much more regular shape.
 
 Let
 
