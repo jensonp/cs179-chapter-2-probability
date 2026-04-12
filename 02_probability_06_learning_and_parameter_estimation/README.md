@@ -1,28 +1,25 @@
 # 2.6 Learning and Parameter Estimation
 
-Sections 2.1 through 2.5 asked forward questions:
+Sections 2.1 through 2.5 mostly asked **forward** questions. A model was already specified, its parameters were already fixed, and the task was to work out what probabilities or expectations followed from that choice. This section changes the direction of reasoning. We are now in the more realistic scientific situation: the world has already produced some observations, and we want to use those observations to say something about the model that may have generated them.
 
-- if the model is already known, what probabilities does it assign?
-- if the parameters are already fixed, what outcomes are likely?
+That change sounds small, but conceptually it is one of the largest shifts in the course. Earlier, the model explained the data. Now the data are being used to evaluate, fit, or update the model. As soon as that reversal happens, several new objects appear: the **likelihood**, the **maximum likelihood estimator**, the **posterior distribution**, the **MAP estimate**, and the **model evidence**. These are closely related, and the mathematics often uses the same symbols in each case. That is exactly why this topic starts to feel slippery.
 
-This section changes the direction of reasoning.
+The main difficulty here is usually **not** the calculus. It is role confusion. The same expression can be read in different ways depending on what is fixed and what is varying. A beginner can look at the symbol
 
-Now the data have already been observed, and the question becomes:
+$$
+p(D\mid \theta)
+$$
 
-- what parameter values fit those observations well?
-- how do we update uncertainty about parameters after data arrive?
-- how do we compare one model family with another?
+and think it means the same thing in every context. It does not. Sometimes it is being read as a probability law for the data when the parameter is fixed. Sometimes it is being read as a function that scores parameter values after the data have already been observed. The algebra may be identical, but the question is not.
 
-For beginners, the hardest part of this section is not the calculus. It is keeping track of which object is random, which object is fixed, and which question is currently being asked.
+So the right way to enter this section is with a standing discipline. Every time a new formula appears, ask four questions:
 
-So keep this checklist visible:
+1. **What object is being treated as fixed?**
+2. **What object is being allowed to vary?**
+3. **What function are we looking at?**
+4. **What question is that function answering?**
 
-1. What is fixed?
-2. What is allowed to vary?
-3. What function are we looking at?
-4. What question does that function answer?
-
-That checklist is what keeps probability, likelihood, posterior, evidence, MLE, and MAP from collapsing into one blur.
+That four-question checklist is not optional bookkeeping. It is the conceptual tool that prevents probability, likelihood, posterior, evidence, MLE, and MAP from collapsing into one undifferentiated mass of notation.
 
 ---
 
@@ -86,78 +83,116 @@ So we obtain the displayed factorization above.
 
 This is the structural starting point for almost every likelihood calculation in the section.
 
+Before moving on, it helps to name the three layers that are already present in this apparently simple factorization.
+
+First, there is the **data-generating layer**. The sample
+
+$$
+D = \bigl(x^{(1)},x^{(2)},\dots,x^{(m)}\bigr)
+$$
+
+is being treated as something that could in principle have turned out differently. At this stage, the observations are random because the experiment or sampling process could have produced another dataset.
+
+Second, there is the **parameter layer**. The symbol $\theta$ is controlling the distribution from which the observations are drawn. In different model families, $\theta$ may be a single number, a vector, or even a more structured object, but its role is always the same: it specifies which member of the model family is being considered.
+
+Third, there is the **factorization layer**. The i.i.d. assumption is not merely a convenience for shortening formulas. It tells us that once $\theta$ is fixed, the full sample contains no additional dependence structure that must be modeled. That is why the joint law of the dataset can be written as a product of one-observation terms. Nearly every likelihood in an introductory course is built by starting from this product and then deciding how to reinterpret it.
+
+That last phrase matters: **reinterpret it**. The next subsection does not introduce a brand-new algebraic formula. It introduces a new way of reading the same one.
+
 ---
 
 ## 2. Likelihood
 
-The likelihood is the same algebraic expression as the sampling model, but viewed as a function of the parameter after the data have already been observed:
+The likelihood is the first place in this chapter where the notation stays almost the same but the **question** changes completely. That is why students often feel that the topic becomes slippery here.
+
+Start with the sampling model:
+
+$$
+p(D\mid \theta).
+$$
+
+If we are thinking in the ordinary data-generating direction, this expression tells us how probable or how dense different datasets are **when the parameter value is fixed**. In that reading, $\theta$ is held still and the data are the variable object.
+
+Likelihood keeps the same algebraic expression but changes the viewpoint. Once the dataset has already been observed, we no longer ask, "What datasets might this parameter generate?" We ask, "For the dataset that actually occurred, which parameter values make it look more or less compatible with the model?" That is a different question, and the expression is now being read as a function of $\theta$:
 
 $$
 L(\theta;D)=p(D\mid \theta).
 $$
 
-This is the first major role reversal.
+This deserves to be read slowly. The semicolon in $L(\theta;D)$ is not decorative. It is there to remind you that the parameter is the variable argument and the dataset is being treated as fixed background information.
 
-### Sampling-model view versus likelihood view
+A useful way to say this in plain language is:
 
-In the sampling-model view:
+- the **sampling-model view** asks how random data behave when the parameter is fixed;
+- the **likelihood view** asks how parameter values compare when the observed data are fixed.
 
-- $\theta$ is fixed;
-- the data are random because a different sample could have been observed.
+The formula is the same. The meaning is not.
 
-In the likelihood view:
+### A concrete role comparison
 
-- the data $D$ are fixed at the values we actually observed;
-- $\theta$ is allowed to vary;
-- the goal is to compare how well different parameter values explain this realized sample.
+Suppose the observed sample is
 
-The formula is the same. The question is different.
+$$
+D=(1,0,1,1,0)
+$$
+
+from a Bernoulli model with success probability $\rho$. Then the expression
+
+$$
+\rho^3(1-\rho)^2
+$$
+
+can be read in two different but related ways.
+
+In the sampling-model reading, if $\rho$ has already been fixed, this tells you the probability of observing exactly that particular sequence of five outcomes.
+
+In the likelihood reading, the sequence has already happened. The sample is no longer the thing being varied. Now the expression is being used to compare candidate values of $\rho$. A value of $\rho$ that makes $\rho^3(1-\rho)^2$ larger is a value that gives the realized sample a better fit inside the Bernoulli family.
+
+This is the first major conceptual distinction to retain: **probability distributes mass over possible data; likelihood scores parameter values using the data that were actually observed**.
 
 ### What likelihood is not
 
-Likelihood does **not** mean
+Likelihood is **not** the posterior probability of the parameter. It is not
 
 $$
-P(\theta\mid D).
+p(\theta\mid D).
 $$
 
-That would be a posterior distribution over parameter values, which requires Bayes' rule and a prior.
+The posterior is a different object that appears only after a prior is introduced and Bayes' rule is applied. Likelihood by itself does not say how probable a parameter value is. It says how well that parameter value explains the observed sample **within the chosen model family**.
 
-Likelihood means:
+That qualification matters. Likelihood only compares parameter values **inside one model family at a time**. It is not yet a complete answer to model comparison, and it is not a probability distribution over parameters.
 
-- fix the observed data;
-- vary the parameter;
-- ask which parameter values make the observed data more or less plausible under the model.
+### Why likelihood usually does not normalize
 
-There is one more important boundary here: as a function of $\theta$, the likelihood usually does **not** integrate or sum to $1$. So likelihood is not itself a probability distribution over parameter values. It is a scoring rule for comparing parameter values inside a fixed model family.
+A common beginner error is to think that because $p(D\mid \theta)$ is a probability law in $D$, it must also behave like a probability law in $\theta$. That is false. When we reinterpret the same expression as a function of $\theta$, there is usually no reason for it to integrate or sum to one across parameter values. In the likelihood reading, normalization is not the point. Relative comparison is the point.
+
+So likelihood should be thought of as a **scoring surface over parameter space**, not as a distribution over parameter values.
 
 ### Why log-likelihood is introduced
 
-Products of many terms are awkward to differentiate and can become numerically tiny. Taking logs turns products into sums:
+Likelihoods under the i.i.d. assumption are usually products:
 
 $$
-\ell(\theta)=\log L(\theta;D)=\sum_{i=1}^{m}\log p\bigl(x^{(i)}\mid \theta\bigr).
+L(\theta;D)=\prod_{i=1}^{m} p\bigl(x^{(i)}\mid \theta\bigr).
 $$
 
-This works because:
+Products are mathematically awkward for at least two reasons. First, they are harder to differentiate cleanly. Second, when many factors are multiplied together, the numerical values can become extremely small even when the model fit is perfectly reasonable.
+
+The logarithm solves both issues at once. Define the log-likelihood by
 
 $$
-L(\theta;D)=\prod_{i=1}^{m} p\bigl(x^{(i)}\mid \theta\bigr),
+\ell(\theta)=\log L(\theta;D).
 $$
 
-so applying $\log$ gives
+Using the logarithm rule that turns products into sums, we get
 
 $$
-\log L(\theta;D)=\log \prod_{i=1}^{m} p\bigl(x^{(i)}\mid \theta\bigr).
+\ell(\theta)=\sum_{i=1}^{m}\log p\bigl(x^{(i)}\mid \theta\bigr).
 $$
 
-Using the logarithm identity $\log(ab)=\log a+\log b$, we obtain
+This is not a cosmetic rewrite. It changes the geometry of the optimization problem from "multiply many factors" to "add many contributions," which is easier to analyze and easier to compute with.
 
-$$
-\log L(\theta;D)=\sum_{i=1}^{m}\log p\bigl(x^{(i)}\mid \theta\bigr).
-$$
-
-Because the logarithm is strictly increasing, maximizing $L(\theta;D)$ and maximizing $\ell(\theta)$ give the same parameter value.
+Just as importantly, maximizing the log-likelihood gives the same maximizing parameter value as maximizing the likelihood itself, because the logarithm is strictly increasing. The log does not change which parameter fits best. It changes only the scale on which that fit is measured.
 
 ---
 
@@ -168,6 +203,14 @@ The maximum likelihood estimator, or MLE, is the parameter value that maximizes 
 $$
 \hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta} L(\theta;D)=\arg\max_{\theta}\ell(\theta).
 $$
+
+Before moving into examples, it helps to say exactly what this definition licenses and what it does **not** license.
+
+The MLE is a **selection rule**. It takes the observed dataset as input and returns the parameter value at which the likelihood is largest. So the MLE is not the parameter itself. It is a rule for producing an estimate from data.
+
+That distinction becomes important as soon as people start saying things like "the MLE is random." The fitted number you get after observing one particular dataset is just a number. But the **estimator as a rule** is random under repeated sampling, because a different dataset would generally produce a different fitted value.
+
+It is also worth noticing what the MLE is optimizing. It is not optimizing truth. It is not optimizing future predictive performance directly. It is optimizing **fit to the observed sample within the chosen model family**. That is exactly why MLE is powerful and exactly why it can later overfit if the model family becomes too flexible.
 
 The word "argmax" means "the argument, or parameter value, at which the maximum occurs."
 
@@ -706,17 +749,21 @@ That is the categorical version of the Bernoulli result.
 
 ## 8. The moment-matching viewpoint
 
-The Bernoulli, Gaussian, and categorical MLEs all share the same deeper pattern:
+At this point, it is easy to think that maximum likelihood estimation is mainly a calculus routine: write a product, take logs, differentiate, solve, and move on. That would miss the deeper pattern.
 
-- the fitted parameter makes model summaries match empirical summaries.
+Across the Bernoulli, Gaussian, and categorical examples, the fitted parameter is not arbitrary. In each case, the optimization is pushing the model toward agreement with the empirical summaries that the model family is built to express.
 
-Examples:
+In the Bernoulli case, the family has one central feature: the success probability. The MLE sets that feature equal to the observed fraction of successes.
 
-- Bernoulli MLE matches the model success probability to the observed success frequency;
-- Gaussian mean MLE matches the model mean to the sample mean;
-- categorical MLE matches the model category probabilities to empirical proportions.
+In the Gaussian mean example with known variance, the family has a center parameter. The MLE sets that center equal to the observed sample mean.
 
-This is why estimation is not just "differentiate and solve." The mathematics is forcing the model to reproduce the statistics that the family knows how to represent.
+In the categorical case, the family stores one probability for each category. The MLE sets those probabilities equal to the observed empirical proportions.
+
+That is why these estimators feel so natural after the derivations are finished. The mathematics is not doing something mysterious. It is telling the model to reproduce, as closely as the family allows, the summaries of the data that the family was designed to encode.
+
+This is an important general lesson. Estimation is not just an exercise in symbolic differentiation. The optimization is exposing what the model family "cares about." If a family is parameterized by a center, a spread, or category weights, likelihood fitting often pushes those parameters toward the corresponding empirical features of the sample.
+
+That viewpoint is worth retaining because it makes later estimators easier to understand. Instead of seeing each MLE as an isolated trick, you begin to ask a more structural question: **which empirical features is this model trying to match?**
 
 ---
 
@@ -742,68 +789,84 @@ So a good learning procedure must care about more than in-sample fit alone. Comm
 
 ## 10. Frequentist and Bayesian viewpoints
 
-Likelihood by itself does not yet distinguish the frequentist and Bayesian viewpoints. It is used in both.
+Up to this point, likelihood has been used in a way that both frequentists and Bayesians accept. That is why students sometimes wonder where the real split occurs. The answer is: the split is not in whether data are informative about parameters. The split is in **what kind of object the parameter is allowed to be** and **what object is retained at the end of inference**.
 
 ### Frequentist view
 
-In the frequentist view:
+In the frequentist view, the parameter is fixed but unknown. It is part of the state of the world. Our uncertainty about it is epistemic--we do not know its value--but the framework does not represent that uncertainty by placing a probability distribution on the parameter itself.
 
-- the parameter is fixed but unknown;
-- the data are random because another sample could have been drawn;
-- an estimator is judged by repeated-sampling behavior.
+What is random in the frequentist picture is the data. Another sample could have been drawn, and a different sample would generally produce a different estimate. So a frequentist estimator is judged by its repeated-sampling behavior: does it tend to be close to the true parameter, how variable is it across samples, is it biased, is it consistent, and so on.
 
-So an MLE is a rule that takes a realized dataset and returns one fitted parameter value.
+In that language, the MLE is a rule that maps observed data to a fitted parameter value. Once the dataset is fixed, the output is just one estimate.
 
 ### Bayesian view
 
-In the Bayesian view:
+In the Bayesian view, uncertainty about the parameter is represented directly with probability. The parameter is not treated as "random because nature keeps resampling it," but as unknown in a way that is itself modeled probabilistically. This is done by placing a prior distribution on parameter values and then updating that prior after the data are observed.
 
-- probability is also used to represent uncertainty about parameters;
-- the parameter is not treated as known but hidden;
-- a prior distribution is placed over parameter values;
-- the data update that prior to a posterior distribution.
+The essential output of Bayesian inference is therefore not just one fitted number. It is a **posterior distribution** over parameter values:
 
-The most important difference is the final object retained:
+$$
+p(\theta\mid D).
+$$
 
-- frequentist estimation often keeps one fitted value;
-- Bayesian inference keeps a posterior distribution unless a later summary is requested.
+That posterior records not only which parameter values fit well, but also how uncertainty is distributed across them after the data and prior information have both been taken into account.
+
+### The cleanest contrast
+
+A good way to keep the two viewpoints straight is this:
+
+- frequentist inference usually asks: **what rule should I use to estimate the fixed unknown parameter from random data?**
+- Bayesian inference usually asks: **after seeing the data, how should my uncertainty about the parameter be updated?**
+
+These viewpoints can produce similar numerical answers in some problems, but they are not conceptually interchangeable. One centers estimation rules and their repeated-sampling properties. The other centers probability distributions over uncertainty.
 
 ---
 
 ## 11. Posterior distributions
 
-Let $\theta$ be the parameter and $D$ the observed data. Bayes' rule gives
+The posterior distribution is the central Bayesian answer to the learning problem. Once a prior has been specified and data have been observed, the posterior tells us how uncertainty about the parameter should now be distributed.
+
+Bayes' rule says
 
 $$
 p(\theta\mid D)=\frac{p(D\mid \theta)p(\theta)}{p(D)}.
 $$
 
-Each factor has a different role:
+This formula is familiar, but it becomes much easier to understand when each factor is assigned a job.
 
-- $p(\theta)$ is the prior;
-- $p(D\mid \theta)$ is the likelihood;
-- $p(\theta\mid D)$ is the posterior;
-- $p(D)$ is the evidence.
+The prior $p(\theta)$ expresses what parameter values were considered more or less plausible **before** the current data were seen.
 
-### Why the evidence appears
+The likelihood $p(D\mid \theta)$ measures how well each parameter value fits the observed data **within the model family**.
 
-The numerator
+The posterior $p(\theta\mid D)$ is the updated distribution that combines those two sources of information.
+
+The evidence $p(D)$ is whatever normalizing constant is needed so that the posterior becomes a genuine probability distribution over the parameter space.
+
+### Why the evidence must appear
+
+Without the denominator, the product
 
 $$
 p(D\mid \theta)p(\theta)
 $$
 
-is usually only proportional to the posterior. To turn it into a proper probability distribution over $\theta$, we must divide by whatever constant makes the total integrate or sum to $1$.
-
-That constant is exactly
+is usually only proportional to the posterior. It has the right shape, but not the right total mass. To turn that shape into a proper probability distribution over $\theta$, we divide by the total mass across all parameter values:
 
 $$
 p(D)=\int p(D\mid \theta)p(\theta)\,d\theta,
 $$
 
-or the analogous sum in a discrete parameter space.
+or a sum in the discrete case.
 
-So the evidence is the normalization constant of the posterior inside a fixed model.
+This is one of the most important places to slow down conceptually. The evidence is not an arbitrary correction factor inserted by hand. It appears because the posterior must be a normalized distribution over parameter values.
+
+### The posterior is not just "likelihood plus prior" in words
+
+A common informal sentence is "the posterior is proportional to prior times likelihood." That sentence is useful, but incomplete. It tells you the **shape** of the posterior, not the fully normalized object.
+
+That distinction matters for two reasons. First, if you want a proper distribution--something you can integrate against, take expectations under, or compare as a probability law--you need normalization. Second, later in the chapter the evidence itself becomes important for model comparison. So it is not merely a disposable constant.
+
+A good mental picture is this: the prior tells you where you started, the likelihood tells you how the observed data reweight that picture, and the evidence rescales the result so the updated picture is again a valid probability distribution.
 
 ---
 
@@ -982,98 +1045,61 @@ That is why Dirichlet parameters are interpreted as pseudo-counts.
 
 ## 14. Posterior summaries
 
-The posterior distribution is the primary Bayesian object. But sometimes a single number is needed for prediction, decision-making, or comparison.
+The posterior distribution is the primary Bayesian object. In principle, once you have the posterior, you already have the full answer to the Bayesian learning problem. But in practice, people often ask for a single number. That is where summaries enter.
 
-Three common summaries are:
-
-- posterior mean;
-- MAP estimate;
-- MLE.
-
-They are not interchangeable because they summarize different objects.
+This is a dangerous point conceptually, because several different summaries can be extracted from the posterior, and they answer different questions. The three most common numbers that appear close together in this chapter are the **posterior mean**, the **MAP estimate**, and the **MLE**. They are often numerically similar in simple examples, but they should never be treated as synonymous.
 
 ### Posterior mean
 
-The posterior mean is the average of the parameter under the posterior distribution.
-
-For a posterior density $p(\theta\mid D)$,
+The posterior mean is the average of the parameter under the posterior distribution:
 
 $$
 \mathbb{E}[\theta\mid D]=\int \theta\,p(\theta\mid D)\,d\theta,
 $$
 
-or the analogous sum for a discrete parameter space.
+or a corresponding sum in a discrete parameter space.
+
+This summary treats the posterior as a full distribution and averages across all parameter values, weighted by their posterior mass or density. It is therefore a "center of mass" type summary.
 
 ### MAP estimate
 
-The MAP estimate is the posterior mode:
+The MAP estimate is the parameter value at which the posterior density is largest:
 
 $$
 \hat{\theta}_{\mathrm{MAP}}=\arg\max_{\theta} p(\theta\mid D).
 $$
 
-Because
+Because the posterior is proportional to likelihood times prior,
 
 $$
 p(\theta\mid D)\propto p(D\mid \theta)p(\theta),
 $$
 
-the MAP estimate maximizes likelihood times prior.
+MAP is the parameter value that maximizes the product of data fit and prior preference.
 
-This statement is only about where the posterior is largest. The posterior itself is still the fully normalized distribution obtained after dividing by the evidence.
+This is a mode, not an average. It identifies the highest point of the posterior surface. That is a very different operation from averaging over the whole surface.
 
-### MLE versus MAP
+### MLE
 
-The MLE ignores the prior. The MAP uses both likelihood and prior.
-
-So:
-
-- if the prior is flat on the relevant region, MAP and MLE may be similar or identical;
-- if the prior is informative, MAP will generally differ from MLE.
-
-### Beta posterior summaries
-
-For
+The MLE ignores the prior entirely and optimizes only the likelihood:
 
 $$
-\rho\mid D\sim \mathrm{Beta}(\alpha,\beta),
+\hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta} p(D\mid \theta).
 $$
 
-the posterior mean is
+So if the prior is flat or weak over the relevant region, MAP and MLE may end up close. But conceptually they are still solving different problems. MLE asks for best data fit within the model family. MAP asks for the highest posterior point after prior information has been incorporated.
 
-$$
-\mathbb{E}[\rho\mid D]=\frac{\alpha}{\alpha+\beta}.
-$$
+### Why these summaries differ
 
-When $\alpha>1$ and $\beta>1$, the MAP estimate is
+The easiest way to separate them is by the question each one answers.
 
-$$
-\hat{\rho}_{\mathrm{MAP}}=\frac{\alpha-1}{\alpha+\beta-2}.
-$$
+- **MLE:** Which parameter value fits the observed data best?
+- **MAP:** Which parameter value has the highest posterior density after combining prior and data?
+- **Posterior mean:** If I average parameter values under the whole posterior distribution, where is the center?
 
-For the earlier posterior $\mathrm{Beta}(5,4)$:
+These are not cosmetic differences. In skewed posteriors, multimodal posteriors, or strongly regularized settings, the three numbers can differ substantially.
 
-$$
-\mathbb{E}[\rho\mid D]=\frac{5}{9}.
-$$
-
-Also,
-
-$$
-\hat{\rho}_{\mathrm{MAP}}=\frac{5-1}{5+4-2}=\frac47.
-$$
-
-And from the data alone,
-
-$$
-\hat{\rho}_{\mathrm{MLE}}=\frac35.
-$$
-
-These values differ because they answer different questions:
-
-- MLE asks which parameter maximizes data fit;
-- MAP asks which parameter maximizes posterior density;
-- posterior mean asks for the average parameter value under the posterior.
+So the correct learning order is: first understand the posterior as a distribution; only then ask which summary, if any, is appropriate for the decision you care about.
 
 ---
 
@@ -1117,98 +1143,68 @@ When strong prior information is unavailable, a common compromise is a weakly in
 
 ## 17. Model comparison: evidence and BIC
 
-Parameter estimation asks:
+Up to now, the question has mostly been: **within one model family, which parameter values fit the observed data well?** Model comparison changes the level of the question. We are no longer choosing only a parameter value. We are choosing among whole model families.
 
-$$
-\text{Within one model family, which parameter values fit the data well?}
-$$
-
-Model comparison asks:
-
-$$
-\text{Which model family is best supported by the data?}
-$$
-
-Those are different questions.
-
-### Model evidence
+That distinction is easy to overlook, but it matters. MLE answers an optimization question **inside** a model. Model evidence answers an averaging question **over** the parameter space of a model.
 
 Let $M$ denote a model family. The model evidence is
 
 $$
-p(D\mid M)=\int p(D\mid \theta,M)p(\theta\mid M)\,d\theta.
+p(D\mid M)=\int p(D\mid \theta,M)p(\theta\mid M)\,d\theta,
 $$
 
-This quantity is easy to misread, so unpack it carefully.
+or a sum in a discrete parameter space.
 
-Inside the integral:
+This formula should be read as follows. For each possible parameter value $\theta$ inside model $M$, the likelihood says how well that parameter fits the observed data, and the prior says how much weight that parameter value receives inside the model. The evidence averages those likelihood values over the entire parameter space.
 
-- $p(D\mid \theta,M)$ measures how well one parameter value fits the data;
-- $p(\theta\mid M)$ gives the prior weight of that parameter value inside the model.
+That is the central conceptual contrast with MLE. MLE asks only for the single best-fitting parameter value. Evidence asks how well the **model as a whole** supports the data after averaging across its admissible parameter values.
 
-The integral averages data fit across the whole parameter space of the model.
+### Why evidence naturally penalizes excessive flexibility
 
-That is the crucial contrast with MLE:
+A flexible model can often achieve a very high likelihood at one specially tuned parameter value. But that fact alone does not imply that the model family is broadly supported by the data. If most parameter values in that flexible family fit badly, then the average support can still be low.
 
-- MLE looks only at the single best-fitting parameter value;
-- evidence averages fit over all parameter values, weighted by the prior.
+This is why evidence contains a built-in complexity penalty. A model does not win merely because it has one sharp peak of excellent fit. It must devote a meaningful portion of its parameter space to fitting the data well. In that sense, evidence rewards models that fit well **robustly**, not just models that can fit well **somewhere**.
 
-So a flexible model does not automatically win just because it can achieve a very high peak likelihood at one special parameter setting.
+### BIC as an approximation
 
-### Why evidence penalizes over-flexibility
-
-If a model has many parameters, it may be able to fit the observed sample extremely well in a small region of parameter space. But if most parameter settings fit the data poorly, the average fit can still be low.
-
-That is why evidence naturally includes a complexity penalty without adding one by hand.
-
-### BIC
-
-The Bayesian information criterion is a large-sample approximation to the log evidence:
+The Bayesian information criterion, or BIC, is a large-sample approximation related to log evidence. In one common convention,
 
 $$
 \mathrm{BIC}=\log p(D\mid \hat{\theta}_{\mathrm{MLE}},M)-\frac{k}{2}\log m,
 $$
 
-up to sign and convention choices across textbooks.
+up to sign and convention differences across sources.
 
-The important structure is:
+The structure matters more than the exact convention. One term rewards fit at the best-fitting parameter value. The other term penalizes the number of free parameters $k$, with a penalty that depends on sample size $m$.
 
-- one term rewards fit at the best-fitting parameter;
-- one term penalizes the number of free parameters $k$;
-- the penalty becomes stronger as the sample size $m$ grows.
+So BIC is not trying to replace evidence philosophically. It is trying to cheaply mimic the key idea that better fit must be weighed against greater flexibility.
 
-### Example: one coin versus two coins
+### The question evidence answers
 
-Suppose model $M_1$ uses one Bernoulli parameter for all flips, while model $M_2$ uses two separate Bernoulli parameters for two subgroups of flips.
+Suppose one model uses one Bernoulli parameter for all coin flips, while another uses two Bernoulli parameters for two subgroups. The two-parameter model is more flexible, so its best possible likelihood cannot be worse. But that does not settle the comparison. The real issue is whether the extra flexibility earns enough additional explanatory power to justify the larger parameter space.
 
-Then:
-
-- $M_2$ is more flexible;
-- $M_2$ can never fit worse at its best parameter value than $M_1$;
-- but that does not automatically mean $M_2$ is better.
-
-The real question is whether the extra fit is large enough to justify the extra parameter freedom.
-
-That is exactly the kind of question evidence and BIC are designed to answer.
+That is exactly the kind of question evidence and BIC are built to answer. They move the discussion from "which parameter fits best?" to "which model family deserves more support after accounting for both fit and flexibility?"
 
 ---
 
 ## 18. What to retain
 
-- Likelihood is the sampling law viewed as a function of the parameter for fixed observed data.
-- MLE chooses the parameter that maximizes likelihood.
-- In standard families, MLE often matches model summaries to empirical summaries.
-- Overfitting explains why likelihood alone is not always enough for model choice.
-- Bayesian inference combines likelihood with a prior to produce a posterior distribution.
-- Beta-Bernoulli and Dirichlet-categorical are the canonical first conjugate updates.
-- Posterior mean, MAP, and MLE are different summaries with different meanings.
-- Evidence compares whole model families by averaging fit over parameter space.
+The conceptual heart of this section is the distinction between objects that share notation but answer different questions. The sampling model tells you how data behave when the parameter is fixed. The likelihood reuses the same algebraic expression but turns it into a scoring function over parameter values once the data are fixed. The MLE selects the parameter that gives the observed sample the best in-family fit. Bayesian inference then adds a prior and returns a posterior distribution, not merely a point estimate.
+
+The standard MLE examples are worth retaining not just for their formulas, but for the pattern they illustrate. In common model families, maximum likelihood often pushes the model to match the empirical summaries that the family is designed to encode. Bernoulli matches success frequency, Gaussian mean matches sample mean, and categorical probabilities match empirical proportions.
+
+The second major lesson is that not all "best" notions mean the same thing. MLE, MAP, and posterior mean can all be reasonable summaries, but they summarize different objects and solve different problems. Likewise, best fit within a model family is not the same as best support for a model family as a whole. That is why evidence and BIC are needed.
 
 ## 19. Do not confuse
 
-- Do not confuse $p(D\mid \theta)$ with $p(\theta\mid D)$.
-- Do not say likelihood is "the probability that the parameter is true."
-- Do not confuse an estimator with the parameter it estimates.
-- Do not confuse MLE with MAP.
-- Do not confuse posterior mode with posterior mean.
-- Do not confuse best fit at one parameter value with average support for a whole model family.
+Do not confuse $p(D\mid \theta)$ with $p(\theta\mid D)$. The first is likelihood when read as a function of $\theta$ for fixed data; the second is a posterior distribution and requires a prior and normalization.
+
+Do not describe likelihood as "the probability that the parameter is true." Likelihood is not a probability distribution over parameter values.
+
+Do not confuse the estimator with the parameter being estimated. An estimator is a rule; its realized output on one dataset is an estimate.
+
+Do not confuse MLE with MAP. MLE ignores the prior. MAP incorporates it.
+
+Do not confuse posterior mode with posterior mean. A mode is the highest point of a distribution; a mean is an average over the whole distribution.
+
+Do not confuse best fit at one parameter value with support for a model family as a whole. Evidence averages across parameter space; MLE does not.
