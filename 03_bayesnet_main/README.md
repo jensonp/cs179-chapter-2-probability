@@ -9,6 +9,8 @@ This chapter matters because high-dimensional probability becomes unmanageable v
 
 The chapter has five jobs. First, it explains what a Bayesian network is and why its factorization is more efficient than an unrestricted joint table. Second, it shows how to read conditional independence from the graph using d-separation. Third, it shows how to estimate the conditional probability tables when the graph is known and the data are complete. Fourth, it studies several important special cases, including naive Bayes, Markov chains, and noisy-OR models. Finally, it gives a forward-looking preview of the distinction between ordinary conditioning and causal intervention.
 
+There are four distinct questions running through the chapter, and keeping them separate will reduce confusion. First: **What does the graph mean as a probability model?** Second: **How do observations change which variables still matter?** Third: **How do we answer a probability query once a graph and local tables are given?** Fourth: **How do we estimate the local tables from data?** If the reader starts to feel overloaded, return to those four questions and identify which one the current subsection is answering.
+
 ---
 
 ## 3.1 Basic semantics
@@ -33,7 +35,11 @@ A Bayesian network answers the following modeling question:
 
 > How can we represent the joint distribution $p(X_1,\dots,X_n)$ in a way that uses local conditional distributions instead of one enormous global table?
 
-The graph does not replace the probability distribution. It organizes it. Each node stands for a random variable, and each node is equipped with a conditional distribution given its parent variables. The graph tells us which conditionals are needed and which variables can be omitted from each conditioning set.
+The graph does not replace the probability distribution. It organizes it.
+
+At this point it is important not to overload the arrows with too many meanings. In this chapter, an arrow first means: this parent variable appears in the child's local conditional distribution. Later, arrows will also help us reason about how evidence changes beliefs, and still later the chapter will briefly discuss when arrows may be given a causal interpretation. Those are related uses, but they are not identical. The first use is the one that must be fully stable before moving on.
+
+Each node stands for a random variable, and each node is equipped with a conditional distribution given its parent variables. The graph tells us which conditionals are needed and which variables can be omitted from each conditioning set.
 
 ### The difficulty with an unrestricted joint distribution
 
@@ -247,6 +253,8 @@ This section gives the semantic foundation for everything that follows. Once we 
 
 Those are exactly the next steps in the chapter.
 
+At the end of this section, the reader should be able to look at a DAG and say, without yet doing any inference, "this graph tells me which conditional distributions multiply together to make the joint."
+
 ### Retain / do not confuse
 
 Retain these points:
@@ -325,6 +333,8 @@ Finally, note two different notions of path:
 
 This distinction becomes crucial for d-separation.
 
+One more warning is worth inserting now because it becomes crucial later: whether a node behaves like a chain middle, a fork middle, or a collider is **not** a permanent label attached to that node. It depends on the local arrow pattern **along the particular path currently being inspected**. Students often try to remember "node A is a collider" as if that were a global property. It is not. The same node can play different local roles on different paths.
+
 ### Misconception block
 
 **Do not confuse ancestors with parents.**  
@@ -353,105 +363,6 @@ Do not confuse:
 
 ---
 
-## 3.1.2 Why the expansion order matters
-
-### Why this subsection exists
-
-The chain rule lets us factor any joint distribution in any ordering of the variables. But different orderings expose different conditional independencies. Since the efficiency of a Bayesian network depends on those simplifications, the order used to build the factorization can make a major difference.
-
-### The object being introduced
-
-The object here is not a new probability model but a modeling choice: the order in which we expand the joint distribution. What is fixed is the underlying joint distribution. What varies is the conditional expansion and therefore the resulting graph and parameter count.
-
-### Interpretation before formula
-
-A good ordering places likely causes before their effects. In that case, many variables can often be conditioned on a small, natural parent set. A poor ordering forces us to condition on observations that are only indirectly informative, and the resulting conditionals often fail to simplify.
-
-### Worked comparison using the alarm example
-
-Using the natural order
-
-$$
-B, E, A, W, H,
-$$
-
-the factorization is
-
-$$
-p(B,E,A,W,H)=p(B)\,p(E)\,p(A\mid B,E)\,p(W\mid A)\,p(H\mid A).
-$$
-
-This is compact. The parent sets are small and intuitive.
-
-Now reverse the perspective and consider the order
-
-$$
-H, W, A, B, E.
-$$
-
-The chain rule gives
-
-$$
-p(B,E,A,W,H)=p(H)\,p(W\mid H)\,p(A\mid H,W)\,p(B\mid A,W,H)\,p(E\mid A,B,W,H).
-$$
-
-Now ask, step by step, which factors simplify.
-
-1. Does $p(W\mid H)$ simplify to $p(W)$?  
-   No. If Hudson calls, that makes the alarm more likely, which in turn makes Watson's call more likely. So $W$ and $H$ are not marginally independent.
-
-2. Does $p(A\mid H,W)$ simplify to a function of only one of those variables?  
-   No. If both neighbors call, that is stronger evidence for the alarm than if only one calls. So both $H$ and $W$ matter.
-
-3. Does $p(B\mid A,W,H)$ simplify?  
-   Yes. Once the alarm state $A$ is known, the calls $W$ and $H$ add no further information about burglary. So this reduces to $p(B\mid A)$.
-
-4. Does $p(E\mid A,B,W,H)$ simplify?  
-   Yes. Once $A$ and $B$ are known, the calls still add no further information about earthquake, so this reduces to $p(E\mid A,B)$.
-
-So the resulting factorization becomes
-
-$$
-p(B,E,A,W,H)=p(H)\,p(W\mid H)\,p(A\mid H,W)\,p(B\mid A)\,p(E\mid A,B).
-$$
-
-This representation is valid, but it is less compact. In the source chapter, the natural ordering needs $10$ parameters, while this alternative ordering needs $13$.
-
-The general lesson is not that one ordering is universally correct. The lesson is that order affects which conditional independencies are easy to express. Causal orderings often, though not always, align well with sparse factorization.
-
-### Boundary conditions and failure modes
-
-A change of ordering does not change the underlying joint distribution if the factors are chosen consistently. What it changes is the form of the factorization and the visible local independencies.
-
-Some orderings are so poor that no simplification occurs at all. In that case the graph becomes complete with respect to predecessors: each variable depends on all earlier ones, and the Bayesian network loses its practical advantage.
-
-### Misconception block
-
-**Do not think the graph is unique for a distribution.**  
-The same joint distribution can usually be represented by many different Bayesian networks.
-
-**Do not assume a more complicated graph means a different underlying probability law.**  
-Sometimes it is just a less efficient factorization of the same law.
-
-### Connection to later material
-
-This subsection prepares the ground for the later discussion of equivalent graphs and structure learning. If many graphs can represent the same distributional information, then choosing a graph from data becomes a subtler problem than merely looking for the best fit.
-
-### Retain / do not confuse
-
-Retain:
-
-- the chain rule allows many orderings;
-- ordering affects which local conditionals simplify;
-- causal orderings often yield smaller parent sets.
-
-Do not confuse:
-
-- different factorization with different underlying distribution;
-- compactness with correctness.
-
----
-
 ## 3.1.3 Observations and influence
 
 ### Why this subsection exists
@@ -464,7 +375,7 @@ The object here is belief update under observation. What is fixed is the graph a
 
 ### Interpretation paragraph
 
-If one variable directly influences another in the graph, then observing the downstream variable often changes our belief about the upstream variable, and vice versa. But this influence is not unrestricted. Sometimes it propagates, sometimes it is blocked, and sometimes observing a variable can create a dependence that was absent before. The next section formalizes exactly when each of those cases occurs.
+The key idea here is not yet formal independence. It is only this: in a Bayesian network, observing one variable can change our uncertainty about another variable even when the second variable is "upstream" in the arrow direction. That is because the graph is not only a recipe for generating data forward. It is also a structure inside which we update beliefs once evidence arrives. So at this stage the student should not ask, "Which way do the arrows let information travel?" The better question is, "Once I observe something, which probabilistic relationships does the graph say are still relevant?"
 
 ### Fully worked example
 
@@ -517,9 +428,13 @@ Do not confuse:
 
 ### Why this section exists
 
-Once a Bayesian network has been built, one of its greatest advantages is that we can often read off independence relationships directly from the graph without computing probabilities numerically. That is enormously valuable. It tells us which variables matter for which predictions, which observations are redundant once other variables are known, and which structures can be simplified or learned from data.
+Once the graph has a probabilistic meaning, the next question is no longer "How does the joint factorize?" The next question is:  
+**After I observe some variables, which other variables still matter for the uncertainty I care about?**  
+That is the problem this section solves.
 
-But to do that correctly, we need a precise graphical criterion. That criterion is d-separation.
+D-separation is the graph-based answer to that question. But the reader should not think of d-separation as a single definition to memorize. It is a checking procedure. You inspect paths, classify the middle nodes on those paths, ask what the evidence does at each such node, and then conclude whether every path is blocked or at least one remains active.
+
+In other words, this section is best read as a method for auditing paths one at a time.
 
 ### The object being introduced
 
@@ -527,9 +442,25 @@ The key object is an **active path** given a set of observed variables. An activ
 
 What is fixed is the graph and the evidence set $E$. What varies is the status of each path: active or inactive.
 
+Before looking at the three motifs, fix the workflow for one path:
+
+1. Pick one undirected path connecting the variables of interest.  
+2. Ignore for a moment the global graph and look only at one interior node on that path.  
+3. Ask: along this path, do both arrows point **into** this middle node? If yes, it is a collider on this path. If not, it is a non-collider on this path.  
+4. Then ask what has been observed.  
+   - If the node is a non-collider, observing it blocks the path.  
+   - If the node is a collider, the path is blocked by default and only opens if the collider or one of its descendants is observed.  
+5. Repeat for every interior node on the path.  
+6. If any interior node blocks the path, that whole path is inactive.  
+7. If every path is inactive, the variables are d-separated.
+
+The student should read the next three motifs as nothing more than the three possible local answers to step 3.
+
 ### Three local path patterns to understand first
 
 Before stating the formal definition, it helps to isolate the three local path motifs that can occur at an interior node on a path.
+
+The labels "chain," "fork," and "collider" describe the **local arrow pattern at the middle node of the path currently under inspection**. They do not describe the graph as a whole.
 
 #### 1. Chain
 
@@ -582,6 +513,8 @@ graph LR
 
 That last rule is the one most readers initially find counterintuitive. It is also the most important one to master.
 
+After the three motifs are stable, the formal definition below should feel like a compact summary rather than a new idea. Read it that way: it is just the precise statement of the path-audit rules already introduced.
+
 ### Formal definition
 
 Let $G$ be a Bayesian network graph, and let $E$ be a set of observed nodes. An undirected path
@@ -606,7 +539,8 @@ Given disjoint node sets $A$, $B$, and $E$, we say that $A$ and $B$ are **d-sepa
 
 ### Interpretation paragraph
 
-D-separation is a purely graphical test. It does not require plugging in numerical probabilities. It asks: after we account for the observed variables, is there any path left along which dependence could in principle flow?
+D-separation is a purely graphical test, but the easiest way to understand it is not as a theorem first. It is a question with a yes-or-no answer: **after accounting for the observed nodes, is there still any path left that can keep the two target variables probabilistically connected?**  
+If the answer is no for every path, the variables are d-separated. If the answer is yes for even one path, they are not.
 
 The collider rule deserves special emphasis. A collider blocks a path by default. Observing it opens the path. This is the opposite of what happens with chains and forks, where observing the middle node blocks the path. That contrast is the heart of d-separation.
 
@@ -720,21 +654,18 @@ $$
 
 The pattern is worth retaining: once the alarm state is known, Watson's call carries no extra information about earthquake.
 
-### A larger worked example: checking several paths
+### Path-audit checklist to retain
 
-Suppose we have a larger graph in which there are several undirected paths between two nodes $B$ and $E$. To decide whether $B$ and $E$ are d-separated given some evidence set, we do not try to reason globally all at once. Instead we check each path one by one and ask whether some interior node blocks it.
+When checking d-separation, do not reason globally all at once. Use the same fixed routine every time:
 
-The procedure is conceptually simple:
+1. choose one undirected path,
+2. inspect each interior node on that path,
+3. classify it as collider or non-collider on that path,
+4. apply the observation rule,
+5. decide whether that path is blocked,
+6. repeat until every path has been checked.
 
-1. List a path from $B$ to $E$.
-2. For each interior node on that path, decide whether it is acting as a collider or non-collider along that particular path.
-3. Check whether the observed set opens or blocks that node.
-4. If any interior node blocks the path, the whole path is inactive.
-5. Repeat for the remaining paths.
-6. If every path is inactive, then the variables are d-separated.
-7. If even one path remains active, they are not d-separated.
-
-This path-by-path discipline matters because the same node can behave differently on different paths depending on local arrow orientation.
+This is slower than intuition at first, but it is the most reliable way to build correct intuition.
 
 ### Misconception or counterexample block
 
@@ -773,9 +704,383 @@ Do not confuse:
 
 ---
 
+## 3.2.2 Markov blankets
+
+### Why this subsection exists
+
+D-separation is the general method. It can answer almost any conditional independence question, but it does so by checking paths. The natural next question is whether there is a standard local answer for one especially common task:
+
+> If I care about one node \(X_i\), which nearby variables are enough to make every other variable irrelevant once they are known?
+
+This subsection answers that question. The answer is the Markov blanket.
+
+### The object being introduced
+
+The Markov blanket of node \(i\) is a set of nearby nodes with a screening-off property. Once those nodes are conditioned on, the target node \(X_i\) becomes conditionally independent of every node outside that set.
+
+What is fixed is the graph and the target node. What varies is which outside paths remain potentially active until the blanket is conditioned on.
+
+### Conceptual idea before the formula
+
+Do not start by memorizing the formula. Start with the path logic.
+
+A node can stay probabilistically connected to the rest of the graph in three immediate ways:
+
+1. through variables that directly help determine it,
+2. through variables it directly helps determine,
+3. through alternative parents of one of its children, because conditioning on a child can open a collider.
+
+Those three possibilities are exactly why the blanket has the three pieces it does.
+
+### Formal definition
+
+Let \(G\) be a Bayesian network DAG. The **Markov blanket** of node \(i\) is
+
+\[
+\mathrm{MB}(i)
+=
+\mathrm{pa}(i)
+\;\cup\;
+\mathrm{ch}(i)
+\;\cup\;
+\bigcup_{c\in \mathrm{ch}(i)}\bigl(\mathrm{pa}(c)\setminus\{i\}\bigr).
+\]
+
+So the blanket contains:
+
+- the parents of \(i\),
+- the children of \(i\),
+- and the other parents of \(i\)'s children.
+
+### Interpretation paragraph
+
+Each part is there for a different reason.
+
+**Parents** are included because the local factor for \(X_i\) is defined conditional on them. If you do not know them, they can still carry relevant uncertainty into \(X_i\).
+
+**Children** are included because observing an effect gives information about its possible causes. So even if the graph arrow points away from \(X_i\), a child can still matter when you update beliefs about \(X_i\).
+
+**Co-parents** are the subtle part. Suppose \(i\) and another node \(j\) both point into the same child \(c\). Then the local structure is a collider:
+\[
+i \to c \leftarrow j.
+\]
+By default that path is blocked. But once the child \(c\) is observed, the path opens. That means conditioning on the child can create dependence between \(i\) and the child's other parent. So if children are in the blanket, the relevant co-parents must be included as well.
+
+That is the real logic of the blanket. It is not a magic neighborhood rule. It is the local consequence of d-separation.
+
+### What the blanket guarantees
+
+The Markov blanket satisfies
+
+\[
+X_i \perp X_{V\setminus(\{i\}\cup \mathrm{MB}(i))}\mid X_{\mathrm{MB}(i)}.
+\]
+
+Read this sentence slowly. It means: once the blanket is known, every other variable outside the blanket becomes irrelevant for the conditional distribution of \(X_i\).
+
+### Fully worked example: blanket of \(A\) in the burglar alarm network
+
+Use the graph
+\[
+B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
+\]
+
+Take \(i=A\).
+
+- Parents of \(A\): \(\{B,E\}\)
+- Children of \(A\): \(\{W,H\}\)
+- Other parents of the children: none, because neither \(W\) nor \(H\) has another parent in this graph
+
+So
+\[
+\mathrm{MB}(A)=\{B,E,W,H\}.
+\]
+
+This is the right place to pause and interpret, not just record the set.
+
+- \(B\) and \(E\) matter because they help determine whether the alarm turns on.
+- \(W\) and \(H\) matter because if either neighbor calls, that changes our belief about whether the alarm was on.
+
+There are no co-parents here because the alarm's children do not have alternative parents.
+
+### Fully worked example: blanket of \(B\)
+
+Now take \(i=B\).
+
+- Parents of \(B\): none
+- Children of \(B\): \(\{A\}\)
+- Other parents of \(A\): \(\{E\}\)
+
+So
+\[
+\mathrm{MB}(B)=\{A,E\}.
+\]
+
+This example is the one that really teaches why co-parents are necessary.
+
+If you conditioned only on \(A\), the collider
+\[
+B \to A \leftarrow E
+\]
+would become active, creating dependence between \(B\) and \(E\). So \(E\) must be included in the blanket together with \(A\). That is why the blanket is not just "parents and children."
+
+### Misconception block
+
+**Do not memorize "parents + children + spouses" as a slogan without the path logic.**  
+The formula is easy to recite and easy to misunderstand. The co-parent term is there specifically because conditioning on a child can open a collider.
+
+**Do not confuse the Markov blanket with an undirected notion of geometric neighborhood.**  
+It is not "everything adjacent in some picture." It is the exact set needed for conditional screening-off in a Bayesian network.
+
+**Do not confuse blanket membership with causal importance.**  
+The Markov blanket is a probabilistic locality statement, not a statement about which variables are the deepest causes of the target.
+
+### Connection to later material
+
+The blanket matters because many algorithms only need it. In Gibbs sampling, for example, the conditional distribution of one node given all the others depends only on its blanket. So this subsection is not a decorative side fact. It is the local form of d-separation that many algorithms actually use.
+
+### Retain / do not confuse
+
+Retain:
+
+- the blanket is the smallest standard local shield around a node;
+- it contains parents, children, and co-parents of children;
+- co-parents are required because conditioning on a child can open a collider.
+
+Do not confuse:
+
+- local screening-off with causal ancestry,
+- blanket formula with a mere adjacency rule.
+
+---
+
+## 3.2.3 Inference queries: how a Bayesian network answers questions
+
+### Why this subsection exists
+
+So far we have used Bayesian networks to (i) represent a joint distribution compactly and (ii) read off conditional independence relationships from the graph. But the most common reason to build a Bayesian network is more direct:
+
+> We want to compute probabilities of interest given observations.
+
+The previous subsection answered a structural question: which variables still matter once some others are known? This subsection answers the computational companion question: once we know what matters, what exact probability expression are we supposed to compute?
+
+For example, in the burglary network we want $P(B=1\mid W=1)$: how likely is a burglary if Watson calls? This subsection exists to connect the representation to the basic inference operation and to make clear where the computational difficulty lives.
+
+### The object being introduced
+
+The object is an **inference query** of the form
+
+$$
+p(X_Q \mid X_E = x_E),
+$$
+
+where:
+
+- $Q$ is a set of query variables whose distribution we want,
+- $E$ is a set of evidence variables we have observed (with values $x_E$),
+- and the remaining variables $H$ are hidden and must be summed (or integrated) out.
+
+What is fixed is the fully specified Bayesian network: the graph and every local conditional distribution. What varies from question to question is only which variables are being asked about, which variables have been observed, and what values those observations took.
+
+### Formal definition
+
+For a discrete model, the fundamental identity is:
+
+$$
+p(x_Q \mid x_E) = \frac{\sum_{x_H} p(x_Q, x_H, x_E)}{\sum_{x_Q}\sum_{x_H} p(x_Q, x_H, x_E)}.
+$$
+
+The Bayesian network factorization tells us how to compute $p(x_Q, x_H, x_E)$ as a product of local conditionals, but the summation over $x_H$ can still be exponentially large if done naively.
+
+### Interpretation paragraph
+
+This formula says: collect all full assignments consistent with the evidence, add up their joint probabilities, and renormalize. The BN does not eliminate the need to sum over hidden variables. What it does is factor the joint probability into small pieces so that algorithms can reuse partial computations.
+
+In other words: **Bayesian networks turn inference into a structured sum-product problem.**
+
+### Boundary conditions, assumptions, and failure modes
+
+Even with a sparse Bayesian network, exact inference can be computationally hard. The worst-case cost depends not on the number of nodes alone, but on how the graph "fills in" when you eliminate hidden variables (a phenomenon later captured by treewidth).
+
+So the right mental model is:
+
+- BNs make inference *possible to express cleanly*.
+- They often make it *possible to compute efficiently* when the graph has favorable structure (trees, polytrees, small treewidth).
+- But they do not guarantee tractability in every graph.
+
+### Fully worked example: writing $P(B\mid W=1)$ in the burglar network
+
+We will not compute a final number here; the goal is to practice translating a question into the correct sum-product expression and simplifying legally.
+
+**Step 1: identify query, evidence, and hidden variables.**
+
+- Query: $Q=\{B\}$.
+- Evidence: $E=\{W\}$ with observed value $W=1$.
+- Hidden variables: $H=\{E,A,H\}$ (earthquake, alarm, Hudson call).
+
+**Step 2: write the posterior as "joint over evidence, summed over hidden, normalized."**
+
+$$
+P(B=b\mid W=1) = \frac{\sum_{e,a,h} P(B=b,E=e,A=a,W=1,H=h)}{\sum_{b'}\sum_{e,a,h} P(B=b',E=e,A=a,W=1,H=h)}.
+$$
+
+**Step 3: expand the joint using the BN factorization.**
+
+The model factorizes as
+
+$$
+P(b,e,a,w,h)=P(b)\,P(e)\,P(a\mid b,e)\,P(w\mid a)\,P(h\mid a).
+$$
+
+Plugging $w=1$,
+
+$$
+P(B=b\mid W=1) = \frac{\sum_{e,a,h} P(b)\,P(e)\,P(a\mid b,e)\,P(W=1\mid a)\,P(h\mid a)}{\sum_{b'}\sum_{e,a,h} P(b')\,P(e)\,P(a\mid b',e)\,P(W=1\mid a)\,P(h\mid a)}.
+$$
+
+**Step 4: simplify by summing out a factor that normalizes.**
+
+Because $P(h\mid a)$ is a conditional distribution over $h$, we always have
+
+$$
+\sum_h P(h\mid a) = 1.
+$$
+
+So the sum over $h$ disappears, leaving a sum only over $e$ and $a$.
+
+This step illustrates the general pattern: inference is hard when hidden variables connect many factors, and easy when you can sum out a variable locally without creating large intermediate dependencies.
+
+### Misconception block
+
+**Do not think inference is "just Bayes' rule."**  
+Bayes' rule is correct, but in multi-variable models the hard part is computing the normalizing constant and managing the sum over hidden variables. Graph structure exists to make that manageable, not to avoid it entirely.
+
+### Connection to later material
+
+This subsection is a bridge to inference algorithms. Variable elimination and belief propagation are systematic ways to perform the sums in the definition of $p(x_Q\mid x_E)$ without enumerating every hidden configuration. Approximate inference methods (sampling, variational inference) become necessary when the graph structure makes exact inference too expensive.
+
+### Retain / do not confuse
+
+Retain:
+
+- inference is "sum out hidden variables, then normalize";
+- the BN factorization turns the joint into a product of small factors.
+
+Do not confuse:
+
+- observation (conditioning) with intervention (changing the model mechanism);
+- compact representation with guaranteed tractable inference in every graph.
+
+Now that the reader has seen what a Bayesian network means, how independence is read from the graph, and how inference queries are written, we can return to a more meta modeling question: why is one factorization order sometimes more natural or more compact than another?
+
+---
+
+## 3.1.2 Why the expansion order matters
+
+### Why this subsection exists
+
+The chain rule lets us factor any joint distribution in any ordering of the variables. But different orderings expose different conditional independencies. Since the efficiency of a Bayesian network depends on those simplifications, the order used to build the factorization can make a major difference.
+
+This is a second-pass subsection. It is not needed to understand what a Bayesian network is or how d-separation works. It matters once the reader is ready to compare multiple valid factorizations of the same joint distribution.
+
+### The object being introduced
+
+Here the underlying joint distribution stays the same. What changes is only the order in which we choose to expose its conditional structure. What is fixed is the underlying joint distribution. What varies is the conditional expansion and therefore the resulting graph and parameter count.
+
+### Interpretation before formula
+
+A good ordering places likely causes before their effects. In that case, many variables can often be conditioned on a small, natural parent set. A poor ordering forces us to condition on observations that are only indirectly informative, and the resulting conditionals often fail to simplify.
+
+### Worked comparison using the alarm example
+
+Using the natural order
+
+$$
+B, E, A, W, H,
+$$
+
+the factorization is
+
+$$
+p(B,E,A,W,H)=p(B)\,p(E)\,p(A\mid B,E)\,p(W\mid A)\,p(H\mid A).
+$$
+
+This is compact. The parent sets are small and intuitive.
+
+Now reverse the perspective and consider the order
+
+$$
+H, W, A, B, E.
+$$
+
+The chain rule gives
+
+$$
+p(B,E,A,W,H)=p(H)\,p(W\mid H)\,p(A\mid H,W)\,p(B\mid A,W,H)\,p(E\mid A,B,W,H).
+$$
+
+Now ask, step by step, which factors simplify.
+
+1. Does $p(W\mid H)$ simplify to $p(W)$?  
+   No. If Hudson calls, that makes the alarm more likely, which in turn makes Watson's call more likely. So $W$ and $H$ are not marginally independent.
+
+2. Does $p(A\mid H,W)$ simplify to a function of only one of those variables?  
+   No. If both neighbors call, that is stronger evidence for the alarm than if only one calls. So both $H$ and $W$ matter.
+
+3. Does $p(B\mid A,W,H)$ simplify?  
+   Yes. Once the alarm state $A$ is known, the calls $W$ and $H$ add no further information about burglary. So this reduces to $p(B\mid A)$.
+
+4. Does $p(E\mid A,B,W,H)$ simplify?  
+   Yes. Once $A$ and $B$ are known, the calls still add no further information about earthquake, so this reduces to $p(E\mid A,B)$.
+
+So the resulting factorization becomes
+
+$$
+p(B,E,A,W,H)=p(H)\,p(W\mid H)\,p(A\mid H,W)\,p(B\mid A)\,p(E\mid A,B).
+$$
+
+This representation is valid, but it is less compact. In the source chapter, the natural ordering needs $10$ parameters, while this alternative ordering needs $13$.
+
+The general lesson is not that one ordering is universally correct. The lesson is that order affects which conditional independencies are easy to express. Causal orderings often, though not always, align well with sparse factorization.
+
+### Boundary conditions and failure modes
+
+A change of ordering does not change the underlying joint distribution if the factors are chosen consistently. What it changes is the form of the factorization and the visible local independencies.
+
+Some orderings are so poor that no simplification occurs at all. In that case the graph becomes complete with respect to predecessors: each variable depends on all earlier ones, and the Bayesian network loses its practical advantage.
+
+### Misconception block
+
+**Do not think the graph is unique for a distribution.**  
+The same joint distribution can usually be represented by many different Bayesian networks.
+
+**Do not assume a more complicated graph means a different underlying probability law.**  
+Sometimes it is just a less efficient factorization of the same law.
+
+### Connection to later material
+
+This subsection prepares the ground for the later discussion of equivalent graphs and structure learning. If many graphs can represent the same distributional information, then choosing a graph from data becomes a subtler problem than merely looking for the best fit.
+
+### Retain / do not confuse
+
+Retain:
+
+- the chain rule allows many orderings;
+- ordering affects which local conditionals simplify;
+- causal orderings often yield smaller parent sets.
+
+Do not confuse:
+
+- different factorization with different underlying distribution;
+- compactness with correctness.
+
+---
+
 ## 3.2.1 Equivalent graphs
 
 ### Why this subsection exists
+
+This subsection is conceptually downstream of d-separation. Do not read it as a new rule for checking paths. Read it as a consequence of what was already learned: if different DAGs produce the same d-separation statements, then observational independence information alone cannot distinguish them.
 
 If d-separation tells us what independencies a graph implies, the next natural question is whether two different graphs can imply exactly the same independencies. The answer is yes. This matters because it limits what we can learn from purely observational data.
 
@@ -789,7 +1094,7 @@ Two Bayesian network graphs are **Markov equivalent** if they encode exactly the
 
 ### Interpretation paragraph
 
-Markov equivalent graphs may look different as directed graphs, but they are indistinguishable if all we are allowed to inspect is the independence structure of the distributions they represent. In other words, the graphs differ in factorization form, but not in the set of distributional constraints implied by d-separation.
+Markov equivalent graphs may look different as directed graphs, but they are indistinguishable if all we are allowed to inspect is the independence structure of the distributions they represent.
 
 There is also a very useful structural characterization to retain because it tells you exactly what data (in the idealized infinite-data limit, with perfect independence tests) can and cannot determine:
 
@@ -900,242 +1205,6 @@ Do not confuse:
 
 ---
 
-## 3.2.2 Markov blankets
-
-### Why this subsection exists
-
-D-separation is the general tool: it answers arbitrary conditional independence questions by analyzing paths. But in practice, we often need a *local* answer to a recurring question:
-
-> If I want to predict or update beliefs about one variable $X_i$, what is the smallest set of variables I must look at?
-
-This question arises in inference algorithms, in sampling methods, and in model debugging. The answer is the Markov blanket: a minimal “shield” around a node that screens it off from the rest of the network.
-
-### The object being introduced
-
-The object is a set of nodes associated with a target node $i$, denoted $\mathrm{MB}(i)$, with the property that once we condition on those nodes, $X_i$ becomes independent of every other variable in the model.
-
-What is fixed is the graph and the choice of the target node $i$. What varies is the evidence: conditioning on the blanket has a special role because it blocks every path from $i$ to the outside.
-
-### Formal definition
-
-Let $G$ be a Bayesian network graph. The **Markov blanket** of node $i$ is the set
-
-$$
-\mathrm{MB}(i) = \mathrm{pa}(i)
-\;\cup\;
-\mathrm{ch}(i)
-\;\cup\;
-\bigcup_{c \in \mathrm{ch}(i)} \Bigl(\mathrm{pa}(c)\setminus\{i\}\Bigr),
-$$
-
-that is:
-
-- the parents of $i$,
-- the children of $i$,
-- and the other parents of $i$'s children (often called co-parents or “spouses”).
-
-### Interpretation paragraph
-
-Each of these groups is forced on us by d-separation logic.
-
-- Parents matter because the factorization tells us $X_i$ is generated conditional on its parents.
-- Children matter because they carry information about $X_i$: observing a child updates beliefs about the parent.
-- Co-parents matter because conditioning on a child can open a collider path between $X_i$ and the child’s other parent(s). If you omit co-parents, you can mistakenly think you have screened off $X_i$ when you have not.
-
-The blanket is “minimal” in the sense that every path from $i$ to a node outside the blanket must pass through the blanket in a way that becomes blocked once the blanket is observed.
-
-### Boundary conditions, assumptions, and failure modes
-
-The Markov blanket statement is a structural one: it is guaranteed for every distribution that factors according to the BN.
-
-However, it does not say that conditioning on $\mathrm{MB}(i)$ makes $X_i$ numerically independent of the outside for *every* parameterization in a way you can detect with small samples. It says the conditional independence holds as a distributional identity.
-
-Also, remember that “blanket” is a probabilistic statement, not a causal one. It does not mean these variables are the only *causes* of $X_i$. It means they are the only variables that matter once you condition appropriately.
-
-### Fully worked example: the Markov blanket in the burglar alarm network
-
-Use the burglar network
-
-$$
-B \to A \leftarrow E,\qquad A \to W,\qquad A \to H.
-$$
-
-Consider the blanket of the alarm $A$.
-
-- $\mathrm{pa}(A)=\{B,E\}$.
-- $\mathrm{ch}(A)=\{W,H\}$.
-- The children $W$ and $H$ have no other parents besides $A$, so there are no co-parents to add.
-
-Therefore
-
-$$
-\mathrm{MB}(A)=\{B,E,W,H\}.
-$$
-
-The Markov blanket claim is:
-
-$$
-A \perp \{ \text{every other variable} \} \mid (B,E,W,H).
-$$
-
-In this tiny model there are no other variables, so the statement is trivial, but the structure is the point: if this network were embedded in a much larger model, conditioning on burglary, earthquake, and the two calls would screen the alarm off from everything else.
-
-Now consider the blanket of $B$ (burglary).
-
-- $\mathrm{pa}(B)=\varnothing$.
-- $\mathrm{ch}(B)=\{A\}$.
-- The other parent of $A$ is $E$, so $E$ is a co-parent of $B$ through child $A$.
-
-Therefore
-
-$$
-\mathrm{MB}(B)=\{A,E\}.
-$$
-
-This is a good place to see why co-parents are required. If you condition on the child $A$ alone, you open the collider structure $B \to A \leftarrow E$, which makes $B$ and $E$ dependent given $A$. The blanket includes $E$ because once you condition on both $A$ and $E$, you have “accounted for” the alternative explanation of $A$, and the remaining paths from $B$ to the rest of the graph are blocked.
-
-### Misconception block
-
-**Do not confuse the Markov blanket with “neighbors in the undirected graph.”**  
-The blanket is not just “everything adjacent.” It has a specific composition (parents, children, co-parents) because those are the nodes that can keep paths active after conditioning.
-
-**Do not confuse Markov blanket with causal parents.**  
-Blanket membership is about probabilistic screening-off, not causal ancestry.
-
-### Connection to later material
-
-The Markov blanket is the key locality principle used by many inference procedures. For example, in Gibbs sampling, the conditional distribution of a node given all others depends only on its Markov blanket. In structure learning, blanket ideas can be used to narrow candidate dependencies.
-
-### Retain / do not confuse
-
-Retain:
-
-- $\mathrm{MB}(i)$ is “parents + children + co-parents”;
-- conditioning on the blanket screens the node off from the rest.
-
-Do not confuse:
-
-- probabilistic screening with causal explanation.
-
----
-
-## 3.2.3 Inference queries: how a Bayesian network answers questions
-
-### Why this subsection exists
-
-So far we have used Bayesian networks to (i) represent a joint distribution compactly and (ii) read off conditional independence relationships from the graph. But the most common reason to build a Bayesian network is more direct:
-
-> We want to compute probabilities of interest given observations.
-
-For example, in the burglary network we want $P(B=1\mid W=1)$: how likely is a burglary if Watson calls? This subsection exists to connect the representation to the basic inference operation and to make clear where the computational difficulty lives.
-
-### The object being introduced
-
-The object is an **inference query** of the form
-
-$$
-p(X_Q \mid X_E = x_E),
-$$
-
-where:
-
-- $Q$ is a set of query variables whose distribution we want,
-- $E$ is a set of evidence variables we have observed (with values $x_E$),
-- and the remaining variables $H$ are hidden and must be summed (or integrated) out.
-
-What is fixed is the model $p$ (equivalently, the BN structure and its CPDs). What varies is the evidence $x_E$ and the query set $Q$.
-
-### Formal definition
-
-For a discrete model, the fundamental identity is:
-
-$$
-p(x_Q \mid x_E) = \frac{\sum_{x_H} p(x_Q, x_H, x_E)}{\sum_{x_Q}\sum_{x_H} p(x_Q, x_H, x_E)}.
-$$
-
-The Bayesian network factorization tells us how to compute $p(x_Q, x_H, x_E)$ as a product of local conditionals, but the summation over $x_H$ can still be exponentially large if done naively.
-
-### Interpretation paragraph
-
-This formula says: collect all full assignments consistent with the evidence, add up their joint probabilities, and renormalize. The BN does not eliminate the need to sum over hidden variables. What it does is factor the joint probability into small pieces so that algorithms can reuse partial computations.
-
-In other words: **Bayesian networks turn inference into a structured sum-product problem.**
-
-### Boundary conditions, assumptions, and failure modes
-
-Even with a sparse Bayesian network, exact inference can be computationally hard. The worst-case cost depends not on the number of nodes alone, but on how the graph “fills in” when you eliminate hidden variables (a phenomenon later captured by treewidth).
-
-So the right mental model is:
-
-- BNs make inference *possible to express cleanly*.
-- They often make it *possible to compute efficiently* when the graph has favorable structure (trees, polytrees, small treewidth).
-- But they do not guarantee tractability in every graph.
-
-### Fully worked example: writing $P(B\mid W=1)$ in the burglar network
-
-We will not compute a final number here; the goal is to practice translating a question into the correct sum-product expression and simplifying legally.
-
-**Step 1: identify query, evidence, and hidden variables.**
-
-- Query: $Q=\{B\}$.
-- Evidence: $E=\{W\}$ with observed value $W=1$.
-- Hidden variables: $H=\{E,A,H\}$ (earthquake, alarm, Hudson call).
-
-**Step 2: write the posterior as “joint over evidence, summed over hidden, normalized.”**
-
-$$
-P(B=b\mid W=1) = \frac{\sum_{e,a,h} P(B=b,E=e,A=a,W=1,H=h)}{\sum_{b'}\sum_{e,a,h} P(B=b',E=e,A=a,W=1,H=h)}.
-$$
-
-**Step 3: expand the joint using the BN factorization.**
-
-The model factorizes as
-
-$$
-P(b,e,a,w,h)=P(b)\,P(e)\,P(a\mid b,e)\,P(w\mid a)\,P(h\mid a).
-$$
-
-Plugging $w=1$,
-
-$$
-P(B=b\mid W=1) = \frac{\sum_{e,a,h} P(b)\,P(e)\,P(a\mid b,e)\,P(W=1\mid a)\,P(h\mid a)}{\sum_{b'}\sum_{e,a,h} P(b')\,P(e)\,P(a\mid b',e)\,P(W=1\mid a)\,P(h\mid a)}.
-$$
-
-**Step 4: simplify by summing out a factor that normalizes.**
-
-Because $P(h\mid a)$ is a conditional distribution over $h$, we always have
-
-$$
-\sum_h P(h\mid a) = 1.
-$$
-
-So the sum over $h$ disappears, leaving a sum only over $e$ and $a$.
-
-This step illustrates the general pattern: inference is hard when hidden variables connect many factors, and easy when you can sum out a variable locally without creating large intermediate dependencies.
-
-### Misconception block
-
-**Do not think inference is “just Bayes’ rule.”**  
-Bayes’ rule is correct, but in multi-variable models the hard part is computing the normalizing constant and managing the sum over hidden variables. Graph structure exists to make that manageable, not to avoid it entirely.
-
-### Connection to later material
-
-This subsection is a bridge to inference algorithms. Variable elimination and belief propagation are systematic ways to perform the sums in the definition of $p(x_Q\mid x_E)$ without enumerating every hidden configuration. Approximate inference methods (sampling, variational inference) become necessary when the graph structure makes exact inference too expensive.
-
-### Retain / do not confuse
-
-Retain:
-
-- inference is “sum out hidden variables, then normalize”;
-- the BN factorization turns the joint into a product of small factors.
-
-Do not confuse:
-
-- observation (conditioning) with intervention (changing the model mechanism);
-- compact representation with guaranteed tractable inference in every graph.
-
----
-
 ## 3.3 Learning from complete data
 
 ### Why this section exists
@@ -1162,6 +1231,8 @@ Here:
 The question is:
 
 > Given a known DAG and complete observations, how do we estimate each local conditional distribution?
+
+At a conceptual level, the answer is simpler than the notation may suggest. Each row of each CPT is just a categorical distribution, so this whole section is the repeated application of ordinary empirical conditional-frequency estimation, one row at a time.
 
 ### Formal parameterization
 
@@ -1195,6 +1266,8 @@ $$
 
 Taking logs,
 
+The derivation below matters for one reason only: it explains **why** the estimation problem splits into independent local counting problems. The reader should not treat it as algebra for its own sake.
+
 $$
 \ell(\rho) = \sum_{j=1}^m \log p(x^{(j)};\rho).
 $$
@@ -1217,7 +1290,7 @@ $$
 \ell(\rho) = \sum_{i=1}^n \sum_{j=1}^m \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)}^{(j)};\rho).
 $$
 
-This is already informative: the full log-likelihood is a sum of node-specific contributions. But we can go one step further and group data points according to the parent configuration they present for node $i$:
+But we can go one step further and group data points according to the parent configuration they present for node $i$:
 
 $$
 \ell(\rho) = \sum_{i=1}^n \sum_{x_{\mathrm{pa}(i)}} \sum_{j: \, x_{\mathrm{pa}(i)}^{(j)} = x_{\mathrm{pa}(i)}} \log p(x_i^{(j)} \mid x_{\mathrm{pa}(i)};\rho).
@@ -1494,6 +1567,8 @@ $$
 p(Y,X_1,\dots,X_n)=p(Y)\prod_{i=1}^n p(X_i \mid Y).
 $$
 
+One common confusion is worth naming explicitly. The graph is drawn in the generative direction $Y \to X_i$, but the prediction task usually goes in the reverse direction: after seeing the features, we want $p(Y\mid X_1,\dots,X_n)$. That is not a contradiction. The model is specified in one direction and queried in the other by Bayes' rule.
+
 Equivalently, in graph form, $Y$ is a parent of every feature $X_i$, and there are no edges among the features.
 
 ```mermaid
@@ -1644,6 +1719,8 @@ Do not confuse:
 ### Why this subsection exists
 
 Many datasets are inherently sequential: words in a sentence, states over time, clicks in a browsing session, weather on consecutive days. In such problems, a variable is often most strongly related to the recent past, not to every earlier state. Markov chains formalize that idea in Bayesian network language.
+
+The reader should see this subsection as a specialization of the same Bayesian-network idea already learned. Nothing fundamentally new is being introduced about probability structure. The only change is that the graph now has a repeated line shape, which encodes the claim that the recent past summarizes the relevant history.
 
 ### The object being introduced
 
@@ -1811,7 +1888,7 @@ graph LR
   X3 --> Y
 ```
 
-(DOT source: `graphs/noisy_or_headache.dot`; the DOT uses the concrete headache example with causes `C,F,D` and effect `H`. The mermaid sketch here is a minimal “many-causes → one-effect” template.)
+(DOT source: `graphs/noisy_or_headache.dot`; the DOT uses the concrete headache example with causes `C,F,D` and effect `H`. The mermaid sketch here is a minimal "many-causes → one-effect" template.)
 
 If you want to see the same structure with the concrete variable names used in the worked example, it is:
 
@@ -1832,6 +1909,8 @@ The model answers the question:
 
 In a **noisy-OR** model, each cause $X_i$ has an associated parameter $\rho_i \in [0,1]$, interpreted as the probability that cause $i$ fails to trigger the effect when it is active.
 
+The parameter $\rho_i$ is the easiest thing in this subsection to misread. It is neither the probability that cause $i$ is present nor the probability that the effect occurs. It is the probability that cause $i$, **when active**, fails to trigger the effect.
+
 The conditional probability of the effect is
 
 $$
@@ -1843,6 +1922,8 @@ Equivalently,
 $$
 p(Y=0 \mid X_1,\dots,X_n) = \prod_{i=1}^n \rho_i^{\mathbf 1[X_i=1]}.
 $$
+
+In particular, if exactly one cause $X_i$ is active and all others are off, then $p(Y=1)=1-\rho_i$. Keep that one-cause case in mind while reading the multi-cause formula.
 
 If all $X_i=0$, then the empty product equals $1$, so $p(Y=0)=1$ and $p(Y=1)=0$, unless a separate leak parameter is added.
 
@@ -1983,13 +2064,16 @@ Do not confuse:
 
 ## 3.4.4 Rewriting noisy-OR with auxiliary variables
 
+**Optional advanced note.**  
+This subsection is not needed for the first-pass understanding of Bayesian networks, d-separation, parameter learning, or standard homework-level noisy-OR reasoning. Its purpose is to show a representational trick: sometimes we introduce extra variables to simplify graph structure. Read it after the rest of the chapter is stable.
+
 ### Why this subsection exists
 
 The noisy-OR formula is compact, but sometimes we want to express the same model using a graph in which every node has only a small number of parents. This can help clarify the mechanism and connect the model to a broader theme in graphical modeling: introducing extra variables to simplify structure.
 
 ### The object being introduced
 
-The new objects are **auxiliary variables** representing whether each cause successfully transmits its effect. These variables are not part of the original observable problem statement. They are introduced to rewrite the model.
+We now temporarily introduce extra binary variables whose only job is to make explicit what the original noisy-OR formula was already assuming implicitly: each active cause independently either succeeds or fails to transmit activation.
 
 ### Construction
 
@@ -2074,7 +2158,11 @@ Do not confuse:
 
 Throughout the chapter, causal language has been a useful intuition. We naturally say burglary causes alarm, alarm causes calls, and so on. But the mathematics of Bayesian networks up to this point has only required a factorization of a joint distribution. That is not yet enough to justify intervention reasoning.
 
-This section exists to mark the boundary clearly. Ordinary probabilistic conditioning and genuine causal intervention are different operations. If we do not distinguish them, we will misread associations as effects.
+This section exists to mark the boundary clearly.
+
+The purpose here is not to reteach Bayesian networks as causal models from scratch. The purpose is only to prevent one specific confusion: ordinary conditioning and intervention are different operations.
+
+Ordinary probabilistic conditioning and genuine causal intervention are different operations. If we do not distinguish them, we will misread associations as effects.
 
 ### The object being introduced
 
@@ -2093,8 +2181,6 @@ p(X \mid X_{\mathrm{pa}(X)})
 $$
 
 with a degenerate distribution that forces $X$ to the chosen value. Graphically, this is often described as removing the incoming edges into $X$, because under intervention, $X$ no longer responds to its usual causes.
-
-The resulting interventional distribution is different from the ordinary conditional distribution in general.
 
 ### Interpretation paragraph
 
@@ -2221,6 +2307,8 @@ This chapter built that interplay in layers.
 First, it showed why high-dimensional probability needs structure and how conditional independence turns the chain rule into a compact factorization. Second, it showed how the graph can be used to read conditional independencies through d-separation, including the especially important collider phenomenon. Third, it showed how a known graph converts parameter learning with complete data into a collection of local counting problems. Fourth, it studied several canonical model families that demonstrate different uses of the framework: naive Bayes for classification, Markov chains for sequences, and noisy-OR for many-cause systems. Finally, it previewed the distinction between observational conditioning and causal intervention.
 
 The unifying theme is that graphical structure is never decoration. It determines what may depend on what, what can be estimated locally, what independencies can be trusted, and what kinds of questions the model can and cannot answer.
+
+On a first serious pass through the chapter, mastery does **not** mean that every subsection feels equally fluent. It means the reader can keep four central ideas separate: factorization, path-blocking, local parameter learning, and the difference between conditioning and intervention.
 
 For mastery, the reader should now be able to do four things without hesitation:
 
