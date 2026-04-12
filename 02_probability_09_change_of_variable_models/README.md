@@ -1,46 +1,54 @@
 # 2.6 Change-of-Variable Models
 
-Change-of-variable modeling appears when a random variable is easier to understand in one space than in another. Sometimes the observed variable has awkward support, such as positivity. Sometimes the observed distribution is highly skewed, but becomes regular after a transformation. Sometimes the dependence structure of a multivariate distribution becomes easier to describe only after the coordinates are remapped. The central idea is therefore not a calculus trick. It is a modeling strategy: begin with a random variable or latent representation whose distribution is simple, transform it into the variable we care about, and then compute the resulting density correctly.
+Change-of-variable modeling appears when a random quantity is easier to describe in one space than in another. Sometimes the observed variable is constrained, such as being always positive. Sometimes the observed distribution is strongly skewed, even though a transformed version looks regular. Sometimes dependence becomes easier to describe only after the coordinates are remapped. So this chapter is not mainly about a calculus trick. It is about a modeling strategy: begin with a variable whose distribution is easy to understand, transform it into the variable we actually care about, and then describe the resulting distribution correctly.
 
-The core law behind the entire section is **probability conservation**. A transformation may move mass from one region to another. It may stretch the space in some directions and compress it in others. But it cannot create or destroy total probability. That is why a Jacobian term appears. The Jacobian is not extra decoration added after the "real" formula. It is part of the model description itself, because once a variable is transformed, the density must be expressed in the new coordinate system correctly. To keep the topic from turning into symbol juggling, it helps to separate the objects before doing any calculation.
+The central law behind the whole chapter is **probability conservation**. A deterministic transformation can move probability mass from one region of the line or space to another. It can stretch some neighborhoods and compress others. But it cannot create or destroy total probability. That is why transformed-density formulas always contain some local scaling factor. In one dimension that factor is an absolute derivative. In several dimensions it becomes an absolute determinant. These terms are not decorative corrections attached after the main idea. They are the mathematical expression of probability conservation under a change of coordinates.
 
-There is first the **base variable**, usually written `Z`. This is the variable whose distribution we already know or deliberately choose because it is simple. There is next the **transformed variable**, usually written `X`, which is defined from `Z` by an explicit deterministic map such as `X = f(Z)`. The map acts on the variable, not on the density directly.
+Before any formula appears, it helps to separate the objects involved.
 
-There is also the **support** of each variable. The support is the set of values where the variable can actually live. Under transformation, the support usually changes, and some errors that look algebraically harmless are really support errors in disguise. Finally, there are **events**, such as `a \le X \le b`, which are often easiest to understand by translating them back into a statement about `Z`.
+There is first the **base variable**, often written `Z`. This is the variable whose distribution we already know, or choose deliberately because it is simple.
 
-Most confusion in this topic comes from mixing up those four objects. A reliable mental discipline is this. Start with the base variable and its known distribution. Then define the transformed variable by an explicit map. Then ask what the transformed support is. Then translate events in `X`-space back to `Z`-space. Only after those steps should you write the transformed density formula. The later discussions of the lognormal, copulas, and normalizing flows do not add a new law. They reuse this same sequence in richer settings.
+There is next the **transformed variable**, often written `X`, defined by a deterministic map such as `X = f(Z)`. The transformation acts on the variable itself. It does not act directly on the density formula.
+
+There is also the **support** of each variable. The support is the set of values the variable can actually take. Transformations often change support, and many algebraically tidy answers are wrong because they ignore that change.
+
+Finally, there are **events**. A probability statement about `X`, such as `a \le X \le b`, can often be understood most easily by translating it back into an equivalent statement about `Z`.
+
+That object separation is worth taking seriously, because most confusion in this topic comes from mixing these roles together. A good working discipline is this: start with the base variable and its known distribution; define the transformed variable by an explicit map; identify the transformed support; translate events in observed space back to the base space; and only then write the transformed density formula.
 
 ## Why transformations appear in probabilistic modeling
 
-This section must appear once densities have been introduced, because densities by themselves do not tell us how a distribution changes when the variable is re-expressed. Earlier sections teach us how to describe a distribution in a fixed coordinate system. But probabilistic modeling constantly asks a harder question: if a random quantity is defined indirectly, or if we choose a more convenient representation, how do we describe its distribution in the new space without losing mathematical correctness?
+This topic has to appear once densities have been introduced, because a density by itself only describes a distribution in one coordinate system. It does not tell us automatically what happens if the variable is re-expressed.
 
-The answer is not “plug the transformation into the density.” That shortcut is one of the most common mistakes in the subject. The real answer is subtler: the transformation changes both *where* probability mass sits and *how densely* that mass is packed. That is why the inverse map appears, and that is why the Jacobian correction is unavoidable.
+Earlier chapters focused on describing random variables once the space and coordinates were fixed. But probabilistic modeling immediately asks a harder question. What if the quantity we observe is defined indirectly from another variable? What if we choose a different representation because it makes the model simpler? What if we want to start from a simple distribution and generate a more complicated one through transformation? At that point the question is no longer "what is the density of this variable?" It becomes "how does a density change when the variable itself is remapped?"
 
-This point matters later for three different reasons. First, it explains transformed families such as the lognormal. Second, it supports dependence constructions such as copulas, where variables are moved into percentile space before dependence is modeled. Third, it underlies normalizing flows, where a complicated density is represented as an invertible transformation of a simple one. So this section is not isolated technique. It is the point where “a random variable with a density” becomes “a random variable that can be modeled through representation change.”
+The wrong instinct is to think that we should simply substitute the transformation into the old density. That is not the right operation. The transformation changes not only where probability mass sits, but also how densely that mass is packed in the new coordinates. That is why the inverse map appears, and that is why the local scaling factor is unavoidable.
 
-
+This idea matters later for at least three reasons. First, it explains transformed families such as the lognormal, where a simple latent variable produces a positively supported and skewed observed variable. Second, it supports constructions such as copulas, where variables are moved into percentile space so that marginal behavior and dependence can be separated. All of these reuse the same law. What changes is only the complexity of the transformation and the modeling goal.
 
 ## Scalar change of variables
 
-The one-dimensional case is the right place to understand the mechanism before the notation becomes heavier. Let `Z` be a scalar random variable with known density `p_Z`, and let
+The one-dimensional case is the right place to understand the mechanism before the notation becomes heavier.
 
+Let `Z` be a scalar random variable with known density `p_Z`, and let
 $$
 X = f(Z).
 $$
+We are trying to answer one specific question:
 
-We are trying to answer a very specific question: **what is the density of `X`?**
+**What is the density of `X`?**
 
-At this point it helps to say exactly what the problem is and is not. The transformation `f` is fixed. The base density `p_Z` is fixed. The observed location `x` is the point at which we want to evaluate the new density. So the job is not to "transform the graph of `p_Z`." The job is to ask: which latent location or locations in `Z`-space could have produced this particular observed point `x`, and how did the map locally stretch or compress the neighborhood around that point? Once that question is clear, the inverse map and the Jacobian correction stop feeling arbitrary.
+To answer that question cleanly, it helps to say exactly what is fixed and what is varying. The transformation `f` is fixed. The base density `p_Z` is fixed. The transformed variable `X` is already defined by that map. What varies is the observed location `x` where we want to evaluate the density of `X`.
 
-The important thing to notice first is that the transformation acts on the variable, not directly on the density. We do not begin by manipulating the graph of `p_Z`. We begin by asking how intervals in `X`-space correspond to intervals in `Z`-space. Once that correspondence is clear, the density formula follows.
+That point matters because it prevents a common misunderstanding. We are not trying to "transform the graph of `p_Z`." We are asking a local question: if we look near one observed point `x`, which latent point or latent points in `Z`-space could have produced it, and how did the map change local width near those points?
+
+That is the core mechanism of the scalar case. First identify the latent source of the observed point. Then correct for local stretching or compression. The inverse map appears because we must work backward from `x` to the latent location that generated it. The derivative appears because density is measured per unit width, and the transformation changes local width.
 
 ### The object being introduced
 
-The scalar change-of-variables rule is a way of answering the following question: if a random quantity is generated indirectly by transforming a simpler variable, how do we describe the density of the observed quantity in its own coordinate system?
+The scalar change-of-variables rule is a rule for computing the density of a transformed random variable. The setup is simple but important: the base density `p_Z` is already known, the transformation `f` is already chosen, and the transformed variable is defined by `X = f(Z)`. The unknown object is the density `p_X`.
 
-In this setup, several things are fixed. The base variable `Z` is already known to have density `p_Z`. The map `f` is already chosen. The transformed variable is defined by `X = f(Z)`. What varies is the observed point `x` where we want to know the density of `X`.
-
-That last sentence matters. A density formula is not a statement about one realized sample. It is a rule that tells us, for each permissible observed point `x`, how much probability mass is concentrated near that point. In the transformed setting, that concentration depends on two ideas together. First, we must locate the latent point that maps to `x`. Second, we must correct for how the map changes local width. The first idea explains why the inverse appears. The second explains why the derivative appears.
+What varies in the rule is the observed point `x`. For each legal value of `x`, we want to know how much probability mass is concentrated near that point. In a transformed model, that concentration depends on two ingredients together. One ingredient is the latent point that maps to `x`. The other is the local scaling behavior of the transformation. Those two ingredients are exactly what the inverse and the derivative will encode.
 
 ### Formal definition: monotone invertible case
 
@@ -210,21 +218,30 @@ If `X = f(Z)`, the transformed density is **not** obtained by replacing `z` with
 
 ## Case B: non-monotone or multi-branch map
 
-Now we can state the most important failure mode of the scalar formula.
+Now we can state the most important failure mode of the one-branch scalar rule.
 
-If the transformation is not one-to-one on the relevant support, then several latent points may map to the same observed point. In that case, the density at `x` receives contributions from every inverse branch that reaches `x`. A one-branch formula misses probability mass.
+In the monotone invertible case, each observed point `x` comes from exactly one latent point `z`. That is why the density formula has one inverse point and one local scaling factor. But this structure can fail. A transformation may be smooth and perfectly well defined while still sending several different latent points to the same observed location.
 
-The important point is that the one-branch formula did not fail because of bad algebra. It failed because its assumptions no longer describe the geometry of the map. In a one-to-one transformation, each observed point `x` corresponds to exactly one latent point `z`, so all the probability near `x` comes from one local neighborhood. In a many-to-one transformation, several separated neighborhoods in latent space may be folded onto the same observed location. If we only track one branch, we are literally discarding some of the probability mass that lands near `x`.
+When that happens, the density at `x` cannot be computed from only one inverse point, because there is no longer only one latent neighborhood contributing probability mass near `x`. Several separated neighborhoods in latent space may all land near the same observed point. The correct density must account for **all** of them.
+
+This is the key conceptual change. The law of probability conservation has not changed. What has changed is the geometry of the map. The observed point `x` is now fed by several latent sources rather than one. So the transformed density must be built by adding the probability contributions from each legal inverse branch.
+
+It is important to notice what did **not** go wrong. The one-branch formula did not fail because of algebra. It failed because its hidden assumption, one observed point and one latent source, no longer matches the transformation being used.
 
 ### Formal rule for the multi-branch case
 
-If the solutions to `f(z)=x` are `z_1(x), \dots, z_k(x)` on the relevant support, then
-
+If the equation `f(z)=x` has several legal solutions on the relevant support, say
+$$
+z_1(x), \dots, z_k(x),
+$$
+then each of those branches contributes probability mass to the observed density at `x`. The correct transformed density is therefore
 $$
 p_X(x) = \sum_{i=1}^k p_Z(z_i(x))\left|\frac{dz_i}{dx}\right|.
 $$
 
-This is not a different principle. It is the same conservation law, but now several latent regions contribute to the same observed location.
+This formula should be read term by term. For each branch, locate the latent point `z_i(x)` that maps to the observed point `x`. Evaluate the base density there. Then correct that branch's contribution by the local width-conversion factor attached to that inverse branch. After that, add the contributions across all legal branches. The sum appears because all of those latent neighborhoods contribute to the same observed neighborhood.
+
+This is not a different law from the one-branch case. It is the same conservation principle, but now more than one latent region feeds the same observed location.
 
 ### Worked example: squaring a symmetric variable
 
@@ -337,31 +354,38 @@ Do not confuse monotonicity with differentiability. A smooth map can still fail 
 
 
 
-Up to this point, every correction factor has been a local width ratio in one dimension. The multivariate section does not change the law. It changes the geometry. Instead of asking how a tiny interval changes length, we must ask how a tiny rectangle, box, or higher-dimensional volume element changes under the inverse map. The determinant enters for exactly the same reason the derivative entered before: it is the local conversion factor required by probability conservation, but now for volume rather than width.
+Up to this point, the local scaling question has been one-dimensional. A tiny neighborhood around an observed point had only one geometric feature to track: its width. That is why a single derivative was enough.
+
+In several dimensions, the underlying law does not change, but the geometry becomes richer. A small neighborhood is no longer just an interval. It is a little rectangle, box, or higher-dimensional volume element. Under the inverse map, that neighborhood can be stretched, compressed, reflected, tilted, or sheared. So the question is no longer "how does local width change?" It becomes "how does local area or volume change?"
+
+That is exactly why the determinant appears in the multivariate rule. It plays the same conceptual role the absolute derivative played in one dimension. It is the local scaling factor required by probability conservation, but now for area or volume rather than width.
+
+So the correct way to experience the next section is not as a new law, but as the same law with more geometric bookkeeping.
 
 ## Multivariate change of variables
 
-In several dimensions, the idea is unchanged but the bookkeeping becomes geometric rather than one-dimensional. Instead of asking how a tiny interval changes width, we ask how a tiny box changes area or volume.
+In several dimensions, the idea is unchanged but the bookkeeping becomes geometric rather than one-dimensional.
 
 Let
-
 $$
 X = f(Z),
 $$
-
 where `Z` and `X` are now vectors, and suppose the map is invertible on the region of interest with inverse
-
 $$
 g = f^{-1}.
 $$
 
 ### The object being introduced
 
-The new object is the **Jacobian matrix of the inverse map**. In one dimension, a single derivative tells us how local length changes under a transformation. In several dimensions, local geometry is richer. A small region has not just a width but an area or volume, and different coordinates can stretch by different amounts and interact with one another.
+The new object is the **Jacobian matrix of the inverse map**.
 
-The Jacobian matrix records those local coordinate sensitivities. Each entry tells us how one component of the inverse map changes when one observed coordinate changes. But the matrix itself is not the final correction factor. The quantity that matters for density transformation is its determinant, because the determinant measures the local volume-scaling factor of the inverse map.
+In one dimension, the inverse derivative tells us how local length changes. In several dimensions, a local neighborhood can change in more than one way at once. Different coordinates can stretch by different amounts, coordinates can interact, and a small square can become a slanted parallelogram or a small box can become a tilted volume element.
 
-So the conceptual question is the same as before, only upgraded geometrically: if we take a tiny observed region around `x` and map it back into latent space, by what factor does its local volume change? That factor is what must multiply the base density evaluated at the inverse point.
+The Jacobian matrix records that local coordinate behavior. Its entries tell us how the components of the inverse map respond to changes in the observed coordinates. So the matrix is a local linear description of how the inverse transformation behaves near one observed point.
+
+But the matrix itself is not yet the correction factor in the density formula. The density needs a single number that tells us how local volume changes. That number is the absolute value of the determinant of the Jacobian matrix.
+
+So the multivariate question is the direct geometric upgrade of the scalar one: if we take a tiny observed neighborhood around `x` and map it back into latent space, by what factor does its local volume change? That factor is what must multiply the base density evaluated at the inverse point.
 
 ### Formal definition
 
@@ -379,13 +403,19 @@ $$
 
 ### Interpretation
 
-The multivariate rule should be read in the same order as the scalar rule. Start with an observed point `x`. Map it back to its latent source `g(x)`. Evaluate the base density there. Then correct by the local volume-scaling factor of the inverse map.
+The multivariate rule should be read in the same order as the scalar rule.
 
-The determinant answers a geometric question. Imagine a tiny box around `x` in observed space. Under the inverse map, that tiny box becomes a small deformed region in latent space. The absolute determinant `|\det J_g(x)|` tells us, to first order, how much the volume of that region has changed.
+Start with an observed point `x`. Ask which latent point produced it. That is the inverse point `g(x)`. Evaluate the base density at that latent location, because that is where the relevant probability mass comes from.
 
-If the inverse map expands local volume, then a fixed observed neighborhood corresponds to a larger latent neighborhood, so the transformed density must be higher to account for the same probability mass coming from a larger preimage region. If the inverse map compresses local volume, the correction goes in the other direction. The determinant therefore plays exactly the role played by `|g'(x)|` in one dimension. It is not a new principle. It is the same conservation law in higher-dimensional geometry.
+Then apply the geometric correction. Imagine a tiny observed neighborhood around `x`. Under the inverse map, that neighborhood becomes a small region in latent space. The absolute determinant
+$$
+|\det J_g(x)|
+$$
+tells us, to first order, how much the local area or volume of that neighborhood changes under the inverse map.
 
-The absolute value still matters. A negative determinant indicates orientation reversal, such as a reflection, not negative probability.
+If the inverse map makes the preimage region larger, then the observed density must be adjusted accordingly. If it makes the preimage region smaller, the correction goes in the other direction. The determinant therefore plays exactly the same role as `|g'(x)|` did in one dimension. It is not a new principle. It is the same conservation law expressed in higher-dimensional geometry.
+
+A negative determinant still does **not** mean negative probability. It only indicates orientation reversal, such as a reflection. Density uses the absolute value because the correction factor is about local volume, not orientation.
 
 ### Worked example: anisotropic scaling
 
@@ -443,7 +473,7 @@ Do not confuse “density gets larger” with “more total probability was crea
 
 
 
-The core change-of-variable law is complete at this point. What follows are two optional enrichments whose purpose is to show that the same principle powers more advanced modeling ideas. If the scalar and multivariate rules are not yet stable, it is reasonable to stop here and return later. If they are stable, the next sections show how the same transformation logic can be used not just to compute densities, but to redesign a modeling problem into a more convenient coordinate system.
+The core change-of-variable law is complete at this point. The remaining sections are optional extensions that show how the same principle can be used in richer modeling settings. If the scalar and multivariate rules are not yet stable, it is reasonable to stop here and return later. If they are stable, the next sections show how the same transformation logic can be used not just to compute densities, but to redesign a modeling problem into a more convenient coordinate system.
 
 ## Optional enrichment: copula models
 
@@ -474,14 +504,11 @@ This equation should be read carefully. The marginal CDFs convert the original v
 
 ### Gaussian copula pipeline
 
-A standard modeling pipeline is:
+A standard way to use a copula is to proceed in stages. First, each marginal distribution is estimated or specified in its own coordinates. Then each observed coordinate is moved into percentile space by applying its marginal CDF. At that point every coordinate lives on `[0,1]`, so the original units and marginal shape have been stripped away.
 
-1. estimate or specify each marginal CDF;
-2. map data into percentile space using those marginals;
-3. optionally map from uniform percentile space into Gaussian latent space using `\Phi^{-1}`;
-4. model dependence in that transformed space.
+Sometimes the model then performs one more transformation, sending percentile coordinates into Gaussian latent coordinates through `\Phi^{-1}`. This step is not magic. It is another change of variables, chosen because Gaussian dependence is often easier to parameterize and reason about. Once the dependence has been modeled in that transformed space, the construction can be mapped back to the original coordinates.
 
-The central lesson is not the pipeline itself. It is the idea that a hard joint model can become easier once marginal shape and dependence are separated by transformation.
+The large lesson is not the pipeline itself. It is that a hard joint model can become easier once marginal behavior and dependence are separated by a representation change.
 
 ### Misconception block
 
@@ -491,9 +518,11 @@ Do not confuse a copula with a marginal distribution, and do not confuse depende
 
 ## Optional enrichment: normalizing flows
 
-Normalizing flows are best understood as a learned version of the exact same change-of-variable rule already developed in this section. Nothing fundamentally new happens to the probability law itself. We still begin with a base variable `Z` whose density is simple and known. We still define an invertible transformation `X = f(Z)`. We still evaluate densities in observed space by mapping back to latent space and applying a Jacobian correction.
+Normalizing flows are best understood as a learned, model-building use of the exact same change-of-variable rule developed earlier in this chapter. The underlying probability law has not changed. We still begin with a base variable `Z` whose density is simple and known. We still transform it into an observed variable `X`. And we still compute the resulting density by evaluating the base density at the inverse point and correcting by a Jacobian term.
 
-What changes is the role of the transformation. In the earlier examples, the transformation was chosen by hand because it had an interpretable effect, such as exponentiating a Gaussian to produce a positive skewed variable. In a flow, the transformation is parameterized and learned from data so that the transformed density matches a complicated observed distribution. The mathematics is the same. The ambition of the model is larger.
+What changes is the modeling goal. In the earlier examples, the transformation was chosen by hand and then analyzed. In a normalizing flow, the transformation itself is parameterized and learned from data. The point of the construction is to keep the density exactly computable while giving the model enough flexibility to represent complicated observed distributions.
+
+So a flow is not "some new density trick after change of variables." It is a direct application of the same law, but with a learned invertible transformation instead of a fixed hand-designed one.
 
 ### Why flows are built from layers
 
