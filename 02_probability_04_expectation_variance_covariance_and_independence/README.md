@@ -1126,6 +1126,12 @@ $$
 
 That is what independence buys you: the entire joint table is determined by the marginals.
 
+Before counting degrees of freedom, it helps to slow down the modeling choice that independence is making. In a completely general joint distribution for two variables, we are free to assign probabilities to the cells of the joint table directly, as long as the entries are nonnegative and sum to one. In other words, each pair of values $(x,y)$ can have its own probability, and those cell probabilities are the primary objects we choose. Independence changes that. Under independence, we no longer treat each joint-table cell as an independently chosen quantity. Instead, we first choose a marginal distribution for $X$ and a marginal distribution for $Y$, and then the joint-table entries are forced to be products:
+$$
+\mathbb{P}(X=x,Y=y)=\mathbb{P}(X=x)\mathbb{P}(Y=y).
+$$
+So the point is not that the joint table disappears. The point is that its entries are no longer chosen one by one. They are generated from a smaller set of numbers: the two marginals.
+
 ### Degrees of freedom under independence
 
 This simplification can be counted explicitly.
@@ -1157,7 +1163,30 @@ $$
 
 degrees of freedom.
 
-If the variables are independent, we no longer choose a full joint table directly. We choose two marginals.
+If the variables are independent, the modeling choice changes in a very specific way. In the unrestricted case, the joint-table cells themselves are the free quantities: you can assign probabilities to each $(x,y)$ pair, subject only to the rule that all entries are nonnegative and the whole table sums to one. Under independence, that freedom is reduced. You do **not** get to choose each joint entry separately anymore, because once you specify the marginal probabilities for $X$ and the marginal probabilities for $Y$, every joint entry is already determined by their products. So "we choose two marginals" means: the free numerical choices now live in the marginal distributions, and the joint table is filled in from those choices rather than specified cell by cell.
+
+A $2\times2$ example makes the distinction concrete. Suppose $X\in\{0,1\}$ and $Y\in\{0,1\}$. In a general joint model, you could choose
+$$
+p_{00},\;p_{01},\;p_{10},\;p_{11}
+$$
+subject only to
+$$
+p_{00}+p_{01}+p_{10}+p_{11}=1.
+$$
+That means three of those four numbers are free, and the last is forced by normalization. But under independence, you would instead choose
+$$
+\mathbb{P}(X=1)=a,\qquad \mathbb{P}(Y=1)=b.
+$$
+Then automatically
+$$
+\mathbb{P}(X=1,Y=1)=ab,\qquad
+\mathbb{P}(X=1,Y=0)=a(1-b),
+$$
+$$
+\mathbb{P}(X=0,Y=1)=(1-a)b,\qquad
+\mathbb{P}(X=0,Y=0)=(1-a)(1-b).
+$$
+Now there are only two free numbers, $a$ and $b$, instead of three free joint-table entries. That is the reduction in degrees of freedom that independence creates.
 
 Each $d$-ary marginal has:
 
