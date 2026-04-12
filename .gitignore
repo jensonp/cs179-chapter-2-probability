@@ -25,6 +25,9 @@
 !hw2_gap_info/
 hw2_gap_info/*
 !hw2_gap_info/README.md
+!hw2_execution_bridge/
+hw2_execution_bridge/*
+!hw2_execution_bridge/README.md
 
 !notes/
 notes/*
