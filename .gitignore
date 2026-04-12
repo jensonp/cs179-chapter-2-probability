@@ -28,6 +28,9 @@ hw2_gap_info/*
 !hw2_execution_bridge/
 hw2_execution_bridge/*
 !hw2_execution_bridge/README.md
+!pygms_catchup_lecture/
+pygms_catchup_lecture/*
+!pygms_catchup_lecture/README.md
 
 !notes/
 notes/*
