@@ -26,64 +26,56 @@ That four-question checklist is not optional bookkeeping. It is the conceptual t
 ## 1. Data, parameters, and the sampling model
 
 Suppose we observe a sample
-
 $$
 D=\bigl(x^{(1)},x^{(2)},\dots,x^{(m)}\bigr).
 $$
+Before doing anything else, it helps to name the objects in this notation very explicitly.
 
-This notation means:
+The symbol $D$ stands for the **entire observed dataset**. It is not one observation. It is the whole collection of observations that were produced by the experiment or data-generating process. The superscripts in $x^{(1)},x^{(2)},\dots,x^{(m)}$ are **labels for which observation we are talking about**, not powers. So $x^{(3)}$ means "the third observed value," not "$x$ cubed."
 
-- there are $m$ observations;
-- the first observed value is $x^{(1)}$;
-- the second observed value is $x^{(2)}$;
-- and so on.
+Now we introduce another object that will appear everywhere in the rest of the chapter: the **parameter**. A parameter is the part of the model that tells us **which probability law inside a family of possible laws** is being used. It is not an observed outcome. It is not yet an estimate. It is the model's internal setting.
 
-The parentheses in the superscripts indicate observation index, not exponentiation.
+That sentence is abstract, so it helps to anchor it in examples. In a Bernoulli model, the parameter may be the success probability $\rho$. In a Gaussian model, the parameter may be the mean $\mu$, or the pair $(\mu,\sigma^2)$. In a categorical model, the parameter may be the probability vector $\pi$. These are different kinds of objects, but they play the same role: **once the parameter value is chosen, the model's distribution is determined**.
 
-Now suppose the model is controlled by a parameter $\theta$.
+This is the right moment to introduce one more term that is often left implicit: a **model family**. A model family is a collection of distributions indexed by parameter values. So when we write something like "Bernoulli family" or "Gaussian family," we mean a whole set of possible distributions, and the parameter tells us which member of that set we are talking about.
 
-Examples:
-
-- in a Bernoulli model, $\theta$ may be the success probability $\rho$;
-- in a Gaussian model, $\theta$ may be the mean $\mu$, or the pair $(\mu,\sigma^2)$;
-- in a categorical model, $\theta$ may be the probability vector $\pi$.
+With those roles in place, the learning problem can now be stated clearly. Earlier chapters mostly assumed the parameter had already been fixed and asked what consequences followed for the random variable or dataset. This chapter changes the direction. The dataset has already been observed, and we want to use it to say something about the parameter, or more broadly, about which member of the model family is most compatible with what we saw.
 
 ### The i.i.d. assumption
 
-Many introductory derivations assume the data are i.i.d. given $\theta$.
+Many introductory derivations assume the data are i.i.d. given $\theta$. This abbreviation contains two different structural claims.
 
-i.i.d. stands for:
-
-- **independent**: once $\theta$ is fixed, one observation does not change the distribution of another;
-- **identically distributed**: once $\theta$ is fixed, every observation is drawn from the same conditional law.
+"Independent" means that once $\theta$ has been fixed, one observation does not change the conditional law of another. "Identically distributed" means that once $\theta$ has been fixed, each observation is drawn from the same one-observation conditional law. These two conditions are often stated together quickly, but they do different jobs. Independence controls how the full sample factorizes. Identically distributed says the same conditional building block is reused for each observation.
 
 Under that assumption,
-
 $$
 p(D\mid \theta)=\prod_{i=1}^{m} p\bigl(x^{(i)}\mid \theta\bigr).
 $$
+This factorization is important enough to unpack slowly.
 
-This factorization is important enough to unpack carefully.
-
-Step 1: write the joint conditional law of the whole sample.
-
+First, start with the conditional law of the entire sample:
 $$
 p\bigl(x^{(1)},x^{(2)},\dots,x^{(m)}\mid \theta\bigr).
 $$
-
-Step 2: independence given $\theta$ allows this joint probability or density to factor into a product of one-observation terms.
-
+Second, use conditional independence given $\theta$ to factor this joint quantity into one-observation terms:
 $$
 p\bigl(x^{(1)},x^{(2)},\dots,x^{(m)}\mid \theta\bigr)=\prod_{i=1}^{m} p\bigl(x^{(i)}\mid \theta\bigr).
 $$
+Third, notice that the left-hand side is exactly the probability or density of the full observed dataset, which is what we abbreviate by $p(D\mid \theta)$.
 
-Step 3: by definition, the left-hand side is exactly $p(D\mid \theta)$.
-
-So we obtain the displayed factorization above.
-
-This is the structural starting point for almost every likelihood calculation in the section.
+So the i.i.d. assumption gives us a product expression for the conditional law of the dataset. This is the structural starting point for almost every likelihood calculation in the section.
 
 Before moving on, it helps to name the three layers that are already present in this apparently simple factorization.
+
+At this point, three distinctions should already be kept separate, because later sections will rely on them repeatedly.
+
+First, **parameter** is not the same thing as **estimate**. The parameter is the model-setting quantity we are trying to learn about. The estimate is a numerical answer produced after we look at data.
+
+Second, **dataset** is not the same thing as **distribution**. The dataset is the particular sample that happened to be observed. The distribution is the probability law the model says could have generated such samples.
+
+Third, **model family** is not the same thing as **one fitted model**. The family is the whole collection of possibilities indexed by the parameter. A fitted model is what you get after choosing one parameter value, whether by MLE, MAP, or some other learning rule.
+
+Those three distinctions sound elementary, but if they are not stable now, then likelihood and posterior notation will start to feel like the same sentence written with different emphases.
 
 First, there is the **data-generating layer**. The sample
 
@@ -121,12 +113,11 @@ $$
 
 This deserves to be read slowly. The semicolon in $L(\theta;D)$ is not decorative. It is there to remind you that the parameter is the variable argument and the dataset is being treated as fixed background information.
 
-A useful way to say this in plain language is:
+A useful way to say this in plain language is the following. In the sampling-model view, the parameter is held fixed and we ask how different possible datasets behave. In the likelihood view, the observed dataset is held fixed and we ask how different possible parameter values compare.
 
-- the **sampling-model view** asks how random data behave when the parameter is fixed;
-- the **likelihood view** asks how parameter values compare when the observed data are fixed.
+This is also the right place to slow down the word **fit**, because the rest of the chapter will use it often. When the chapter says that one parameter value "fits the data better" than another, it does not mean that the parameter is morally better, more realistic in every possible sense, or closer to the truth by definition. It means something narrower and more precise: **inside the chosen model family, that parameter assigns a larger likelihood to the dataset that was actually observed**.
 
-The formula is the same. The meaning is not.
+So "better fit" in this chapter is a likelihood statement. It is always relative to the model family being used, and it is always relative to the particular observed data. That is why likelihood is powerful, but also why likelihood alone cannot answer every scientific question.
 
 ### A concrete role comparison
 
@@ -198,21 +189,27 @@ Just as importantly, maximizing the log-likelihood gives the same maximizing par
 
 ## 3. Maximum likelihood estimation
 
-The maximum likelihood estimator, or MLE, is the parameter value that maximizes the likelihood:
-
+The maximum likelihood estimator, or MLE, is the rule that chooses the parameter value at which the likelihood is largest:
 $$
 \hat{\theta}_{\mathrm{MLE}}=\arg\max_{\theta} L(\theta;D)=\arg\max_{\theta}\ell(\theta).
 $$
+This definition is easy to read too quickly, so it is worth separating the objects one by one.
 
-Before moving into examples, it helps to say exactly what this definition licenses and what it does **not** license.
+The symbol $\theta$ names the **parameter** itself: the model-setting quantity whose value determines which member of the model family we are using.
 
-The MLE is a **selection rule**. It takes the observed dataset as input and returns the parameter value at which the likelihood is largest. So the MLE is not the parameter itself. It is a rule for producing an estimate from data.
+The symbol $\hat{\theta}_{\mathrm{MLE}}$ names the **estimate produced by the maximum-likelihood rule after the data have been observed**. So it is not the true parameter, and it is not the same thing as the likelihood function. It is the output of an estimation procedure.
 
-That distinction becomes important as soon as people start saying things like "the MLE is random." The fitted number you get after observing one particular dataset is just a number. But the **estimator as a rule** is random under repeated sampling, because a different dataset would generally produce a different fitted value.
+This is where three words must be kept distinct.
 
-It is also worth noticing what the MLE is optimizing. It is not optimizing truth. It is not optimizing future predictive performance directly. It is optimizing **fit to the observed sample within the chosen model family**. That is exactly why MLE is powerful and exactly why it can later overfit if the model family becomes too flexible.
+An **estimator** is a rule that maps datasets to parameter estimates. An **estimate** is the numerical output of that rule for the particular dataset you actually observed. A **fitted value** is just another plain-language way of referring to that realized estimate: the parameter value that your fitting rule returned on this dataset.
 
-The word "argmax" means "the argument, or parameter value, at which the maximum occurs."
+So when people say "the MLE is random," they mean the estimator, understood as a data-dependent rule under repeated sampling. If a different dataset had been observed, the rule would generally return a different estimate. But once one particular dataset is fixed in front of you, the fitted value produced from it is just a number.
+
+It is also important to say what MLE is optimizing and what it is not. MLE is not optimizing truth directly. It is not guaranteeing the best future predictions in all settings. It is choosing the parameter value that gives the observed sample the highest likelihood **within the chosen model family**. That is exactly why MLE is so useful, and also why it can fail when the model family is badly chosen or too flexible.
+
+The word "argmax" means "the argument at which the maximum occurs." In this setting, the argument being varied is the parameter value.
+
+Before turning MLE into a calculus routine, keep the conceptual structure in mind. The workflow is not "differentiate because textbooks do that." The workflow is: first build a function that scores parameter values using the observed data; then find where that scoring function is largest; then interpret the resulting parameter value as the model setting that makes the observed sample most compatible with the model family. The calculus is only the tool used to locate the maximum.
 
 ### The generic MLE workflow
 
@@ -364,6 +361,10 @@ Both terms are nonpositive for $0<\rho<1$, and unless the sample is degenerate t
 ### Interpretation
 
 The Bernoulli MLE is the empirical success frequency. The fitted model copies the observed fraction of ones into the Bernoulli parameter.
+
+This is a good place to define one more phrase that will keep returning. The observed fraction $m_1/m$ is an **empirical summary** of the data. That means it is a numerical feature computed directly from the sample itself, without any additional modeling beyond counting what appeared. In this case, the empirical summary is the sample proportion of ones. The MLE sets the Bernoulli parameter equal to that empirical summary.
+
+That is why this answer feels natural once it is derived. The Bernoulli family is built to represent how often "success" occurs. So the likelihood calculation ends up matching the model's success parameter to the sample's observed success frequency.
 
 That is a deep pattern, not just a one-off trick: likelihood fitting often makes model summaries match empirical summaries.
 
@@ -749,21 +750,15 @@ That is the categorical version of the Bernoulli result.
 
 ## 8. The moment-matching viewpoint
 
-At this point, it is easy to think that maximum likelihood estimation is mainly a calculus routine: write a product, take logs, differentiate, solve, and move on. That would miss the deeper pattern.
+At this point, it is easy to come away with the wrong lesson. After several worked derivations, a beginner may think that maximum likelihood estimation is basically a symbolic recipe: write a product, take logs, differentiate, solve, and move on. That view is understandable, but it misses the deeper pattern that makes the examples hang together.
 
-Across the Bernoulli, Gaussian, and categorical examples, the fitted parameter is not arbitrary. In each case, the optimization is pushing the model toward agreement with the empirical summaries that the model family is built to express.
+Across the Bernoulli, Gaussian, and categorical cases, the maximizing parameter value is not an arbitrary algebraic accident. In each example, the likelihood is pushing the model toward agreement with certain **empirical summaries** of the observed data.
 
-In the Bernoulli case, the family has one central feature: the success probability. The MLE sets that feature equal to the observed fraction of successes.
+In the Bernoulli case, the model family is built around one central quantity: the probability of success. The MLE sets that model quantity equal to the observed fraction of successes. In the Gaussian mean example with known variance, the family is built around a center parameter. The MLE sets that center equal to the sample mean. In the categorical case, the family is built around one probability for each category. The MLE sets those probabilities equal to the observed empirical proportions.
 
-In the Gaussian mean example with known variance, the family has a center parameter. The MLE sets that center equal to the observed sample mean.
+This is why the answers feel natural after the derivation is finished. The likelihood is not doing something mysterious. It is choosing the member of the model family whose built-in summaries line up best with the summaries that actually appear in the sample.
 
-In the categorical case, the family stores one probability for each category. The MLE sets those probabilities equal to the observed empirical proportions.
-
-That is why these estimators feel so natural after the derivations are finished. The mathematics is not doing something mysterious. It is telling the model to reproduce, as closely as the family allows, the summaries of the data that the family was designed to encode.
-
-This is an important general lesson. Estimation is not just an exercise in symbolic differentiation. The optimization is exposing what the model family "cares about." If a family is parameterized by a center, a spread, or category weights, likelihood fitting often pushes those parameters toward the corresponding empirical features of the sample.
-
-That viewpoint is worth retaining because it makes later estimators easier to understand. Instead of seeing each MLE as an isolated trick, you begin to ask a more structural question: **which empirical features is this model trying to match?**
+That perspective is worth pausing on because it changes how future estimators are read. Instead of seeing each MLE derivation as an isolated trick, you start asking a more structural question: **what features of the data is this model family designed to represent, and how does likelihood force the fitted parameter to line up with those features?**
 
 ---
 
@@ -789,36 +784,15 @@ So a good learning procedure must care about more than in-sample fit alone. Comm
 
 ## 10. Frequentist and Bayesian viewpoints
 
-Up to this point, likelihood has been used in a way that both frequentists and Bayesians accept. That is why students sometimes wonder where the real split occurs. The answer is: the split is not in whether data are informative about parameters. The split is in **what kind of object the parameter is allowed to be** and **what object is retained at the end of inference**.
+Up to this point, the chapter has used likelihood in a way that both frequentists and Bayesians can accept. That is why the real difference between the viewpoints often stays blurry at first. The split is not about whether data can teach us about parameters. Both viewpoints agree that they can. The split is about **how uncertainty about the parameter should be represented** and **what object counts as the main output of inference**.
 
-### Frequentist view
+The cleanest way to enter this contrast is to start from the question each framework is trying to answer.
 
-In the frequentist view, the parameter is fixed but unknown. It is part of the state of the world. Our uncertainty about it is epistemic--we do not know its value--but the framework does not represent that uncertainty by placing a probability distribution on the parameter itself.
+The frequentist question is: **given that the parameter is fixed but unknown, what rule should I use to produce good estimates from random datasets?** In that view, randomness lives in the data because another sample could have been drawn. The parameter is part of the underlying state of the world, not something assigned a probability distribution inside the framework. So a frequentist estimator is judged by repeated-sampling properties: if we reran the data-generating process many times, would the rule tend to land near the true parameter, how variable would it be, and would it be biased or consistent?
 
-What is random in the frequentist picture is the data. Another sample could have been drawn, and a different sample would generally produce a different estimate. So a frequentist estimator is judged by its repeated-sampling behavior: does it tend to be close to the true parameter, how variable is it across samples, is it biased, is it consistent, and so on.
+The Bayesian question is different: **after observing data, how should uncertainty about the parameter be updated?** In that view, the uncertainty itself is represented probabilistically by placing a prior distribution on the parameter and updating it with Bayes' rule once data are observed. So the main Bayesian output is not merely one fitted number. It is a posterior distribution over parameter values.
 
-In that language, the MLE is a rule that maps observed data to a fitted parameter value. Once the dataset is fixed, the output is just one estimate.
-
-### Bayesian view
-
-In the Bayesian view, uncertainty about the parameter is represented directly with probability. The parameter is not treated as "random because nature keeps resampling it," but as unknown in a way that is itself modeled probabilistically. This is done by placing a prior distribution on parameter values and then updating that prior after the data are observed.
-
-The essential output of Bayesian inference is therefore not just one fitted number. It is a **posterior distribution** over parameter values:
-
-$$
-p(\theta\mid D).
-$$
-
-That posterior records not only which parameter values fit well, but also how uncertainty is distributed across them after the data and prior information have both been taken into account.
-
-### The cleanest contrast
-
-A good way to keep the two viewpoints straight is this:
-
-- frequentist inference usually asks: **what rule should I use to estimate the fixed unknown parameter from random data?**
-- Bayesian inference usually asks: **after seeing the data, how should my uncertainty about the parameter be updated?**
-
-These viewpoints can produce similar numerical answers in some problems, but they are not conceptually interchangeable. One centers estimation rules and their repeated-sampling properties. The other centers probability distributions over uncertainty.
+These viewpoints can produce similar numerical answers in simple problems, but they are not conceptually interchangeable. One centers rules and their repeated-sampling behavior. The other centers updated probability distributions over uncertainty.
 
 ---
 
@@ -1079,6 +1053,10 @@ MAP is the parameter value that maximizes the product of data fit and prior pref
 
 This is a mode, not an average. It identifies the highest point of the posterior surface. That is a very different operation from averaging over the whole surface.
 
+One more warning is important here, especially when the parameter is continuous. When we say that the MAP estimate is the point where the posterior density is largest, that does **not** mean there is positive posterior probability that the parameter equals that exact point. For continuous parameters, single points typically have probability zero. MAP is about the location of the **highest density**, not about the probability mass of one exact parameter value.
+
+This is another reason not to collapse MAP into "the most probable parameter" without qualification. In informal speech people say that often, but mathematically what is being maximized is the posterior density, not a point-mass probability.
+
 ### MLE
 
 The MLE ignores the prior entirely and optimizes only the likelihood:
@@ -1197,14 +1175,22 @@ The second major lesson is that not all "best" notions mean the same thing. MLE,
 
 ## 19. Do not confuse
 
-Do not confuse $p(D\mid \theta)$ with $p(\theta\mid D)$. The first is likelihood when read as a function of $\theta$ for fixed data; the second is a posterior distribution and requires a prior and normalization.
+Do not confuse the **parameter** with an **estimate** of the parameter. The parameter is the model-setting quantity we are trying to learn about. The estimate is the numerical output produced after applying an estimation rule to observed data.
 
-Do not describe likelihood as "the probability that the parameter is true." Likelihood is not a probability distribution over parameter values.
+Do not confuse an **estimator** with an **estimate**. An estimator is a rule that maps datasets to outputs. An estimate is the particular output that rule returns for the sample you actually observed. "Fitted value" is just a plain-language name for that realized estimate.
 
-Do not confuse the estimator with the parameter being estimated. An estimator is a rule; its realized output on one dataset is an estimate.
+Do not confuse a **model family** with one **fitted model**. A model family is the whole collection of distributions indexed by parameter values. A fitted model is what you get after choosing one particular parameter value inside that family.
 
-Do not confuse MLE with MAP. MLE ignores the prior. MAP incorporates it.
+Do not confuse $p(D\mid \theta)$ with $p(\theta\mid D)$. The first is a probability law for the data when read in the sampling direction, and a likelihood function when read as a function of $\theta$ for fixed data. The second is a posterior distribution over parameters and requires both a prior and normalization.
 
-Do not confuse posterior mode with posterior mean. A mode is the highest point of a distribution; a mean is an average over the whole distribution.
+Do not describe likelihood as "the probability that the parameter is true." Likelihood is not a probability distribution over parameter values. It is a scoring function over parameter values for the observed dataset.
 
-Do not confuse best fit at one parameter value with support for a model family as a whole. Evidence averages across parameter space; MLE does not.
+Do not confuse "better fit" with "more true in every sense." In this chapter, better fit means that the parameter value assigns a larger likelihood to the dataset that was actually observed, within the chosen model family.
+
+Do not confuse MLE with MAP. MLE ignores the prior and optimizes only likelihood. MAP incorporates the prior through the posterior.
+
+Do not confuse posterior mode with posterior mean. A mode is the highest point of the posterior density surface. A mean is an average taken over the whole posterior distribution.
+
+Do not confuse highest posterior density at a point with positive probability at that exact point when the parameter is continuous. Continuous posterior distributions assign density to neighborhoods; single points usually have probability zero.
+
+Do not confuse best fit at one parameter value with support for a model family as a whole. MLE looks for the best point inside the model family. Evidence averages support over the model's parameter space.
