@@ -31,9 +31,11 @@ This idea matters later for at least three reasons. First, it explains transform
 The one-dimensional case is the right place to understand the mechanism before the notation becomes heavier.
 
 Let $Z$ be a scalar random variable with known density $p_Z$, and let
+
 $$
 X = f(Z).
 $$
+
 We are trying to answer one specific question:
 
 **What is the density of $X$?**
@@ -231,10 +233,13 @@ It is important to notice what did **not** go wrong. The one-branch formula did 
 ### Formal rule for the multi-branch case
 
 If the equation $f(z)=x$ has several legal solutions on the relevant support, say
+
 $$
 z_1(x), \dots, z_k(x),
 $$
+
 then each of those branches contributes probability mass to the observed density at $x$. The correct transformed density is therefore
+
 $$
 p_X(x) = \sum_{i=1}^k p_Z(z_i(x))\left|\frac{dz_i}{dx}\right|.
 $$
@@ -367,10 +372,13 @@ So the correct way to experience the next section is not as a new law, but as th
 In several dimensions, the idea is unchanged but the bookkeeping becomes geometric rather than one-dimensional.
 
 Let
+
 $$
 X = f(Z),
 $$
+
 where $Z$ and $X$ are now vectors, and suppose the map is invertible on the region of interest with inverse
+
 $$
 g = f^{-1}.
 $$
@@ -408,9 +416,11 @@ The multivariate rule should be read in the same order as the scalar rule.
 Start with an observed point $x$. Ask which latent point produced it. That is the inverse point $g(x)$. Evaluate the base density at that latent location, because that is where the relevant probability mass comes from.
 
 Then apply the geometric correction. Imagine a tiny observed neighborhood around $x$. Under the inverse map, that neighborhood becomes a small region in latent space. The absolute determinant
+
 $$
 |\det J_g(x)|
 $$
+
 tells us, to first order, how much the local area or volume of that neighborhood changes under the inverse map.
 
 If the inverse map makes the preimage region larger, then the observed density must be adjusted accordingly. If it makes the preimage region smaller, the correction goes in the other direction. The determinant therefore plays exactly the same role as $|g'(x)|$ did in one dimension. It is not a new principle. It is the same conservation law expressed in higher-dimensional geometry.
