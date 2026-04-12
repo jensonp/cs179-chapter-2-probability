@@ -22,6 +22,9 @@
 !04_undirected_main/
 !04_undirected_main/**
 !04_undirected_rewritten.md
+!hw2_gap_info/
+hw2_gap_info/*
+!hw2_gap_info/README.md
 
 !notes/
 notes/*
