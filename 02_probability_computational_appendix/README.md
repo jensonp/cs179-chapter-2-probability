@@ -1,34 +1,32 @@
 # Probability and Inference: Computational Appendix
 
-Source: ../notes/02_probability_reconstructed/source/02_probability.pdf
+This appendix is a **workflow companion** to the main chapter. Its job is not to introduce the probability ideas for the first time, and it is not a programming-language tutorial. Its narrower purpose is to make the numerical structure of the chapter explicit enough that a reader can carry the mathematics into a spreadsheet, notebook, or ordinary programming language without turning important checks into guesswork.
 
-This appendix translates the chapter into numerical workflows. It is not a programming-language tutorial, and it does not use code listings. Instead, it states the quantities to store, the checks to run, the formulas to evaluate, and the interpretation of the results. The goal is to make the chapter executable in a spreadsheet, numerical notebook, or ordinary programming language without leaving important implementation details implicit.
+The right way to use this appendix is after the conceptual lesson has already established what the object means. In the main text, the reader should learn what a conditional distribution is, why likelihood is not a posterior, why a Jacobian appears under a change of variables, and what Bayesian updating is doing. In this appendix, those same ideas are translated into workflows: what must be stored, what must be normalized, which quantity is being held fixed, what failure condition must be checked before proceeding, and what numerical pattern would signal that something has gone wrong.
+
+That distinction matters. Many probability errors are not arithmetic errors. They are **object errors**. A student computes the value of a density and treats it as an event probability, or computes a likelihood and reads it as a distribution over parameters, or normalizes a vector whose denominator should actually have signaled an impossible conditioning event. The appendix is meant to prevent that kind of mistake by making the computational roles of the chapter's objects explicit.
 
 ## 1. Notation and Numerical Conventions
 
-The chapter uses three related but different kinds of objects:
+The chapter uses several objects that are numerically related but conceptually different, and computations go wrong most often when those roles are mixed.
 
-- $P(A)$ for the probability of an event $A$
-- $p(x)$ or $p(x,y)$ for a probability mass function or density evaluated at specific states
-- $F_X(x)$ for a cumulative distribution function
+An **event probability** such as $P(A)$ assigns a number to a set of outcomes. To compute it, one sums or integrates over all states inside that event. A **PMF or density value** such as $p(x)$ or $p(x,y)$ is a local quantity attached to a specific state. It is not, by itself, the probability of an interval or event. A **CDF** such as $F_X(x)$ is an accumulated quantity: it records the total probability up to a threshold. These are notationally close, but computationally they behave differently. A density can be larger than one, a CDF must be nondecreasing and stay between zero and one, and an event probability must come from aggregation rather than point evaluation.
 
-These should not be conflated computationally. An event probability is a sum or integral over a set. A PMF or PDF is a local quantity attached to a state. A CDF is an accumulated probability. If an implementation mixes those roles, the numbers may still look plausible while meaning the wrong thing.
-
-Likelihood notation has its own role. For observed data $D$ and parameter $\theta$,
+Likelihood introduces a second role reversal that is easy to mishandle. For observed data $D$ and parameter $\theta$,
 
 $$L(\theta)=p(D \mid \theta)$$
 
-is treated as a function of $\theta$ with $D$ fixed. It is therefore a scoring function for parameter values, not a probability distribution over parameters.
+is read as a function of the parameter with the dataset held fixed. Numerically, this means the same algebraic expression can be read in two different ways depending on the question being asked. As a sampling model, $p(D\mid \theta)$ treats $\theta$ as fixed and the data as varying. As a likelihood, the data are the realized input and $\theta$ varies across candidate values. The formula may look identical, but the computational role is different.
 
-Floating-point computations introduce two recurring issues. First, quantities that should sum to one may come out as $0.999999$ or $1.000001$ because of rounding. Second, products of many small probabilities can underflow to zero numerically even when the true value is positive. For that reason, one should explicitly normalize probability vectors after accumulation steps and use log-likelihoods rather than raw likelihood products when sample sizes become moderate or large.
+Two numerical hazards recur across nearly every section. First, floating-point arithmetic introduces small normalization drift: quantities that should sum to one may come out as $0.999999$ or $1.000001$. Second, products of many small probabilities quickly underflow to zero even when the true mathematical value is positive. For that reason, one should explicitly renormalize probability vectors after accumulation steps and use log-likelihoods rather than raw likelihood products once the sample size is even moderately large.
+
+The guiding rule for the entire appendix is therefore simple: before trusting a number, identify **what kind of probability object it is supposed to be**, **what is fixed**, **what is varying**, and **which invariants the object must satisfy**.
 
 ## 2. Finite Probability Tables
 
-For a finite discrete model, the computational primitive is usually a table of nonnegative numbers whose entries sum to one. If the model is joint over several variables, each axis corresponds to one variable. All marginal, conditional, and posterior quantities in the discrete part of the chapter are built from three operations:
+For finite discrete models, the most useful computational object is a table whose entries are nonnegative and whose total mass is one. That sounds elementary, but it is the concrete form in which much of discrete probability actually lives. Marginals, conditionals, posteriors, and evidence terms are not new mysterious objects in this setting. They are all obtained by a small number of table operations applied in the right order.
 
-1. Restrict to rows consistent with observed evidence.
-2. Sum out hidden coordinates.
-3. Renormalize the remaining vector so it sums to one.
+The key fact is that discrete inference is often simpler computationally than its notation suggests. Bayes' rule in a table is not a separate magical formula to memorize. It is a workflow. One first restricts attention to states compatible with the observed evidence. One then sums out coordinates that are not part of the query. Finally, one renormalizes what remains so that the resulting vector becomes a proper distribution. The conceptual version of this idea should appear in the conditioning lesson; the appendix records the operational version.
 
 ### Worked Example: Dentist Joint Table
 
@@ -90,7 +88,11 @@ The computational lesson is that Bayes' rule in table form is just the sequence 
 
 ## 3. Odds Updating and Base Rates
 
-The scalar Bayes formula is often numerically less transparent than the odds form. For two hypotheses $H_1$ and $H_0$ and evidence $E$,
+The ordinary Bayes formula is perfectly correct, but it can hide the structure of the update because the numerator and denominator are packed together. The odds form separates the update into two interpretable pieces: what you believed before the evidence arrived, and how strongly the evidence favors one hypothesis over the other. This makes the computation easier to debug because each piece can be inspected separately.
+
+When this form is used numerically, the important point is not merely that odds can be converted back to probabilities. The deeper point is that evidence does not arrive in a vacuum. A large likelihood ratio can still leave the posterior probability small when the prior odds were extremely small to begin with. This is exactly the kind of base-rate effect that students often misread when they look only at test accuracy numbers.
+
+For two hypotheses $H_1$ and $H_0$ and evidence $E$,
 
 $$\frac{p(H_1 \mid E)}{p(H_0 \mid E)} = \frac{p(E \mid H_1)}{p(E \mid H_0)} \cdot \frac{p(H_1)}{p(H_0)}.$$
 
@@ -126,15 +128,9 @@ This computation is the same as the direct posterior formula, but it makes the s
 
 ## 4. Monte Carlo Estimation
 
-Monte Carlo estimation replaces exact expectations by empirical averages from simulated samples. If
+Monte Carlo methods matter because many exact probabilistic quantities are expectations, and expectations are averages. Once that connection is understood, simulation stops looking like a separate numerical trick and starts looking like an empirical version of the same mathematical object. The computational question is no longer "Can I calculate the expectation symbolically?" but "If I can sample from the model, what average of those samples is estimating the quantity I care about?"
 
-$$X^{(1)},\dots,X^{(m)}$$
-
-are samples from a model, then the empirical estimate of the mean is
-
-$$\hat{\mu}_m=\frac{1}{m}\sum_{i=1}^m X^{(i)}.$$
-
-The law of large numbers says that this quantity should stabilize near $\mathbb{E}[X]$ as $m$ grows. The practical purpose of the simulation is not merely to approximate a number, but to develop intuition for which exact formulas are averages in disguise.
+This is also why Monte Carlo can serve as a conceptual check, not only a numerical approximation. If a symbolic mean, posterior expectation, or transformed-distribution claim is correct, then repeated simulation should drift toward it. A simulation does not prove a theorem, but it is often the fastest way to discover that one has misunderstood the meaning of the exact expression.
 
 ### Worked Example: Bernoulli Mean
 
@@ -168,13 +164,13 @@ $$\hat{\mu}_6=\frac{2+5+1+6+3+4}{6}=3.5.$$
 
 That exact match is accidental, not guaranteed. The important check is that as more rolls are accumulated, the running average should drift toward $3.5$ rather than away from it.
 
-### Homework Workflow: Sampling and Plotting
+### Sampling and Plotting Workflow
 
-The Chapter 2 homework asks for sampled histograms rather than symbolic derivations. The computational logic should therefore be stated explicitly.
+Sampling is often treated as if it were separate from theory, but a plot is only useful if it is read against the theoretical structure of the distribution. A histogram is not just a picture of samples. It is an empirical approximation to a PMF or density, and the reader should therefore already know what broad shape is plausible before plotting anything.
 
-First, fix the random seed before drawing any samples so that the results are reproducible. In the course notebook, the seed is $123$, and that fixed seed should be preserved. Second, choose the distribution parameters and draw the requested number of independent samples. Third, inspect the raw sample range before plotting, because the support determines the correct histogram style. Continuous samples should usually be plotted with contiguous bins over an interval. Discrete integer-valued samples should be plotted with bins aligned to integer locations rather than with arbitrary floating-point boundaries.
+That means the workflow should begin before the plot is drawn. First fix the random seed if reproducibility matters. Then identify the support of the distribution, because support determines the acceptable sample range and the correct visual style. Continuous distributions should usually be displayed with contiguous bins over an interval. Discrete integer-valued distributions should be plotted with bins aligned to integer locations so that separate mass points do not get blurred into a fake continuous shape.
 
-A histogram is not just a picture; it is an empirical approximation to a PMF or density. So after plotting, one should compare the histogram to basic theoretical checks such as support, center, skewness, and rough scale. If the picture contradicts those simple checks, the issue is usually a parameterization mistake, a sampling mistake, or an inappropriate bin choice.
+After plotting, the first checks should be conceptual rather than cosmetic. Does the sample stay inside the support? Is the center roughly where the mean suggests it should be? Does the skewness match the theoretical shape? Is the plot jagged because the distribution is genuinely irregular, or because the bin choice is too aggressive for the sample size? When a histogram contradicts the basic theory, the usual causes are incorrect parameterization, mistaken support, an unsuitable plotting choice, or a misunderstanding of what was actually sampled.
 
 ### Worked Example: Beta$(3,2)$ Samples
 
@@ -196,7 +192,7 @@ For $1000$ samples, a moderate number of bins is usually best. Too few bins hide
 
 ### Worked Example: Geometric$(0.2)$ Samples
 
-For the homework's Pyro workflow, the Geometric distribution uses the zero-based convention:
+Under the zero-based convention often used in probabilistic programming, the Geometric distribution uses the zero-based convention:
 
 $$p(X=x)=(1-0.2)^x(0.2), \qquad x \in \{0,1,2,\dots\}.$$
 
@@ -224,7 +220,13 @@ The histogram for a Geometric sample should use bins centered on the integers. I
 
 ## 5. Likelihood and Log-Likelihood Sweeps
 
-Likelihood surfaces are easiest to understand numerically by evaluating them on a parameter grid. For Bernoulli data
+A likelihood sweep is one of the best numerical ways to make estimation concrete. Instead of jumping immediately to calculus, one evaluates the likelihood across a grid of parameter values and watches which values score the observed data more strongly. That turns estimation into a visible landscape rather than a symbolic derivation.
+
+This is especially useful because the conceptual difficulty of likelihood is not the formula itself. It is the role reversal. The data are fixed because they have already been observed. The parameter varies because different candidate settings are being compared. A likelihood sweep makes that role reversal tangible: nothing about the dataset changes from row to row, and only the candidate parameter value changes.
+
+The log-likelihood should usually be treated as the default computational form. It preserves the ranking of parameter values because the logarithm is monotone, but it turns products into sums, which makes both differentiation and numerical stability much better behaved. The mathematical content is unchanged. What changes is that the calculation no longer collapses when many small factors are multiplied together.
+
+For Bernoulli data
 
 $$D=\{1,0,1\},$$
 
@@ -244,15 +246,7 @@ The ranking is identical whether one compares likelihood or log-likelihood, beca
 
 ### Why Logs Matter
 
-Suppose $m=100$ independent observations each contribute a factor near $0.01$. The raw product is roughly
-
-$$10^{-200},$$
-
-which is numerically tiny. The corresponding log-likelihood is roughly
-
-$$100 \log(0.01),$$
-
-which is a moderate negative number rather than an underflowed zero. The computation is the same in mathematical content, but the log representation is far more stable.
+The point of taking logs is not stylistic elegance. It is to preserve information that ordinary floating-point arithmetic may otherwise erase. If $100$ independent terms each contribute a factor near $0.01$, the raw product is roughly $10^{-200}$, which is so small that a computer may treat it as zero. But the log-likelihood is roughly $100\log(0.01)$, which is a perfectly manageable negative number. The model has not become more probable or less probable because of the logarithm. The same comparison is being represented in a numerically safer language.
 
 ### Worked Example: Gaussian Mean Sweep
 
@@ -270,9 +264,13 @@ $$\bar{x}=0.4.$$
 
 That is the numerical reason the Gaussian MLE is the arithmetic average.
 
+This section should remain in the appendix as a reusable workflow, but the core conceptual lesson about likelihood, log-likelihood, and what is held fixed should also appear in `02_probability_06_learning_and_parameter_estimation`. The appendix version is the operational summary; the main lesson should carry the first full explanation.
+
 ## 6. Sequential Bayesian Updating
 
-Bayesian updates are computationally attractive when the posterior stays in the same family as the prior. Then the update becomes simple parameter arithmetic rather than numerical integration.
+Bayesian updating becomes computationally simple when the posterior remains in the same family as the prior. In that case, inference no longer requires recomputing everything from scratch or performing a difficult integral each time new data arrive. Instead, the update can often be recorded as parameter arithmetic. That simplicity is not a coincidence. It is the computational payoff of conjugacy.
+
+The important conceptual point is that sequential updating and batch updating should agree whenever the model assumptions stay fixed. Learning from the first batch and then the second batch should lead to the same posterior as learning from the combined dataset in one step. If those two routes disagree, either the bookkeeping is wrong or the underlying model changed between updates.
 
 ### Worked Example: Beta-Bernoulli Updating
 
@@ -328,6 +326,10 @@ The unobserved third category still keeps positive mass because the prior preven
 
 ## 7. Entropy and KL in Numerical Form
 
+Entropy and KL divergence are easy to state and easy to miscompute. The formulas are short, but they are fragile with respect to support mismatches and zero entries, so the main computational difficulty is not algebraic complexity. It is respecting the conditions under which the formulas are meaningful.
+
+Entropy measures uncertainty internal to a single distribution. KL divergence measures how badly one distribution would stand in for another. Those are different jobs, and the numerical checks should reflect that difference. Entropy only requires a valid normalized distribution. KL requires two distributions on a common support, and it is especially sensitive to cases where the reference distribution assigns zero mass to events that the target distribution considers possible.
+
 For a discrete distribution $p$, entropy is
 
 $$H(p)=-\sum_i p_i \log p_i.$$
@@ -335,8 +337,6 @@ $$H(p)=-\sum_i p_i \log p_i.$$
 For two distributions $p$ and $q$ on the same support, KL divergence is
 
 $$D(p \,\|\, q)=\sum_i p_i \log \frac{p_i}{q_i}.$$
-
-The computational hazard is not the formula itself but support mismatches and zero entries.
 
 ### Worked Example: Entropy
 
@@ -376,12 +376,17 @@ That is not a numerical nuisance but a mathematically meaningful statement: $q$ 
 
 ## 8. Change of Variables and Jacobian Checks
 
-For scalar transforms, the computational recipe is:
+The computational purpose of a change-of-variables formula is to preserve probability mass when the coordinate system has changed. A transformed density should not be thought of as the old density with symbols renamed. It must be corrected for the way the transformation locally stretches or compresses space. The Jacobian term is exactly that correction.
 
-1. write the inverse map
-2. differentiate the inverse
-3. evaluate the base density at the inverse point
-4. multiply by the absolute derivative
+For scalar transforms, the workflow is best read as a sequence of conceptual checks.
+
+First identify the region on which the transformation is being treated as invertible. This matters because the naive one-branch formula fails if several source points map to the same destination point.
+
+Second write the inverse map on that region. The density at a destination point must be computed by tracing that point back to where it came from under the original variable.
+
+Third differentiate the inverse map. This derivative measures how intervals in the transformed coordinate correspond to intervals in the original coordinate.
+
+Fourth evaluate the base density at the inverse point and multiply by the absolute derivative. The absolute value is essential because density must stay nonnegative even when the transformation reverses orientation.
 
 ### Worked Example: Linear Rescaling
 
@@ -419,9 +424,11 @@ $$\det J = \alpha_1(Z_1).$$
 
 The lower-left derivative may be algebraically messy, but it does not affect the determinant. This is the implementation reason triangular layers are popular: they preserve expressive transforms while keeping exact density evaluation cheap.
 
+This section should remain in the appendix because the audit is reusable, but the first real conceptual explanation of why Jacobians appear should live in `02_probability_09_change_of_variable_models`. The appendix version is where the reader checks an implementation. The main lesson is where the reader should first understand why local stretching changes density values at all.
+
 ## 9. End-to-End Probability Audit
 
-The most reliable way to catch model bugs is to use a short checklist on every example or implementation:
+The most reliable way to catch probability bugs is not to rely on memory of formulas but to run a short object-level audit. Each item in the checklist below corresponds to a structural property that the quantity must satisfy if it has been computed correctly.
 
 ### Probability Objects
 
@@ -454,4 +461,6 @@ The most reliable way to catch model bugs is to use a short checklist on every e
 - is the Jacobian determinant nonzero on that region
 - if the map is triangular, is the determinant computed from the diagonal entries only
 
-This appendix does not replace the theory in the main note or the proofs in the formal supplement. Its role is narrower and practical: it makes the numerical structure of the chapter explicit enough that each concept can be checked, implemented, and debugged systematically.
+This appendix is intentionally narrower than the main lessons. It is not the place where the reader should first struggle to understand conditioning, likelihood, Bayesian updating, entropy, or Jacobian correction. Those ideas need their own slower conceptual development in the lessons themselves.
+
+Its job is different. Once the conceptual meaning of the object is known, the appendix makes the numerical structure explicit enough that the object can be computed, checked, and debugged systematically. In that sense, it is best read not as a second textbook chapter, but as a practical companion to one.
