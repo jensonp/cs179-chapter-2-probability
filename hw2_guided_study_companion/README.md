@@ -37,7 +37,7 @@ A pyGMs variable has two pieces of information:
 
 The integer ID is not decoration. It is how pyGMs identifies the variable internally. Your Python name for that variable is only your local label.
 
-So if you call something `T`, that is for your convenience. pyGMs cares about the variable’s internal ID and number of states.
+So if you call something $T$, that is for your convenience. pyGMs cares about the variable’s internal ID and number of states.
 
 This matters because factor tables are organized by variable IDs, not by the order you happened to type things in casual code.
 
@@ -59,7 +59,7 @@ That distinction matters because many homework steps involve intermediate factor
 
 The scope of a factor is the set of variables it depends on.
 
-This is the first thing to track in every problem. If a factor has scope `(T, D, C)`, then every table entry corresponds to one assignment of those three variables. If you condition on `T = 1`, then the resulting object is now effectively a factor over the remaining variables. If you sum out `D`, then the scope shrinks accordingly.
+This is the first thing to track in every problem. If a factor has scope $(T, D, C)$, then every table entry corresponds to one assignment of those three variables. If you condition on $T = 1$, then the resulting object is now effectively a factor over the remaining variables. If you sum out $D$, then the scope shrinks accordingly.
 
 So many pyGMs operations can be understood as “change the scope in a mathematically meaningful way.”
 
@@ -69,7 +69,7 @@ So many pyGMs operations can be understood as “change the scope in a mathemati
 
 Conditioning means fixing one or more variables to observed values and looking only at the entries consistent with that evidence.
 
-If you start with a factor over `(T, D, C)` and fix `T = 1`, then you are no longer looking at the full table. You are looking at the subtable compatible with `T = 1`.
+If you start with a factor over $(T, D, C)$ and fix $T = 1$, then you are no longer looking at the full table. You are looking at the subtable compatible with $T = 1$.
 
 This is not yet the same thing as a normalized conditional probability unless you later normalize. At the moment of restriction, you are only selecting the relevant part of the joint table.
 
@@ -77,7 +77,7 @@ This is not yet the same thing as a normalized conditional probability unless yo
 
 Summing out is marginalization.
 
-If you have a factor over `(T, D, C)` and you sum out `D`, then for each fixed `(T, C)` pair you add over both possible values of `D`. The resulting factor has smaller scope because `D` no longer appears as an argument.
+If you have a factor over $(T, D, C)$ and you sum out $D$, then for each fixed $(T, C)$ pair you add over both possible values of $D$. The resulting factor has smaller scope because $D$ no longer appears as an argument.
 
 This is the central operation behind marginals and also behind exact inference more broadly.
 
@@ -85,11 +85,11 @@ This is the central operation behind marginals and also behind exact inference m
 
 A conditional probability is usually built by taking a joint-like factor and dividing by the right marginal.
 
-So if you want something like `p(C | T = 1)`, the natural reasoning path is:
+So if you want something like $p(C | T = 1)$, the natural reasoning path is:
 
-- restrict to `T = 1`,
+- restrict to $T = 1$,
 - sum out nuisance variables if needed,
-- then divide by the total mass so the result sums to one over `C`.
+- then divide by the total mass so the result sums to one over $C$.
 
 The deep lesson is that a conditional is not a new magical object. It is a correctly normalized factor derived from a joint factor.
 
@@ -199,7 +199,7 @@ Then you repeat the same kind of reasoning using an empirical estimate from samp
 
 ## What mathematical object you start with
 
-You start with a joint probability distribution over three discrete variables. In pyGMs this is represented as one factor over the scope `(T, D, C)`.
+You start with a joint probability distribution over three discrete variables. In pyGMs this is represented as one factor over the scope $(T, D, C)$.
 
 Because it is a full joint distribution, every table entry has a direct probabilistic meaning: for each full assignment of the three variables, the entry gives the probability of that assignment.
 
@@ -209,35 +209,35 @@ So before doing anything else, treat this factor as the truth table for the whol
 
 ### What the problem is asking in probabilistic language
 
-The question asks you to compute `p(C | T = 1)` in stages, not all at once.
+The question asks you to compute $p(C | T = 1)$ in stages, not all at once.
 
 It wants you to explicitly expose three objects:
 
-1. the restricted subtable corresponding to `T = 1`,
-2. the smaller factor obtained after summing out `D`,
-3. the normalized conditional distribution over `C`.
+1. the restricted subtable corresponding to $T = 1$,
+2. the smaller factor obtained after summing out $D$,
+3. the normalized conditional distribution over $C$.
 
 This is good pedagogy because it forces you to see that a conditional distribution is built from simpler operations.
 
 ### Reasoning path
 
-First, fix `T = 1`.
+First, fix $T = 1$.
 
-This does not yet produce a conditional distribution. It produces the part of the joint table that remains when only assignments with `T = 1` are kept.
+This does not yet produce a conditional distribution. It produces the part of the joint table that remains when only assignments with $T = 1$ are kept.
 
-At that point, the active uncertainty is still over `D` and `C`. So you should conceptually view the result as a factor over `(D, C)` that still carries the joint mass associated with `T = 1`.
+At that point, the active uncertainty is still over $D$ and $C$. So you should conceptually view the result as a factor over $(D, C)$ that still carries the joint mass associated with $T = 1$.
 
-Second, sum out `D`.
+Second, sum out $D$.
 
-The question asks for `p(T = 1, C)` before normalization. That means for each value of `C`, you add together the entries for all possible values of `D` while keeping `T = 1` fixed.
+The question asks for $p(T = 1, C)$ before normalization. That means for each value of $C$, you add together the entries for all possible values of $D$ while keeping $T = 1$ fixed.
 
-This removes `D` from the scope and leaves you with a smaller factor over `C` that tells you the joint mass of `T = 1` together with each value of `C`.
+This removes $D$ from the scope and leaves you with a smaller factor over $C$ that tells you the joint mass of $T = 1$ together with each value of $C$.
 
-Third, normalize over `C`.
+Third, normalize over $C$.
 
-Once you have the factor giving `p(T = 1, C)`, divide by the total mass associated with `T = 1`. That produces `p(C | T = 1)`.
+Once you have the factor giving $p(T = 1, C)$, divide by the total mass associated with $T = 1$. That produces $p(C | T = 1)$.
 
-The thing to check at the end is simple: the resulting table over `C` must sum to one.
+The thing to check at the end is simple: the resulting table over $C$ must sum to one.
 
 ### What to write in your solution
 
@@ -256,35 +256,35 @@ That is the conceptual heart of the problem.
 
 You are being asked to verify the conditional-independence claim
 
-`D` is independent of `T` given `C`.
+$D$ is independent of $T$ given $C$.
 
-This means that once `C` is known, learning `D` should not give additional information about `T`, and learning `T` should not give additional information about `D`.
+This means that once $C$ is known, learning $D$ should not give additional information about $T$, and learning $T$ should not give additional information about $D$.
 
 The factorization corresponding to that claim is:
 
-`p(T, D, C) = p(C) p(D | C) p(T | C)`.
+$p(T, D, C) = p(C) p(D | C) p(T | C)$.
 
 So the problem is asking you to build the right-hand side from factor operations and compare it numerically to the original joint factor.
 
 ### Reasoning path
 
-First compute `p(C)`.
+First compute $p(C)$.
 
-That means sum out both `T` and `D` from the original joint factor. The resulting factor has scope only `C`.
+That means sum out both $T$ and $D$ from the original joint factor. The resulting factor has scope only $C$.
 
-Second compute `p(D | C)`.
+Second compute $p(D | C)$.
 
-You need the joint factor over `(D, C)` and then the marginal over `C`. Divide the joint by the marginal in the correct scope-aware way so that for each fixed `C`, the values over `D` form a conditional distribution.
+You need the joint factor over $(D, C)$ and then the marginal over $C$. Divide the joint by the marginal in the correct scope-aware way so that for each fixed $C$, the values over $D$ form a conditional distribution.
 
-Third compute `p(T | C)` in the same style.
+Third compute $p(T | C)$ in the same style.
 
 Now multiply the three resulting factors:
 
-- `p(C)`,
-- `p(D | C)`,
-- `p(T | C)`.
+- $p(C)$,
+- $p(D | C)$,
+- $p(T | C)$.
 
-That gives you a new factor over `(T, D, C)`.
+That gives you a new factor over $(T, D, C)$.
 
 The independence claim predicts that this reconstructed factor should match the original joint factor very closely.
 
@@ -313,11 +313,11 @@ Now the true joint distribution is no longer assumed to be known directly. Inste
 Then you repeat the same kind of conditional-independence factorization using the empirical estimate and compare two candidate approximations to the true joint:
 
 - the raw empirical estimate,
-- and the factorized estimate that enforces conditional independence through `C`.
+- and the factorized estimate that enforces conditional independence through $C$.
 
 ### Reasoning path
 
-First, count occurrences of each `(T, D, C)` configuration in the sampled dataset.
+First, count occurrences of each $(T, D, C)$ configuration in the sampled dataset.
 
 That gives you raw counts.
 
@@ -327,18 +327,18 @@ If smoothing or regularization is added, understand why: it prevents exact zeros
 
 Third, compute the empirical versions of:
 
-- `p_hat(C)`,
-- `p_hat(D | C)`,
-- `p_hat(T | C)`.
+- $p_hat(C)$,
+- $p_hat(D | C)$,
+- $p_hat(T | C)$.
 
 Fourth, build the factorized approximation
 
-`q(T, D, C) = p_hat(C) p_hat(D | C) p_hat(T | C)`.
+$q(T, D, C) = p_hat(C) p_hat(D | C) p_hat(T | C)$.
 
 Now compare both candidate approximations against the true joint:
 
-- `p_hat` compared to the true joint,
-- `q` compared to the true joint.
+- $p_hat$ compared to the true joint,
+- $q$ compared to the true joint.
 
 ### What the real lesson is
 
@@ -364,13 +364,13 @@ You start with a Bayesian network. A Bayesian network is not yet code. It is a f
 
 The graph says:
 
-- `C` is a parent of `S`,
-- `C` is a parent of `R`,
-- `S` and `R` are both parents of `W`.
+- $C$ is a parent of $S$,
+- $C$ is a parent of $R$,
+- $S$ and $R$ are both parents of $W$.
 
 So the joint factorization is:
 
-`p(C, S, R, W) = p(C) p(S | C) p(R | C) p(W | R, S)`.
+$p(C, S, R, W) = p(C) p(S | C) p(R | C) p(W | R, S)$.
 
 The Pyro model is just a generative implementation of this factorization.
 
@@ -380,10 +380,10 @@ The order matters because parents must be sampled before children.
 
 So the reasoning sequence is:
 
-1. draw `C`,
-2. using that value, draw `S`,
-3. using that value, draw `R`,
-4. using both `S` and `R`, draw `W`.
+1. draw $C$,
+2. using that value, draw $S$,
+3. using that value, draw $R$,
+4. using both $S$ and $R$, draw $W$.
 
 At each step, the only thing that matters is the parent configuration that determines the distribution for the child.
 
@@ -393,11 +393,11 @@ Once you draw many full samples from the model, you have an empirical dataset of
 
 Then each probability estimate is simply a frequency:
 
-- `p_hat(C = 1)` is the fraction of samples with `C = 1`,
-- `p_hat(S = 1)` is the fraction of samples with `S = 1`,
+- $p_hat(C = 1)$ is the fraction of samples with $C = 1$,
+- $p_hat(S = 1)$ is the fraction of samples with $S = 1$,
 - and so on.
 
-For the joint event `p_hat(S = 1, R = 1)`, count how many full samples satisfy both conditions simultaneously and divide by the total number of samples.
+For the joint event $p_hat(S = 1, R = 1)$, count how many full samples satisfy both conditions simultaneously and divide by the total number of samples.
 
 ## What to check
 
@@ -487,7 +487,7 @@ After preprocessing and vocabulary restriction, each word is turned into an inde
 
 At that point the model is a first-order Markov chain over a finite state space of word indices.
 
-That means the key object is a transition matrix `T` where entry `(i, j)` gives the probability that the next token is `j` when the current token is `i`.
+That means the key object is a transition matrix $T$ where entry $(i, j)$ gives the probability that the next token is $j$ when the current token is $i$.
 
 ## Reasoning path
 
@@ -509,7 +509,7 @@ Fourth normalize each row.
 
 Each row corresponds to a current word. Each row must become a conditional distribution over the next word. So the row sum must become one.
 
-Now you can answer the question about the most probable followers of the word `miss` by looking at the row corresponding to the token `miss` and finding the largest probabilities.
+Now you can answer the question about the most probable followers of the word $miss$ by looking at the row corresponding to the token $miss$ and finding the largest probabilities.
 
 Finally, generate sequences.
 

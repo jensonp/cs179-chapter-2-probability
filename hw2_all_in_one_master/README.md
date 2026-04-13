@@ -55,7 +55,7 @@ A pyGMs variable has:
 
 This matters because the library tracks variables by ID, not by your Python nickname for them.
 
-If you call a variable `T`, that name is for you.  
+If you call a variable $T$, that name is for you.  
 Inside pyGMs, the variable is identified by its numeric ID.
 
 You should also know that factors are organized according to variable IDs, not according to the casual order you happened to type things.
@@ -85,7 +85,7 @@ The scope of a factor is the set of variables it depends on.
 
 This is one of the most important ideas in the homework.
 
-If a factor has scope `(T, D, C)`, then every entry refers to one assignment of those variables.
+If a factor has scope $(T, D, C)$, then every entry refers to one assignment of those variables.
 
 When you:
 - condition on one variable,
@@ -104,7 +104,7 @@ Always ask:
 
 Conditioning means fixing some variable values and keeping only the entries consistent with that evidence.
 
-If you fix `T = 1` in a factor over `(T, D, C)`, you are keeping only the entries where `T = 1`.
+If you fix $T = 1$ in a factor over $(T, D, C)$, you are keeping only the entries where $T = 1$.
 
 This does not automatically mean you have a normalized conditional probability.  
 At this point, you have only restricted the table.
@@ -113,7 +113,7 @@ At this point, you have only restricted the table.
 
 Summing out is marginalization.
 
-If you sum out `D` from a factor over `(T, D, C)`, you are adding over the possible values of `D` and producing a smaller factor over the remaining variables.
+If you sum out $D$ from a factor over $(T, D, C)$, you are adding over the possible values of $D$ and producing a smaller factor over the remaining variables.
 
 This is the central operation behind marginals.
 
@@ -121,11 +121,11 @@ This is the central operation behind marginals.
 
 A conditional distribution is usually built by taking a joint-like factor and dividing by the right marginal.
 
-So if you want `p(C | T = 1)`, the natural path is:
+So if you want $p(C | T = 1)$, the natural path is:
 
-- restrict to `T = 1`,
+- restrict to $T = 1$,
 - sum out variables you do not want,
-- divide by the total mass so the result sums to one over `C`.
+- divide by the total mass so the result sums to one over $C$.
 
 That is the deep point:
 a conditional is not a magical new object. It is a correctly normalized factor derived from a joint factor.
@@ -174,16 +174,16 @@ So the right mindset is not “I need to learn a large framework.” The right m
 In a Bayesian network, children depend on parents.
 
 So if the graph says:
-- `C` influences `S`,
-- `C` influences `R`,
-- and `R` and `S` jointly influence `W`,
+- $C$ influences $S$,
+- $C$ influences $R$,
+- and $R$ and $S$ jointly influence $W$,
 
 then the sampling order must be:
 
-1. sample `C`,
-2. sample `S` given `C`,
-3. sample `R` given `C`,
-4. sample `W` given `R` and `S`.
+1. sample $C$,
+2. sample $S$ given $C$,
+3. sample $R$ given $C$,
+4. sample $W$ given $R$ and $S$.
 
 One full run gives one full joint sample.
 
@@ -210,9 +210,9 @@ If this feels slippery, the main thing to remember is this:
 
 A transformation acts on the variable values, not directly on the old density formula.
 
-If `X = f(Z)`, then the map sends values of `Z` to values of `X`.
+If $X = f(Z)$, then the map sends values of $Z$ to values of $X$.
 
-The density of `X` has to be recomputed because the transformation can stretch or compress neighborhoods of the space.
+The density of $X$ has to be recomputed because the transformation can stretch or compress neighborhoods of the space.
 
 The key principle is probability conservation:
 the same small probability is being described in two coordinate systems, so the density has to adjust when local widths or volumes change.
@@ -245,9 +245,9 @@ Then you repeat the same kind of work using an empirical estimate from sampled d
 
 ## What object you start with
 
-You start with a full joint distribution over `(T, D, C)`.
+You start with a full joint distribution over $(T, D, C)$.
 
-In pyGMs, that is one factor over the scope `(T, D, C)`.
+In pyGMs, that is one factor over the scope $(T, D, C)$.
 
 Each table entry means:
 the probability of one full assignment of all three variables.
@@ -258,34 +258,34 @@ So treat the original factor as the truth table for the whole model.
 
 ### What is being asked
 
-You are not being asked to jump directly to `p(C | T = 1)`.  
+You are not being asked to jump directly to $p(C | T = 1)$.  
 You are being asked to expose the intermediate objects.
 
 That means:
 
-1. restrict to `T = 1`,
-2. sum out `D`,
-3. normalize over `C`.
+1. restrict to $T = 1$,
+2. sum out $D$,
+3. normalize over $C$.
 
 ### Reasoning path
 
-First, fix `T = 1`.
+First, fix $T = 1$.
 
-At this point, you have not yet formed a conditional probability. You have only restricted the full joint table to assignments consistent with `T = 1`.
+At this point, you have not yet formed a conditional probability. You have only restricted the full joint table to assignments consistent with $T = 1$.
 
-Second, sum out `D`.
+Second, sum out $D$.
 
-Now you are removing the variable you no longer care about. This produces a factor over `C` that still represents joint mass involving `T = 1`.
+Now you are removing the variable you no longer care about. This produces a factor over $C$ that still represents joint mass involving $T = 1$.
 
 Third, normalize.
 
-Now divide by the total mass associated with `T = 1` so the resulting factor over `C` sums to one.
+Now divide by the total mass associated with $T = 1$ so the resulting factor over $C$ sums to one.
 
-That gives `p(C | T = 1)`.
+That gives $p(C | T = 1)$.
 
 ### What to check
 
-At the end, the values over `C` must sum to one.
+At the end, the values over $C$ must sum to one.
 
 If they do not, you either normalized incorrectly or summed out the wrong variable.
 
@@ -295,11 +295,11 @@ If they do not, you either normalized incorrectly or summed out the wrong variab
 
 You are being asked to verify the conditional-independence claim
 
-`D` is independent of `T` given `C`.
+$D$ is independent of $T$ given $C$.
 
 The corresponding factorization is:
 
-`p(T, D, C) = p(C) p(D | C) p(T | C)`.
+$p(T, D, C) = p(C) p(D | C) p(T | C)$.
 
 The question is asking you to build the right-hand side and compare it to the original joint.
 
@@ -307,9 +307,9 @@ The question is asking you to build the right-hand side and compare it to the or
 
 Compute:
 
-- `p(C)` by summing out `T` and `D`,
-- `p(D | C)` from the joint over `(D, C)` divided by `p(C)`,
-- `p(T | C)` from the joint over `(T, C)` divided by `p(C)`.
+- $p(C)$ by summing out $T$ and $D$,
+- $p(D | C)$ from the joint over $(D, C)$ divided by $p(C)$,
+- $p(T | C)$ from the joint over $(T, C)$ divided by $p(C)$.
 
 Multiply those factors.
 
@@ -336,7 +336,7 @@ Now you estimate the joint from sampled data instead of taking the true joint as
 Then you compare two approximations to the true joint:
 
 - the raw empirical estimate,
-- the structured factorized estimate built from `p_hat(C)`, `p_hat(D | C)`, and `p_hat(T | C)`.
+- the structured factorized estimate built from $p_hat(C)$, $p_hat(D | C)$, and $p_hat(T | C)$.
 
 ### Reasoning path
 
@@ -382,7 +382,7 @@ You must:
 
 You start with a graph and its factorization:
 
-`p(C, S, R, W) = p(C) p(S | C) p(R | C) p(W | R, S)`.
+$p(C, S, R, W) = p(C) p(S | C) p(R | C) p(W | R, S)$.
 
 The Pyro model is just the graph written as a sampling story.
 
@@ -392,16 +392,16 @@ Parents must be sampled before children.
 
 So the logical order is:
 
-1. sample `C`,
-2. sample `S` using the probability appropriate for that sampled value of `C`,
-3. sample `R` using the probability appropriate for that sampled value of `C`,
-4. sample `W` using the probability appropriate for the sampled pair `(R, S)`.
+1. sample $C$,
+2. sample $S$ using the probability appropriate for that sampled value of $C$,
+3. sample $R$ using the probability appropriate for that sampled value of $C$,
+4. sample $W$ using the probability appropriate for the sampled pair $(R, S)$.
 
 Once you have many samples, every requested probability becomes an empirical frequency.
 
 ### Example of the logic
 
-To estimate `p(S = 1, R = 1)`:
+To estimate $p(S = 1, R = 1)$:
 count how many samples satisfy both conditions at once, then divide by the total number of samples.
 
 ## What to check
@@ -487,7 +487,7 @@ After preprocessing and vocabulary restriction, that becomes one long sequence o
 
 At that point the model is a first-order Markov chain.
 
-The key object is the transition matrix `T`, where `T[i, j]` is the probability of going from word `i` to word `j`.
+The key object is the transition matrix $T$, where $T[i, j]$ is the probability of going from word $i$ to word $j$.
 
 ## Reasoning path
 
@@ -497,7 +497,7 @@ This defines the state space. Lowercasing, punctuation removal, and rare-word re
 
 Second build the reduced vocabulary.
 
-Frequent words stay separate. Rare words are merged into the `?` token.
+Frequent words stay separate. Rare words are merged into the $?$ token.
 
 That is a modeling choice: less detail, more stability.
 
@@ -510,7 +510,7 @@ Fourth normalize rows.
 Each row corresponds to a current word, so each row must become a conditional distribution over the next word.
 
 Once the rows are normalized, you can:
-- answer the “most likely followers of `miss`” question by inspecting the relevant row,
+- answer the “most likely followers of $miss$” question by inspecting the relevant row,
 - and generate sequences by repeated conditional sampling.
 
 ## What to pay attention to

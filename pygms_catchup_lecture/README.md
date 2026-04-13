@@ -42,7 +42,7 @@ A pyGMs variable is not a Python variable name. It is a mathematical random vari
 
 This is the first thing to internalize.
 
-When you write a Python name like `T` or `C`, that is just your local handle for referring to the pyGMs variable object. The actual identity of the variable inside pyGMs is its integer label.
+When you write a Python name like $T$ or $C$, that is just your local handle for referring to the pyGMs variable object. The actual identity of the variable inside pyGMs is its integer label.
 
 So there are really two layers:
 
@@ -51,7 +51,7 @@ So there are really two layers:
 
 That is why a variable can be printed as just a number. The number is the identity pyGMs actually uses.
 
-The number of states matters because pyGMs assumes each variable takes values from a finite set, usually written like `{0, 1, ..., d-1}`.
+The number of states matters because pyGMs assumes each variable takes values from a finite set, usually written like ${0, 1, ..., d-1}$.
 
 For HW2 Problem 1, this is exactly what happens in the Dentist example. The variables are binary, so each one has two states.
 
@@ -100,8 +100,8 @@ A factor is just a function table. It becomes a probability distribution only if
 
 For example:
 
-- a joint probability factor over variables \(X, Y\) must sum to 1 over all joint assignments
-- a conditional factor for \(p(Y \mid X)\) must sum to 1 over \(Y\) separately for each fixed value of \(X\)
+- a joint probability factor over variables $X, Y$ must sum to 1 over all joint assignments
+- a conditional factor for $p(Y \mid X)$ must sum to 1 over $Y$ separately for each fixed value of $X$
 - an arbitrary factor used inside an inference calculation may not be normalized at all
 
 So do not confuse “factor” with “probability distribution.” Some factors are probabilities. Some are not. pyGMs is happy to manipulate either kind.
@@ -158,13 +158,13 @@ For Problem 1, most of pyGMs reduces to three operations.
 
 Conditioning means fixing one or more variables to specific values and looking only at the remaining subtable.
 
-Mathematically, if you have a factor \(F(T, D, C)\) and fix \(T = 1\), you get a smaller factor over the remaining variables \(D\) and \(C\).
+Mathematically, if you have a factor $F(T, D, C)$ and fix $T = 1$, you get a smaller factor over the remaining variables $D$ and $C$.
 
 Conceptually, nothing mysterious is happening. You are saying:
 
 “Out of this full table, keep only the entries consistent with this evidence.”
 
-This is exactly how you should think about the homework request to extract the \(T=1\) subtable corresponding to \(p(T=1, D, C)\).
+This is exactly how you should think about the homework request to extract the $T=1$ subtable corresponding to $p(T=1, D, C)$.
 
 The important thing to notice is that conditioning does **not** automatically normalize the result. It only restricts the table.
 
@@ -176,7 +176,7 @@ Summing out means aggregating over all values of one or more variables to produc
 
 This is marginalization.
 
-If you sum out \(D\) from a factor over \((T, D, C)\), you get a factor over \((T, C)\).
+If you sum out $D$ from a factor over $(T, D, C)$, you get a factor over $(T, C)$.
 
 The conceptual rule is:
 
@@ -191,10 +191,10 @@ When you read “sum” or “marginal” in pyGMs, do not think of them as two 
 
 A conditional probability is usually obtained in pyGMs by taking a restricted or joint factor and dividing it by the appropriate marginal.
 
-For example, if you want \(p(C \mid T=1)\), you can proceed conceptually like this:
+For example, if you want $p(C \mid T=1)$, you can proceed conceptually like this:
 
 - start from the joint factor
-- condition on \(T=1\)
+- condition on $T=1$
 - sum out any remaining nuisance variables you do not want
 - divide by the appropriate normalizing quantity so the result sums to 1 over the target variable
 
@@ -337,11 +337,11 @@ What you need to know to finish it cleanly is this:
 5. If you want to compare two factorizations of the same joint, you can build them as factors and compare the resulting functions numerically.
 
 That is exactly why the homework asks you to:
-- extract the \(T=1\) subtable,
-- sum to obtain \(p(T=1, C)\),
-- divide to obtain \(p(C \mid T=1)\),
-- compute marginals like \(p(C)\),
-- build \(p(C)p(D\mid C)p(T\mid C)\),
+- extract the $T=1$ subtable,
+- sum to obtain $p(T=1, C)$,
+- divide to obtain $p(C \mid T=1)$,
+- compute marginals like $p(C)$,
+- build $p(C)p(D\mid C)p(T\mid C)$,
 - and compare it to the original joint.
 
 So if you understand the factor view, the homework becomes a sequence of mathematically familiar operations rather than a library-specific mystery.
