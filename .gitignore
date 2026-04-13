@@ -28,6 +28,9 @@ hw2_gap_info/*
 !hw2_execution_bridge/
 hw2_execution_bridge/*
 !hw2_execution_bridge/README.md
+!hw2_all_in_one_master/
+hw2_all_in_one_master/*
+!hw2_all_in_one_master/README.md
 !hw2_guided_study_companion/
 hw2_guided_study_companion/*
 !hw2_guided_study_companion/README.md
