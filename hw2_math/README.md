@@ -31,7 +31,7 @@ given explicitly by the table
 
 $$
 \begin{array}{c|c|c|c}
-T&D&C&p(T,D,C)\\ \hline
+T&D&C&p(T,D,C)\\
 0&0&0&0.576\\
 0&0&1&0.008\\
 0&1&0&0.144\\
@@ -59,7 +59,7 @@ As a $D \times C$ table:
 
 $$
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 D=0 & 0.064 & 0.012\\
 D=1 & 0.016 & 0.108
 \end{array}
@@ -237,7 +237,7 @@ So
 $$
 p(D\mid C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 D=0 & 0.8 & 0.1\\
 D=1 & 0.2 & 0.9
 \end{array}
@@ -296,7 +296,7 @@ So
 $$
 p(T\mid C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 T=0 & 0.9 & 0.4\\
 T=1 & 0.1 & 0.6
 \end{array}
@@ -390,7 +390,7 @@ $$
 $$
 \hat{p}(D\mid C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 D=0 & 0.76713124 & 0.14539007\\
 D=1 & 0.23286876 & 0.85460993
 \end{array}
@@ -399,7 +399,7 @@ $$
 $$
 \hat{p}(T\mid C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 T=0 & 0.97619048 & 0.28723404\\
 T=1 & 0.02380952 & 0.71276596
 \end{array}
@@ -942,7 +942,7 @@ So the “answer” here is not a single scalar. The answer is the completed syn
 $$
 p(T=1,D,C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 D=0 & 0.064 & 0.012\\
 D=1 & 0.016 & 0.108
 \end{array}
@@ -972,7 +972,7 @@ $$
 $$
 p(D\mid C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 D=0 & 0.8 & 0.1\\
 D=1 & 0.2 & 0.9
 \end{array}
@@ -981,7 +981,7 @@ $$
 $$
 p(T\mid C)=
 \begin{array}{c|cc}
- & C=0 & C=1\\ \hline
+ & C=0 & C=1\\
 T=0 & 0.9 & 0.4\\
 T=1 & 0.1 & 0.6
 \end{array}
