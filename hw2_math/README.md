@@ -212,7 +212,7 @@ p(D\mid C=0)=
 0.640/0.8\\
 0.160/0.8
 \end{bmatrix}
-=
+\;=\;
 \begin{bmatrix}
 0.8\\
 0.2
@@ -225,7 +225,7 @@ p(D\mid C=1)=
 0.020/0.2\\
 0.180/0.2
 \end{bmatrix}
-=
+\;=\;
 \begin{bmatrix}
 0.1\\
 0.9
@@ -271,7 +271,7 @@ p(T\mid C=0)=
 0.720/0.8\\
 0.080/0.8
 \end{bmatrix}
-=
+\;=\;
 \begin{bmatrix}
 0.9\\
 0.1
@@ -284,7 +284,7 @@ p(T\mid C=1)=
 0.080/0.2\\
 0.120/0.2
 \end{bmatrix}
-=
+\;=\;
 \begin{bmatrix}
 0.4\\
 0.6
@@ -895,9 +895,7 @@ This gives the **Generative Process** plot.
 The training loop is already given:
 
 $$
-\mathcal L(\theta)
-=
--\frac{1}{m}\sum_{j=1}^m \log p_{X,\theta}(x_j).
+\mathcal L(\theta) = -\frac{1}{m}\sum_{j=1}^m \log p_{X,\theta}(x_j).
 $$
 
 In code:
