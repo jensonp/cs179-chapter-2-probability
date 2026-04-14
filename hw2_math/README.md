@@ -478,6 +478,20 @@ p(W=1\mid R=0,S=1)=0.9,\qquad
 p(W=1\mid R=S=1)=0.99.
 $$
 
+## Foundational concepts that are easy to leave implicit
+
+1. A Bayesian network is a factorization of one joint distribution, not separate unrelated local models.
+2. Each local term is a conditional Bernoulli model indexed by parent values.
+3. Sampling the model in topological order is ancestral sampling from the exact joint.
+4. In this graph, $S$ and $R$ are conditionally independent given $C$:
+
+$$
+p(S,R\mid C)=p(S\mid C)\,p(R\mid C).
+$$
+
+5. Unconditionally, $S$ and $R$ are generally dependent because they share the common parent $C$.
+6. Any marginal like $p(S=1)$ or $p(W=1)$ comes from summing out latent variables via the law of total probability.
+
 ---
 
 ## Exact marginals from math
@@ -500,10 +514,42 @@ $$
 p(S=1,R=1)=0.5\cdot(0.5)(0.2)+0.5\cdot(0.1)(0.8)=0.09
 $$
 
-For $p(W=1)$, sum over all values of $C,S,R$:
+For $p(W=1)$, the full expansion is:
 
 $$
-p(W=1)=0.6471.
+p(W=1)=\sum_{c,s,r} p(c)\,p(s\mid c)\,p(r\mid c)\,p(W=1\mid r,s).
+$$
+
+Evaluate by grouping on $c$.
+
+For $c=0$, use $p(s=1\mid c=0)=0.5$, $p(r=1\mid c=0)=0.2$:
+
+$$
+\begin{aligned}
+p(W=1\mid c=0)
+&=0\cdot p(r=0,s=0\mid c=0) \\
+&\quad +0.9\cdot p(r=1,s=0\mid c=0) \\
+&\quad +0.9\cdot p(r=0,s=1\mid c=0) \\
+&\quad +0.99\cdot p(r=1,s=1\mid c=0) \\
+&=0.9(0.2\cdot 0.5)+0.9(0.8\cdot 0.5)+0.99(0.2\cdot 0.5) \\
+&=0.549.
+\end{aligned}
+$$
+
+For $c=1$, use $p(s=1\mid c=1)=0.1$, $p(r=1\mid c=1)=0.8$:
+
+$$
+\begin{aligned}
+p(W=1\mid c=1)
+&=0.9(0.8\cdot 0.9)+0.9(0.2\cdot 0.1)+0.99(0.8\cdot 0.1) \\
+&=0.7452.
+\end{aligned}
+$$
+
+Then average over $p(c)$:
+
+$$
+p(W=1)=0.5\cdot 0.549 + 0.5\cdot 0.7452 = 0.6471.
 $$
 
 So the empirical estimates from 1000 samples should be near:
@@ -518,6 +564,8 @@ $$
 $$
 \hat{p}(S=1,R=1)\approx 0.09.
 $$
+
+These are Monte Carlo estimates. Their random fluctuation is expected to scale like $O(1/\sqrt{n})$ with sample count $n$.
 
 ---
 
@@ -573,6 +621,24 @@ The key rule is d-separation.
 
 Because the graph is a **polytree**, there is exactly one undirected path between any two nodes. So for each yes/no question, you only need to inspect that one path and decide whether it is blocked or active.
 
+## Mathematical foundation: when does one node "affect" another?
+
+For this problem, "can $A$ affect $B$" means:
+
+$$
+A \not\!\perp\!\!\!\perp B \mid E
+$$
+
+for the evidence set $E$ specified in the question (possibly empty).
+
+On a path between two nodes:
+
+1. A **chain/fork** middle node blocks the path if that node is observed.
+2. A **collider** middle node blocks the path unless the collider or one of its descendants is observed.
+3. If every middle node passes the rule above, the path is active.
+
+In a polytree, one active path is enough for dependence and one blocked path means d-separation.
+
 ---
 
 ## (a) Can projector_plugged_in affect sam_reading_book?
@@ -581,13 +647,17 @@ Because the graph is a **polytree**, there is exactly one undirected path betwee
 **No.**
 
 ### Why
-The only path is blocked at the **collider** $power\_in\_wire$:
+Evidence set: $E=\varnothing$.
+
+The only path is
 
 $$
 projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_building \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
 $$
 
-Since neither the collider nor one of its descendants is observed, the path is blocked.
+At $power\_in\_wire$, arrows converge, so it is a collider. Since neither this collider nor any descendant is observed, the path is blocked there.
+
+So $projector\_plugged\_in$ and $sam\_reading\_book$ are d-separated with no evidence.
 
 ---
 
@@ -597,7 +667,9 @@ Since neither the collider nor one of its descendants is observed, the path is b
 **Yes.**
 
 ### Why
-There is an active path:
+Evidence set: $E=\varnothing$.
+
+The unique path is
 
 $$
 screen\_lit\_up \leftarrow projector\_lamp\_on \leftarrow power\_in\_projector
@@ -605,7 +677,9 @@ screen\_lit\_up \leftarrow projector\_lamp\_on \leftarrow power\_in\_projector
 \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
 $$
 
-This path consists of serial and diverging connections with no blocking evidence on the intermediate nodes.
+There is no unobserved collider that blocks this path, and there is no observed chain/fork middle node to block it either. Hence the path is active.
+
+So dependence is possible, meaning influence is possible in the sense used by the problem.
 
 ---
 
@@ -615,12 +689,18 @@ This path consists of serial and diverging connections with no blocking evidence
 **Yes.**
 
 ### Why
-The same path from part (a) becomes active because $screen\_lit\_up$ is a **descendant** of the collider $power\_in\_wire$, and observing a descendant of a collider opens the path:
+Evidence set: $E=\{screen\_lit\_up\}$.
+
+The path from part (a)
 
 $$
 projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_building
 \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
 $$
+
+contains collider $power\_in\_wire$. Normally this blocks the path. But $screen\_lit\_up$ is a descendant of that collider (through projector-side descendants), and conditioning on a collider descendant opens that collider path.
+
+So conditioning flips the answer from part (a): now an active path exists.
 
 ---
 
@@ -649,7 +729,7 @@ Observing $power\_in\_projector$ can affect **all variables except**:
 
 So, equivalently, it can affect the rest of the graph.
 
-There is no code required here. The output is your yes/no choices and path explanations.
+There is no code required here. The output is your yes/no choices with explicit path-blocking explanations.
 
 ---
 
@@ -669,11 +749,33 @@ $$
 T[i,j]=p(w_t=j\mid w_{t-1}=i).
 $$
 
-You estimate it from counts:
+Define bigram counts
 
 $$
-T[i,j]=\frac{\#(i\to j)}{\sum_k \#(i\to k)}.
+N_{ij}=\sum_{t=2}^{n}\mathbf{1}\{w_{t-1}=i,\ w_t=j\}.
 $$
+
+Then the maximum-likelihood estimate is:
+
+$$
+T[i,j]=\frac{N_{ij}}{\sum_k N_{ik}}.
+$$
+
+So each row of $T$ is a conditional distribution over next-word indices and must sum to $1$ (for rows with at least one outgoing transition).
+
+## Foundational concepts often left implicit
+
+1. Tokens are random variables taking values in a finite vocabulary index set.
+2. The first-order assumption is:
+
+$$
+p(w_t\mid w_{1:t-1})=p(w_t\mid w_{t-1}).
+$$
+
+3. Replacing rare words with $?$ is a state-space reduction step:
+it lowers variance in count estimates by pooling rare types.
+4. Generation is iterative conditional sampling: choose $w_1$, then repeatedly sample $w_{t+1}\sim T[w_t,:]$.
+5. If a row has zero count mass, the model has no empirical evidence for transitions out of that token; handling that case explicitly is part of a robust implementation.
 
 ---
 
@@ -778,6 +880,32 @@ This problem is easiest if you separate three levels:
 2. the **base distribution**
 3. the **invertible flow transform**
 
+## Foundational concepts for deep understanding
+
+The generator defines a valid data distribution even when we cannot write its density in closed form.
+Formally,
+
+$$
+p_{\text{data}}(x)=\sum_{i\in\{0,1\}} p(i)\int_0^1 p(w)\,p(x\mid w,i)\,dw.
+$$
+
+This is a mixture-integral construction: discrete latent $i$ and continuous latent $w$ both get marginalized out.
+
+The flow model defines another density family $p_{X,\theta}(x)$ through an invertible map from a simple base density.
+Training by maximum likelihood minimizes
+
+$$
+\mathcal{L}(\theta)=-\frac{1}{m}\sum_{j=1}^m \log p_{X,\theta}(x_j),
+$$
+
+which is empirical cross-entropy from data to model. In expectation, minimizing this objective is equivalent (up to an additive constant independent of $\theta$) to minimizing
+
+$$
+D_{\mathrm{KL}}(p_{\text{data}}\|p_{X,\theta}).
+$$
+
+So the training loop is not an arbitrary recipe: it is directly implementing likelihood-based density fitting.
+
 ---
 
 ## Step 1: Mathemize the generative process
@@ -862,6 +990,14 @@ This is the exact mathematical reason the model remains trainable: the transform
 
 In the homework, the transform is a spline coupling layer.
 
+For a composition $f_\theta=f_K\circ\cdots\circ f_1$, the log-density uses additive log-determinants:
+
+$$
+\log p_X(x)=\log p_Z(z)+\sum_{k=1}^{K}\log\left|\det J_{f_k^{-1}}(x_k)\right|,
+$$
+
+with $z=f_\theta^{-1}(x)$ and intermediate states $x_k$ defined by the inverse chain. This is why flow layers are designed to make Jacobian determinants cheap to compute.
+
 ### Syntax
 
 ```python
@@ -904,6 +1040,12 @@ loss = -flow.log_prob(data).mean()
 ```
 
 Minimizing this means making the flow assign higher probability to data coming from the generator.
+
+A practical interpretation:
+
+1. If $\log p_{X,\theta}(x_j)$ is low on real data, loss is high.
+2. Gradient steps increase log-probability where data concentrate.
+3. Over training, sampled points from the flow move toward the target geometric structure.
 
 ---
 
