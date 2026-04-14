@@ -728,16 +728,42 @@ There is no code required here. The output is your yes/no choices with explicit 
 
 ## Mathematical model
 
+Let a cleaned tokenized corpus be
+
+$$
+w_1,w_2,\dots,w_n,
+$$
+
+with each token $w_t$ mapped to an index in a finite vocabulary.
+
 A bigram model is a first-order Markov chain:
 
 $$
 p(w_1,\dots,w_n)=p(w_1)\prod_{t=2}^n p(w_t\mid w_{t-1}).
 $$
 
+This means the next token depends only on the current token, not on the full earlier history:
+
+$$
+p(w_t\mid w_{1:t-1})=p(w_t\mid w_{t-1}).
+$$
+
+In language-model terms:
+
+1. A **bigram** is an adjacent ordered pair $(w_{t-1},w_t)$.
+2. A **first-order Markov chain** is the modeling assumption above.
+3. The **transition matrix** (not "translation matrix") is the table of those conditional next-token probabilities.
+
 The core object is the transition matrix
 
 $$
 T[i,j]=p(w_t=j\mid w_{t-1}=i).
+$$
+
+For each fixed current-token index $i$, the row $T[i,:]$ is a categorical distribution over next-token indices, so it must satisfy
+
+$$
+T[i,j]\ge 0,\qquad \sum_j T[i,j]=1.
 $$
 
 Define bigram counts
@@ -746,27 +772,34 @@ $$
 N_{ij}=\sum_{t=2}^{n}\mathbf{1}\{w_{t-1}=i,\ w_t=j\}.
 $$
 
-Then the maximum-likelihood estimate is:
+So $N_{ij}$ is the number of observed times token $i$ is immediately followed by token $j$ in the corpus.
+
+Then the maximum-likelihood estimate (MLE) is:
 
 $$
 T[i,j]=\frac{N_{ij}}{\sum_k N_{ik}}.
 $$
 
-So each row of $T$ is a conditional distribution over next-word indices and must sum to $1$ (for rows with at least one outgoing transition).
+Why this ratio is the MLE:
 
-## Foundational concepts often left implicit
-
-1. Tokens are random variables taking values in a finite vocabulary index set.
-2. The first-order assumption is:
+For each row $i$, the outgoing transitions are multinomial with counts $\{N_{ij}\}_j$. The row likelihood is
 
 $$
-p(w_t\mid w_{1:t-1})=p(w_t\mid w_{t-1}).
+\mathcal{L}_i(T[i,:])\propto \prod_j T[i,j]^{N_{ij}}
+\quad\text{subject to}\quad \sum_j T[i,j]=1.
 $$
 
-3. Replacing rare words with $?$ is a state-space reduction step:
-it lowers variance in count estimates by pooling rare types.
-4. Generation is iterative conditional sampling: choose $w_1$, then repeatedly sample $w_{t+1}\sim T[w_t,:]$.
-5. If a row has zero count mass, the model has no empirical evidence for transitions out of that token; handling that case explicitly is part of a robust implementation.
+Maximizing this constrained likelihood gives normalized empirical frequencies, exactly the ratio above.
+
+## Conceptual interpretation
+
+1. If $N_{ij}$ is large, the model has strong evidence that $j$ follows $i$ often.
+2. If $N_{ij}=0$, the unsmoothed MLE gives $T[i,j]=0$ (hard zero probability).
+3. Replacing rare words with $?$ is a variance-reduction step: it pools sparse types so transition estimates are less noisy.
+4. Sequence generation is iterative: choose a start token $w_1$, then repeatedly sample $w_{t+1}\sim T[w_t,:]$.
+5. If a row has zero total count ($\sum_k N_{ik}=0$), the unsmoothed MLE is undefined for that row; practical code needs an explicit fallback or smoothing rule.
+
+This is why Problem 4 is fundamentally a probability-estimation problem: you are estimating conditional categorical distributions from adjacent-pair counts.
 
 ---
 
