@@ -17,17 +17,19 @@ The goal is that you can read the math first, understand the object being manipu
 
 # Problem 1. Factor Tables in Python
 
-## Problem 1.1: Compute \(p(T=1,D,C)\), \(p(T=1,C)\), and \(p(C\mid T=1)\)
+## Problem 1.1: Compute $p(T=1,D,C)$, $p(T=1,C)$, and $p(C\mid T=1)$
 
 ## Mathematical object
 
 You begin with the full joint distribution
-\[
+
+$$
 p(T,D,C),
-\]
+$$
+
 given explicitly by the table
 
-\[
+$$
 \begin{array}{c|c|c|c}
 T&D&C&p(T,D,C)\\ \hline
 0&0&0&0.576\\
@@ -39,83 +41,95 @@ T&D&C&p(T,D,C)\\ \hline
 1&1&0&0.016\\
 1&1&1&0.108
 \end{array}
-\]
+$$
 
-The problem wants you to reach \(p(C\mid T=1)\) in stages.
+The problem wants you to reach $p(C\mid T=1)$ in stages.
 
 ---
 
-## Step 1: Restrict to \(T=1\)
+## Step 1: Restrict to $T=1$
 
-Fixing \(T=1\) gives the subtable
-\[
+Fixing $T=1$ gives the subtable
+
+$$
 p(T=1,D,C).
-\]
+$$
 
-As a \(D \times C\) table:
-\[
+As a $D \times C$ table:
+
+$$
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 D=0 & 0.064 & 0.012\\
 D=1 & 0.016 & 0.108
 \end{array}
-\]
+$$
 
-This is **not yet** a conditional distribution. It is only the \(T=1\) slice of the joint table.
+This is **not yet** a conditional distribution. It is only the $T=1$ slice of the joint table.
 
 ---
 
-## Step 2: Sum out \(D\)
+## Step 2: Sum out $D$
 
 Now compute
-\[
+
+$$
 p(T=1,C)=\sum_D p(T=1,D,C).
-\]
+$$
 
 So
-\[
+
+$$
 p(T=1,C=0)=0.064+0.016=0.080,
-\]
-\[
+$$
+
+$$
 p(T=1,C=1)=0.012+0.108=0.120.
-\]
+$$
 
 Thus
-\[
+
+$$
 p(T=1,C)=
 \begin{bmatrix}
 0.080 & 0.120
 \end{bmatrix}.
-\]
+$$
 
 ---
 
-## Step 3: Normalize over \(C\)
+## Step 3: Normalize over $C$
 
 Now
-\[
+
+$$
 p(C\mid T=1)=\frac{p(T=1,C)}{p(T=1)}.
-\]
+$$
 
 Since
-\[
+
+$$
 p(T=1)=0.080+0.120=0.200,
-\]
+$$
+
 we get
-\[
+
+$$
 p(C=0\mid T=1)=\frac{0.080}{0.200}=0.4,
-\]
-\[
+$$
+
+$$
 p(C=1\mid T=1)=\frac{0.120}{0.200}=0.6.
-\]
+$$
 
 So
-\[
+
+$$
 p(C\mid T=1)=
 \begin{bmatrix}
 0.4 & 0.6
 \end{bmatrix}.
-\]
+$$
 
 ---
 
@@ -133,61 +147,66 @@ p_C_given_T1 = p_T1_C / p_T1_C.sum()
 ```
 
 If your local pyGMs version prefers passing a single variable rather than a list, the mathematically intended operation is still the same:
-sum over \(D\), keep \(C\).
+sum over $D$, keep $C$.
 
 ---
 
-# Problem 1.2: Verify \(D \perp T \mid C\)
+# Problem 1.2: Verify $D \perp T \mid C$
 
 ## Mathematical statement
 
 Conditional independence here means
-\[
+
+$$
 p(T,D,C)=p(C)\,p(D\mid C)\,p(T\mid C).
-\]
+$$
 
 So the task is to compute the three smaller factors and compare their product to the original joint table.
 
 ---
 
-## Step 1: Compute \(p(C)\)
+## Step 1: Compute $p(C)$
 
-\[
+$$
 p(C=0)=0.576+0.144+0.064+0.016=0.8,
-\]
-\[
+$$
+
+$$
 p(C=1)=0.008+0.072+0.012+0.108=0.2.
-\]
+$$
 
 So
-\[
+
+$$
 p(C)=
 \begin{bmatrix}
 0.8 & 0.2
 \end{bmatrix}.
-\]
+$$
 
 ---
 
-## Step 2: Compute \(p(D\mid C)\)
+## Step 2: Compute $p(D\mid C)$
 
-First compute \(p(D,C)\).
+First compute $p(D,C)$.
 
-For \(C=0\):
-\[
+For $C=0$:
+
+$$
 p(D=0,C=0)=0.576+0.064=0.640,\qquad
 p(D=1,C=0)=0.144+0.016=0.160.
-\]
+$$
 
-For \(C=1\):
-\[
+For $C=1$:
+
+$$
 p(D=0,C=1)=0.008+0.012=0.020,\qquad
 p(D=1,C=1)=0.072+0.108=0.180.
-\]
+$$
 
-Now divide by \(p(C)\):
+Now divide by $p(C)$:
 
-\[
+$$
 p(D\mid C=0)=
 \begin{bmatrix}
 0.640/0.8\\
@@ -198,8 +217,9 @@ p(D\mid C=0)=
 0.8\\
 0.2
 \end{bmatrix},
-\]
-\[
+$$
+
+$$
 p(D\mid C=1)=
 \begin{bmatrix}
 0.020/0.2\\
@@ -210,39 +230,42 @@ p(D\mid C=1)=
 0.1\\
 0.9
 \end{bmatrix}.
-\]
+$$
 
 So
-\[
+
+$$
 p(D\mid C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 D=0 & 0.8 & 0.1\\
 D=1 & 0.2 & 0.9
 \end{array}
-\]
+$$
 
 ---
 
-## Step 3: Compute \(p(T\mid C)\)
+## Step 3: Compute $p(T\mid C)$
 
-First compute \(p(T,C)\).
+First compute $p(T,C)$.
 
-For \(C=0\):
-\[
+For $C=0$:
+
+$$
 p(T=0,C=0)=0.576+0.144=0.720,\qquad
 p(T=1,C=0)=0.064+0.016=0.080.
-\]
+$$
 
-For \(C=1\):
-\[
+For $C=1$:
+
+$$
 p(T=0,C=1)=0.008+0.072=0.080,\qquad
 p(T=1,C=1)=0.012+0.108=0.120.
-\]
+$$
 
-Now divide by \(p(C)\):
+Now divide by $p(C)$:
 
-\[
+$$
 p(T\mid C=0)=
 \begin{bmatrix}
 0.720/0.8\\
@@ -253,8 +276,9 @@ p(T\mid C=0)=
 0.9\\
 0.1
 \end{bmatrix},
-\]
-\[
+$$
+
+$$
 p(T\mid C=1)=
 \begin{bmatrix}
 0.080/0.2\\
@@ -265,49 +289,54 @@ p(T\mid C=1)=
 0.4\\
 0.6
 \end{bmatrix}.
-\]
+$$
 
 So
-\[
+
+$$
 p(T\mid C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 T=0 & 0.9 & 0.4\\
 T=1 & 0.1 & 0.6
 \end{array}
-\]
+$$
 
 ---
 
 ## Step 4: Reconstruct the joint
 
 Now define
-\[
-q(T,D,C)=p(C)\,p(D\mid C)\,p(T\mid C).
-\]
 
-Because the original table was generated from exactly this structure, \(q\) should match the original joint exactly.
+$$
+q(T,D,C)=p(C)\,p(D\mid C)\,p(T\mid C).
+$$
+
+Because the original table was generated from exactly this structure, $q$ should match the original joint exactly.
 
 Indeed, for example:
-\[
+
+$$
 q(1,1,1)=p(C=1)\,p(D=1\mid C=1)\,p(T=1\mid C=1)
 =0.2\cdot 0.9\cdot 0.6=0.108,
-\]
+$$
+
 which matches the original table.
 
 The same happens for every entry.
 
 So:
 
-- total squared error is essentially \(0\),
-- KL divergence is essentially \(0\).
+- total squared error is essentially $0$,
+- KL divergence is essentially $0$.
 
 Numerically:
-\[
+
+$$
 \text{Total Sq. Err} \approx 1.33\times 10^{-32},
 \qquad
 \mathrm{KL}(p\|q)\approx 1.78\times 10^{-16}.
-\]
+$$
 
 These are zero up to floating-point precision.
 
@@ -334,55 +363,57 @@ kl_div = joint.distance(q, 'kl')
 
 # Problem 1.3: Empirical estimate and structured approximation
 
-The homework generates 50 samples from the joint, constructs an empirical estimate \(\hat p\), then compares:
+The homework generates 50 samples from the joint, constructs an empirical estimate $\hat{p}$, then compares:
 
-- the raw empirical estimate \(\hat p\),
+- the raw empirical estimate $\hat{p}$,
 - the structured estimate
-  \[
-  q(T,D,C)=\hat p(C)\hat p(D\mid C)\hat p(T\mid C).
-  \]
+
+$$
+  q(T,D,C)=\hat{p}(C)\hat{p}(D\mid C)\hat{p}(T\mid C).
+$$
 
 Using the fixed seed in the template, the first few samples begin:
-\[
+
+$$
 (0,1,0),\ (0,0,0),\ (0,0,0),\ (0,0,0),\ (0,1,0),\ (0,0,0),\dots
-\]
+$$
 
 Following the PDF’s stated order — **add smoothing first, then normalize** — the resulting empirical quantities are:
 
-\[
-\hat p(C)=
+$$
+\hat{p}(C)=
 \begin{bmatrix}
 0.85928144 & 0.14071856
 \end{bmatrix}
-\]
+$$
 
-\[
-\hat p(D\mid C)=
+$$
+\hat{p}(D\mid C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 D=0 & 0.76713124 & 0.14539007\\
 D=1 & 0.23286876 & 0.85460993
 \end{array}
-\]
+$$
 
-\[
-\hat p(T\mid C)=
+$$
+\hat{p}(T\mid C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 T=0 & 0.97619048 & 0.28723404\\
 T=1 & 0.02380952 & 0.71276596
 \end{array}
-\]
+$$
 
 Comparing to the true joint:
 
-\[
-D(p\|\hat p)\approx 0.12918,
+$$
+D(p\|\hat{p})\approx 0.12918,
 \qquad
 D(p\|q)\approx 0.07958.
-\]
+$$
 
-So for this sampled dataset, the **conditionally independent structured estimate \(q\)** is closer to the true distribution than the raw empirical estimate \(\hat p\).
+So for this sampled dataset, the **conditionally independent structured estimate $q$** is closer to the true distribution than the raw empirical estimate $\hat{p}$.
 
 ---
 
@@ -418,32 +449,34 @@ kl_p_q    = joint.distance(q, 'kl')
 ## Mathematical model
 
 The Wet Grass Bayesian network factorizes as
-\[
+
+$$
 p(C,S,R,W)=p(C)\,p(S\mid C)\,p(R\mid C)\,p(W\mid R,S).
-\]
+$$
 
 Given in the prompt:
 
-\[
+$$
 p(C=1)=0.5.
-\]
+$$
 
-\[
+$$
 p(S=1\mid C=0)=0.5,\qquad p(S=1\mid C=1)=0.1.
-\]
+$$
 
-\[
+$$
 p(R=1\mid C=0)=0.2,\qquad p(R=1\mid C=1)=0.8.
-\]
+$$
 
-\[
+$$
 p(W=1\mid R=S=0)=0,\qquad
 p(W=1\mid R=1,S=0)=0.9,
-\]
-\[
+$$
+
+$$
 p(W=1\mid R=0,S=1)=0.9,\qquad
 p(W=1\mid R=S=1)=0.99.
-\]
+$$
 
 ---
 
@@ -451,38 +484,40 @@ p(W=1\mid R=S=1)=0.99.
 
 The exact target values are:
 
-\[
+$$
 p(C=1)=0.5
-\]
+$$
 
-\[
+$$
 p(S=1)=0.5\cdot 0.5 + 0.5\cdot 0.1 = 0.3
-\]
+$$
 
-\[
+$$
 p(R=1)=0.5\cdot 0.2 + 0.5\cdot 0.8 = 0.5
-\]
+$$
 
-\[
+$$
 p(S=1,R=1)=0.5\cdot(0.5)(0.2)+0.5\cdot(0.1)(0.8)=0.09
-\]
+$$
 
-For \(p(W=1)\), sum over all values of \(C,S,R\):
-\[
+For $p(W=1)$, sum over all values of $C,S,R$:
+
+$$
 p(W=1)=0.6471.
-\]
+$$
 
 So the empirical estimates from 1000 samples should be near:
 
-\[
-\hat p(C=1)\approx 0.5,\quad
-\hat p(S=1)\approx 0.3,\quad
-\hat p(R=1)\approx 0.5,\quad
-\hat p(W=1)\approx 0.6471,
-\]
-\[
-\hat p(S=1,R=1)\approx 0.09.
-\]
+$$
+\hat{p}(C=1)\approx 0.5,\quad
+\hat{p}(S=1)\approx 0.3,\quad
+\hat{p}(R=1)\approx 0.5,\quad
+\hat{p}(W=1)\approx 0.6471,
+$$
+
+$$
+\hat{p}(S=1,R=1)\approx 0.09.
+$$
 
 ---
 
@@ -546,10 +581,11 @@ Because the graph is a **polytree**, there is exactly one undirected path betwee
 **No.**
 
 ### Why
-The only path is blocked at the **collider** \(power\_in\_wire\):
-\[
+The only path is blocked at the **collider** $power\_in\_wire$:
+
+$$
 projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_building \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
-\]
+$$
 
 Since neither the collider nor one of its descendants is observed, the path is blocked.
 
@@ -562,11 +598,12 @@ Since neither the collider nor one of its descendants is observed, the path is b
 
 ### Why
 There is an active path:
-\[
+
+$$
 screen\_lit\_up \leftarrow projector\_lamp\_on \leftarrow power\_in\_projector
 \leftarrow power\_in\_wire \leftarrow power\_in\_building
 \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
-\]
+$$
 
 This path consists of serial and diverging connections with no blocking evidence on the intermediate nodes.
 
@@ -578,11 +615,12 @@ This path consists of serial and diverging connections with no blocking evidence
 **Yes.**
 
 ### Why
-The same path from part (a) becomes active because \(screen\_lit\_up\) is a **descendant** of the collider \(power\_in\_wire\), and observing a descendant of a collider opens the path:
-\[
+The same path from part (a) becomes active because $screen\_lit\_up$ is a **descendant** of the collider $power\_in\_wire$, and observing a descendant of a collider opens the path:
+
+$$
 projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_building
 \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
-\]
+$$
 
 ---
 
@@ -591,9 +629,9 @@ projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_buildin
 ### Answer
 The variables whose probabilities could change are:
 
-- \(projector\_lamp\_on\)
-- \(screen\_lit\_up\)
-- \(ray\_says\_screen\_is\_dark\)
+- $projector\_lamp\_on$
+- $screen\_lit\_up$
+- $ray\_says\_screen\_is\_dark$
 
 This follows the active downstream path from the observed node.
 
@@ -602,12 +640,12 @@ This follows the active downstream path from the observed node.
 ## (e) Which variables could change if just power_in_projector is observed?
 
 ### Answer
-Observing \(power\_in\_projector\) can affect **all variables except**:
+Observing $power\_in\_projector$ can affect **all variables except**:
 
-- \(light\_switch\_on\)
-- \(lamp\_works\)
-- \(mirror\_working\)
-- \(ray\_is\_awake\)
+- $light\_switch\_on$
+- $lamp\_works$
+- $mirror\_working$
+- $ray\_is\_awake$
 
 So, equivalently, it can affect the rest of the graph.
 
@@ -620,19 +658,22 @@ There is no code required here. The output is your yes/no choices and path expla
 ## Mathematical model
 
 A bigram model is a first-order Markov chain:
-\[
+
+$$
 p(w_1,\dots,w_n)=p(w_1)\prod_{t=2}^n p(w_t\mid w_{t-1}).
-\]
+$$
 
 The core object is the transition matrix
-\[
+
+$$
 T[i,j]=p(w_t=j\mid w_{t-1}=i).
-\]
+$$
 
 You estimate it from counts:
-\[
+
+$$
 T[i,j]=\frac{\#(i\to j)}{\sum_k \#(i\to k)}.
-\]
+$$
 
 ---
 
@@ -744,48 +785,53 @@ This problem is easiest if you separate three levels:
 The data come from a two-component mixture-like latent mechanism.
 
 Let
-\[
+
+$$
 i \sim \text{Bernoulli}(0.3),
 \qquad
 w \sim \text{Uniform}(0,1).
-\]
+$$
 
 Define the mean curve
-\[
+
+$$
 \mu(w,i)=
 \begin{pmatrix}
-w\cdot 0.6^i + 0.2i - 0.5\\[4pt]
+w\cdot 0.6^i + 0.2i - 0.5\\\
 -2(1-i)(2w-1)^2 - i + 1
 \end{pmatrix}.
-\]
+$$
 
 Then
-\[
+
+$$
 X = 5\mu(w,i) + \varepsilon,
 \qquad
 \varepsilon \sim \mathcal N\!\left(0,\ (0.1(i+1))^2 I\right).
-\]
+$$
 
 Interpretation:
 
-- when \(i=0\) (probability \(0.7\)), the mean trace is parabolic with smaller noise,
-- when \(i=1\) (probability \(0.3\)), the mean trace is more linear with larger noise.
+- when $i=0$ (probability $0.7$), the mean trace is parabolic with smaller noise,
+- when $i=1$ (probability $0.3$), the mean trace is more linear with larger noise.
 
-The point is that we can **sample** from this process, but we do not have an easy analytic density formula for the resulting \(X\). That is why we fit a flexible density model instead.
+The point is that we can **sample** from this process, but we do not have an easy analytic density formula for the resulting $X$. That is why we fit a flexible density model instead.
 
 ---
 
 ## Step 2: Base distribution
 
 Choose a simple 2D isotropic Gaussian:
-\[
+
+$$
 Z \sim \mathcal N(0, I_2).
-\]
+$$
 
 Its density is
-\[
+
+$$
 p_Z(z)=\frac{1}{2\pi}\exp\!\left(-\frac12 \|z\|^2\right).
-\]
+$$
 
 ### Syntax
 
@@ -800,15 +846,17 @@ plt.scatter(Z[:,0], Z[:,1], s=2)
 ## Step 3: Flow model as change of variables
 
 Define an invertible learned transform
-\[
+
+$$
 x = f_\theta(z).
-\]
+$$
 
 Then the transformed density is
-\[
+
+$$
 p_X(x) = p_Z(f_\theta^{-1}(x))
 \left|\det J_{f_\theta^{-1}}(x)\right|.
-\]
+$$
 
 This is the exact mathematical reason the model remains trainable: the transformed density is still computable.
 
@@ -845,11 +893,12 @@ This gives the **Generative Process** plot.
 ## Step 5: Training objective
 
 The training loop is already given:
-\[
+
+$$
 \mathcal L(\theta)
 =
 -\frac{1}{m}\sum_{j=1}^m \log p_{X,\theta}(x_j).
-\]
+$$
 
 In code:
 ```python
@@ -890,82 +939,84 @@ So the “answer” here is not a single scalar. The answer is the completed syn
 
 ## Problem 1 final quantitative answers
 
-\[
+$$
 p(T=1,D,C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 D=0 & 0.064 & 0.012\\
 D=1 & 0.016 & 0.108
 \end{array}
-\]
+$$
 
-\[
+$$
 p(T=1,C)=
 \begin{bmatrix}
 0.080 & 0.120
 \end{bmatrix}
-\]
+$$
 
-\[
+$$
 p(C\mid T=1)=
 \begin{bmatrix}
 0.4 & 0.6
 \end{bmatrix}
-\]
+$$
 
-\[
+$$
 p(C)=
 \begin{bmatrix}
 0.8 & 0.2
 \end{bmatrix}
-\]
+$$
 
-\[
+$$
 p(D\mid C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 D=0 & 0.8 & 0.1\\
 D=1 & 0.2 & 0.9
 \end{array}
-\]
+$$
 
-\[
+$$
 p(T\mid C)=
 \begin{array}{c|cc}
  & C=0 & C=1\\ \hline
 T=0 & 0.9 & 0.4\\
 T=1 & 0.1 & 0.6
 \end{array}
-\]
+$$
 
-\[
+$$
 \text{Total Sq. Err}\approx 1.33\times 10^{-32},
 \qquad
 \mathrm{KL}\approx 1.78\times 10^{-16}.
-\]
+$$
 
 Empirical comparison:
-\[
-D(p\|\hat p)\approx 0.12918,
+
+$$
+D(p\|\hat{p})\approx 0.12918,
 \qquad
 D(p\|q)\approx 0.07958.
-\]
+$$
 
-So \(q\) is closer.
+So $q$ is closer.
 
 ---
 
 ## Problem 2 target values
 
-\[
+$$
 p(C=1)=0.5,\quad
 p(S=1)=0.3,\quad
 p(R=1)=0.5,\quad
 p(W=1)=0.6471,
-\]
-\[
+$$
+
+$$
 p(S=1,R=1)=0.09.
-\]
+$$
 
 ---
 
@@ -974,8 +1025,8 @@ p(S=1,R=1)=0.09.
 - (a) **No**
 - (b) **Yes**
 - (c) **Yes**
-- (d) affected: \(projector\_lamp\_on,\ screen\_lit\_up,\ ray\_says\_screen\_is\_dark\)
-- (e) affected: all except \(light\_switch\_on,\ lamp\_works,\ mirror\_working,\ ray\_is\_awake\)
+- (d) affected: $projector\_lamp\_on,\ screen\_lit\_up,\ ray\_says\_screen\_is\_dark$
+- (e) affected: all except $light\_switch\_on,\ lamp\_works,\ mirror\_working,\ ray\_is\_awake$
 
 ---
 
