@@ -626,7 +626,7 @@ Because the graph is a **polytree**, there is exactly one undirected path betwee
 For this problem, "can $A$ affect $B$" means:
 
 $$
-A \not\!\perp\!\!\!\perp B \mid E
+A \not\perp B \mid E
 $$
 
 for the evidence set $E$ specified in the question (possibly empty).
