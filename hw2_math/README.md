@@ -651,13 +651,11 @@ Evidence set: $E=\varnothing$.
 
 The only path is
 
-$$
-projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_building \rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
-$$
+`projector_plugged_in -> power_in_wire <- power_in_building -> light_switch_on -> room_light_on -> sam_reading_book`
 
-At $power\_in\_wire$, arrows converge, so it is a collider. Since neither this collider nor any descendant is observed, the path is blocked there.
+At `power_in_wire`, arrows converge, so it is a collider. Since neither this collider nor any descendant is observed, the path is blocked there.
 
-So $projector\_plugged\_in$ and $sam\_reading\_book$ are d-separated with no evidence.
+So `projector_plugged_in` and `sam_reading_book` are d-separated with no evidence.
 
 ---
 
@@ -671,11 +669,7 @@ Evidence set: $E=\varnothing$.
 
 The unique path is
 
-$$
-screen\_lit\_up \leftarrow projector\_lamp\_on \leftarrow power\_in\_projector
-\leftarrow power\_in\_wire \leftarrow power\_in\_building
-\rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
-$$
+`screen_lit_up <- projector_lamp_on <- power_in_projector <- power_in_wire <- power_in_building -> light_switch_on -> room_light_on -> sam_reading_book`
 
 There is no unobserved collider that blocks this path, and there is no observed chain/fork middle node to block it either. Hence the path is active.
 
@@ -689,16 +683,13 @@ So dependence is possible, meaning influence is possible in the sense used by th
 **Yes.**
 
 ### Why
-Evidence set: $E=\{screen\_lit\_up\}$.
+Evidence set: `E = {screen_lit_up}`.
 
 The path from part (a)
 
-$$
-projector\_plugged\_in \rightarrow power\_in\_wire \leftarrow power\_in\_building
-\rightarrow light\_switch\_on \rightarrow room\_light\_on \rightarrow sam\_reading\_book.
-$$
+`projector_plugged_in -> power_in_wire <- power_in_building -> light_switch_on -> room_light_on -> sam_reading_book`
 
-contains collider $power\_in\_wire$. Normally this blocks the path. But $screen\_lit\_up$ is a descendant of that collider (through projector-side descendants), and conditioning on a collider descendant opens that collider path.
+contains collider `power_in_wire`. Normally this blocks the path. But `screen_lit_up` is a descendant of that collider (through projector-side descendants), and conditioning on a collider descendant opens that collider path.
 
 So conditioning flips the answer from part (a): now an active path exists.
 
@@ -709,9 +700,9 @@ So conditioning flips the answer from part (a): now an active path exists.
 ### Answer
 The variables whose probabilities could change are:
 
-- $projector\_lamp\_on$
-- $screen\_lit\_up$
-- $ray\_says\_screen\_is\_dark$
+- `projector_lamp_on`
+- `screen_lit_up`
+- `ray_says_screen_is_dark`
 
 This follows the active downstream path from the observed node.
 
@@ -720,12 +711,12 @@ This follows the active downstream path from the observed node.
 ## (e) Which variables could change if just power_in_projector is observed?
 
 ### Answer
-Observing $power\_in\_projector$ can affect **all variables except**:
+Observing `power_in_projector` can affect **all variables except**:
 
-- $light\_switch\_on$
-- $lamp\_works$
-- $mirror\_working$
-- $ray\_is\_awake$
+- `light_switch_on`
+- `lamp_works`
+- `mirror_working`
+- `ray_is_awake`
 
 So, equivalently, it can affect the rest of the graph.
 
@@ -1165,8 +1156,8 @@ $$
 - (a) **No**
 - (b) **Yes**
 - (c) **Yes**
-- (d) affected: $projector\_lamp\_on,\ screen\_lit\_up,\ ray\_says\_screen\_is\_dark$
-- (e) affected: all except $light\_switch\_on,\ lamp\_works,\ mirror\_working,\ ray\_is\_awake$
+- (d) affected: `projector_lamp_on`, `screen_lit_up`, `ray_says_screen_is_dark`
+- (e) affected: all except `light_switch_on`, `lamp_works`, `mirror_working`, `ray_is_awake`
 
 ---
 
