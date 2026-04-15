@@ -41,6 +41,10 @@ hw2_guided_study_companion/*
 pygms_catchup_lecture/*
 !pygms_catchup_lecture/README.md
 
+!hw2_solutions/
+hw2_solutions/*
+!hw2_solutions/README.md
+
 !notes/
 notes/*
 !notes/03_bayesnet.pdf
