@@ -463,7 +463,7 @@ you get
 
 $$
 p_X(x)
-=
+\;=\;
 \frac{p_Z(z)}{\left|\det J_{f_\theta}(z)\right|},
 \qquad x = f_\theta(z).
 $$
@@ -472,7 +472,7 @@ Equivalently, writing everything in terms of $x$ by substituting $z = f_\theta^{
 
 $$
 p_X(x)
-=
+\;=\;
 p_Z\bigl(f_\theta^{-1}(x)\bigr)
 \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
@@ -602,7 +602,7 @@ So
 
 $$
 \det J
-=
+\;=\;
 \frac{\partial y_1}{\partial x_1}
 \cdot
 \frac{\partial y_2}{\partial x_2}.
@@ -710,7 +710,7 @@ The training objective is the negative average log likelihood:
 
 $$
 \mathcal{L}(\theta)
-=
+\;=\;
 -\frac{1}{m}\sum_{j=1}^m \log p_\theta(x_j).
 $$
 
@@ -937,9 +937,9 @@ The final log density is
 
 $$
 \log p_\theta(x)
-=
+\;=\;
 \log p_Z\bigl(f_\theta^{-1}(x)\bigr)
-+
+\;+\;
 \log \left| \det J_{f_\theta^{-1}}(x) \right|.
 $$
 
@@ -1140,7 +1140,7 @@ Because the warp is invertible and has a tractable Jacobian determinant, the res
 
 $$
 p_X(x)
-=
+\;=\;
 p_Z\bigl(f_\theta^{-1}(x)\bigr)
 \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
