@@ -19,7 +19,7 @@ The style here is math-first and object-first. For each problem, the goal is to 
 
 ## Why this problem exists
 
-Earlier in the course, probability tables and Bayesian networks described uncertainty in a small number of random variables. This problem forces the same ideas into a sequential setting. Instead of asking for the probability of a small tuple like \((T,D,C)\), we now want a model for a whole sequence of words.
+Earlier in the course, probability tables and Bayesian networks described uncertainty in a small number of random variables. This problem forces the same ideas into a sequential setting. Instead of asking for the probability of a small tuple like $(T,D,C)$, we now want a model for a whole sequence of words.
 
 The problem introduces the simplest nontrivial sequence model: the bigram model. It matters because it is the first place where “conditional probability from counts” becomes a model of language. The point is not that this is a realistic language model. It is that it teaches the mechanism clearly.
 
@@ -27,13 +27,13 @@ The problem introduces the simplest nontrivial sequence model: the bigram model.
 
 ## The object being introduced
 
-The main object is the **transition matrix** \(T\).
+The main object is the **transition matrix** $T$.
 
-A bigram model assumes that the next word depends only on the current word. So if the current word has index \(i\) and the next word has index \(j\), then
+A bigram model assumes that the next word depends only on the current word. So if the current word has index $i$ and the next word has index $j$, then
 
-\[
+$$
 T[i,j] = p(w_t = j \mid w_{t-1} = i).
-\]
+$$
 
 This matrix is a conditional-probability table. Each row corresponds to one current word. Each row gives a full conditional distribution over the next word.
 
@@ -44,20 +44,20 @@ What is fixed?
 - the vocabulary,
 - the tokenization rule,
 - the dataset,
-- the decision to keep the top \(1000\) words and collapse the rest into `?`.
+- the decision to keep the top $1000$ words and collapse the rest into `?`.
 
 What varies?
 
-- the current word index \(i\),
-- the next word index \(j\),
-- and therefore which row and column of \(T\) we are talking about.
+- the current word index $i$,
+- the next word index $j$,
+- and therefore which row and column of $T$ we are talking about.
 
-What conclusion does \(T\) allow?
+What conclusion does $T$ allow?
 
 It lets you answer both kinds of questions the homework asks:
 
 1. **prediction**: which words are most likely after a given word?  
-2. **generation**: if I repeatedly sample according to the rows of \(T\), what sequences does the model produce?
+2. **generation**: if I repeatedly sample according to the rows of $T$, what sequences does the model produce?
 
 ---
 
@@ -65,22 +65,22 @@ It lets you answer both kinds of questions the homework asks:
 
 A bigram model is the Markov-chain approximation
 
-\[
+$$
 p(w_1,\dots,w_n)
 =
 p(w_1)\prod_{t=2}^{n} p(w_t \mid w_{t-1}).
-\]
+$$
 
 The transition probabilities are estimated from counts:
 
-\[
+$$
 T[i,j]
 =
 \frac{\#(i \to j)}{\sum_k \#(i \to k)}.
-\]
+$$
 
-The numerator is the number of times word \(i\) is followed by word \(j\) in the corpus.  
-The denominator is the total number of observed transitions leaving word \(i\).
+The numerator is the number of times word $i$ is followed by word $j$ in the corpus.  
+The denominator is the total number of observed transitions leaving word $i$.
 
 ---
 
@@ -102,9 +102,9 @@ There are several assumptions and practical details here that matter.
 
 First, the model is only as good as the preprocessing. Lowercasing, removing punctuation, and replacing infrequent words all change the state space. So the estimated probabilities depend on those choices.
 
-Second, the top-\(1000\) truncation is a modeling choice, not just a memory trick. It says that rare words are all being merged into a single state called `?`. That stabilizes the matrix, but it also destroys distinctions among rare words.
+Second, the top-$1000$ truncation is a modeling choice, not just a memory trick. It says that rare words are all being merged into a single state called `?`. That stabilizes the matrix, but it also destroys distinctions among rare words.
 
-Third, some rows might be sparse. If a word is rare even within the top \(1000\), then its row may be based on very few transitions. Those estimated probabilities are much less stable.
+Third, some rows might be sparse. If a word is rare even within the top $1000$, then its row may be based on very few transitions. Those estimated probabilities are much less stable.
 
 Fourth, this is a first-order Markov model. It has no memory beyond the previous token. So if a sequence seems incoherent, that is not a bug in the code. It is the direct consequence of the modeling assumption.
 
@@ -134,7 +134,7 @@ After preprocessing:
 - everything is lowercase,
 - the corpus becomes a list of word tokens.
 
-So `tok_all` is the original sequence \(w_1,w_2,\dots,w_N\) before vocabulary truncation.
+So `tok_all` is the original sequence $w_1,w_2,\dots,w_N$ before vocabulary truncation.
 
 ---
 
@@ -166,7 +166,7 @@ idx = [keep.index(t) for t in tok]
 
 This step turns an open-ended vocabulary into a finite state space.
 
-- `keep` is the list of the \(1000\) most frequent words, plus the catch-all token `?`.
+- `keep` is the list of the $1000$ most frequent words, plus the catch-all token `?`.
 - `tok` is the corpus after rare words have been collapsed into `?`.
 - `idx` is the token sequence written as integers instead of strings.
 
@@ -174,7 +174,7 @@ So `idx` is the actual observed Markov chain.
 
 ### Why this matters
 
-At this point, the model is no longer about English words in the abstract. It is about transitions among the \(1001\) discrete states listed in `keep`.
+At this point, the model is no longer about English words in the abstract. It is about transitions among the $1001$ discrete states listed in `keep`.
 
 ---
 
@@ -193,13 +193,13 @@ for a, b in zip(idx[:-1], idx[1:]):
 
 The pair `(a, b)` represents one observed adjacent transition in the corpus:
 
-\[
+$$
 w_{t-1} = a,\qquad w_t = b.
-\]
+$$
 
 So each time you see a pair, you increment that transition count.
 
-After this loop, `T[i, j]` is not yet a probability. It is just the number of observed transitions from state \(i\) to state \(j\).
+After this loop, `T[i, j]` is not yet a probability. It is just the number of observed transitions from state $i$ to state $j$.
 
 Now normalize each row:
 
@@ -211,13 +211,13 @@ T[nz] /= row_sums[nz]
 
 ### Why row normalization is the right operation
 
-Each row corresponds to one fixed current word \(i\). The row entries are supposed to represent
+Each row corresponds to one fixed current word $i$. The row entries are supposed to represent
 
-\[
+$$
 p(w_t = j \mid w_{t-1} = i).
-\]
+$$
 
-So for each fixed \(i\), the row must sum to one over all possible next words \(j\). That is exactly what row normalization accomplishes.
+So for each fixed $i$, the row must sum to one over all possible next words $j$. That is exactly what row normalization accomplishes.
 
 After this step, each nonempty row of `T` is a valid conditional probability distribution.
 
@@ -276,16 +276,16 @@ def sample_sequence(start_word, length=50):
 This function implements the model literally.
 
 - Start from a chosen initial word.
-- Look up its row in \(T\).
+- Look up its row in $T$.
 - Sample the next word according to that row.
 - Move to that new word.
 - Repeat.
 
 Mathematically, each step samples from
 
-\[
+$$
 w_t \sim p(\cdot \mid w_{t-1}).
-\]
+$$
 
 So the generated sequence is a sample path from the learned Markov chain.
 
@@ -315,9 +315,9 @@ This example is worth doing because it teaches the general logic of sampling fro
 
 Suppose the current word is `miss`. Then the model holds the full row
 
-\[
+$$
 T[\texttt{miss}, :]
-\]
+$$
 
 which is a conditional distribution over the next word. When `np.random.choice` samples according to that row, it produces one next-state sample consistent with the learned conditional law.
 
@@ -361,7 +361,7 @@ The model does not understand syntax or meaning. It only estimates local token-t
 Retain these points:
 
 - A bigram model is a first-order Markov chain.
-- Each row of \(T\) is a conditional distribution over the next word.
+- Each row of $T$ is a conditional distribution over the next word.
 - Counts come first, then row normalization.
 - Generation is repeated sampling from the row corresponding to the current word.
 
@@ -379,7 +379,7 @@ Do not confuse:
 
 Earlier problems dealt with discrete probability tables, Bayesian networks, and Markov chains. In all of those settings, the probabilistic objects were either small enough to write down explicitly or simple enough to estimate from counts.
 
-This problem changes the setting completely. Now the data live in \(\mathbb{R}^2\), and the target distribution is complicated enough that we can sample from it but cannot easily write its density in closed form.
+This problem changes the setting completely. Now the data live in $\mathbb{R}^2$, and the target distribution is complicated enough that we can sample from it but cannot easily write its density in closed form.
 
 So the problem introduces a new modeling idea:
 
@@ -395,17 +395,17 @@ The main object is a **parameterized transformed density**.
 
 You begin with a simple base random variable
 
-\[
+$$
 Z \sim p_Z
-\]
+$$
 
 and define the observed variable by an invertible map
 
-\[
+$$
 X = f_\theta(Z),
-\]
+$$
 
-where \(f_\theta\) depends on trainable parameters \(\theta\).
+where $f_\theta$ depends on trainable parameters $\theta$.
 
 What is fixed?
 
@@ -416,36 +416,36 @@ What is fixed?
 
 What varies?
 
-- the random sample \(Z\),
-- the observed point \(X\),
-- and, during training, the parameters \(\theta\).
+- the random sample $Z$,
+- the observed point $X$,
+- and, during training, the parameters $\theta$.
 
 What conclusion does the object allow?
 
-It gives you a flexible density model for \(X\) whose density is still computable, so you can optimize it by likelihood.
+It gives you a flexible density model for $X$ whose density is still computable, so you can optimize it by likelihood.
 
 ---
 
 ## Formal definition
 
-If \(f_\theta\) is invertible, then the transformed density is
+If $f_\theta$ is invertible, then the transformed density is
 
-\[
+$$
 p_X(x)
 =
 p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
 \left|\det J_{f_\theta^{-1}}(x)\right|.
-\]
+$$
 
 For log density, this becomes
 
-\[
+$$
 \log p_X(x)
 =
 \log p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
 +
 \log \left|\det J_{f_\theta^{-1}}(x)\right|.
-\]
+$$
 
 If the transform is a composition of layers, then the log-determinant corrections add across layers.
 
@@ -455,7 +455,7 @@ If the transform is a composition of layers, then the log-determinant correction
 
 This formula is easiest to understand in two pieces.
 
-First, given an observed point \(x\), map it backward to latent space using the inverse transform. That tells you where the point came from under the base distribution.
+First, given an observed point $x$, map it backward to latent space using the inverse transform. That tells you where the point came from under the base distribution.
 
 Second, correct for the fact that the transformation stretches or compresses local area. If a region is stretched out, the density must decrease there. If it is compressed, the density must increase there. The determinant term is exactly the area-scaling correction that enforces probability conservation.
 
@@ -493,44 +493,46 @@ This is compact, so rewrite it mathematically.
 
 First draw
 
-\[
+$$
 w \sim \mathrm{Uniform}(0,1),
 \qquad
 i \sim \mathrm{Bernoulli}(0.3),
-\]
+$$
 
-where \(i=1\) with probability \(0.3\) because the code uses the condition `> 0.7`.
+where $i=1$ with probability $0.3$ because the code uses the condition `> 0.7`.
 
 Then define
 
-\[
+$$
 \mu(w,i)
 =
 \begin{pmatrix}
 w\cdot 0.6^i + 0.2i - 0.5 \\
 -2(1-i)(2w-1)^2 - i + 1
 \end{pmatrix}.
-\]
+$$
 
 Then add Gaussian noise and a scale factor:
 
-\[
+$$
 X = 5\,\mu(w,i) + \varepsilon,
 \qquad
 \varepsilon \sim \mathcal{N}\!\left(0,\ (0.1(i+1))^2 I\right).
-\]
+$$
 
 ### What this means geometrically
 
 There are two regimes.
 
-When \(i=0\), the second coordinate contains the curved term
-\[
+When $i=0$, the second coordinate contains the curved term
+
+$$
 -2(2w-1)^2 + 1,
-\]
+$$
+
 so the data lie near a curved arc with smaller noise.
 
-When \(i=1\), that curved term disappears and the location becomes more line-like, with larger noise.
+When $i=1$, that curved term disappears and the location becomes more line-like, with larger noise.
 
 So the generator creates a two-component geometric structure: one curved component and one straighter, noisier component.
 
@@ -579,12 +581,12 @@ base = dist.MultivariateNormal(torch.zeros(2), torch.eye(2))
 
 This is
 
-\[
+$$
 Z \sim \mathcal{N}(0, I_2).
-\]
+$$
 
-- `torch.zeros(2)` is the mean vector \((0,0)\).
-- `torch.eye(2)` is the \(2\times 2\) identity matrix, which serves as the covariance matrix.
+- `torch.zeros(2)` is the mean vector $(0,0)$.
+- `torch.eye(2)` is the $2\times 2$ identity matrix, which serves as the covariance matrix.
 - `dist.MultivariateNormal(...)` creates the Pyro distribution object.
 
 ### Why this choice is natural
@@ -631,14 +633,14 @@ flow = dist.TransformedDistribution(base, [xform])
 
 ### What this means mathematically
 
-The transform \(f_\theta\) is a learned invertible map implemented as a spline coupling layer.
+The transform $f_\theta$ is a learned invertible map implemented as a spline coupling layer.
 
 The transformed distribution is
 
-\[
+$$
 X = f_\theta(Z),
 \qquad Z \sim \mathcal{N}(0, I_2).
-\]
+$$
 
 So `flow` is the actual density model you will train.
 
@@ -704,11 +706,11 @@ The transformation contains trainable parameters. This call collects them so the
 
 The loss is
 
-\[
+$$
 \mathcal{L}(\theta)
 =
 -\frac{1}{m}\sum_{j=1}^{m} \log p_\theta(x_j).
-\]
+$$
 
 This is the negative average log likelihood.
 
@@ -819,7 +821,7 @@ plt.show()
 
 This example matters because otherwise the training loop can feel like a generic machine-learning ritual.
 
-Suppose the current model places low density on regions where the target generator frequently produces data. Then for those data points, \(\log p_\theta(x)\) will be very negative. That makes the average log probability small, so the negative average log probability becomes large.
+Suppose the current model places low density on regions where the target generator frequently produces data. Then for those data points, $\log p_\theta(x)$ will be very negative. That makes the average log probability small, so the negative average log probability becomes large.
 
 When the optimizer reduces the loss, it is forced to change the transform so that the model assigns larger density to points that actually appear under the generator.
 
