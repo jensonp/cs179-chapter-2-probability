@@ -47,6 +47,9 @@ pygms_catchup_lecture/*
 !hw2_solutions/
 hw2_solutions/*
 !hw2_solutions/README.md
+!p5_fully_explained/
+p5_fully_explained/*
+!p5_fully_explained/README.md
 
 !notes/
 notes/*
