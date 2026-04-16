@@ -112,7 +112,7 @@ $$
 
 Here is what those words mean.
 
-### 3.1 Uniform$(0,1)$
+### 3.1 $\mathrm{Uniform}(0,1)$
 
 A random variable $w \sim \mathrm{Uniform}(0,1)$ is equally likely to land anywhere in the interval $[0,1]$.
 
@@ -121,7 +121,7 @@ So:
 - $w$ varies continuously between $0$ and $1$,
 - no sub-interval of the same length is preferred over another.
 
-### 3.2 Bernoulli$(0.3)$
+### 3.2 $\mathrm{Bernoulli}(0.3)$
 
 A Bernoulli random variable takes only two values, usually $0$ and $1$.
 
@@ -1429,22 +1429,10 @@ Here is the full logic of Problem 5 in the order it becomes meaningful.
 
 1. The homework generator makes a 2D target distribution with a curved branch and a noisier line-like branch.
 2. A single Gaussian is too simple to match that target directly.
-3. Choose a simple latent source:
-   $$
-   Z \sim \mathcal{N}(0, I_2).
-   $$
+3. Choose a simple latent source: $Z \sim \mathcal{N}(0, I_2)$.
 4. Choose a learnable invertible transform $f_\theta$ implemented as a spline coupling map.
-5. Define the model by
-   $$
-   X = f_\theta(Z).
-   $$
-6. Use the change-of-variables formula
-   $$
-   p_\theta(x)
-   =
-   p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
-   \left|\det J_{f_\theta^{-1}}(x)\right|.
-   $$
+5. Define the model by $X = f_\theta(Z)$.
+6. Use the change-of-variables formula $p_\theta(x) = p_Z\!\bigl(f_\theta^{-1}(x)\bigr)\left|\det J_{f_\theta^{-1}}(x)\right|$.
 7. Train $\theta$ by minimizing negative average log likelihood on samples from the target generator.
 8. After training, sample from the model by drawing $z$ from the Gaussian and pushing it through the learned transform.
 
