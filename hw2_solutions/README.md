@@ -66,17 +66,13 @@ It lets you answer both kinds of questions the homework asks:
 A bigram model is the Markov-chain approximation
 
 $$
-p(w_1,\dots,w_n)
-=
-p(w_1)\prod_{t=2}^{n} p(w_t \mid w_{t-1}).
+p(w_1,\dots,w_n)=p(w_1)\prod_{t=2}^{n} p(w_t \mid w_{t-1}).
 $$
 
 The transition probabilities are estimated from counts:
 
 $$
-T[i,j]
-=
-\frac{\#(i \to j)}{\sum_k \#(i \to k)}.
+T[i,j]=\frac{N_{ij}}{\sum_k N_{ik}}.
 $$
 
 The numerator is the number of times word $i$ is followed by word $j$ in the corpus.  
@@ -431,20 +427,13 @@ It gives you a flexible density model for $X$ whose density is still computable,
 If $f_\theta$ is invertible, then the transformed density is
 
 $$
-p_X(x)
-=
-p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
-\left|\det J_{f_\theta^{-1}}(x)\right|.
+p_X(x)=p_Z\!\bigl(f_\theta^{-1}(x)\bigr)\left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
 
 For log density, this becomes
 
 $$
-\log p_X(x)
-=
-\log p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
-+
-\log \left|\det J_{f_\theta^{-1}}(x)\right|.
+\log p_X(x)=\log p_Z\!\bigl(f_\theta^{-1}(x)\bigr)+\log \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
 
 If the transform is a composition of layers, then the log-determinant corrections add across layers.
@@ -504,8 +493,7 @@ where $i=1$ with probability $0.3$ because the code uses the condition `> 0.7`.
 Then define
 
 $$
-\mu(w,i)
-=
+\mu(w,i)=
 \begin{pmatrix}
 w\cdot 0.6^i + 0.2i - 0.5 \\
 -2(1-i)(2w-1)^2 - i + 1
@@ -707,9 +695,7 @@ The transformation contains trainable parameters. This call collects them so the
 The loss is
 
 $$
-\mathcal{L}(\theta)
-=
--\frac{1}{m}\sum_{j=1}^{m} \log p_\theta(x_j).
+\mathcal{L}(\theta)=-\frac{1}{m}\sum_{j=1}^{m} \log p_\theta(x_j).
 $$
 
 This is the negative average log likelihood.
