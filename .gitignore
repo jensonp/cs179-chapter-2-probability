@@ -28,6 +28,9 @@ hw2_gap_info/*
 !hw2_execution_bridge/
 hw2_execution_bridge/*
 !hw2_execution_bridge/README.md
+!problem5_normalizing_flows_walkthrough/
+problem5_normalizing_flows_walkthrough/*
+!problem5_normalizing_flows_walkthrough/README.md
 !hw2_math/
 hw2_math/*
 !hw2_math/README.md
