@@ -145,7 +145,7 @@ The generator then builds a mean location
 
 $$
 \mu(w,i)
-=
+\;=\;
 \begin{bmatrix}
 w \cdot 0.6^i + 0.2i - 0.5 \\
 -2(1-i)(2w-1)^2 - i + 1
@@ -188,7 +188,7 @@ Then
 
 $$
 \mu(w,0)
-=
+\;=\;
 \begin{bmatrix}
 w - 0.5 \\
 -2(2w-1)^2 + 1
@@ -216,7 +216,7 @@ Then
 
 $$
 \mu(w,1)
-=
+\;=\;
 \begin{bmatrix}
 0.6w - 0.3 \\
 0
@@ -323,7 +323,7 @@ then the mean vector is
 
 $$
 \mathbb{E}[Z]
-=
+\;=\;
 \begin{bmatrix}
 \mathbb{E}[Z_1] \\
 \mathbb{E}[Z_2]
@@ -349,7 +349,7 @@ The covariance matrix records variances on the diagonal and cross-coordinate cov
 
 $$
 \Sigma
-=
+\;=\;
 \begin{bmatrix}
 \mathrm{Var}(Z_1) & \mathrm{Cov}(Z_1, Z_2) \\
 \mathrm{Cov}(Z_2, Z_1) & \mathrm{Var}(Z_2)
@@ -368,7 +368,7 @@ The $2 \times 2$ identity matrix is
 
 $$
 I_2
-=
+\;=\;
 \begin{bmatrix}
 1 & 0 \\
 0 & 1
@@ -533,7 +533,7 @@ The standard choice is an open ball of radius $\varepsilon > 0$:
 
 $$
 B_\varepsilon(z_0)
-=
+\;=\;
 \{z \in \mathbb{R}^2 : \|z - z_0\| < \varepsilon\}.
 $$
 
@@ -579,7 +579,7 @@ the Jacobian matrix at a point $z$ is
 
 $$
 J_f(z)
-=
+\;=\;
 \begin{bmatrix}
 \frac{\partial f_1}{\partial z_1}(z) & \frac{\partial f_1}{\partial z_2}(z) \\
 \frac{\partial f_2}{\partial z_1}(z) & \frac{\partial f_2}{\partial z_2}(z)
@@ -676,7 +676,7 @@ Its image in data space is
 
 $$
 f_\theta(B_\varepsilon(z_0))
-=
+\;=\;
 \{f_\theta(z) : z \in B_\varepsilon(z_0)\}.
 $$
 
@@ -686,7 +686,7 @@ Because the transform just moves points, the probability mass of the latent neig
 
 $$
 P(Z \in B_\varepsilon(z_0))
-=
+\;=\;
 P(X \in f_\theta(B_\varepsilon(z_0))).
 $$
 
@@ -740,7 +740,7 @@ Cancel the common factor:
 
 $$
 p_X(x_0)
-=
+\;=\;
 \frac{p_Z(z_0)}{|\det J_{f_\theta}(z_0)|}.
 $$
 
@@ -748,7 +748,7 @@ Since $z_0 = f_\theta^{-1}(x_0)$, we can rewrite this in terms of $x$:
 
 $$
 p_X(x)
-=
+\;=\;
 p_Z\!\bigl(f_\theta^{-1}(x)\bigr)\,
 \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
@@ -761,9 +761,9 @@ Training uses log density, so the practical form is
 
 $$
 \log p_X(x)
-=
+\;=\;
 \log p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
-+
+\;+\;
 \log \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
 
@@ -850,7 +850,7 @@ J =
 \frac{\partial y_1}{\partial x_1} & \frac{\partial y_1}{\partial x_2} \\
 \frac{\partial y_2}{\partial x_1} & \frac{\partial y_2}{\partial x_2}
 \end{bmatrix}
-=
+\;=\;
 \begin{bmatrix}
 \frac{\partial y_1}{\partial x_1} & 0 \\
 \frac{\partial y_2}{\partial x_1} & \frac{\partial y_2}{\partial x_2}
@@ -863,7 +863,7 @@ So the Jacobian is triangular, and its determinant is just the product of the di
 
 $$
 \det J
-=
+\;=\;
 \frac{\partial y_1}{\partial x_1}
 \cdot
 \frac{\partial y_2}{\partial x_2}.
@@ -1073,9 +1073,9 @@ The final result is
 
 $$
 \log p_\theta(x)
-=
+\;=\;
 \log p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
-+
+\;+\;
 \log \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
 
@@ -1129,7 +1129,7 @@ So the code minimizes the negative average log likelihood:
 
 $$
 \mathcal{L}(\theta)
-=
+\;=\;
 -\frac{1}{m}\sum_{j=1}^m \log p_\theta(x_j).
 $$
 
@@ -1275,9 +1275,9 @@ The model log density is
 
 $$
 \log p_\theta(x)
-=
+\;=\;
 \log p_Z\!\bigl(f_\theta^{-1}(x)\bigr)
-+
+\;+\;
 \log \left|\det J_{f_\theta^{-1}}(x)\right|.
 $$
 
